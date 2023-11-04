@@ -74,6 +74,17 @@ The following directory structure is used in this project:
 └── tsconfig.json
 ```
 
+## Tech Stack
+
+Core libraries that this project uses:
+
+- [zod](https://www.npmjs.com/package/zod): User input validation and validation schemas
+- [jest](https://www.npmjs.com/package/jest): Unit testing (alternatively: [vitest](https://www.npmjs.com/package/vitest))
+- [pino](https://www.npmjs.com/package/pino): low overhead logging
+- integration and regression testing: a subset of [cypress](https://www.npmjs.com/package/cypress), [puppeteer](https://www.npmjs.com/package/puppeteer)
+- if next-fetch is not enough: [axios](https://www.npmjs.com/package/axios)
+- if we need a dedicated auth library: [next-auth](https://www.npmjs.com/package/next-auth) or [passport](https://www.npmjs.com/package/passport)
+
 ## Remarks
 
 ### Google Fonts

@@ -1,4 +1,4 @@
-.PHONY: prerequisites install run lint build clean purge
+.PHONY: prerequisites install run lint build start clean purge
 
 # This Makefile should provide you with a simple way to get your dev
 # environment up and running. It will install all the dependencies
@@ -11,6 +11,7 @@ prerequisites:
 		switch between node versions (e.g. if other projects of yours use node<20)"
 
 install:
+	pnpm run preinstall
 	pnpm i
 
 run:
@@ -21,6 +22,9 @@ lint:
 
 build:
 	pnpm run build
+
+start:
+	pnpm run start
 
 clean:
 	rm -rf dist

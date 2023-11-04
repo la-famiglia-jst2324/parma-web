@@ -19,7 +19,6 @@ jobs:
   prod-deployment:
     name: Upload Package
     if: startsWith(github.ref, 'refs/tags/')
-    needs: build
     runs-on: ubuntu-latest
     steps:
       - name: Checkout

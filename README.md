@@ -10,7 +10,7 @@ The following steps will get you started with the project.
 
    - Configure GitHub via an ssh key. Key based authenticated is highly encouraged. See [GitHub Docs](https://docs.github.com/en/github/authenticating-to-github/connecting-to-github-with-ssh) for more information.
    - Please make sure to have an GPG key configured for GitHub. See [GitHub Docs](https://docs.github.com/en/authentication/managing-commit-signature-verification/adding-a-gpg-key-to-your-github-account) for more information.
-   - Install node `v20` via node version manager (`nvm`) to not cause conflicts with other projects of yours.
+   - Install node `v18` via node version manager (`nvm`) to not cause conflicts with other projects of yours.
 
 2. **Clone the repository**
 
@@ -46,6 +46,29 @@ The following steps will get you started with the project.
    ```
 
    Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+
+## PR workflow
+
+1. **Create a new branch**
+   [linear.app](linear.app) offers a button to copy branch names from tickets.
+   In case there is no ticket, please use feel free to use an arbitrary name or create a ticket.
+   GitHub CI doesn't care about the branch name, only the PR title matters.
+
+   ```bash
+   # format: e.g. robinholzingr/meta-1-create-archtecture-drafts-diagrams-list-of-key-priorities
+   git checkout -b <branch-name>
+   ```
+
+2. Open a PR and use a [conventional commit](https://www.conventionalcommits.org/en/v1.0.0/) PR title.
+
+3. Wait for CI pipeline to pass and if you are happy with your changes request a review.
+
+4. Merge the PR (using the "Squash and merge" option) and delete the branch.
+   Pay attention to include co-authors if anyone else contributed to the PR.
+
+5. If you want to release a new version to production, create a new release on GitHub.
+   The release version will be automatically derived from the PR titles
+   (breaking changes yield new major versions, new features yield new minor versionss).
 
 ## Directory Structure
 
@@ -84,6 +107,22 @@ Core libraries that this project uses:
 - integration and regression testing: a subset of [cypress](https://www.npmjs.com/package/cypress), [puppeteer](https://www.npmjs.com/package/puppeteer)
 - if next-fetch is not enough: [axios](https://www.npmjs.com/package/axios)
 - if we need a dedicated auth library: [next-auth](https://www.npmjs.com/package/next-auth) or [passport](https://www.npmjs.com/package/passport)
+
+## Deployment
+
+This project is deployed on [Vercel](https://vercel.com/) in @robinholzi's peronsal account.
+As the hobby (free) plan enough for now, we will stick to it for the time being.
+
+Every commit to a PR branch will trigger a deployment preview.
+Every new version released on GitHub will trigger a production deployment.
+
+In the future we might add a staging deployment that is deployed to on commit to the `main` branch.
+Reach out to @robinholzi if you can benefit from this.
+
+Maybe it would make sense to create a dedicated la-famiglia mail box to which
+at least the meta team has access to.
+
+We might switch to something else after choosing a full-stack framework like `Firebase`, `Supabase` or `AWS Amplify`.
 
 ## Remarks
 

@@ -1,0 +1,9 @@
+{
+    "buildCommand": "next build",
+    "installCommand": "pnpm install",
+    "git": {
+        "deploymentEnabled": {
+            "main": false
+        }
+    }
+  }

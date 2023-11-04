@@ -1,0 +1,54 @@
+name: CI
+permissions: write-all
+on:
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}-${{ github.event.comment.body }}
+  cancel-in-progress: true
+
+jobs:
+  pre-commit-checks:
+    name: Pre-commit Checks
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    if: github.event_name == 'pull_request'
+    steps:
+      - uses: actions/checkout@v4
+      - name: micromamba installation
+        uses: mamba-org/setup-micromamba@54d4d5980e1a4aa7cdc8b050cf2d19b7e262ce18
+      - name: add micromamba to GITHUB_PATH
+        run: echo "${HOME}/micromamba-bin" >> "$GITHUB_PATH"
+      - name: pnpm installation
+        uses: pnpm/action-setup@v2.4.0
+        with:
+          version: 8
+      - name: Set up node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+      - name: dependency installation
+        run: pnpm install --frozen-lockfile
+      - name: Run pre-commit checks
+        uses: pre-commit/action@v3.0.0
+        env:
+          PRE_COMMIT_USE_MICROMAMBA: 1
+
+  ci:
+    name: CI
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    if: github.event_name == 'pull_request'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v2.4.0
+        with:
+          version: 8
+      - name: node.js setup
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+      - name: dependency installation
+        run: pnpm install --frozen-lockfile
+      - name: Run CI
+        run: echo "TODO add test setup"

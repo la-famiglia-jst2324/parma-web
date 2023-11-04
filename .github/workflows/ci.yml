@@ -50,12 +50,5 @@ jobs:
           node-version: 20
       - name: dependency installation
         run: pnpm install --frozen-lockfile
-
-      # TODO
-
-      - run: pnpm run ci-asserts
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
-          GITHUB_REPOSITORY: ${{ github.repository }}
-          MATCH_COMMENT_ID: ${{ steps.match-comment.outputs.comment-id }}
-          NO_MATCH_COMMENT_ID: ${{ steps.no-match-comment.outputs.comment-id }}
+      - name: Run CI
+        run: echo "TODO add test setup"

@@ -4,35 +4,82 @@ ParmaAI webstack including frontend and REST API backend.
 
 ## Getting Started
 
-First, run the development server:
+The following steps will get you started with the project.
+
+1. **Pre-requisites**: to be able to contribute to JST in this repository, make sure to comply with the following prerequisites.
+
+   - Configure GitHub via an ssh key. Key based authenticated is highly encouraged. See [GitHub Docs](https://docs.github.com/en/github/authenticating-to-github/connecting-to-github-with-ssh) for more information.
+   - Please make sure to have an GPG key configured for GitHub. See [GitHub Docs](https://docs.github.com/en/authentication/managing-commit-signature-verification/adding-a-gpg-key-to-your-github-account) for more information.
+   - Install node `v20` via node version manager (`nvm`) to not cause conflicts with other projects of yours.
+
+2. **Clone the repository**
+
+   ```bash
+   git clone git@github.com:la-famiglia-jst2324/parma-web.git
+   ```
+
+3. **Precommit & pnpm setup**:
+
+   ```bash
+   make install
+   ```
+
+4. **Start the development server**
+
+   ```bash
+   make dev
+   ```
+
+   **Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.**
+
+5. Optional: Running parts of the pre-commit pipeline manually
+
+   ```bash
+   make lint  # runs linting
+   make build  # builds the project
+   ```
+
+6. Optional: Run a production build (used in the CI pipeline)
+
+   ```bash
+   make start
+   ```
+
+   Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+
+## Directory Structure
+
+The following directory structure is used in this project:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+.
+├── node_modules: temporary directory for node dependencies
+├── public
+│   ├── next.svg
+│   └── vercel.svg
+├── src: Source code directory for both backend and frontend
+│   ├── api: Backend API
+│   ├── app: Frontend app
+│   ├── components: Reusable components
+│   └── types: Typescript types
+├── tests: Tests directory
+├── Makefile: Recipes for easy simplified setup and local development
+├── README.md
+├── next-env.d.ts
+├── next.config.js
+├── package.json
+├── pnpm-lock.yaml
+├── postcss.config.js
+├── tailwind.config.ts
+└── tsconfig.json
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Remarks
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Google Fonts
 
 This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
 
-## Learn More
+## Disclaimer
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+In case there are any issues with the initial setup or important architectural decisions/integrations missing, please contact the meta team or @robinholzi directly.

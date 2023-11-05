@@ -43,6 +43,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
+          ref: ${{ github.head_ref }}
           token: ${{ secrets.RH_PAT_FOR_PUSHING }}
       - uses: pnpm/action-setup@v2.4.0
         with:
@@ -64,4 +65,4 @@ jobs:
           git add .
           git diff-index --quiet HEAD || git commit -m "Update code cov badges"
       - name: Push changes
-        run: git push origin ${{ github.head_ref || github.ref_name }}
+        run: git push

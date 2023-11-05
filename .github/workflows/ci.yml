@@ -64,4 +64,4 @@ jobs:
           git add .
           git diff-index --quiet HEAD || git commit -m "Update code cov badges"
       - name: Push changes
-        run: git push origin HEAD
+        run: git push origin ${GITHUB_REF#refs/heads/}

@@ -1,4 +1,4 @@
-.PHONY: prerequisites install dev lint build start clean purge
+.PHONY: prerequisites install dev lint build test start clean purge
 
 # This Makefile should provide you with a simple way to get your dev
 # environment up and running. It will install all the dependencies
@@ -24,6 +24,9 @@ lint:
 
 build:
 	pnpm run build
+
+test: lint
+	pnpm run test
 
 start:
 	pnpm run start

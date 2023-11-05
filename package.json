@@ -9,17 +9,9 @@
     "lint": "next lint",
     "lint:fix": "eslint --fix ./src",
     "preinstall": "npx only-allow pnpm",
-    "test": "jest"
-  },
-  "jest": {
-    "preset": "ts-jest",
-    "testEnvironment": "node",
-    "testMatch": [
-      "**/tests/**/*.test.ts"
-    ],
-    "moduleNameMapper": {
-      "^@/(.*)": "<rootDir>/src/$1"
-    }
+    "test": "jest",
+    "test:ci": "jest --ci --json --coverage --testLocationInResults --outputFile=coverage/report.json",
+    "cypress": "echo 'not set up'"
   },
   "dependencies": {
     "@heroicons/react": "1.0.6",
@@ -32,6 +24,8 @@
   },
   "devDependencies": {
     "@next/eslint-plugin-next": "^14.0.1",
+    "@testing-library/jest-dom": "^6.1.4",
+    "@testing-library/react": "^14.0.0",
     "@types/jest": "^29.5.7",
     "@types/node": "^20.8.10",
     "@types/react": "^18.2.34",
@@ -52,6 +46,7 @@
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-tailwindcss": "^3.13.0",
     "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0",
     "postcss": "^8.4.31",
     "prettier": "^3.0.3",
     "tailwindcss": "^3.3.0",

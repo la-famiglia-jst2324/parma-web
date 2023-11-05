@@ -46,7 +46,13 @@ The following steps will get you started with the project.
    make build  # builds the project
    ```
 
-6. Optional: Run a production build (used in the CI pipeline)
+6. Test your code and code coverage:
+
+   ```bash
+   make test  # runs jest and typescript-coverage-report
+   ```
+
+7. Optional: Run a production build (used in the CI pipeline)
 
    ```bash
    make start

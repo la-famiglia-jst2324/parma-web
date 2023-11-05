@@ -13,8 +13,7 @@ defaults:
 
 jobs:
   prod-deployment:
-    name: Upload Package
-    if: startsWith(github.ref, 'refs/tags/')
+    name: Publish release
     runs-on: ubuntu-latest
     steps:
       - name: Trigger deploy webhook

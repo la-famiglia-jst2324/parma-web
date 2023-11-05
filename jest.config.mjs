@@ -27,8 +27,8 @@ const config = {
       "functions": 90,
       "lines": 90
     }
-  }
-
+  },
+  coverageReporters: ["json-summary"]
 }
 
 export default createJestConfig(config)

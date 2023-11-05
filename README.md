@@ -7,6 +7,8 @@
 
 ParmaAI webstack including frontend and REST API backend.
 
+![Screenshot](./docs/images/landing_page.png)
+
 ## Getting Started
 
 The following steps will get you started with the project.

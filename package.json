@@ -11,6 +11,8 @@
     "preinstall": "npx only-allow pnpm"
   },
   "dependencies": {
+    "@heroicons/react": "1.0.6",
+    "@tremor/react": "^3.10.1",
     "next": "^14.0.1",
     "pino": "^8.16.1",
     "react": "^18",

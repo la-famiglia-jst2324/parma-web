@@ -15,7 +15,6 @@ jobs:
     name: Pre-commit Checks
     runs-on: ubuntu-latest
     timeout-minutes: 30
-    if: github.event_name == 'pull_request'
     steps:
       - uses: actions/checkout@v4
       - name: micromamba installation
@@ -41,7 +40,6 @@ jobs:
     name: CI
     runs-on: ubuntu-latest
     timeout-minutes: 10
-    if: github.event_name == 'pull_request'
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v2.4.0
@@ -53,5 +51,5 @@ jobs:
           node-version: 18
       - name: dependency installation
         run: pnpm install --frozen-lockfile
-      - name: Run CI
-        run: echo "TODO add test setup"
+      - name: Run CI tests
+        run: pnpm run test

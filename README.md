@@ -83,7 +83,7 @@ The following steps will get you started with the project.
 
 5. If you want to release a new version to production, create a new release on GitHub.
    The release version will be automatically derived from the PR titles
-   (breaking changes yield new major versions, new features yield new minor versionss).
+   (breaking changes yield new major versions, new features yield new minor versions).
 
 ## Directory Structure
 

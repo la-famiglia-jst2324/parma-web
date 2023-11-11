@@ -20,6 +20,7 @@ The following steps will get you started with the project.
    - Configure GitHub via an ssh key. Key based authenticated is highly encouraged. See [GitHub Docs](https://docs.github.com/en/github/authenticating-to-github/connecting-to-github-with-ssh) for more information.
    - Please make sure to have an GPG key configured for GitHub. See [GitHub Docs](https://docs.github.com/en/authentication/managing-commit-signature-verification/adding-a-gpg-key-to-your-github-account) for more information.
    - Install node `v18` via node version manager (`nvm`) to not cause conflicts with other projects of yours.
+   - Make sure you have [pnpm](https://pnpm.io/installation) installed.
 
 2. **Clone the repository**
 
@@ -83,7 +84,7 @@ The following steps will get you started with the project.
 
 5. If you want to release a new version to production, create a new release on GitHub.
    The release version will be automatically derived from the PR titles
-   (breaking changes yield new major versions, new features yield new minor versionss).
+   (breaking changes yield new major versions, new features yield new minor versions).
 
 ## Directory Structure
 

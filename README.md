@@ -21,15 +21,41 @@ The following steps will get you started with the project.
    - Please make sure to have an GPG key configured for GitHub. See [GitHub Docs](https://docs.github.com/en/authentication/managing-commit-signature-verification/adding-a-gpg-key-to-your-github-account) for more information.
    - Install node `v18` via node version manager (`nvm`) to not cause conflicts with other projects of yours.
    - Make sure you have [pnpm](https://pnpm.io/installation) installed.
-   - (Windows Users Only) have WSL installed
+   - (Windows Users Only) have WSL installed on your system and use a linux distribution such as Ubuntu
 
 2. **Clone the repository**
+
+   (Windows Users) : Make sure to clone the repository on remote WSL!!
 
    ```bash
    git clone git@github.com:la-famiglia-jst2324/parma-web.git
    ```
 
 3. **Precommit & pnpm setup**:
+
+   ```bash
+   make install
+   ```
+
+   **Skip to 4. if everything worked**
+
+   In case you encounter errors while installing **_pre-commit_**, do _one_ of the following :
+
+   1. Install pre-commit with sudo:
+      ```bash
+      sudo apt install pre-commit
+      pre-commit # check that it has been correctly installed
+      ```
+   2. Install pre-commit using conda :
+      ```bash
+      "${SHELL}" <(curl -L micro.mamba.pm/install.sh)
+      bash
+      micromamba activate
+      micromamba install pre-commit
+      pre-commit # check that it has been correctly installed
+      ```
+
+   _Rerun the command to make sure there are no errors :_
 
    ```bash
    make install

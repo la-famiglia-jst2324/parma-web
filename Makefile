@@ -11,9 +11,9 @@ prerequisites:
 		switch between node versions (e.g. if other projects of yours use node<20)"
 
 install:
-	pre-commit install
 	pnpm run preinstall
 	pnpm i
+	pre-commit install
 
 dev:
 	pnpm run dev

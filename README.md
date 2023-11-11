@@ -21,6 +21,7 @@ The following steps will get you started with the project.
    - Please make sure to have an GPG key configured for GitHub. See [GitHub Docs](https://docs.github.com/en/authentication/managing-commit-signature-verification/adding-a-gpg-key-to-your-github-account) for more information.
    - Install node `v18` via node version manager (`nvm`) to not cause conflicts with other projects of yours.
    - Make sure you have [pnpm](https://pnpm.io/installation) installed.
+   - (Windows Users Only) have WSL installed
 
 2. **Clone the repository**
 

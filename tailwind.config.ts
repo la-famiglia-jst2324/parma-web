@@ -15,7 +15,7 @@ const config: Config = {
     extend: {
       colors: {
         primary: 'var(--primary-color)',
-        secondary: 'var(--seconday-color)',
+        secondary: 'var(--secondary-color)',
         'light-gray': 'var(--light-gray)',
         // light mode
         tremor: {

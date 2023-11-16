@@ -54,6 +54,7 @@ The following steps will get you started with the project.
       micromamba install pre-commit
       pre-commit # check that it has been correctly installed
       ```
+   3. Mac Users: consider using `brew install pre-commit`
 
    _Rerun the command to make sure there are no errors :_
 

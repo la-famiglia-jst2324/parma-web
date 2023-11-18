@@ -23,7 +23,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en">
       <body className={inter.className}>
         <div className="flex flex-row">
-          <div className="sticky left-0 top-0 flex h-screen w-1/4 flex-col bg-primary p-8 md:p-12">
+          <div className="sticky left-0 top-0 flex h-screen w-1/4 flex-col bg-primary">
             <div className="flex grow flex-col overflow-y-auto">
               <div className="mb-12">
                 <Link href="/" className="cursor-pointer text-3xl font-extrabold text-white">

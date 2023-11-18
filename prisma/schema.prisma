@@ -1,0 +1,373 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id          String   @id @default(uuid())
+  name        String
+  role        Role
+  created_at  DateTime @default(now())
+  modified_at DateTime @updatedAt
+
+  // Relation fields
+  addedCompanies                     Company[]                            @relation("UserAddsCompany")
+  ownedBuckets                       Bucket[]                             @relation("UserOwnsBucket")
+  notificationSubscriptions          NotificationSubscription[]           @relation("UserToNotificationSubscription")
+  reportSubscriptions                ReportSubscription[]                 @relation("UserToReportSubscription")
+  companyAttachments                 CompanyAttachment[]                  @relation("UserAttachesToCompany")
+  permissions                        BucketAccess[]
+  userImportantMeasurementPreference UserImportantMeasurementPreference[]
+
+  @@map("user")
+}
+
+model Company {
+  id          String   @id @default(uuid())
+  name        String
+  description String?
+  added_by    String
+  created_at  DateTime @default(now())
+  modified_at DateTime @updatedAt
+
+  // Relation fields
+  user                      User                       @relation("UserAddsCompany", fields: [added_by], references: [id])
+  companyBucketMember       CompanyBucketMembership[]
+  notificationSubscriptions NotificationSubscription[] @relation("CompanyToNotificationSubscription")
+  reportSubscriptions       ReportSubscription[]       @relation("CompanyToReportSubscription")
+  companyAttachments        CompanyAttachment[]        @relation("CompanyAttachment")
+  companyDataSource         CompanyDataSource[]
+  notifications             Notification[]
+  reports                   Report[]
+  sourceMeasurements        SourceMeasurement[]
+
+  @@map("company")
+}
+
+model Bucket {
+  id          String   @id @default(uuid())
+  title       String
+  description String?
+  owner_id    String
+  is_public   Boolean
+  created_at  DateTime @default(now())
+  modified_at DateTime @updatedAt
+
+  // Relation fields
+  user                User                      @relation("UserOwnsBucket", fields: [owner_id], references: [id])
+  companyBucketMember CompanyBucketMembership[]
+  permissions         BucketAccess[]
+
+  @@map("bucket")
+}
+
+model CompanyBucketMembership {
+  company_id  String
+  bucket_id   String
+  created_at  DateTime @default(now())
+  modified_at DateTime @updatedAt
+
+  // Relation fields
+  company Company @relation(fields: [company_id], references: [id])
+  bucket  Bucket  @relation(fields: [bucket_id], references: [id])
+
+  @@id([company_id, bucket_id])
+  @@map("company_bucket_membership")
+}
+
+model NotificationChannel {
+  id           String      @id @default(uuid())
+  entity_id    String
+  entity_type  EntityType
+  channel_type ChannelType
+  destination  String
+  created_at   DateTime    @default(now())
+  modified_at  DateTime    @updatedAt
+
+  // Relations
+  notificationSubscriptions NotificationSubscription[]
+  reportSubscriptions       ReportSubscription[]
+
+  @@map("notification_channel")
+}
+
+model NotificationSubscription {
+  user_id     String
+  company_id  String
+  channel_id  String
+  created_at  DateTime @default(now())
+  modified_at DateTime @updatedAt
+
+  // Relation fields
+  user    User                @relation("UserToNotificationSubscription", fields: [user_id], references: [id])
+  company Company             @relation("CompanyToNotificationSubscription", fields: [company_id], references: [id])
+  channel NotificationChannel @relation(fields: [channel_id], references: [id])
+
+  @@id([user_id, company_id, channel_id])
+  @@map("notification_subscription")
+}
+
+model ReportSubscription {
+  user_id     String
+  company_id  String
+  channel_id  String
+  created_at  DateTime @default(now())
+  modified_at DateTime @updatedAt
+
+  // Relation fields
+  user    User                @relation("UserToReportSubscription", fields: [user_id], references: [id])
+  company Company             @relation("CompanyToReportSubscription", fields: [company_id], references: [id])
+  channel NotificationChannel @relation(fields: [channel_id], references: [id])
+
+  @@id([user_id, company_id, channel_id])
+  @@map("report_subscription")
+}
+
+model CompanyAttachment {
+  id          String   @id @default(uuid())
+  company_id  String
+  file_type   FileType
+  file_url    String
+  user_id     String
+  title       String
+  created_at  DateTime @default(now())
+  modified_at DateTime @updatedAt
+
+  // Relations
+  user    User    @relation("UserAttachesToCompany", fields: [user_id], references: [id])
+  company Company @relation("CompanyAttachment", fields: [company_id], references: [id])
+
+  @@map("company_attachment")
+}
+
+model DataSource {
+  id                String       @id @default(uuid())
+  source_name       String
+  is_active         Boolean
+  default_frequency Frequency
+  health_status     HealthStatus
+  description       String?
+  created_at        DateTime     @default(now())
+  modified_at       DateTime     @updatedAt
+
+  // Relations
+  companyDataSource                  CompanyDataSource[]
+  notifications                      Notification[]
+  sourceMeasurements                 SourceMeasurement[]
+  userImportantMeasurementPreference UserImportantMeasurementPreference[]
+
+  @@map("data_source")
+}
+
+model CompanyDataSource {
+  data_source_id        String
+  company_id            String
+  frequency             Frequency
+  is_data_source_active Boolean
+  health_status         HealthStatus
+  created_at            DateTime     @default(now())
+  modified_at           DateTime     @updatedAt
+
+  // Relations
+  dataSources DataSource @relation(fields: [data_source_id], references: [id])
+  companies   Company    @relation(fields: [company_id], references: [id])
+
+  @@id([data_source_id, company_id])
+  @@map("company_data_source")
+}
+
+model BucketAccess {
+  bucket_id   String
+  invitee_id  String
+  permission  BucketPermission
+  created_at  DateTime         @default(now())
+  modified_at DateTime         @updatedAt
+
+  // Relations
+  bucket Bucket @relation(fields: [bucket_id], references: [id])
+  user   User   @relation(fields: [invitee_id], references: [id])
+
+  @@id([bucket_id, invitee_id])
+  @@map("bucket_access")
+}
+
+model Notification {
+  id             String   @id @default(uuid())
+  message        String
+  company_id     String
+  data_source_id String
+  created_at     DateTime @default(now())
+  modified_at    DateTime @updatedAt
+
+  // Relations
+  company    Company    @relation(fields: [company_id], references: [id])
+  dataSource DataSource @relation(fields: [data_source_id], references: [id])
+
+  @@map("notification")
+}
+
+model SourceMeasurement {
+  id               String   @id @default(uuid())
+  source_module_id String
+  type             String
+  company_id       String
+  measurement_name String
+  created_at       DateTime @default(now())
+  modified_at      DateTime @updatedAt
+
+  // Relations
+  dataSource             DataSource              @relation(fields: [source_module_id], references: [id])
+  company                Company                 @relation(fields: [company_id], references: [id])
+  measurementTextValues  MeasurementTextValue[]
+  measurementIntValues   MeasurementIntValue[]
+  measurementFloatValues MeasurementFloatValue[]
+  measurementCommentValues MeasurementCommentValue[]
+  measurementParagraphValues MeasurementParagraphValue[]
+
+  @@map("source_measurement")
+}
+
+model MeasurementTextValue {
+  id                    String   @id @default(uuid())
+  source_measurement_id String
+  value                 String
+  created_at            DateTime @default(now())
+  modified_at           DateTime @updatedAt
+
+  // Relations
+  sourceMeasurement SourceMeasurement @relation(fields: [source_measurement_id], references: [id])
+
+  @@map("measurement_text_value")
+}
+
+model MeasurementIntValue {
+  id                    String   @id @default(uuid())
+  source_measurement_id String
+  value                 Int
+  created_at            DateTime @default(now())
+  modified_at           DateTime @updatedAt
+
+  // Relations
+  sourceMeasurement SourceMeasurement @relation(fields: [source_measurement_id], references: [id])
+
+  @@map("measurement_int_value")
+}
+
+model MeasurementFloatValue {
+  id                    String   @id @default(uuid())
+  source_measurement_id String
+  value                 Float
+  created_at            DateTime @default(now())
+  modified_at           DateTime @updatedAt
+
+  // Relations
+  sourceMeasurement SourceMeasurement @relation(fields: [source_measurement_id], references: [id])
+
+  @@map("measurement_float_value")
+}
+
+model MeasurementCommentValue {
+  id                    String   @id @default(uuid())
+  source_measurement_id String
+  value                 Float
+  created_at            DateTime @default(now())
+  modified_at           DateTime @updatedAt
+
+  // Relations
+  sourceMeasurement SourceMeasurement @relation(fields: [source_measurement_id], references: [id])
+
+  @@map("measurement_comment_value")
+}
+
+model MeasurementParagraphValue {
+  id                    String   @id @default(uuid())
+  source_measurement_id String
+  value                 Float
+  created_at            DateTime @default(now())
+  modified_at           DateTime @updatedAt
+
+  // Relations
+  sourceMeasurement SourceMeasurement @relation(fields: [source_measurement_id], references: [id])
+
+  @@map("measurement_paragraph_value")
+}
+
+model Report {
+  id              String   @id @default(uuid())
+  company_id      String
+  name            String
+  report_file_url String
+  created_at      DateTime @default(now())
+  modified_at     DateTime @updatedAt
+
+  // Relations
+  company Company @relation(fields: [company_id], references: [id])
+
+  @@map("report")
+}
+
+model UserImportantMeasurementPreference {
+  data_source_id       String
+  user_id              String
+  important_field_name String
+  created_at           DateTime @default(now())
+  modified_at          DateTime @updatedAt
+
+  // Relations
+  dataSource DataSource @relation(fields: [data_source_id], references: [id])
+  user       User       @relation(fields: [user_id], references: [id])
+
+  @@id([data_source_id, user_id])
+  @@map("user_important_measurement_preference")
+}
+
+// model NewsSubscription {
+//   id String @id @default(uuid())
+//   user_id String
+//   company_id String
+
+//   // relations
+
+//   @@map("news_subscription")
+// }
+
+// ENUMS
+enum Role {
+  USER
+  ADMIN
+}
+
+enum EntityType {
+  NOTIFICATION
+  REPORT
+}
+
+enum ChannelType {
+  EMAIL
+  SLACK
+}
+
+enum FileType {
+  TEXT
+  JPG
+  PDF
+}
+
+enum HealthStatus {
+  UP
+  DOWN
+}
+
+enum Frequency {
+  DAILY
+  WEEKLY
+}
+
+enum BucketPermission {
+  Viewer
+  Moderator
+}

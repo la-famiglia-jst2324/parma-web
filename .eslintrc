@@ -15,7 +15,7 @@
     "sourceType": "module",
     "ecmaVersion": 2020
   },
-  "plugins": ["@typescript-eslint", "prettier"],
+  "plugins": ["@typescript-eslint", "prettier", "tailwindcss"],
   "rules": {
     "import/order": "error",
     "no-use-before-define": "off",
@@ -24,6 +24,8 @@
     "@typescript-eslint/no-use-before-define": "error",
     "n/no-callback-literal": "off",
     "@typescript-eslint/consistent-type-imports": ["error", { "prefer": "type-imports" }],
+    "react/no-unescaped-entities": "off",
+    "@next/next/no-page-custom-font": "off",
     "@typescript-eslint/no-floating-promises": "error",
     "prettier/prettier": [
       "error",

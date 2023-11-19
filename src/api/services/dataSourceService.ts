@@ -6,7 +6,7 @@ const createDataSource = async (data: {
   is_active: boolean;
   default_frequency: Frequency;
   health_status: HealthStatus;
-
+  description?: string
 }) => {
   try {
     return await prisma.dataSource.create({
@@ -15,6 +15,7 @@ const createDataSource = async (data: {
         is_active: data.is_active,
         default_frequency: data.default_frequency,
         health_status: data.health_status,
+        description: data.description,
       },
     });
   } catch (error) {
@@ -27,12 +28,12 @@ const getDataSourceByID = async (id: string) => {
   try {
     const datasource = await prisma.dataSource.findUnique({
       where: { id },
-      include: {
-        companyDataSource: true,
-        notifications: true,
-        sourceMeasurements: true,
-        userImportantMeasurementPreference: true,
-      },
+      // include: {
+      //   companyDataSource: true,
+      //   notifications: true,
+      //   sourceMeasurements: true,
+      //   userImportantMeasurementPreference: true,
+      // },
     });
     if (datasource) {
       return datasource;
@@ -75,8 +76,9 @@ const getAllDataSources = async () => {
 const updateDataSource = async (id: string, data: {
   source_name?: string;
   isActive?: boolean;
-  health_status?: HealthStatus
+  health_status?: HealthStatus;
   frequency?: Frequency;
+  description?: string
 }) => {
   try {
     return await prisma.dataSource.update({
@@ -90,7 +92,6 @@ const updateDataSource = async (id: string, data: {
     throw error;
   }
 };
-
 
 // need also delete all data of this datasource???? 
 const deleteDataSource = async (id: string) => {

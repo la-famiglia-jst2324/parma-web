@@ -1,11 +1,11 @@
 import { prisma } from '../prismaClient';
 
 // check if the company already exists??? use name 
-const createCompany = async function createCompany(data: {
+const createCompany = async (data: {
   name: string;
   description?: string;
   added_by: string;
-}) {
+}) => {
   try {
     return await prisma.company.create({
       data: {
@@ -13,6 +13,7 @@ const createCompany = async function createCompany(data: {
         description: data.description,
         added_by: data.added_by,   // created_at and modified_at automatically
       },
+
     });
   } catch (error) {
     console.error('Error creating company:', error);
@@ -26,7 +27,7 @@ const getCompanyByID = async (id: string) => {
       where: { id },
     });
     if (company) {
-      return company; //find the company by id 
+      return company;
     } else {
       throw new Error(`Company with ID ${id} not found.`);
     }
@@ -36,21 +37,21 @@ const getCompanyByID = async (id: string) => {
   }
 };
 
-// const getCompanyByName = async (name: string) => {
-//   try {
-//     const company = await prisma.Company.findUnique({
-//       where: { name },
-//     });
-//     if (company) {
-//       return company; //find the company 
-//     } else {
-//       throw new Error(`Company with name ${name} not found.`);
-//     }
-//   } catch (error) {
-//     console.error('Error finding company by name:', error);
-//     throw error;
-//   }
-// };
+const getCompanyByName = async (name: string) => {
+  try {
+    const company = await prisma.company.findMany({
+      where: { name },
+    });
+    if (company) {
+      return company;
+    } else {
+      throw new Error(`Company with name ${name} not found.`);
+    }
+  } catch (error) {
+    console.error('Error finding company by name:', error);
+    throw error;
+  }
+};
 
 const getAllCompanies = async () => {
   try {
@@ -75,7 +76,7 @@ const updateCompany = async (id: string, data: {
   });
 }
 
-//NEED: FR-06 when deleting a company from the system, should also delete its data (notification and reports
+//NEED: FR-06 when deleting a company from the system, should also delete its data 
 const deleteCompany = async (id: string) => {
   try {
     const result = await prisma.$transaction(async (prisma) => {
@@ -101,6 +102,7 @@ const deleteCompany = async (id: string) => {
 export default {
   createCompany,
   getCompanyByID,
+  getCompanyByName,
   getAllCompanies,
   updateCompany,
   deleteCompany,

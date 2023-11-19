@@ -59,11 +59,8 @@ const deleteNotificationSubscription = async (user_id: string, company_id: strin
   }
 }
 
-
 export default {
   createNotificationSubscription,
   getNotificationSubscription,
   deleteNotificationSubscription,
-
-
 };

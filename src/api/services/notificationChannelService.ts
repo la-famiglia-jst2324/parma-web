@@ -22,13 +22,17 @@ const createNotificationChannel = async (data: {
   }
 }
 
-const getNotificationChannelById = async (channel_id: string) => {
+const getNotificationChannelById = async (id: string) => {
   try {
     const notificationChannel = await prisma.notificationChannel.findUnique({
-      where: { id: channel_id },
+      where: { id },
+      include: {
+        notificationSubscriptions: true,
+        reportSubscriptions: true,
+      },
     });
     if (!notificationChannel) {
-      throw new Error(`NotificationChannel with ID ${channel_id} not found`);
+      throw new Error(`NotificationChannel with ID ${id} not found`);
     }
     return notificationChannel;
   } catch (error) {
@@ -37,7 +41,7 @@ const getNotificationChannelById = async (channel_id: string) => {
   }
 }
 
-const updateNotificationChannel = async (channel_id: string, data: {
+const updateNotificationChannel = async (id: string, data: {
   entity_id?: string;
   entity_type?: EntityType;
   channel_type?: ChannelType;
@@ -45,18 +49,18 @@ const updateNotificationChannel = async (channel_id: string, data: {
 }) => {
   try {
     return await prisma.notificationChannel.update({
-      where: { id: channel_id },
-      data: data,
+      where: { id },
+      data: { ...data },
     });
   } catch (error) {
     console.error('Error updating notification channel:', error);
     throw new Error('Unable to update notification channel');
   }
 }
-const deleteNotificationChannel = async (channel_id: string) => {
+const deleteNotificationChannel = async (id: string) => {
   try {
     return await prisma.notificationChannel.delete({
-      where: { id: channel_id },
+      where: { id },
     });
   } catch (error) {
     console.error('Error deleting notification channel:', error);
@@ -69,6 +73,4 @@ export default {
   getNotificationChannelById,
   updateNotificationChannel,
   deleteNotificationChannel,
-
-
 };

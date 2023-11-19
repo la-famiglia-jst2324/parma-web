@@ -35,6 +35,7 @@ const getReportById = async (id: string) => {
 }
 
 const updateReport = async (id: string, data: {
+  company_id?: string;
   name?: string;
   report_file_url?: string;
 }) => {

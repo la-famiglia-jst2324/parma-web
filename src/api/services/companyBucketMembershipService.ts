@@ -42,8 +42,8 @@ const getCompaniesByBucketId = async (bucketId: string) => {
         bucket_id: bucketId,
       },
       include: {
-        company: true,  //include来获取每个成员身份对应的公司信息。
-        //然后映射这些结果，只返回公司数据，而不是整个 CompanyBucketMembership 对象
+        company: true,
+        //map list company，not CompanyBucketMembership  
       },
     });
     if (memebership) {
@@ -78,6 +78,28 @@ const getBucketsByCompanyId = async (companyId: string) => {
     throw error;
   }
 };
+
+const getCompanyBucketByID = async (bucketId: string, companyId: string) => {
+  try {
+    const companyBucket = await prisma.companyBucketMembership.findUnique({
+      where: {
+        company_id_bucket_id: {
+          bucket_id: bucketId,
+          company_id: companyId,
+        },
+      },
+    });
+    if (companyBucket) {
+      return companyBucket;
+    } else {
+      throw new Error(`not found.`);
+    }
+  } catch (error) {
+    console.error('Error getting by ID:', error);
+    throw error;
+  }
+};
+
 //FR-13 user remove a company from a bucket
 const removeCompanyFromBucket = async (companyId: string, bucketId: string) => {
   try {
@@ -100,5 +122,6 @@ export default {
   addCompanyToBucket,
   getCompaniesByBucketId,
   getBucketsByCompanyId,
+  getCompanyBucketByID,
   removeCompanyFromBucket,
 };

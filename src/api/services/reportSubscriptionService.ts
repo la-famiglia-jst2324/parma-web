@@ -60,6 +60,4 @@ export default {
   createReportSubscription,
   getReportSubscription,
   deleteReportSubscription,
-
-
 };

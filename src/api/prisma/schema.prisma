@@ -43,6 +43,7 @@ model Company {
   companyDataSource         CompanyDataSource[]
   notifications             Notification[]
   reports                   Report[]
+  sourceMeasurements        SourceMeasurement[]
 
   @@map("company")
 }
@@ -87,7 +88,7 @@ model NotificationChannel {
   created_at   DateTime    @default(now())
   modified_at  DateTime    @updatedAt
 
-  // Assuming a one-to-many relationship with NotificationSubscription
+  // Relations
   notificationSubscriptions NotificationSubscription[]
   reportSubscriptions       ReportSubscription[]
 
@@ -146,9 +147,10 @@ model CompanyAttachment {
 model DataSource {
   id                String       @id @default(uuid())
   source_name       String
-  is_active         Boolean // 0 or 1 
+  is_active         Boolean
   default_frequency Frequency
   health_status     HealthStatus
+  description       String?
   created_at        DateTime     @default(now())
   modified_at       DateTime     @updatedAt
 
@@ -212,14 +214,19 @@ model SourceMeasurement {
   id               String   @id @default(uuid())
   source_module_id String
   type             String
+  company_id       String
   measurement_name String
   created_at       DateTime @default(now())
   modified_at      DateTime @updatedAt
 
   // Relations
-  dataSource            DataSource                @relation(fields: [source_module_id], references: [id])
-  measurementTextValues MeasurementTextValue[]
-  measurementIntValues  MeasurementNumericValue[]
+  dataSource             DataSource              @relation(fields: [source_module_id], references: [id])
+  company                Company                 @relation(fields: [company_id], references: [id])
+  measurementTextValues  MeasurementTextValue[]
+  measurementIntValues   MeasurementIntValue[]
+  measurementFloatValues MeasurementFloatValue[]
+  measurementCommmentValues MeasurementCommentValue[]
+  measurementParagraphValues MeasurementParagraphValue[]
 
   @@map("source_measurement")
 }
@@ -237,7 +244,20 @@ model MeasurementTextValue {
   @@map("measurement_text_value")
 }
 
-model MeasurementNumericValue {
+model MeasurementIntValue {
+  id                    String   @id @default(uuid())
+  source_measurement_id String
+  value                 Int
+  created_at            DateTime @default(now())
+  modified_at           DateTime @updatedAt
+
+  // Relations
+  sourceMeasurement SourceMeasurement @relation(fields: [source_measurement_id], references: [id])
+
+  @@map("measurement_int_value")
+}
+
+model MeasurementFloatValue {
   id                    String   @id @default(uuid())
   source_measurement_id String
   value                 Float
@@ -247,14 +267,42 @@ model MeasurementNumericValue {
   // Relations
   sourceMeasurement SourceMeasurement @relation(fields: [source_measurement_id], references: [id])
 
-  @@map("measurement_numeric_value")
+  @@map("measurement_float_value")
+}
+
+model MeasurementCommentValue {
+  id                    String   @id @default(uuid())
+  source_measurement_id String
+  value                 Float
+  created_at            DateTime @default(now())
+  modified_at           DateTime @updatedAt
+
+  // Relations
+  sourceMeasurement SourceMeasurement @relation(fields: [source_measurement_id], references: [id])
+
+  @@map("measurement_comment_value")
+}
+
+model MeasurementParagraphValue {
+  id                    String   @id @default(uuid())
+  source_measurement_id String
+  value                 Float
+  created_at            DateTime @default(now())
+  modified_at           DateTime @updatedAt
+
+  // Relations
+  sourceMeasurement SourceMeasurement @relation(fields: [source_measurement_id], references: [id])
+
+  @@map("measurement_paragraph_value")
 }
 
 model Report {
-  id              String @id @default(uuid())
+  id              String   @id @default(uuid())
   company_id      String
   name            String
   report_file_url String
+  created_at      DateTime @default(now())
+  modified_at     DateTime @updatedAt
 
   // Relations
   company Company @relation(fields: [company_id], references: [id])
@@ -266,6 +314,8 @@ model UserImportantMeasurementPreference {
   data_source_id       String
   user_id              String
   important_field_name String
+  created_at           DateTime @default(now())
+  modified_at          DateTime @updatedAt
 
   // Relations
   dataSource DataSource @relation(fields: [data_source_id], references: [id])

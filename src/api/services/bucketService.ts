@@ -29,6 +29,7 @@ const getBucketById = async (id: string) => {
       include: {
         user: true,
         companyBucketMember: true,
+        permissions: true,
       },
     });
     if (!bucket) {
@@ -60,7 +61,7 @@ const getBucketByName = async (title: string) => {
 };
 
 
-async function getAllBuckets() {
+const getAllBuckets = async () => {
   try {
     return await prisma.bucket.findMany();
   } catch (error) {
@@ -84,14 +85,12 @@ const getOwnBuckets = async (ownerId: string) => {
   }
 };
 
-// difference between Moderator and Viewer (all invited？ )
-
-
-// who? only the Bucket creator?  onwer cant be modified? 
+// who? only the Bucket creator?  owner_id can be modified? 
 const updateBucket = async (id: string, data: {
   title?: string;
   description?: string;
   is_public?: boolean;
+  owner_id?: string;
 }) => {
   try {
     return await prisma.bucket.update({
@@ -105,7 +104,6 @@ const updateBucket = async (id: string, data: {
     throw new Error('Unable to update bucket');
   }
 };
-
 
 const deleteBucket = async (id: string) => {
   try {

@@ -62,5 +62,4 @@ export default {
   getNotificationById,
   updateNotification,
   deleteNotification,
-
 };

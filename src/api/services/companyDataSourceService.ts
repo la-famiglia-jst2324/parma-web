@@ -2,13 +2,13 @@ import { Frequency, HealthStatus } from '@prisma/client';
 import { prisma } from '../prismaClient';
 // FR-04 Users add/edit/remove data sources for a company 
 // add Datasource To Company 
-async function createCompanyDataSource(data: {
+const createCompanyDataSource = async (data: {
   data_source_id: string;
   company_id: string;
   frequency: Frequency;
   is_data_source_active: boolean;
   health_status: HealthStatus;
-}) {
+}) => {
   try {
     // check if the data source already in the company
     const existingMembership = await prisma.companyDataSource.findUnique({
@@ -38,7 +38,7 @@ async function createCompanyDataSource(data: {
   }
 }
 
-async function getDataSourcesByCompanyId(companyId: string) {
+const getDataSourcesByCompanyId = async (companyId: string) => {
   try {
     const memebership = await prisma.companyDataSource.findMany({
       where: {
@@ -49,6 +49,7 @@ async function getDataSourcesByCompanyId(companyId: string) {
       },
     });
     if (memebership) {
+      //list data sources 
       return memebership.map(membership => membership.dataSources);
     } else {
       throw new Error(`company${companyId} does not have any data sources.`);

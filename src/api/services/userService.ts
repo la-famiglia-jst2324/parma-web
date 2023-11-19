@@ -24,10 +24,10 @@ const getUserById = async (id: string) => {
     const user = await prisma.user.findUnique({
       where: { id },
       include: {
-        addedCompanies: true,
         ownedBuckets: true,
         notificationSubscriptions: true,
         reportSubscriptions: true,
+        permissions: true,
       },
     });
     if (!user) {
@@ -49,8 +49,7 @@ const getAllUsers = async () => {
     throw error;
   }
 };
-
-
+// who can update
 const updateUser = async (id: string, data: {
   name?: string;
   role?: Role;
@@ -60,7 +59,6 @@ const updateUser = async (id: string, data: {
       where: { id },
       data: {
         ...data,
-
       },
     });
     return user;
@@ -70,7 +68,7 @@ const updateUser = async (id: string, data: {
   }
 }
 
-// also delete his own buckets and subscriptions?
+//???also delete his own buckets, attachments,subscriptions,permissions,userImportantMeasurementPreference?
 const deleteUser = async (id: string) => {
   try {
     const user = await prisma.user.delete({

@@ -29,14 +29,11 @@ export const authLogin = async ({ provider }: { provider: 'google' | 'email' }) 
       // This gives you a Google Access Token. You can use it to access the Google API.
       const credential = GoogleAuthProvider.credentialFromResult(result)
       console.log(credential)
+      // TODO: we might need this in the future
       // const token = credential.accessToken;
       // const user = result.user;
     })
     .catch((error) => {
-      // const errorCode = error.code;
-      // const errorMessage = error.message;
-      // const email = error.customData.email;
-      // const credential = GoogleAuthProvider.credentialFromError(error);
       console.log(error)
     })
 }

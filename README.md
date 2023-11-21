@@ -42,11 +42,14 @@ The following steps will get you started with the project.
    In case you encounter errors while installing **_pre-commit_**, do _one_ of the following :
 
    1. Install pre-commit with sudo:
+
       ```bash
       sudo apt install pre-commit
       pre-commit # check that it has been correctly installed
       ```
-   2. Install pre-commit using conda :
+
+   2. Install pre-commit using conda
+
       ```bash
       "${SHELL}" <(curl -L micro.mamba.pm/install.sh)
       bash
@@ -54,6 +57,7 @@ The following steps will get you started with the project.
       micromamba install pre-commit
       pre-commit # check that it has been correctly installed
       ```
+
    3. Mac Users: consider using `brew install pre-commit`
 
    _Rerun the command to make sure there are no errors :_
@@ -128,6 +132,8 @@ The following directory structure is used in this project:
 │   ├── api: Backend API
 │   ├── app: Frontend app
 │   ├── components: Reusable components
+│   ├── contexts: Frontend context providers
+│   ├── lib: generic / non ui functions
 │   └── types: Typescript types
 ├── tests: Tests directory
 ├── Makefile: Recipes for easy simplified setup and local development

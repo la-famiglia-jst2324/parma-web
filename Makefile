@@ -11,9 +11,18 @@ prerequisites:
 		switch between node versions (e.g. if other projects of yours use node<20)"
 
 install:
+	npm install -g firebase-tools
 	pnpm run preinstall
 	pnpm i
 	pre-commit install
+
+setup:
+	firebase login
+
+	# select: frameworks, firestore, functions, hosting (configure files ...), Storage,
+	# Emulators: Authentication Emulator, Functions Emulator, Firestore Emulator,
+	# Hosting Emulator, Storage Emulator
+	firebase init
 
 dev:
 	pnpm run dev

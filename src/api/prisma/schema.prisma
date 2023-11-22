@@ -8,7 +8,7 @@ generator client {
 }
 
 model User {
-  id         String   @id @default(uuid())
+  id         Int      @id @default(autoincrement())
   name       String
   role       Role
   createdAt  DateTime @default(now()) @map("created_at")
@@ -28,10 +28,10 @@ model User {
 }
 
 model Company {
-  id          String   @id @default(uuid())
+  id          Int      @id @default(autoincrement())
   name        String
   description String?
-  addedBy     String   @map("added_by")
+  addedBy     Int      @map("added_by")
   createdAt   DateTime @default(now()) @map("created_at")
   modifiedAt  DateTime @updatedAt @map("modified_at")
 
@@ -51,10 +51,10 @@ model Company {
 }
 
 model Bucket {
-  id          String   @id @default(uuid())
+  id          Int      @id @default(autoincrement())
   title       String
   description String?
-  ownerId     String   @map("owner_id")
+  ownerId     Int      @map("owner_id")
   isPublic    Boolean  @map("is_public")
   createdAt   DateTime @default(now()) @map("created_at")
   modifiedAt  DateTime @updatedAt @map("modified_at")
@@ -68,8 +68,8 @@ model Bucket {
 }
 
 model CompanyBucketMembership {
-  companyId  String   @map("company_id")
-  bucketId   String   @map("bucket_id")
+  companyId  Int      @map("company_id")
+  bucketId   Int      @map("bucket_id")
   createdAt  DateTime @default(now()) @map("created_at")
   modifiedAt DateTime @updatedAt @map("modified_at")
 
@@ -82,7 +82,7 @@ model CompanyBucketMembership {
 }
 
 model NotificationChannel {
-  id          String      @id @default(uuid())
+  id          Int         @id @default(autoincrement())
   entityId    String      @map("entity_id")
   entityType  EntityType  @map("entity_type")
   channelType ChannelType @map("channel_type")
@@ -98,9 +98,9 @@ model NotificationChannel {
 }
 
 model NotificationSubscription {
-  userId     String   @map("user_id")
-  companyId  String   @map("company_id")
-  channelId  String   @map("channel_id")
+  userId     Int      @map("user_id")
+  companyId  Int      @map("company_id")
+  channelId  Int      @map("channel_id")
   createdAt  DateTime @default(now()) @map("created_at")
   modifiedAt DateTime @updatedAt @map("modified_at")
 
@@ -114,9 +114,9 @@ model NotificationSubscription {
 }
 
 model ReportSubscription {
-  userId     String              @map("user_id")
-  companyId  String              @map("company_id")
-  channelId  String              @map("channel_id")
+  userId     Int                 @map("user_id")
+  companyId  Int                 @map("company_id")
+  channelId  Int                 @map("channel_id")
   createdAt  DateTime            @default(now()) @map("created_at")
   modifiedAt DateTime            @updatedAt @map("modified_at")
   // Relation fields
@@ -129,11 +129,11 @@ model ReportSubscription {
 }
 
 model CompanyAttachment {
-  id         String   @id @default(uuid())
-  companyId  String   @map("company_id")
+  id         Int      @id @default(autoincrement())
+  companyId  Int      @map("company_id")
   fileType   FileType @map("file_type")
   fileUrl    String   @map("file_url")
-  userId     String   @map("user_id")
+  userId     Int      @map("user_id")
   title      String
   createdAt  DateTime @default(now()) @map("created_at")
   modifiedAt DateTime @updatedAt @map("modified_at")
@@ -146,7 +146,7 @@ model CompanyAttachment {
 }
 
 model DataSource {
-  id               String       @id @default(uuid())
+  id               Int          @id @default(autoincrement())
   sourceName       String       @map("source_name")
   isActive         Boolean      @map("is_active")
   defaultFrequency Frequency    @map("default_frequency")
@@ -165,8 +165,8 @@ model DataSource {
 }
 
 model CompanyDataSource {
-  dataSourceId       String       @map("data_source_id")
-  companyId          String       @map("company_id")
+  dataSourceId       Int          @map("data_source_id")
+  companyId          Int          @map("company_id")
   frequency          Frequency
   isDataSourceActive Boolean      @map("is_data_source_active")
   healthStatus       HealthStatus @map("health_status")
@@ -182,8 +182,8 @@ model CompanyDataSource {
 }
 
 model BucketAccess {
-  bucketId   String           @map("bucket_id")
-  inviteeId  String           @map("invitee_id")
+  bucketId   Int              @map("bucket_id")
+  inviteeId  Int              @map("invitee_id")
   permission BucketPermission
   createdAt  DateTime         @default(now()) @map("created_at")
   modifiedAt DateTime         @updatedAt @map("modified_at")
@@ -197,10 +197,10 @@ model BucketAccess {
 }
 
 model Notification {
-  id           String   @id @default(uuid())
+  id           Int      @id @default(autoincrement())
   message      String
-  companyId    String   @map("company_id")
-  dataSourceId String   @map("data_source_id")
+  companyId    Int      @map("company_id")
+  dataSourceId Int      @map("data_source_id")
   createdAt    DateTime @default(now()) @map("created_at")
   modifiedAt   DateTime @updatedAt @map("modified_at")
 
@@ -212,13 +212,13 @@ model Notification {
 }
 
 model SourceMeasurement {
-  id               String   @id @default(uuid())
-  sourceModuleId   String   @map("source_module_id")
-  type             String
-  companyId        String   @map("company_id")
+  id              Int      @id @default(autoincrement())
+  sourceModuleId  Int      @map("source_module_id")
+  type            String
+  companyId       Int      @map("company_id")
   measurementName String   @map("measurement_name")
-  createdAt        DateTime @default(now()) @map("created_at")
-  modifiedAt       DateTime @updatedAt @map("modified_at")
+  createdAt       DateTime @default(now()) @map("created_at")
+  modifiedAt      DateTime @updatedAt @map("modified_at")
 
   // Relations
   dataSource                 DataSource                  @relation(fields: [sourceModuleId], references: [id])
@@ -233,8 +233,8 @@ model SourceMeasurement {
 }
 
 model MeasurementTextValue {
-  id                  String   @id @default(uuid())
-  sourceMeasurementId String   @map("source_measurement_id")
+  id                  Int      @id @default(autoincrement())
+  sourceMeasurementId Int      @map("source_measurement_id")
   value               String
   createdAt           DateTime @default(now()) @map("created_at")
   modifiedAt          DateTime @updatedAt @map("modified_at")
@@ -246,8 +246,8 @@ model MeasurementTextValue {
 }
 
 model MeasurementIntValue {
-  id                  String   @id @default(uuid())
-  sourceMeasurementId String   @map("source_measurement_id")
+  id                  Int      @id @default(autoincrement())
+  sourceMeasurementId Int      @map("source_measurement_id")
   value               Int
   createdAt           DateTime @default(now()) @map("created_at")
   modifiedAt          DateTime @updatedAt @map("modified_at")
@@ -259,8 +259,8 @@ model MeasurementIntValue {
 }
 
 model MeasurementFloatValue {
-  id                  String   @id @default(uuid())
-  sourceMeasurementId String   @map("source_measurement_id")
+  id                  Int      @id @default(autoincrement())
+  sourceMeasurementId Int      @map("source_measurement_id")
   value               Float
   createdAt           DateTime @default(now()) @map("created_at")
   modifiedAt          DateTime @updatedAt @map("modified_at")
@@ -272,8 +272,8 @@ model MeasurementFloatValue {
 }
 
 model MeasurementCommentValue {
-  id                  String   @id @default(uuid())
-  sourceMeasurementId String   @map("source_measurement_id")
+  id                  Int      @id @default(autoincrement())
+  sourceMeasurementId Int      @map("source_measurement_id")
   value               Float
   createdAt           DateTime @default(now()) @map("created_at")
   modifiedAt          DateTime @updatedAt @map("modified_at")
@@ -285,8 +285,8 @@ model MeasurementCommentValue {
 }
 
 model MeasurementParagraphValue {
-  id                  String   @id @default(uuid())
-  sourceMeasurementId String   @map("source_measurement_id")
+  id                  Int      @id @default(autoincrement())
+  sourceMeasurementId Int      @map("source_measurement_id")
   value               Float
   createdAt           DateTime @default(now()) @map("created_at")
   modifiedAt          DateTime @updatedAt @map("modified_at")
@@ -298,8 +298,8 @@ model MeasurementParagraphValue {
 }
 
 model Report {
-  id            String   @id @default(uuid())
-  companyId     String   @map("company_id")
+  id            Int      @id @default(autoincrement())
+  companyId     Int      @map("company_id")
   name          String
   reportFileUrl String   @map("report_file_url")
   createdAt     DateTime @default(now()) @map("created_at")
@@ -312,8 +312,8 @@ model Report {
 }
 
 model UserImportantMeasurementPreference {
-  dataSourceId       String   @map("data_source_id")
-  userId             String   @map("user_id")
+  dataSourceId       Int      @map("data_source_id")
+  userId             Int      @map("user_id")
   importantFieldName String   @map("important_field_name")
   createdAt          DateTime @default(now()) @map("created_at")
   modifiedAt         DateTime @updatedAt @map("modified_at")
@@ -327,8 +327,8 @@ model UserImportantMeasurementPreference {
 }
 
 model NewsSubscription {
-  userId     String   @map("user_id")
-  companyId  String   @map("company_id")
+  userId     Int      @map("user_id")
+  companyId  Int      @map("company_id")
   createdAt  DateTime @default(now()) @map("created_at")
   modifiedAt DateTime @updatedAt @map("modified_at")
 

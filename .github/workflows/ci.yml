@@ -39,7 +39,16 @@ jobs:
   ci:
     name: CI
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 20
+    services:
+      postgres-db:
+        image: postgres:16-alpine
+        ports:
+          - 5432:5432
+        env:
+          POSTGRES_USER: parma-prod-db
+          POSTGRES_PASSWORD: parma-prod-db
+          POSTGRES_DB: parma-prod-db
     steps:
       - uses: actions/checkout@v4
         with:
@@ -56,6 +65,12 @@ jobs:
         run: pnpm install --frozen-lockfile
       - name: Run CI tests
         run: pnpm run test:ci
+        env:
+          POSTGRES_HOST: localhost
+          POSTGRES_PORT: 5432
+          POSTGRES_USER: parma-prod-db
+          POSTGRES_PASSWORD: parma-prod-db
+          POSTGRES_DB: parma-prod-db
       - name: Update badges
         run: pnpm run make-badges
       - name: Commit changes

@@ -1,66 +1,60 @@
-import { ChannelType, EntityType } from '@prisma/client';
-import { prisma } from '../prismaClient';
+import { prisma } from '../prismaClient'
 
-const createNotificationSubscription = async (data: {
-  user_id: string;
-  company_id: string;
-  channel_id: string;
-}) => {
+const createNotificationSubscription = async (data: { userId: number; companyId: number; channelId: number }) => {
   try {
     return await prisma.notificationSubscription.create({
       data: {
-        user_id: data.user_id,
-        company_id: data.company_id,
-        channel_id: data.channel_id,
-      },
-    });
+        userId: data.userId,
+        companyId: data.companyId,
+        channelId: data.channelId
+      }
+    })
   } catch (error) {
-    console.error('Error creating notification subscription:', error);
-    throw new Error('Unable to create notification subscription');
+    console.error('Error creating notification subscription:', error)
+    throw new Error('Unable to create notification subscription')
   }
 }
 
-const getNotificationSubscription = async (user_id: string, company_id: string, channel_id: string) => {
+const getNotificationSubscription = async (userId: number, companyId: number, channelId: number) => {
   try {
     const subscription = await prisma.notificationSubscription.findUnique({
       where: {
-        user_id_company_id_channel_id: {
-          user_id,
-          company_id,
-          channel_id,
-        },
-      },
-    });
+        userId_companyId_channelId: {
+          userId,
+          companyId,
+          channelId
+        }
+      }
+    })
     if (!subscription) {
-      throw new Error('NotificationSubscription not found');
+      throw new Error('NotificationSubscription not found')
     }
-    return subscription;
+    return subscription
   } catch (error) {
-    console.error('Error retrieving notification subscription:', error);
-    throw new Error('Unable to retrieve notification subscription');
+    console.error('Error retrieving notification subscription:', error)
+    throw new Error('Unable to retrieve notification subscription')
   }
 }
 
-
-const deleteNotificationSubscription = async (user_id: string, company_id: string, channel_id: string) => {
+const deleteNotificationSubscription = async (userId: number, companyId: number, channelId: number) => {
   try {
     return await prisma.notificationSubscription.delete({
       where: {
-        user_id_company_id_channel_id: {
-          user_id,
-          company_id,
-          channel_id,
-        },
-      },
-    });
+        userId_companyId_channelId: {
+          userId,
+          companyId,
+          channelId
+        }
+      }
+    })
   } catch (error) {
-    console.error('Error deleting notification subscription:', error);
-    throw new Error('Unable to delete notification subscription');
+    console.error('Error deleting notification subscription:', error)
+    throw new Error('Unable to delete notification subscription')
   }
 }
 
 export default {
   createNotificationSubscription,
   getNotificationSubscription,
-  deleteNotificationSubscription,
-};
+  deleteNotificationSubscription
+}

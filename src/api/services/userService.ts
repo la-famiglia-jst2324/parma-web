@@ -1,25 +1,22 @@
-import { Role } from '@prisma/client';
-import { prisma } from '../prismaClient';
+import type { Role } from '@prisma/client'
+import { prisma } from '../prismaClient'
 
-const createUser = async (data: {
-  name: string;
-  role: Role;
-}) => {
+const createUser = async (data: { name: string; role: Role }) => {
   try {
     const user = await prisma.user.create({
       data: {
         name: data.name,
-        role: data.role,
+        role: data.role
         // created_at  modified_at automatically
-      },
-    });
-    return user;
+      }
+    })
+    return user
   } catch (error) {
-    console.error('Error creating user:', error);
-    throw new Error('Unable to create user');
+    console.error('Error creating user:', error)
+    throw new Error('Unable to create user')
   }
 }
-const getUserById = async (id: string) => {
+const getUserById = async (id: number) => {
   try {
     const user = await prisma.user.findUnique({
       where: { id },
@@ -27,65 +24,67 @@ const getUserById = async (id: string) => {
         ownedBuckets: true,
         notificationSubscriptions: true,
         reportSubscriptions: true,
-        permissions: true,
-      },
-    });
+        permissions: true
+      }
+    })
     if (!user) {
-      throw new Error(`User with ID ${id} not found`);
+      throw new Error(`User with ID ${id} not found`)
     }
-    return user;
+    return user
   } catch (error) {
-    console.error('Error retrieving user:', error);
-    throw new Error('Unable to retrieve user');
+    console.error('Error retrieving user:', error)
+    throw new Error('Unable to retrieve user')
   }
 }
 
 const getAllUsers = async () => {
   try {
-    const users = await prisma.user.findMany();
-    return users;
+    const users = await prisma.user.findMany()
+    return users
   } catch (error) {
-    console.error('Error fetching all users:', error);
-    throw error;
+    console.error('Error fetching all users:', error)
+    throw error
   }
-};
+}
 // who can update
-const updateUser = async (id: string, data: {
-  name?: string;
-  role?: Role;
-}) => {
+const updateUser = async (
+  id: number,
+  data: {
+    name?: string
+    role?: Role
+  }
+) => {
   try {
     const user = await prisma.user.update({
       where: { id },
       data: {
-        ...data,
-      },
-    });
-    return user;
+        ...data
+      }
+    })
+    return user
   } catch (error) {
-    console.error('Error updating user:', error);
-    throw new Error('Unable to update user');
+    console.error('Error updating user:', error)
+    throw new Error('Unable to update user')
   }
 }
 
-//???also delete his own buckets, attachments,subscriptions,permissions,userImportantMeasurementPreference?
-const deleteUser = async (id: string) => {
+// ???also delete his own buckets, attachments,subscriptions,permissions,userImportantMeasurementPreference?
+const deleteUser = async (id: number) => {
   try {
     const user = await prisma.user.delete({
-      where: { id },
-    });
-    return user; // if successful, return the deleted user information
+      where: { id }
+    })
+    return user // if successful, return the deleted user information
   } catch (error) {
-    console.error('Error deleting user:', error);
-    throw error;
+    console.error('Error deleting user:', error)
+    throw error
   }
-};
+}
 
 export default {
   createUser,
   getUserById,
   getAllUsers,
   updateUser,
-  deleteUser,
-
-};
+  deleteUser
+}

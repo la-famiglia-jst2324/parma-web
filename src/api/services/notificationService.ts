@@ -1,65 +1,64 @@
-import { prisma } from '../prismaClient';
+import { prisma } from '../prismaClient'
 
-const createNotification = async (data: {
-  message: string;
-  company_id: string;
-  data_source_id: string;
-}) => {
+const createNotification = async (data: { message: string; companyId: number; dataSourceId: number }) => {
   try {
     return await prisma.notification.create({
       data: {
         message: data.message,
-        company_id: data.company_id,
-        data_source_id: data.data_source_id,
-      },
-    });
+        companyId: data.companyId,
+        dataSourceId: data.dataSourceId
+      }
+    })
   } catch (error) {
-    console.error('Error creating notification:', error);
-    throw new Error('Unable to create notification');
+    console.error('Error creating notification:', error)
+    throw new Error('Unable to create notification')
   }
 }
 
-const getNotificationById = async (id: string) => {
+const getNotificationById = async (id: number) => {
   try {
     const notification = await prisma.notification.findUnique({
-      where: { id },
-    });
+      where: { id }
+    })
     if (!notification) {
-      throw new Error(`Notification with ID ${id} not found`);
+      throw new Error(`Notification with ID ${id} not found`)
     }
-    return notification;
+    return notification
   } catch (error) {
-    console.error('Error retrieving notification:', error);
-    throw new Error('Unable to retrieve notification');
+    console.error('Error retrieving notification:', error)
+    throw new Error('Unable to retrieve notification')
   }
 }
 
-const updateNotification = async (id: string, data: {
-  message?: string;
-}) => {
+const updateNotification = async (
+  id: number,
+  data: {
+    message?: string
+  }
+) => {
   try {
     return await prisma.notification.update({
       where: { id },
-      data: data,
-    });
+      data
+    })
   } catch (error) {
-    console.error('Error updating notification:', error);
-    throw new Error('Unable to update notification');
+    console.error('Error updating notification:', error)
+    throw new Error('Unable to update notification')
   }
 }
-const deleteNotification = async (id: string) => {
+const deleteNotification = async (id: number) => {
   try {
     return await prisma.notification.delete({
-      where: { id },
-    });
+      where: { id }
+    })
   } catch (error) {
-    console.error('Error deleting notification:', error);
-    throw new Error('Unable to delete notification');
+    console.error('Error deleting notification:', error)
+    throw new Error('Unable to delete notification')
   }
 }
 export default {
   createNotification,
   getNotificationById,
   updateNotification,
-  deleteNotification,
-};
+  deleteNotification
+}

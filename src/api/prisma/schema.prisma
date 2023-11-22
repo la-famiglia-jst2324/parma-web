@@ -344,35 +344,49 @@ model NewsSubscription {
 enum Role {
   USER
   ADMIN
+
+  @@map("role")
 }
 
 enum EntityType {
   NOTIFICATION
   REPORT
+
+  @@map("entity_type")
 }
 
 enum ChannelType {
   EMAIL
   SLACK
+
+  @@map("channel_type")
 }
 
 enum FileType {
   TEXT
   JPG
   PDF
+
+  @@map("file_type")
 }
 
 enum HealthStatus {
   UP
   DOWN
+
+  @@map("health_status")
 }
 
 enum Frequency {
   DAILY
   WEEKLY
+
+  @@map("frequency")
 }
 
 enum BucketPermission {
   VIEWER
   MODERATOR
+
+  @@map("bucket_permission")
 }

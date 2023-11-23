@@ -49,6 +49,8 @@ jobs:
           POSTGRES_USER: parma-prod-db
           POSTGRES_PASSWORD: parma-prod-db
           POSTGRES_DB: parma-prod-db
+    env:
+      DATABASE_URL: "postgresql://parma-prod-db:parma-prod-db@postgres-db:5432/parma-prod-db"
     steps:
       - uses: actions/checkout@v4
         with:

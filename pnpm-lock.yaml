@@ -29,7 +29,7 @@ devDependencies:
     version: 14.0.1
   '@prisma/client':
     specifier: ^5.6.0
-    version: 5.6.0(prisma@5.6.0)
+    version: 5.6.0
   '@testing-library/jest-dom':
     specifier: ^6.1.4
     version: 6.1.4(@types/jest@29.5.7)(jest@29.7.0)
@@ -114,9 +114,6 @@ devDependencies:
   prettier-plugin-tailwindcss:
     specifier: ^0.5.7
     version: 0.5.7(prettier@3.0.3)
-  prisma:
-    specifier: ^5.6.0
-    version: 5.6.0
   tailwindcss:
     specifier: ^3.3.0
     version: 3.3.5(ts-node@10.9.1)
@@ -1207,7 +1204,7 @@ packages:
       tslib: 2.6.2
     dev: true
 
-  /@prisma/client@5.6.0(prisma@5.6.0):
+  /@prisma/client@5.6.0:
     resolution: {integrity: sha512-mUDefQFa1wWqk4+JhKPYq8BdVoFk9NFMBXUI8jAkBfQTtgx8WPx02U2HB/XbAz3GSUJpeJOKJQtNvaAIDs6sug==}
     engines: {node: '>=16.13'}
     requiresBuild: true
@@ -1218,16 +1215,10 @@ packages:
         optional: true
     dependencies:
       '@prisma/engines-version': 5.6.0-32.e95e739751f42d8ca026f6b910f5a2dc5adeaeee
-      prisma: 5.6.0
     dev: true
 
   /@prisma/engines-version@5.6.0-32.e95e739751f42d8ca026f6b910f5a2dc5adeaeee:
     resolution: {integrity: sha512-UoFgbV1awGL/3wXuUK3GDaX2SolqczeeJ5b4FVec9tzeGbSWJboPSbT0psSrmgYAKiKnkOPFSLlH6+b+IyOwAw==}
-    dev: true
-
-  /@prisma/engines@5.6.0:
-    resolution: {integrity: sha512-Mt2q+GNJpU2vFn6kif24oRSBQv1KOkYaterQsi0k2/lA+dLvhRX6Lm26gon6PYHwUM8/h8KRgXIUMU0PCLB6bw==}
-    requiresBuild: true
     dev: true
 
   /@rushstack/eslint-patch@1.5.1:
@@ -5251,15 +5242,6 @@ packages:
       '@jest/schemas': 29.6.3
       ansi-styles: 5.2.0
       react-is: 18.2.0
-    dev: true
-
-  /prisma@5.6.0:
-    resolution: {integrity: sha512-EEaccku4ZGshdr2cthYHhf7iyvCcXqwJDvnoQRAJg5ge2Tzpv0e2BaMCp+CbbDUwoVTzwgOap9Zp+d4jFa2O9A==}
-    engines: {node: '>=16.13'}
-    hasBin: true
-    requiresBuild: true
-    dependencies:
-      '@prisma/engines': 5.6.0
     dev: true
 
   /process-nextick-args@2.0.1:

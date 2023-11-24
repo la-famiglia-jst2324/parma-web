@@ -119,7 +119,7 @@ The following steps will get you started with the project.
 Follow the steps below to update your local database with recent changes
 
 1.  Make sure your .env file contains:
-    `DATABASE_URL="postgresql://parma-prod-db:parma-prod-db@localhost:9000/parma-prod-db"
+    `POSTGRES_URL="postgresql://parma-prod-db:parma-prod-db@localhost:9000/parma-prod-db"
 `
 2.  To apply the recent changes to your local database, run:
 

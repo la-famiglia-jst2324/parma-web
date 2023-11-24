@@ -44,4 +44,4 @@ jobs:
       - name: Run migrations
         run: pnpx prisma migrate
         env:
-          DATABASE_URL: ${{ github.event_name == 'release' && secrets.PROD_POSTGRES_URL || secrets.STAGING_POSTGRES_URL }}
+          POSTGRES_URL: ${{ github.event_name == 'release' && secrets.PROD_POSTGRES_URL || secrets.STAGING_POSTGRES_URL }}

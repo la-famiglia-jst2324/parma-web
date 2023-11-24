@@ -1,7 +1,6 @@
 'use client'
 
 import {
-  BellIcon,
   CogIcon,
   DatabaseIcon,
   LibraryIcon,
@@ -18,14 +17,15 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex flex-row">
       <div className="sticky left-0 top-0 flex h-screen w-1/4 flex-col bg-primary">
-        <div className="flex grow flex-col overflow-y-auto">
+        <div className="ml-4 flex grow flex-col overflow-y-auto">
           <div className="mb-12">
             <Link href="/" className="cursor-pointer text-3xl font-extrabold text-white">
               ParmaAI
             </Link>
           </div>
-          <span>{user ? 'Logged in as <' + user.displayName + '>' : ''}</span>
+          <span className="text-white">{user ? 'Logged in as <' + user.displayName + '>' : ''}</span>
           <button
+            className="mb-6 text-white"
             onClick={async () => {
               if (user) {
                 await authLogout()
@@ -69,22 +69,25 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
             </Link>
           </div>
         </div>
-        <Link
-          href="/settings"
-          className="mb-6 flex cursor-pointer flex-row gap-3 text-lg font-extralight hover:font-semibold"
-        >
-          <CogIcon className="h-6 w-6"></CogIcon>Settings
-        </Link>
       </div>
       <div className="w-full">
-        <div className="sticky top-0 flex items-center justify-end bg-white p-4 shadow-lg">
-          <div className="flex items-center gap-4">
-            <div className="relative h-10 w-10 rounded-md bg-light-gray p-3">
-              <span className="absolute right-0 top-0 inline-flex -translate-y-1/2 translate-x-1/2 items-center justify-center rounded-full bg-red-600 px-2 py-1 text-xs font-bold leading-none text-red-100">
-                3
-              </span>
-              <BellIcon className="cursor-pointer text-black"></BellIcon>
-            </div>
+        <div className="sticky top-0 flex items-center justify-end gap-4 bg-white p-4 shadow-lg">
+          <div className=" mr-4 inline-flex h-9 w-32 items-center justify-center rounded-md bg-gray-200">
+            <Link
+              href="/settings"
+              className="
+                flex
+                cursor-pointer
+                flex-row
+                items-center
+                justify-center
+                gap-3
+                text-lg
+                text-[#374151]
+              "
+            >
+              <CogIcon className="w-6 text-[#374151]"></CogIcon>Settings
+            </Link>
           </div>
         </div>
         <div>{children}</div>

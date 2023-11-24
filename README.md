@@ -83,6 +83,25 @@ The following steps will get you started with the project.
 
 6. Test your code and code coverage:
 
+   As the tests require a postgres database to be running, you need a postgres database running locally.
+   For that you can use the docker-compose file in the root directory of this project.
+
+   ```bash
+   docker compose up -d
+   ```
+
+   then before actually running the tests you must set the environment variable with the database credentials.
+   Consider using `.env` files for that.
+
+   ```bash
+   export NEXT_PUBLIC_ENV="staging"
+   export POSTGRES_HOST=localhost
+   export POSTGRES_PORT=9000
+   export POSTGRES_USER=parma-prod-db
+   export POSTGRES_PASSWORD=parma-prod-db
+   export POSTGRES_DB=parma-prod-db
+   ```
+
    ```bash
    make test  # runs jest and typescript-coverage-report
    ```

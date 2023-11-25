@@ -24,10 +24,10 @@ const DatasourceTable = ({ data }: TableProps) => {
         {data.map((datasource) => (
           <TableRow
             key={datasource.id}
-            onClick={() => router.push(`/datasources/${datasource.id}`)}
+            onClick={() => router.push(`/datasources/${datasource.id}?data=${JSON.stringify(datasource)}`)}
             style={{ cursor: 'pointer' }}
           >
-            <TableCell>{datasource.name}</TableCell>
+            <TableCell>{datasource.sourceName}</TableCell>
             <TableCell>{datasource.description}</TableCell>
             <TableCell>
               {datasource.isActive ? <Badge color="blue">Active</Badge> : <Badge color="red">Inactive</Badge>}

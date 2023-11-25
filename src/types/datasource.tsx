@@ -1,8 +1,10 @@
 type Datasource = {
   id: number
-  name: string
+  sourceName: string
   description: string
   isActive: boolean
+  defaultFrequency: string
+  healthStatus: 'up' | 'down' | 'unknown'
 }
 
 export default Datasource

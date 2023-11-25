@@ -49,6 +49,8 @@ jobs:
           POSTGRES_USER: parma-prod-db
           POSTGRES_PASSWORD: parma-prod-db
           POSTGRES_DB: parma-prod-db
+    env:
+      POSTGRES_URL: "postgresql://parma-prod-db:parma-prod-db@localhost:5432/parma-prod-db"
     steps:
       - uses: actions/checkout@v4
         with:
@@ -63,6 +65,10 @@ jobs:
           node-version: 18
       - name: dependency installation
         run: pnpm install --frozen-lockfile
+      - name: Db model generation
+        run: pnpx prisma generate
+      - name: Run migrations
+        run: pnpx prisma migrate dev
       - name: Run CI tests
         run: pnpm run test:ci
         env:

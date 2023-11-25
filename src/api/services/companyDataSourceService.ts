@@ -1,11 +1,10 @@
-import type { Frequency, HealthStatus } from '@prisma/client'
+import type { HealthStatus } from '@prisma/client'
 import { prisma } from '../prismaClient'
 // FR-04 Users add/edit/remove data sources for a company
 // add Datasource To Company
 const createCompanyDataSource = async (data: {
   dataSourceId: number
   companyId: number
-  frequency: Frequency
   isDataSourceActive: boolean
   healthStatus: HealthStatus
 }) => {
@@ -26,7 +25,6 @@ const createCompanyDataSource = async (data: {
       data: {
         dataSourceId: data.dataSourceId,
         companyId: data.companyId,
-        frequency: data.frequency,
         isDataSourceActive: data.isDataSourceActive,
         healthStatus: data.healthStatus
       }
@@ -87,7 +85,6 @@ const updateCompanyDataSource = async (
   dataSourceId: number,
   companyId: number,
   updateData: {
-    frequency?: Frequency
     isDataSourceActive?: boolean
     healthStatus?: HealthStatus
   }

@@ -41,7 +41,18 @@ jobs:
   ci:
     name: CI
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 20
+    services:
+      postgres-db:
+        image: postgres:16-alpine
+        ports:
+          - 5432:5432
+        env:
+          POSTGRES_USER: parma-prod-db
+          POSTGRES_PASSWORD: parma-prod-db
+          POSTGRES_DB: parma-prod-db
+    env:
+      POSTGRES_URL: "postgresql://parma-prod-db:parma-prod-db@localhost:5432/parma-prod-db"
     steps:
       - uses: actions/checkout@v4
         with:
@@ -56,8 +67,18 @@ jobs:
           node-version: 18
       - name: dependency installation
         run: pnpm install --frozen-lockfile
+      - name: Db model generation
+        run: pnpx prisma generate
+      - name: Run migrations
+        run: pnpx prisma migrate dev
       - name: Run CI tests
         run: pnpm run test:ci
+        env:
+          POSTGRES_HOST: localhost
+          POSTGRES_PORT: 5432
+          POSTGRES_USER: parma-prod-db
+          POSTGRES_PASSWORD: parma-prod-db
+          POSTGRES_DB: parma-prod-db
       - name: Update badges
         run: pnpm run make-badges
       - name: Commit changes

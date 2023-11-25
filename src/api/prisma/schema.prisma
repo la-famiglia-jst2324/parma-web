@@ -1,6 +1,6 @@
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  url      = env("POSTGRES_URL")
 }
 
 generator client {
@@ -55,12 +55,12 @@ model Bucket {
   title       String
   description String?
   ownerId     Int      @map("owner_id")
-  isPublic    Boolean  @map("is_public")
+  isPublic    Boolean  @default(false) @map("is_public")
   createdAt   DateTime @default(now()) @map("created_at")
   modifiedAt  DateTime @updatedAt @map("modified_at")
 
   // Relation fields
-  user                User                      @relation("UserOwnsBucket", fields: [ownerId], references: [id])
+  user                User                      @relation("UserOwnsBucket", fields: [ownerId], references: [id], onDelete: Cascade)
   companyBucketMember CompanyBucketMembership[]
   permissions         BucketAccess[]
 
@@ -74,8 +74,8 @@ model CompanyBucketMembership {
   modifiedAt DateTime @updatedAt @map("modified_at")
 
   // Relation fields
-  company Company @relation(fields: [companyId], references: [id])
-  bucket  Bucket  @relation(fields: [bucketId], references: [id])
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  bucket  Bucket  @relation(fields: [bucketId], references: [id], onDelete: Cascade)
 
   @@id([companyId, bucketId])
   @@map("company_bucket_membership")
@@ -105,9 +105,9 @@ model NotificationSubscription {
   modifiedAt DateTime @updatedAt @map("modified_at")
 
   // Relation fields
-  user    User                @relation("UserToNotificationSubscription", fields: [userId], references: [id])
-  company Company             @relation("CompanyToNotificationSubscription", fields: [companyId], references: [id])
-  channel NotificationChannel @relation(fields: [channelId], references: [id])
+  user    User                @relation("UserToNotificationSubscription", fields: [userId], references: [id], onDelete: Cascade)
+  company Company             @relation("CompanyToNotificationSubscription", fields: [companyId], references: [id], onDelete: Cascade)
+  channel NotificationChannel @relation(fields: [channelId], references: [id], onDelete: Cascade)
 
   @@id([userId, companyId, channelId])
   @@map("notification_subscription")
@@ -120,9 +120,9 @@ model ReportSubscription {
   createdAt  DateTime            @default(now()) @map("created_at")
   modifiedAt DateTime            @updatedAt @map("modified_at")
   // Relation fields
-  user       User                @relation("UserToReportSubscription", fields: [userId], references: [id])
-  company    Company             @relation("CompanyToReportSubscription", fields: [companyId], references: [id])
-  channel    NotificationChannel @relation(fields: [channelId], references: [id])
+  user       User                @relation("UserToReportSubscription", fields: [userId], references: [id], onDelete: Cascade)
+  company    Company             @relation("CompanyToReportSubscription", fields: [companyId], references: [id], onDelete: Cascade)
+  channel    NotificationChannel @relation(fields: [channelId], references: [id], onDelete: Cascade)
 
   @@id([userId, companyId, channelId])
   @@map("report_subscription")
@@ -140,7 +140,7 @@ model CompanyAttachment {
 
   // Relations
   user    User    @relation("UserAttachesToCompany", fields: [userId], references: [id])
-  company Company @relation("CompanyAttachment", fields: [companyId], references: [id])
+  company Company @relation("CompanyAttachment", fields: [companyId], references: [id], onDelete: Cascade)
 
   @@map("company_attachment")
 }
@@ -167,15 +167,14 @@ model DataSource {
 model CompanyDataSource {
   dataSourceId       Int          @map("data_source_id")
   companyId          Int          @map("company_id")
-  frequency          Frequency
   isDataSourceActive Boolean      @map("is_data_source_active")
   healthStatus       HealthStatus @map("health_status")
   createdAt          DateTime     @default(now()) @map("created_at")
   modifiedAt         DateTime     @updatedAt @map("modified_at")
 
   // Relations
-  dataSources DataSource @relation(fields: [dataSourceId], references: [id])
-  companies   Company    @relation(fields: [companyId], references: [id])
+  dataSources DataSource @relation(fields: [dataSourceId], references: [id], onDelete: Cascade)
+  companies   Company    @relation(fields: [companyId], references: [id], onDelete: Cascade)
 
   @@id([dataSourceId, companyId])
   @@map("company_data_source")
@@ -189,8 +188,8 @@ model BucketAccess {
   modifiedAt DateTime         @updatedAt @map("modified_at")
 
   // Relations
-  bucket Bucket @relation(fields: [bucketId], references: [id])
-  user   User   @relation(fields: [inviteeId], references: [id])
+  bucket Bucket @relation(fields: [bucketId], references: [id], onDelete: Cascade)
+  user   User   @relation(fields: [inviteeId], references: [id], onDelete: Cascade)
 
   @@id([bucketId, inviteeId])
   @@map("bucket_access")
@@ -221,8 +220,8 @@ model SourceMeasurement {
   modifiedAt      DateTime @updatedAt @map("modified_at")
 
   // Relations
-  dataSource                 DataSource                  @relation(fields: [sourceModuleId], references: [id])
-  company                    Company                     @relation(fields: [companyId], references: [id])
+  dataSource                 DataSource                  @relation(fields: [sourceModuleId], references: [id], onDelete: Cascade)
+  company                    Company                     @relation(fields: [companyId], references: [id], onDelete: Cascade)
   measurementTextValues      MeasurementTextValue[]
   measurementIntValues       MeasurementIntValue[]
   measurementFloatValues     MeasurementFloatValue[]
@@ -240,7 +239,7 @@ model MeasurementTextValue {
   modifiedAt          DateTime @updatedAt @map("modified_at")
 
   // Relations
-  sourceMeasurement SourceMeasurement @relation(fields: [sourceMeasurementId], references: [id])
+  sourceMeasurement SourceMeasurement @relation(fields: [sourceMeasurementId], references: [id], onDelete: Cascade)
 
   @@map("measurement_text_value")
 }
@@ -253,7 +252,7 @@ model MeasurementIntValue {
   modifiedAt          DateTime @updatedAt @map("modified_at")
 
   // Relations
-  sourceMeasurement SourceMeasurement @relation(fields: [sourceMeasurementId], references: [id])
+  sourceMeasurement SourceMeasurement @relation(fields: [sourceMeasurementId], references: [id], onDelete: Cascade)
 
   @@map("measurement_int_value")
 }
@@ -266,7 +265,7 @@ model MeasurementFloatValue {
   modifiedAt          DateTime @updatedAt @map("modified_at")
 
   // Relations
-  sourceMeasurement SourceMeasurement @relation(fields: [sourceMeasurementId], references: [id])
+  sourceMeasurement SourceMeasurement @relation(fields: [sourceMeasurementId], references: [id], onDelete: Cascade)
 
   @@map("measurement_float_value")
 }
@@ -274,12 +273,12 @@ model MeasurementFloatValue {
 model MeasurementCommentValue {
   id                  Int      @id @default(autoincrement())
   sourceMeasurementId Int      @map("source_measurement_id")
-  value               Float
+  value               String
   createdAt           DateTime @default(now()) @map("created_at")
   modifiedAt          DateTime @updatedAt @map("modified_at")
 
   // Relations
-  sourceMeasurement SourceMeasurement @relation(fields: [sourceMeasurementId], references: [id])
+  sourceMeasurement SourceMeasurement @relation(fields: [sourceMeasurementId], references: [id], onDelete: Cascade)
 
   @@map("measurement_comment_value")
 }
@@ -287,12 +286,12 @@ model MeasurementCommentValue {
 model MeasurementParagraphValue {
   id                  Int      @id @default(autoincrement())
   sourceMeasurementId Int      @map("source_measurement_id")
-  value               Float
+  value               String
   createdAt           DateTime @default(now()) @map("created_at")
   modifiedAt          DateTime @updatedAt @map("modified_at")
 
   // Relations
-  sourceMeasurement SourceMeasurement @relation(fields: [sourceMeasurementId], references: [id])
+  sourceMeasurement SourceMeasurement @relation(fields: [sourceMeasurementId], references: [id], onDelete: Cascade)
 
   @@map("measurement_paragraph_value")
 }
@@ -319,10 +318,10 @@ model UserImportantMeasurementPreference {
   modifiedAt         DateTime @updatedAt @map("modified_at")
 
   // Relations
-  dataSource DataSource @relation(fields: [dataSourceId], references: [id])
-  user       User       @relation(fields: [userId], references: [id])
+  dataSource DataSource @relation(fields: [dataSourceId], references: [id], onDelete: Cascade)
+  user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@id([dataSourceId, userId])
+  @@id([dataSourceId, userId, importantFieldName])
   @@map("user_important_measurement_preference")
 }
 
@@ -333,8 +332,8 @@ model NewsSubscription {
   modifiedAt DateTime @updatedAt @map("modified_at")
 
   // relations
-  user    User    @relation(fields: [userId], references: [id])
-  company Company @relation(fields: [companyId], references: [id])
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
 
   @@id([userId, companyId])
   @@map("news_subscription")

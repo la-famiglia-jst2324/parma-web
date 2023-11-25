@@ -4,8 +4,8 @@
 [![CI](https://github.com/la-famiglia-jst2324/parma-web/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/la-famiglia-jst2324/parma-web/actions/workflows/ci.yml)
 [![Deploy](https://github.com/la-famiglia-jst2324/parma-web/actions/workflows/release.yml/badge.svg)](https://github.com/la-famiglia-jst2324/parma-web/actions/workflows/release.yml)
 [![Major Tag](https://github.com/la-famiglia-jst2324/parma-web/actions/workflows/tag-major.yml/badge.svg)](https://github.com/la-famiglia-jst2324/parma-web/actions/workflows/tag-major.yml)
-![Functions](https://img.shields.io/badge/functions-100%25-brightgreen.svg?style=flat)
-![Lines](https://img.shields.io/badge/lines-100%25-brightgreen.svg?style=flat)
+![Functions](https://img.shields.io/badge/functions-18.18%25-red.svg?style=flat)
+![Lines](https://img.shields.io/badge/lines-60.65%25-red.svg?style=flat)
 
 ParmaAI webstack including frontend and REST API backend.
 
@@ -42,11 +42,14 @@ The following steps will get you started with the project.
    In case you encounter errors while installing **_pre-commit_**, do _one_ of the following :
 
    1. Install pre-commit with sudo:
+
       ```bash
       sudo apt install pre-commit
       pre-commit # check that it has been correctly installed
       ```
-   2. Install pre-commit using conda :
+
+   2. Install pre-commit using conda
+
       ```bash
       "${SHELL}" <(curl -L micro.mamba.pm/install.sh)
       bash
@@ -54,6 +57,7 @@ The following steps will get you started with the project.
       micromamba install pre-commit
       pre-commit # check that it has been correctly installed
       ```
+
    3. Mac Users: consider using `brew install pre-commit`
 
    _Rerun the command to make sure there are no errors :_
@@ -79,6 +83,25 @@ The following steps will get you started with the project.
 
 6. Test your code and code coverage:
 
+   As the tests require a postgres database to be running, you need a postgres database running locally.
+   For that you can use the docker-compose file in the root directory of this project.
+
+   ```bash
+   docker compose up -d
+   ```
+
+   then before actually running the tests you must set the environment variable with the database credentials.
+   Consider using `.env` files for that.
+
+   ```bash
+   export NEXT_PUBLIC_ENV="staging"
+   export POSTGRES_HOST=localhost
+   export POSTGRES_PORT=9000
+   export POSTGRES_USER=parma-prod-db
+   export POSTGRES_PASSWORD=parma-prod-db
+   export POSTGRES_DB=parma-prod-db
+   ```
+
    ```bash
    make test  # runs jest and typescript-coverage-report
    ```
@@ -90,6 +113,19 @@ The following steps will get you started with the project.
    ```
 
    Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+
+## Database Migrations
+
+Follow the steps below to update your local database with recent changes
+
+1.  Make sure your .env file contains:
+    `POSTGRES_URL="postgresql://parma-prod-db:parma-prod-db@localhost:9000/parma-prod-db"
+`
+2.  To apply the recent changes to your local database, run:
+
+    ```
+    pnpm prisma migrate dev
+    ```
 
 ## PR workflow
 
@@ -128,6 +164,8 @@ The following directory structure is used in this project:
 │   ├── api: Backend API
 │   ├── app: Frontend app
 │   ├── components: Reusable components
+│   ├── contexts: Frontend context providers
+│   ├── lib: generic / non ui functions
 │   └── types: Typescript types
 ├── tests: Tests directory
 ├── Makefile: Recipes for easy simplified setup and local development

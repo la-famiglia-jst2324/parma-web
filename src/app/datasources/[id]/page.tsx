@@ -23,7 +23,7 @@ function DatasourcePage() {
 
   return (
     <>
-      <div className="relative m-5 flex min-h-screen w-auto flex-col justify-start bg-white shadow-lg">
+      <div className="relative m-3 flex min-h-screen w-auto flex-col justify-start bg-white shadow-lg">
         <div className="flex items-center justify-between p-4">
           <div className="mb-2 flex items-center justify-start space-x-4">
             <GoBackButton />
@@ -33,7 +33,7 @@ function DatasourcePage() {
               Active
             </div>
           </div>
-          <div className="flex items-center justify-end space-x-4">
+          <div className="mr-8 flex items-center justify-end space-x-4">
             <button className="flex items-center rounded-md border border-gray-500 bg-transparent px-4 py-2 text-gray-500">
               <PencilIcon className="mr-2 h-5 w-5" />
               Edit Information
@@ -45,23 +45,21 @@ function DatasourcePage() {
             </button>
           </div>
         </div>
-        <div className="p-14">
-          <p className="mb-1 text-lg text-gray-700">
-            {/* Placeholder for real datasource description */}
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed vitae diam eget risus various. Lorem ipsum
-            dolor sit amet, consectetur adipiscing elit. Sed vitae diam eget risus various.
-          </p>
-          <a
-            href="https://www.linkedin.com/feed/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="mb-1 text-lg font-semibold text-black"
-          >
-            {/* Placeholder for real datasource URL */}
-            URL: https://www.linkedin.com/feed/
-          </a>
-        </div>
-        <div className="mt-2">
+        <p className="mb-1 ml-14 mr-12 text-base text-gray-700">
+          {/* Placeholder for real datasource description */}
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed vitae diam eget risus various. Lorem ipsum dolor
+          sit amet, consectetur adipiscing elit. Sed vitae diam eget risus various.
+        </p>
+        <a
+          href="https://www.linkedin.com/feed/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mb-1 ml-14 text-base font-semibold text-gray-900 hover:text-blue-600"
+        >
+          {/* Placeholder for real datasource URL */}
+          https://www.linkedin.com/feed/
+        </a>
+        <div className="mt-1">
           <TabComponent />
         </div>
       </div>

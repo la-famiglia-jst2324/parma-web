@@ -15,8 +15,6 @@ jobs:
     name: Pre-commit Checks
     runs-on: ubuntu-latest
     timeout-minutes: 30
-    env:
-      DATABASE_URL: postgresql://parma-prod-db:parma-prod-db@localhost:9000/parma-prod-db
     steps:
       - uses: actions/checkout@v4
       - name: micromamba installation

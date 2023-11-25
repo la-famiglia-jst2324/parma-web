@@ -1,6 +1,6 @@
 import { prisma } from '../prismaClient'
 
-const createCommentValue = async (data: { sourceMeasurementId: number; value: number }) => {
+const createCommentValue = async (data: { sourceMeasurementId: number; value: string }) => {
   try {
     return await prisma.measurementCommentValue.create({
       data: {
@@ -44,7 +44,7 @@ const updateCommentValue = async (
   id: number,
   data: {
     sourceMeasurementId: number
-    value: number
+    value: string
   }
 ) => {
   try {

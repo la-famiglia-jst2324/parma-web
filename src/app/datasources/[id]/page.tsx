@@ -2,17 +2,32 @@
 import React from 'react'
 import { Button } from '@tremor/react'
 import { TrashIcon, PencilIcon, StatusOnlineIcon } from '@heroicons/react/outline'
+import { useParams } from 'next/navigation'
 import { TabComponent } from '@/components/Datasources/TabComponent'
 import GoBackButton from '@/components/Datasources/GoBackButton'
+// import { useEffect, useState } from 'react';
 
 function DatasourcePage() {
+  const sourceId = useParams().id
+
+  /* This code will be used later when making API calls to fetch datasource data */
+  // const [datasource, setDatasource] = useState(null);
+  // useEffect(() => {
+  //   if (sourceId) {
+  //     fetch(`/api/datasource/${sourceId}`)
+  //       .then(response => response.json())
+  //       .then(data => setDatasource(data))
+  //       .catch(error => console.error('Error:', error));
+  //   }
+  // }, [sourceId]);
+
   return (
     <>
       <div className="relative m-5 flex min-h-screen w-auto flex-col justify-start bg-white shadow-lg">
         <div className="flex items-center justify-between p-4">
           <div className="mb-2 flex items-center justify-start space-x-4">
             <GoBackButton />
-            <h1>Datasource</h1>
+            <h1>Datasource {sourceId}</h1>
             <div className="inline-flex items-center rounded-full bg-blue-200 px-2 py-1 text-sm text-blue-700">
               <StatusOnlineIcon className="mr-2 h-5 w-5" />
               Active

@@ -23,8 +23,8 @@ export const CompaniesTable = () => {
   ]
 
   return (
-    <div className="flex flex-col">
-      <div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+    <div className="flex max-w-full flex-col overflow-x-auto">
+      <div className="-my-2 sm:-mx-6 lg:-mx-8">
         <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
           <div className="overflow-hidden border-b border-gray-200 shadow sm:rounded-lg">
             <table className="min-w-full divide-y divide-gray-200">
@@ -54,7 +54,7 @@ export const CompaniesTable = () => {
                 {companies.map((company) => (
                   <tr key={company.name}>
                     <td className="whitespace-nowrap px-6 py-4 text-sm font-medium text-gray-900">{company.name}</td>
-                    <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-500">{company.description}</td>
+                    <td className="break-words px-6 py-4 text-sm text-gray-500">{company.description}</td>
                     <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-500">
                       <span
                         className={`inline-flex rounded-full px-2 text-xs font-semibold leading-5 ${

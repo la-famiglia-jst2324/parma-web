@@ -24,7 +24,7 @@ const DatasourceTable = ({ data }: TableProps) => {
         {data.map((datasource) => (
           <TableRow
             key={datasource.id}
-            onClick={() => router.push(`/datasources/${datasource.id}?data=${JSON.stringify(datasource)}`)}
+            onClick={() => router.push(`/datasources/${datasource.id}`)}
             style={{ cursor: 'pointer' }}
           >
             <TableCell>{datasource.sourceName}</TableCell>

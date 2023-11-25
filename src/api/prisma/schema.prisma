@@ -1,0 +1,391 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("POSTGRES_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id         Int      @id @default(autoincrement())
+  name       String
+  role       Role
+  createdAt  DateTime @default(now()) @map("created_at")
+  modifiedAt DateTime @updatedAt @map("modified_at")
+
+  // Relation fields
+  addedCompanies                     Company[]                            @relation("UserAddsCompany")
+  ownedBuckets                       Bucket[]                             @relation("UserOwnsBucket")
+  notificationSubscriptions          NotificationSubscription[]           @relation("UserToNotificationSubscription")
+  reportSubscriptions                ReportSubscription[]                 @relation("UserToReportSubscription")
+  companyAttachments                 CompanyAttachment[]                  @relation("UserAttachesToCompany")
+  permissions                        BucketAccess[]
+  userImportantMeasurementPreference UserImportantMeasurementPreference[]
+  newsSubscription                   NewsSubscription[]
+
+  @@map("user")
+}
+
+model Company {
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String?
+  addedBy     Int      @map("added_by")
+  createdAt   DateTime @default(now()) @map("created_at")
+  modifiedAt  DateTime @updatedAt @map("modified_at")
+
+  // Relation fields
+  user                      User                       @relation("UserAddsCompany", fields: [addedBy], references: [id])
+  companyBucketMember       CompanyBucketMembership[]
+  notificationSubscriptions NotificationSubscription[] @relation("CompanyToNotificationSubscription")
+  reportSubscriptions       ReportSubscription[]       @relation("CompanyToReportSubscription")
+  companyAttachments        CompanyAttachment[]        @relation("CompanyAttachment")
+  companyDataSource         CompanyDataSource[]
+  notifications             Notification[]
+  reports                   Report[]
+  sourceMeasurements        SourceMeasurement[]
+  newsSubscription          NewsSubscription[]
+
+  @@map("company")
+}
+
+model Bucket {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String?
+  ownerId     Int      @map("owner_id")
+  isPublic    Boolean  @default(false) @map("is_public")
+  createdAt   DateTime @default(now()) @map("created_at")
+  modifiedAt  DateTime @updatedAt @map("modified_at")
+
+  // Relation fields
+  user                User                      @relation("UserOwnsBucket", fields: [ownerId], references: [id], onDelete: Cascade)
+  companyBucketMember CompanyBucketMembership[]
+  permissions         BucketAccess[]
+
+  @@map("bucket")
+}
+
+model CompanyBucketMembership {
+  companyId  Int      @map("company_id")
+  bucketId   Int      @map("bucket_id")
+  createdAt  DateTime @default(now()) @map("created_at")
+  modifiedAt DateTime @updatedAt @map("modified_at")
+
+  // Relation fields
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  bucket  Bucket  @relation(fields: [bucketId], references: [id], onDelete: Cascade)
+
+  @@id([companyId, bucketId])
+  @@map("company_bucket_membership")
+}
+
+model NotificationChannel {
+  id          Int         @id @default(autoincrement())
+  entityId    String      @map("entity_id")
+  entityType  EntityType  @map("entity_type")
+  channelType ChannelType @map("channel_type")
+  destination String
+  createdAt   DateTime    @default(now()) @map("created_at")
+  modifiedAt  DateTime    @updatedAt @map("modified_at")
+
+  // Relations
+  notificationSubscriptions NotificationSubscription[]
+  reportSubscriptions       ReportSubscription[]
+
+  @@map("notification_channel")
+}
+
+model NotificationSubscription {
+  userId     Int      @map("user_id")
+  companyId  Int      @map("company_id")
+  channelId  Int      @map("channel_id")
+  createdAt  DateTime @default(now()) @map("created_at")
+  modifiedAt DateTime @updatedAt @map("modified_at")
+
+  // Relation fields
+  user    User                @relation("UserToNotificationSubscription", fields: [userId], references: [id], onDelete: Cascade)
+  company Company             @relation("CompanyToNotificationSubscription", fields: [companyId], references: [id], onDelete: Cascade)
+  channel NotificationChannel @relation(fields: [channelId], references: [id], onDelete: Cascade)
+
+  @@id([userId, companyId, channelId])
+  @@map("notification_subscription")
+}
+
+model ReportSubscription {
+  userId     Int                 @map("user_id")
+  companyId  Int                 @map("company_id")
+  channelId  Int                 @map("channel_id")
+  createdAt  DateTime            @default(now()) @map("created_at")
+  modifiedAt DateTime            @updatedAt @map("modified_at")
+  // Relation fields
+  user       User                @relation("UserToReportSubscription", fields: [userId], references: [id], onDelete: Cascade)
+  company    Company             @relation("CompanyToReportSubscription", fields: [companyId], references: [id], onDelete: Cascade)
+  channel    NotificationChannel @relation(fields: [channelId], references: [id], onDelete: Cascade)
+
+  @@id([userId, companyId, channelId])
+  @@map("report_subscription")
+}
+
+model CompanyAttachment {
+  id         Int      @id @default(autoincrement())
+  companyId  Int      @map("company_id")
+  fileType   FileType @map("file_type")
+  fileUrl    String   @map("file_url")
+  userId     Int      @map("user_id")
+  title      String
+  createdAt  DateTime @default(now()) @map("created_at")
+  modifiedAt DateTime @updatedAt @map("modified_at")
+
+  // Relations
+  user    User    @relation("UserAttachesToCompany", fields: [userId], references: [id])
+  company Company @relation("CompanyAttachment", fields: [companyId], references: [id], onDelete: Cascade)
+
+  @@map("company_attachment")
+}
+
+model DataSource {
+  id               Int          @id @default(autoincrement())
+  sourceName       String       @map("source_name")
+  isActive         Boolean      @map("is_active")
+  defaultFrequency Frequency    @map("default_frequency")
+  healthStatus     HealthStatus @map("health_status")
+  description      String?
+  createdAt        DateTime     @default(now()) @map("created_at")
+  modifiedAt       DateTime     @updatedAt @map("modified_at")
+
+  // Relations
+  companyDataSource                  CompanyDataSource[]
+  notifications                      Notification[]
+  sourceMeasurements                 SourceMeasurement[]
+  userImportantMeasurementPreference UserImportantMeasurementPreference[]
+
+  @@map("data_source")
+}
+
+model CompanyDataSource {
+  dataSourceId       Int          @map("data_source_id")
+  companyId          Int          @map("company_id")
+  isDataSourceActive Boolean      @map("is_data_source_active")
+  healthStatus       HealthStatus @map("health_status")
+  createdAt          DateTime     @default(now()) @map("created_at")
+  modifiedAt         DateTime     @updatedAt @map("modified_at")
+
+  // Relations
+  dataSources DataSource @relation(fields: [dataSourceId], references: [id], onDelete: Cascade)
+  companies   Company    @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  @@id([dataSourceId, companyId])
+  @@map("company_data_source")
+}
+
+model BucketAccess {
+  bucketId   Int              @map("bucket_id")
+  inviteeId  Int              @map("invitee_id")
+  permission BucketPermission
+  createdAt  DateTime         @default(now()) @map("created_at")
+  modifiedAt DateTime         @updatedAt @map("modified_at")
+
+  // Relations
+  bucket Bucket @relation(fields: [bucketId], references: [id], onDelete: Cascade)
+  user   User   @relation(fields: [inviteeId], references: [id], onDelete: Cascade)
+
+  @@id([bucketId, inviteeId])
+  @@map("bucket_access")
+}
+
+model Notification {
+  id           Int      @id @default(autoincrement())
+  message      String
+  companyId    Int      @map("company_id")
+  dataSourceId Int      @map("data_source_id")
+  createdAt    DateTime @default(now()) @map("created_at")
+  modifiedAt   DateTime @updatedAt @map("modified_at")
+
+  // Relations
+  company    Company    @relation(fields: [companyId], references: [id])
+  dataSource DataSource @relation(fields: [dataSourceId], references: [id])
+
+  @@map("notification")
+}
+
+model SourceMeasurement {
+  id              Int      @id @default(autoincrement())
+  sourceModuleId  Int      @map("source_module_id")
+  type            String
+  companyId       Int      @map("company_id")
+  measurementName String   @map("measurement_name")
+  createdAt       DateTime @default(now()) @map("created_at")
+  modifiedAt      DateTime @updatedAt @map("modified_at")
+
+  // Relations
+  dataSource                 DataSource                  @relation(fields: [sourceModuleId], references: [id], onDelete: Cascade)
+  company                    Company                     @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  measurementTextValues      MeasurementTextValue[]
+  measurementIntValues       MeasurementIntValue[]
+  measurementFloatValues     MeasurementFloatValue[]
+  measurementCommentValues   MeasurementCommentValue[]
+  measurementParagraphValues MeasurementParagraphValue[]
+
+  @@map("source_measurement")
+}
+
+model MeasurementTextValue {
+  id                  Int      @id @default(autoincrement())
+  sourceMeasurementId Int      @map("source_measurement_id")
+  value               String
+  createdAt           DateTime @default(now()) @map("created_at")
+  modifiedAt          DateTime @updatedAt @map("modified_at")
+
+  // Relations
+  sourceMeasurement SourceMeasurement @relation(fields: [sourceMeasurementId], references: [id], onDelete: Cascade)
+
+  @@map("measurement_text_value")
+}
+
+model MeasurementIntValue {
+  id                  Int      @id @default(autoincrement())
+  sourceMeasurementId Int      @map("source_measurement_id")
+  value               Int
+  createdAt           DateTime @default(now()) @map("created_at")
+  modifiedAt          DateTime @updatedAt @map("modified_at")
+
+  // Relations
+  sourceMeasurement SourceMeasurement @relation(fields: [sourceMeasurementId], references: [id], onDelete: Cascade)
+
+  @@map("measurement_int_value")
+}
+
+model MeasurementFloatValue {
+  id                  Int      @id @default(autoincrement())
+  sourceMeasurementId Int      @map("source_measurement_id")
+  value               Float
+  createdAt           DateTime @default(now()) @map("created_at")
+  modifiedAt          DateTime @updatedAt @map("modified_at")
+
+  // Relations
+  sourceMeasurement SourceMeasurement @relation(fields: [sourceMeasurementId], references: [id], onDelete: Cascade)
+
+  @@map("measurement_float_value")
+}
+
+model MeasurementCommentValue {
+  id                  Int      @id @default(autoincrement())
+  sourceMeasurementId Int      @map("source_measurement_id")
+  value               String
+  createdAt           DateTime @default(now()) @map("created_at")
+  modifiedAt          DateTime @updatedAt @map("modified_at")
+
+  // Relations
+  sourceMeasurement SourceMeasurement @relation(fields: [sourceMeasurementId], references: [id], onDelete: Cascade)
+
+  @@map("measurement_comment_value")
+}
+
+model MeasurementParagraphValue {
+  id                  Int      @id @default(autoincrement())
+  sourceMeasurementId Int      @map("source_measurement_id")
+  value               String
+  createdAt           DateTime @default(now()) @map("created_at")
+  modifiedAt          DateTime @updatedAt @map("modified_at")
+
+  // Relations
+  sourceMeasurement SourceMeasurement @relation(fields: [sourceMeasurementId], references: [id], onDelete: Cascade)
+
+  @@map("measurement_paragraph_value")
+}
+
+model Report {
+  id            Int      @id @default(autoincrement())
+  companyId     Int      @map("company_id")
+  name          String
+  reportFileUrl String   @map("report_file_url")
+  createdAt     DateTime @default(now()) @map("created_at")
+  modifiedAt    DateTime @updatedAt @map("modified_at")
+
+  // Relations
+  company Company @relation(fields: [companyId], references: [id])
+
+  @@map("report")
+}
+
+model UserImportantMeasurementPreference {
+  dataSourceId       Int      @map("data_source_id")
+  userId             Int      @map("user_id")
+  importantFieldName String   @map("important_field_name")
+  createdAt          DateTime @default(now()) @map("created_at")
+  modifiedAt         DateTime @updatedAt @map("modified_at")
+
+  // Relations
+  dataSource DataSource @relation(fields: [dataSourceId], references: [id], onDelete: Cascade)
+  user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([dataSourceId, userId, importantFieldName])
+  @@map("user_important_measurement_preference")
+}
+
+model NewsSubscription {
+  userId     Int      @map("user_id")
+  companyId  Int      @map("company_id")
+  createdAt  DateTime @default(now()) @map("created_at")
+  modifiedAt DateTime @updatedAt @map("modified_at")
+
+  // relations
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  @@id([userId, companyId])
+  @@map("news_subscription")
+}
+
+// ENUMS
+enum Role {
+  USER
+  ADMIN
+
+  @@map("role")
+}
+
+enum EntityType {
+  NOTIFICATION
+  REPORT
+
+  @@map("entity_type")
+}
+
+enum ChannelType {
+  EMAIL
+  SLACK
+
+  @@map("channel_type")
+}
+
+enum FileType {
+  TEXT
+  JPG
+  PDF
+
+  @@map("file_type")
+}
+
+enum HealthStatus {
+  UP
+  DOWN
+
+  @@map("health_status")
+}
+
+enum Frequency {
+  DAILY
+  WEEKLY
+
+  @@map("frequency")
+}
+
+enum BucketPermission {
+  VIEWER
+  MODERATOR
+
+  @@map("bucket_permission")
+}

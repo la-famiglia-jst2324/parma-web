@@ -1,5 +1,5 @@
 import Image from 'next/image'
-import { Card, Text, Metric, Flex, ProgressBar } from '@tremor/react'
+import { Card, Flex, Metric, ProgressBar, Text } from '@tremor/react'
 
 export default function Home() {
   return (

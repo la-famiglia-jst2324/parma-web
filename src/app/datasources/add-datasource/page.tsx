@@ -11,7 +11,7 @@ export default function CreateDatasourcePage() {
             <h1 className="mb-2 text-2xl font-bold">Create Datasource</h1>
           </div>
           <p className="mb-4">Create a datasource by providing the name, URL and description.</p>
-          <form>
+          <form role="form" data-testid="create-datasource-form">
             <div className="mb-4">
               <label className="mb-2 block text-sm font-bold text-gray-700" htmlFor="name">
                 Datasource Name

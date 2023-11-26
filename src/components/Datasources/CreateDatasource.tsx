@@ -12,7 +12,7 @@ const CreateDatasource = () => {
 
   return (
     <div>
-      <Button color="blue" onClick={navigateToCreate}>
+      <Button role="button" color="blue" onClick={navigateToCreate}>
         Create Datasource
       </Button>
     </div>

@@ -47,7 +47,7 @@ const datasources: Datasource[] = [
     healthStatus: 'up'
   },
   {
-    id: 3,
+    id: 5,
     sourceName: 'datasource 5',
     description: 'description',
     isActive: false,
@@ -55,7 +55,7 @@ const datasources: Datasource[] = [
     healthStatus: 'up'
   },
   {
-    id: 4,
+    id: 6,
     sourceName: 'datasource 6',
     description: 'description',
     isActive: true,

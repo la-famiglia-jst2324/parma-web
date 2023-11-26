@@ -1,5 +1,6 @@
 import React from 'react'
 import GoBackButton from '@/components/Datasources/GoBackButton'
+import { FormContent } from '@/components/FormContent'
 
 export default function CreateDatasourcePage() {
   return (
@@ -12,45 +13,14 @@ export default function CreateDatasourcePage() {
           </div>
           <p className="mb-4">Create a datasource by providing the name, URL and description.</p>
           <form role="form" data-testid="create-datasource-form">
-            <div className="mb-4">
-              <label className="mb-2 block text-sm font-bold text-gray-700" htmlFor="name">
-                Datasource Name
-              </label>
-              <input
-                className="focus:shadow-outline w-full appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow focus:outline-none"
-                type="text"
-                id="name"
-                name="name"
-                placeholder="Please enter datasource name"
-              />
-            </div>
-
-            <div className="mb-4">
-              <label className="mb-2 block text-sm font-bold text-gray-700" htmlFor="url">
-                Datasource URL
-              </label>
-              <input
-                className="focus:shadow-outline w-full appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow focus:outline-none"
-                type="text"
-                id="url"
-                name="url"
-                placeholder="Please enter datasource URL"
-              />
-            </div>
-
-            <div className="mb-4">
-              <label className="mb-2 block text-sm font-bold text-gray-700" htmlFor="description">
-                Datasource Description
-              </label>
-              <input
-                className="focus:shadow-outline w-full appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow focus:outline-none"
-                type="text"
-                id="description"
-                name="description"
-                placeholder="Please enter datasource description"
-              />
-            </div>
-
+            <FormContent id="name" name="name" label="Datasource Name" placeholder="Please enter datasource name" />
+            <FormContent id="url" name="url" label="Datasource URL" placeholder="Please enter datasource URL" />
+            <FormContent
+              id="description"
+              name="description"
+              label="Datasource Description"
+              placeholder="Please enter datasource description"
+            />
             <div>
               <button
                 className="focus:shadow-outline rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700 focus:outline-none"

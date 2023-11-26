@@ -29,13 +29,6 @@ describe('CompaniesTable', () => {
         expect(screen.getByText('unknown')).toBeInTheDocument();
     });
 
-    // test('renders correct company description', () => {
-    //     render(<CompaniesTable />);
-    //     expect(screen.getByText('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod nibh eu massa eleifend porttitor. Duis tempor sed turpis venenatis suscipit. ')).toBeInTheDocument();
-    //     expect(screen.getByText('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod nibh eu massa eleifend porttitor. Duis tempor sed turpis venenatis suscipit. ')).toBeInTheDocument();
-    //     expect(screen.getByText('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod nibh eu massa eleifend porttitor. Duis tempor sed turpis venenatis suscipit. ')).toBeInTheDocument();
-    // });
-
     test('renders correct company name', () => {
         render(<CompaniesTable />);
         expect(screen.getByText('Company 1')).toBeInTheDocument();

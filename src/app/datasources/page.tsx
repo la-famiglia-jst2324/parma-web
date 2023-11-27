@@ -1,71 +1,37 @@
-import React from 'react'
+'use client'
+import React, { useEffect, useState } from 'react'
 import Table from '../../components/Datasources/Table'
 import DatasourcesLayout from './layout'
-import type Datasource from '@/types/datasource'
 import CreateDatasource from '@/components/Datasources/CreateDatasource'
+import type Datasource from '@/types/datasource'
 
-// async function getDatasources() {
-//   const res = await fetch('/api/datasources?page=1', {
-//     method: 'GET',
-//     cache: 'no-cache'
-//   })
-//   const json = await res.json()
-//   return json
-// }
-
-const datasources: Datasource[] = [
-  {
-    id: 1,
-    sourceName: 'datasource 1',
-    description: 'description',
-    isActive: true,
-    defaultFrequency: '',
-    healthStatus: 'up'
-  },
-  {
-    id: 2,
-    sourceName: 'datasource 2',
-    description: 'description',
-    isActive: true,
-    defaultFrequency: '',
-    healthStatus: 'up'
-  },
-  {
-    id: 3,
-    sourceName: 'datasource 3',
-    description: 'description',
-    isActive: false,
-    defaultFrequency: '',
-    healthStatus: 'up'
-  },
-  {
-    id: 4,
-    sourceName: 'datasource 4',
-    description: 'description',
-    isActive: true,
-    defaultFrequency: '',
-    healthStatus: 'up'
-  },
-  {
-    id: 5,
-    sourceName: 'datasource 5',
-    description: 'description',
-    isActive: false,
-    defaultFrequency: '',
-    healthStatus: 'up'
-  },
-  {
-    id: 6,
-    sourceName: 'datasource 6',
-    description: 'description',
-    isActive: true,
-    defaultFrequency: '',
-    healthStatus: 'up'
+async function getDatasources() {
+  try {
+    const res = await fetch('/api/datasources', {
+      method: 'GET',
+      cache: 'no-cache'
+    })
+    if (!res.ok) {
+      console.log('Response status:', res.status)
+      throw new Error('HTTP response was not OK')
+    }
+    const json = await res.json()
+    return json
+  } catch (error) {
+    console.log('An error has occurred: ', error)
   }
-]
+}
 
 export default function DatasourcesPage() {
-  // const data = getDatasources();
+  const [data, setData] = useState<Datasource[]>([])
+
+  useEffect(() => {
+    getDatasources()
+      .then(setData)
+      .catch((error) => {
+        console.error('Failed to fetch datasources:', error)
+      })
+  }, [])
 
   return (
     <>
@@ -82,7 +48,7 @@ export default function DatasourcesPage() {
           <div className="p-14">
             <div className="mx-6 rounded-lg border-0 bg-white shadow-md">
               <div>
-                <Table data={datasources} />
+                <Table data={data} />
               </div>
             </div>
           </div>

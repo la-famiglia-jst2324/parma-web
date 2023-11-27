@@ -1,5 +1,5 @@
-import { BadgeDelta } from '@tremor/react'
 import React from 'react'
+import { BadgeDelta } from '@tremor/react'
 
 interface Metric {
   name: string

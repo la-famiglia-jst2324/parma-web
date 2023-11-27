@@ -1,9 +1,8 @@
 'use client'
 
 import React from 'react'
-import { TextInput, Button } from '@tremor/react'
-
 import Link from 'next/link'
+import { TextInput, Button } from '@tremor/react'
 
 export default function SignupPage() {
   return (

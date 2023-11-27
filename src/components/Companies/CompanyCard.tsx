@@ -1,6 +1,6 @@
-import { BadgeDelta, Button } from '@tremor/react'
-import Link from 'next/link'
 import React from 'react'
+import Link from 'next/link'
+import { BadgeDelta, Button } from '@tremor/react'
 
 interface CompanyCardProps {
   name: string

@@ -1,9 +1,8 @@
 'use client'
 
 import React from 'react'
-import { TextInput, Callout, Button } from '@tremor/react'
-
 import Link from 'next/link'
+import { TextInput, Callout, Button } from '@tremor/react'
 import { CheckCircleIcon } from '@heroicons/react/solid'
 
 export default function ForgotPasswordPage() {

@@ -10,14 +10,12 @@ jest.mock('next/navigation', () => ({
 
 describe('DatasourcePage', () => {
   test('renders without crashing', () => {
-    (useParams as jest.Mock).mockReturnValue({ id: '1' });
-    render(<DatasourcePage />);
+    render(<DatasourcePage params={{id:'1'}} ></DatasourcePage>);
   });
 
-  test('renders the GoBackButton', () => {
-    render(<DatasourcePage />);
-    const goBackButton = screen.getByTestId('arrow-left-icon');
-    expect(goBackButton).toBeInTheDocument();
+  test('renders loading message', () => {
+    render(<DatasourcePage params={{id:'1'}} ></DatasourcePage>);
+    expect(screen.getByText('Loading...')).toBeInTheDocument();
   });
 
 });

@@ -1,3 +1,4 @@
+'use client'
 import React, { useState } from 'react'
 import { TabButton } from '../TabButton'
 import { TabContent } from '../TabContent'

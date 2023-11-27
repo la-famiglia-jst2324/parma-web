@@ -1,25 +1,42 @@
 'use client'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button } from '@tremor/react'
 import { TrashIcon, PencilIcon, StatusOnlineIcon } from '@heroicons/react/outline'
-import { useParams } from 'next/navigation'
 import { TabComponent } from '@/components/Datasources/TabComponent'
 import GoBackButton from '@/components/Datasources/GoBackButton'
-// import { useEffect, useState } from 'react';
+import type Datasource from '@/types/datasource'
 
-function DatasourcePage() {
-  const sourceId = useParams().id
+async function getDatasource(id: string) {
+  try {
+    const res = await fetch(`/api/datasources/${id}`, {
+      method: 'GET',
+      cache: 'no-cache'
+    })
+    if (!res.ok) {
+      console.log('Response status:', res.status)
+      throw new Error('HTTP response was not OK')
+    }
+    const json = await res.json()
+    return json
+  } catch (error) {
+    console.log('An error has occurred: ', error)
+  }
+}
 
-  /* This code will be used later when making API calls to fetch datasource data */
-  // const [datasource, setDatasource] = useState(null);
-  // useEffect(() => {
-  //   if (sourceId) {
-  //     fetch(`/api/datasource/${sourceId}`)
-  //       .then(response => response.json())
-  //       .then(data => setDatasource(data))
-  //       .catch(error => console.error('Error:', error));
-  //   }
-  // }, [sourceId]);
+export default function DatasourcePage({ params: { id } }: { params: { id: string } }) {
+  const [data, setData] = useState<Datasource>()
+
+  useEffect(() => {
+    getDatasource(id)
+      .then(setData)
+      .catch((error) => {
+        console.error('Failed to fetch datasource:', error)
+      })
+  }, [id])
+
+  if (!data) {
+    return <div className="flex h-screen items-center justify-center text-2xl text-gray-500">Loading...</div>
+  }
 
   return (
     <>
@@ -27,7 +44,7 @@ function DatasourcePage() {
         <div className="flex items-center justify-between p-4">
           <div className="mb-2 flex items-center justify-start space-x-4">
             <GoBackButton />
-            <h1>Datasource {sourceId}</h1>
+            <h1> {data.sourceName} </h1>
             <div className="inline-flex items-center rounded-full bg-blue-200 px-2 py-1 text-sm text-blue-700">
               <StatusOnlineIcon className="mr-2 h-5 w-5" />
               Active
@@ -45,11 +62,7 @@ function DatasourcePage() {
             </button>
           </div>
         </div>
-        <p className="mb-1 ml-14 mr-12 text-base text-gray-700">
-          {/* Placeholder for real datasource description */}
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed vitae diam eget risus various. Lorem ipsum dolor
-          sit amet, consectetur adipiscing elit. Sed vitae diam eget risus various.
-        </p>
+        <p className="mb-1 ml-14 mr-12 text-base text-gray-700">{data.description}</p>
         <a
           href="https://www.linkedin.com/feed/"
           target="_blank"
@@ -66,5 +79,3 @@ function DatasourcePage() {
     </>
   )
 }
-
-export default DatasourcePage

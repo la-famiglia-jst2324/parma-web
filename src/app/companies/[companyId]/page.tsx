@@ -4,11 +4,11 @@ import React from 'react'
 import { Tab, TabGroup, TabList, TabPanel, TabPanels, Button } from '@tremor/react'
 import { UserGroupIcon, UserIcon } from '@heroicons/react/solid'
 import { RefreshIcon } from '@heroicons/react/outline'
-import { companyData } from '../../../components/companies/dummydata'
-import GoBackButton from '@/components/companies/GoBackButton'
-import CompanyAttachment from '@/components/companies/CompanyAttachment'
-import DataSourcesPanel from '@/components/companies/DataSourcesPanel'
-import PerformancePanel from '@/components/companies/PerformancePanel'
+import { companyData } from 'src/components/Companies/dummydata'
+import GoBackButton from '@/components/Companies/GoBackButton'
+import CompanyAttachment from '@/components/Companies/CompanyAttachment'
+import DataSourcesPanel from '@/components/Companies/DataSourcesPanel'
+import PerformancePanel from '@/components/Companies/PerformancePanel'
 
 const CompanyPage: React.FC = () => {
   const { name, description, attachments } = companyData

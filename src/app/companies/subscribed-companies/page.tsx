@@ -1,9 +1,9 @@
 'use client'
 
 import React from 'react'
-import { dummyCompanies } from '../../../components/companies/dummydata'
-import CompanyCard from '@/components/companies/CompanyCard'
-import GoBackButton from '@/components/companies/GoBackButton'
+import { dummyCompanies } from '../../../components/Companies/dummydata'
+import CompanyCard from '@/components/Companies/CompanyCard'
+import GoBackButton from '@/components/Companies/GoBackButton'
 
 const SubscribedCompaniesPage: React.FC = () => {
   return (

@@ -3,8 +3,8 @@
 import React from 'react'
 import { SearchIcon } from '@heroicons/react/solid'
 import { TextInput } from '@tremor/react'
-import { dummyCompanies, moreDummyCompanies } from '../../components/companies/dummydata'
-import CompanyCard from '@/components/companies/CompanyCard'
+import { dummyCompanies, moreDummyCompanies } from '../../components/Companies/dummydata'
+import CompanyCard from '@/components/Companies/CompanyCard'
 
 const CompaniesPage: React.FC = () => {
   return (

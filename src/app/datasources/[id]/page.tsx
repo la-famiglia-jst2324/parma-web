@@ -6,6 +6,9 @@ import { TabComponent } from '@/components/Datasources/TabComponent'
 import GoBackButton from '@/components/Datasources/GoBackButton'
 import type Datasource from '@/types/datasource'
 
+// Replace with the URL of the datasource
+const sourceUrl = 'https://www.linkedin.com/feed/'
+
 async function getDatasource(id: string) {
   try {
     const res = await fetch(`/api/datasources/${id}`, {
@@ -45,9 +48,13 @@ export default function DatasourcePage({ params: { id } }: { params: { id: strin
           <div className="mb-2 flex items-center justify-start space-x-4">
             <GoBackButton />
             <h1> {data.sourceName} </h1>
-            <div className="inline-flex items-center rounded-full bg-blue-200 px-2 py-1 text-sm text-blue-700">
+            <div
+              className={`inline-flex items-center rounded-full px-2 py-1 text-sm ${
+                data.isActive ? 'bg-blue-200 text-blue-700' : 'bg-red-200 text-red-700'
+              }`}
+            >
               <StatusOnlineIcon className="mr-2 h-5 w-5" />
-              Active
+              {data.isActive ? 'Active' : 'Inactive'}
             </div>
           </div>
           <div className="mr-8 flex items-center justify-end space-x-4">
@@ -69,8 +76,7 @@ export default function DatasourcePage({ params: { id } }: { params: { id: strin
           rel="noopener noreferrer"
           className="mb-1 ml-14 text-base font-semibold text-gray-900 hover:text-blue-600"
         >
-          {/* Placeholder for real datasource URL */}
-          https://www.linkedin.com/feed/
+          {sourceUrl}
         </a>
         <div className="mt-1">
           <TabComponent />

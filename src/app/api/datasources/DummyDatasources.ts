@@ -1,10 +1,13 @@
 import type Datasource from '@/types/datasource'
 
+const description =
+  'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla euismod, nisl eget ultricies aliquam, nunc nisl aliquet nunc, vitae aliquam nisi nunc sed nunc. Nulla facil vitae aliquam nisi nunc sed nunc.'
+
 export const datasources: Datasource[] = [
   {
     id: 1,
-    sourceName: 'datasource 1',
-    description: 'description',
+    sourceName: 'Datasource 1',
+    description,
     isActive: true,
     defaultFrequency: '',
     healthStatus: 'up'
@@ -12,8 +15,8 @@ export const datasources: Datasource[] = [
 
   {
     id: 2,
-    sourceName: 'datasource 2',
-    description: 'description',
+    sourceName: 'Datasource 2',
+    description,
     isActive: true,
     defaultFrequency: '',
     healthStatus: 'up'
@@ -21,8 +24,8 @@ export const datasources: Datasource[] = [
 
   {
     id: 3,
-    sourceName: 'datasource 3',
-    description: 'description',
+    sourceName: 'Datasource 3',
+    description,
     isActive: false,
     defaultFrequency: '',
     healthStatus: 'up'
@@ -30,8 +33,8 @@ export const datasources: Datasource[] = [
 
   {
     id: 4,
-    sourceName: 'datasource 4',
-    description: 'description',
+    sourceName: 'Datasource 4',
+    description,
     isActive: false,
     defaultFrequency: '',
     healthStatus: 'up'
@@ -39,8 +42,8 @@ export const datasources: Datasource[] = [
 
   {
     id: 5,
-    sourceName: 'datasource 5',
-    description: 'description',
+    sourceName: 'Datasource 5',
+    description,
     isActive: true,
     defaultFrequency: '',
     healthStatus: 'up'
@@ -48,8 +51,8 @@ export const datasources: Datasource[] = [
 
   {
     id: 6,
-    sourceName: 'datasource 6',
-    description: 'description',
+    sourceName: 'Datasource 6',
+    description,
     isActive: true,
     defaultFrequency: '',
     healthStatus: 'up'

@@ -23,7 +23,7 @@ export default function CreateDatasourcePage() {
             />
             <div>
               <button
-                className="focus:shadow-outline rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700 focus:outline-none"
+                className="rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700 focus:outline-none"
                 type="submit"
               >
                 Create Datasource

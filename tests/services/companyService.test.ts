@@ -1,6 +1,7 @@
 import { PrismaClient, Role } from '@prisma/client'
-import { createCompany, deleteCompany, getCompanyByID, updateCompany } from '@/api/services/companyService'
-import { createUser } from '@/api/services/userService'
+import { genRandomDummyAuthId } from './utils/random'
+import { createCompany, deleteCompany, getCompanyByID, updateCompany } from '@/pages/api/services/companyService'
+import { createUser } from '@/pages/api/services/userService'
 const prisma = new PrismaClient()
 
 describe('Company Model Tests', () => {
@@ -15,7 +16,7 @@ describe('Company Model Tests', () => {
   let companyId: number
 
   test('Create a new user with valid details', async () => {
-    const user = await createUser({ name: 'John Doe', role: Role.USER })
+    const user = await createUser({ name: 'John Doe', authId: genRandomDummyAuthId(), role: Role.USER })
     userId = user.id
   })
 

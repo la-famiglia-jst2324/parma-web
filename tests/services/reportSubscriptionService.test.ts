@@ -1,12 +1,13 @@
 import { ChannelType, Role, EntityType, PrismaClient } from '@prisma/client'
-import { createCompany, deleteCompany } from '@/api/services/companyService'
-import { createNotificationChannel } from '@/api/services/notificationChannelService'
+import { genRandomDummyAuthId } from './utils/random'
+import { createCompany, deleteCompany } from '@/pages/api/services/companyService'
+import { createNotificationChannel } from '@/pages/api/services/notificationChannelService'
 import {
   createReportSubscription,
   deleteReportSubscription,
   getReportSubscription
-} from '@/api/services/reportSubscriptionService'
-import { createUser, deleteUser } from '@/api/services/userService'
+} from '@/pages/api/services/reportSubscriptionService'
+import { createUser, deleteUser } from '@/pages/api/services/userService'
 const prisma = new PrismaClient()
 
 describe('ReportSubscription Model Tests', () => {
@@ -16,7 +17,7 @@ describe('ReportSubscription Model Tests', () => {
   let channelId: number
 
   beforeAll(async () => {
-    const user = await createUser({ name: 'John Doe', role: Role.ADMIN })
+    const user = await createUser({ name: 'John Doe', authId: genRandomDummyAuthId(), role: Role.ADMIN })
     const company = await createCompany({ name: 'Google', addedBy: user.id })
     userId = user.id
     companyId = company.id

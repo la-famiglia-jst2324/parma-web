@@ -1,13 +1,14 @@
 import { PrismaClient, Frequency, HealthStatus, Role } from '@prisma/client'
-import { createCompany } from '@/api/services/companyService'
-import { createDataSource } from '@/api/services/dataSourceService'
+import { genRandomDummyAuthId } from './utils/random'
+import { createCompany } from '@/pages/api/services/companyService'
+import { createDataSource } from '@/pages/api/services/dataSourceService'
 import {
   createNotification,
   deleteNotification,
   getNotificationById,
   updateNotification
-} from '@/api/services/notificationService'
-import { createUser } from '@/api/services/userService'
+} from '@/pages/api/services/notificationService'
+import { createUser } from '@/pages/api/services/userService'
 const prisma = new PrismaClient()
 
 describe('Notification Model Tests', () => {
@@ -24,7 +25,7 @@ describe('Notification Model Tests', () => {
   let dataSourceId: number
   let userId: number
   test('Create a new user with valid details', async () => {
-    const user = await createUser({ name: 'John Doe', role: Role.USER })
+    const user = await createUser({ name: 'John Doe', authId: genRandomDummyAuthId(), role: Role.USER })
     userId = user.id
   })
   test('Create a new company with valid details', async () => {

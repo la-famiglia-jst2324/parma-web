@@ -69,7 +69,7 @@ The following steps will get you started with the project.
 4. **Setup Firebase Admin SDK**:
 
    The Firebase Admin SDK is used to verify user tokens in the backend (Next API routes).
-   Please download [this secrest json file](https://www.notion.so/firebase-admin-sdk-certificate-4279aa3b4e904e1b927619ed69537045) from Notion and place it in `/src/api/.secrets/la-famiglia-parma-ai-firebase-adminsdk.json`.
+   Please download [this secrets json file](https://www.notion.so/firebase-admin-sdk-certificate-4279aa3b4e904e1b927619ed69537045) from Notion and place it in `/src/api/.secrets/la-famiglia-parma-ai-firebase-adminsdk.json`.
 
 5. **Start the development server**
 

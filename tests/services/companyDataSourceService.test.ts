@@ -1,13 +1,14 @@
 import { Frequency, HealthStatus, PrismaClient, Role } from '@prisma/client'
+import { genRandomDummyAuthId } from './utils/random'
 import {
   createCompanyDataSource,
   deleteCompanyDataSource,
   getCompaniesByDataSourceId,
   getDataSourcesByCompanyId
-} from '@/api/services/companyDataSourceService'
-import { createCompany, deleteCompany } from '@/api/services/companyService'
-import { createDataSource } from '@/api/services/dataSourceService'
-import { createUser, deleteUser } from '@/api/services/userService'
+} from '@/pages/api/services/companyDataSourceService'
+import { createCompany, deleteCompany } from '@/pages/api/services/companyService'
+import { createDataSource } from '@/pages/api/services/dataSourceService'
+import { createUser, deleteUser } from '@/pages/api/services/userService'
 
 const prisma = new PrismaClient()
 
@@ -18,7 +19,7 @@ describe('Company Datasource Model Tests', () => {
   let dataSourceId: number
 
   beforeAll(async () => {
-    const user = await createUser({ name: 'John Doe', role: Role.ADMIN })
+    const user = await createUser({ name: 'John Doe', authId: genRandomDummyAuthId(), role: Role.ADMIN })
     const company = await createCompany({ name: 'Google', addedBy: user.id })
     const dataSource = await createDataSource({
       sourceName: 'source1',

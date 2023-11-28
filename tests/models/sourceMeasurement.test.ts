@@ -58,9 +58,9 @@ describe('SourceMeasurement Model Tests', () => {
     })
 
     expect(sourceMeasurement).toBeTruthy()
-    expect(sourceMeasurement.id).toBe(sourceMeasurementId)
-    expect(sourceMeasurement.sourceModuleId).toBe(dataSourceId)
-    expect(sourceMeasurement.companyId).toBe(companyId)
+    expect(sourceMeasurement?.id).toBe(sourceMeasurementId)
+    expect(sourceMeasurement?.sourceModuleId).toBe(dataSourceId)
+    expect(sourceMeasurement?.companyId).toBe(companyId)
   })
 
   // Update SourceMeasurement Test
@@ -102,7 +102,7 @@ describe('MeasurementTextValue Model Tests', () => {
   })
 
   afterAll(async () => {
-    await deleteSourceMeasurement(sourceMeasurementId, dataSourceId, companyId)
+    await deleteSourceMeasurement(sourceMeasurementId)
     await deleteDataSource(dataSourceId)
     await deleteCompany(companyId)
     await deleteUser(userId)

@@ -1,7 +1,8 @@
 import { PrismaClient, Role, Frequency, HealthStatus } from '@prisma/client'
-import { createDataSource, deleteDataSource } from '@/api/services/dataSourceService'
-import { createUserPref, deleteUserPref, getUserPrefByID } from '@/api/services/userMeasurementPrefService'
-import { createUser, deleteUser } from '@/api/services/userService'
+import { genRandomDummyAuthId } from './utils/random'
+import { createDataSource, deleteDataSource } from '@/pages/api/services/dataSourceService'
+import { createUserPref, deleteUserPref, getUserPrefByID } from '@/pages/api/services/userMeasurementPrefService'
+import { createUser, deleteUser } from '@/pages/api/services/userService'
 const prisma = new PrismaClient()
 
 describe('User Preference Measurement Model Tests', () => {
@@ -11,7 +12,7 @@ describe('User Preference Measurement Model Tests', () => {
   let userPreId: { dataSourceId: number; userId: number; importantFieldName: string }
 
   beforeAll(async () => {
-    const user = await createUser({ name: 'John Doe', role: Role.ADMIN })
+    const user = await createUser({ name: 'John Doe', authId: genRandomDummyAuthId(), role: Role.ADMIN })
     const dataSource = await createDataSource({
       sourceName: 'source1',
       isActive: true,

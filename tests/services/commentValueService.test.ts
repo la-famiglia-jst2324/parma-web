@@ -1,14 +1,15 @@
 import { PrismaClient, Frequency, HealthStatus, Role } from '@prisma/client'
+import { genRandomDummyAuthId } from './utils/random'
 import {
   createCommentValue,
   deleteCommentValue,
   getCommentValueByID,
   updateCommentValue
-} from '@/api/services/commentValueService'
-import { createCompany } from '@/api/services/companyService'
-import { createDataSource } from '@/api/services/dataSourceService'
-import { createSourceMeasurement } from '@/api/services/sourceMeasurementService'
-import { createUser } from '@/api/services/userService'
+} from '@/pages/api/services/commentValueService'
+import { createCompany } from '@/pages/api/services/companyService'
+import { createDataSource } from '@/pages/api/services/dataSourceService'
+import { createSourceMeasurement } from '@/pages/api/services/sourceMeasurementService'
+import { createUser } from '@/pages/api/services/userService'
 const prisma = new PrismaClient()
 
 describe('comment value Model Tests', () => {
@@ -26,7 +27,7 @@ describe('comment value Model Tests', () => {
   let dataSourceId: number
   let userId: number
   test('Create a new user with valid details', async () => {
-    const user = await createUser({ name: 'John Doe', role: Role.USER })
+    const user = await createUser({ name: 'John Doe', authId: genRandomDummyAuthId(), role: Role.USER })
     userId = user.id
   })
   test('Create a new company with valid details', async () => {

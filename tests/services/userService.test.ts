@@ -1,5 +1,6 @@
 import { PrismaClient, Role } from '@prisma/client'
-import { createUser, getUserById, deleteUser, updateUser } from '@/api/services/userService'
+import { genRandomDummyAuthId } from './utils/random'
+import { createUser, getUserById, deleteUser, updateUser } from '@/pages/api/services/userService'
 const prisma = new PrismaClient()
 
 describe('User Model Tests', () => {
@@ -15,7 +16,7 @@ describe('User Model Tests', () => {
 
   // Create User Test
   test('Create a new user with valid details', async () => {
-    const user = await createUser({ name: 'John Doe', role: Role.USER })
+    const user = await createUser({ name: 'John Doe', authId: genRandomDummyAuthId(), role: Role.USER })
     userId = user.id // Store the user ID for later use
     const username = (await getUserById(userId)).name
     expect(username).toBe('John Doe')
@@ -25,7 +26,7 @@ describe('User Model Tests', () => {
   })
 
   test('Create a new user with valid details', async () => {
-    const user = await createUser({ name: 'Mr Burns', role: Role.ADMIN })
+    const user = await createUser({ name: 'Mr Burns', authId: genRandomDummyAuthId(), role: Role.ADMIN })
     userId = user.id // Store the user ID for later use
     const username = (await getUserById(userId)).name
     expect(username).toBe('Mr Burns')

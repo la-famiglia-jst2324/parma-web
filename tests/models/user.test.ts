@@ -7,6 +7,7 @@ import {
   deleteDataSource,
   createDataSource
 } from './utils/helperFunctions'
+import { genRandomDummyAuthId } from 'tests/services/utils/random'
 
 const prisma = new PrismaClient()
 
@@ -26,6 +27,7 @@ describe('User Model Tests', () => {
     const user = await prisma.user.create({
       data: {
         name: 'John Doe',
+        authId: genRandomDummyAuthId(),
         role: 'USER'
       }
     })
@@ -41,6 +43,7 @@ describe('User Model Tests', () => {
     const user = await prisma.user.create({
       data: {
         name: 'Mr Burns',
+        authId: genRandomDummyAuthId(),
         role: 'ADMIN'
       }
     })
@@ -133,9 +136,9 @@ describe('UserImportantMeasurementPreference Model Tests', () => {
     })
 
     expect(preference).toBeTruthy()
-    expect(preference.dataSourceId).toBe(dataSourceId)
-    expect(preference.userId).toBe(userId)
-    expect(preference.importantFieldName).toBe(preference.importantFieldName)
+    expect(preference?.dataSourceId).toBe(dataSourceId)
+    expect(preference?.userId).toBe(userId)
+    expect(preference?.importantFieldName).toBe(preference?.importantFieldName)
   })
 
   // Update UserImportantMeasurementPreference Test

@@ -1,12 +1,13 @@
 import { FileType, PrismaClient, Role } from '@prisma/client'
+import { genRandomDummyAuthId } from './utils/random'
 import {
   createAttachment,
   deleteAttachment,
   getAttachmentByID,
   updateAttachment
-} from '@/api/services/attachmentService'
-import { createCompany } from '@/api/services/companyService'
-import { createUser } from '@/api/services/userService'
+} from '@/pages/api/services/attachmentService'
+import { createCompany } from '@/pages/api/services/companyService'
+import { createUser } from '@/pages/api/services/userService'
 const prisma = new PrismaClient()
 
 describe('Company Attachment Model Tests', () => {
@@ -22,7 +23,7 @@ describe('Company Attachment Model Tests', () => {
   let attachmentId: number
 
   test('Create a new user with valid details', async () => {
-    const user = await createUser({ name: 'John Doe', role: Role.USER })
+    const user = await createUser({ name: 'John Doe', authId: genRandomDummyAuthId(), role: Role.USER })
     userId = user.id
   })
   test('Create a new company with valid details', async () => {

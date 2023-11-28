@@ -4,7 +4,7 @@ import {
   deleteDataSource,
   getDataSourceByID,
   updateDataSource
-} from '@/api/services/dataSourceService'
+} from '@/pages/api/services/dataSourceService'
 
 const prisma = new PrismaClient()
 

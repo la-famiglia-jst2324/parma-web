@@ -1,6 +1,7 @@
 import { PrismaClient, Role } from '@prisma/client'
-import { createBucket, deleteBucket, getBucketById, updateBucket } from '@/api/services/bucketService'
-import { createUser } from '@/api/services/userService'
+import { genRandomDummyAuthId } from './utils/random'
+import { createBucket, deleteBucket, getBucketById, updateBucket } from '@/pages/api/services/bucketService'
+import { createUser } from '@/pages/api/services/userService'
 
 const prisma = new PrismaClient()
 
@@ -16,7 +17,7 @@ describe('Bucket Model Tests', () => {
   let bucketId: number
 
   test('Create a new user with valid details', async () => {
-    const user = await createUser({ name: 'John Doe', role: Role.USER })
+    const user = await createUser({ name: 'John Doe', authId: genRandomDummyAuthId(), role: Role.USER })
     userId = user.id
   })
 

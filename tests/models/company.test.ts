@@ -41,7 +41,7 @@ describe('Company Model Tests', () => {
     })
 
     expect(company).toBeTruthy()
-    expect(company.id).toBe(companyId)
+    expect(company?.id).toBe(companyId)
     expect(company?.addedBy).toBe(userId)
   })
 

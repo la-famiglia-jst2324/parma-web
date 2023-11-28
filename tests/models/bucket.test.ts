@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client'
-import { createUser, createCompany, deleteUser, deleteCompany, createBucket } from './utils/helperFunctions'
+import { createUser, createCompany, deleteUser, deleteCompany, createBucket, deleteBucket } from './utils/helperFunctions'
 
 const prisma = new PrismaClient()
 

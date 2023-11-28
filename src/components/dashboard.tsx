@@ -71,7 +71,7 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
         </div>
       </div>
       <div className="w-full">
-        <div className="sticky top-0 flex items-center justify-end gap-4 bg-white p-4 shadow-lg">
+        <div className="sticky top-0 z-50 flex items-center justify-end gap-4 bg-white p-4 shadow-lg">
           <div className=" mr-4 inline-flex h-9 w-32 items-center justify-center rounded-md bg-gray-200">
             <Link
               href="/settings"

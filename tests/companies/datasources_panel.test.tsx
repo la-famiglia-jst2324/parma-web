@@ -1,6 +1,6 @@
 import DataSourcesPanel from '@/components/Companies/DataSourcesPanel';
-import { dummyDatasourceHealth } from '@/components/Companies/dummydata';
-import { fireEvent, render, screen } from '@testing-library/react';
+import { dummyDatasourceHealth } from '@/app/api/companies/DummyCompanies';
+import { render } from '@testing-library/react';
 import React from 'react';
 
 import '@testing-library/jest-dom'

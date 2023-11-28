@@ -1,17 +1,51 @@
 'use client'
 
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { Tab, TabGroup, TabList, TabPanel, TabPanels, Button } from '@tremor/react'
 import { UserGroupIcon, UserIcon } from '@heroicons/react/solid'
 import { RefreshIcon } from '@heroicons/react/outline'
-import { companyData } from 'src/components/Companies/dummydata'
+import type { CompanyData } from '@/types/companies'
 import GoBackButton from '@/components/Companies/GoBackButton'
 import CompanyAttachment from '@/components/Companies/CompanyAttachment'
 import DataSourcesPanel from '@/components/Companies/DataSourcesPanel'
 import PerformancePanel from '@/components/Companies/PerformancePanel'
 
+async function getCompanyData() {
+  try {
+    const res = await fetch('/api/companies/1', {
+      method: 'GET',
+      cache: 'no-cache'
+    })
+    if (!res.ok) {
+      console.log('Response status:', res.status)
+      throw new Error('HTTP response was not OK')
+    }
+    const json = await res.json()
+    return json
+  } catch (error) {
+    console.log('An error has occurred: ', error)
+  }
+}
+
 const CompanyPage: React.FC = () => {
-  const { name, description, attachments } = companyData
+  const [companyData, setCompanyData] = useState<CompanyData>()
+
+  useEffect(() => {
+    getCompanyData()
+      .then((res) => {
+        setCompanyData(res)
+      })
+      .catch((error) => {
+        console.error('Failed to fetch subscribed companies:', error)
+      })
+  }, [])
+
+  let name, description, attachments
+  if (companyData) {
+    name = companyData.name
+    description = companyData.description
+    attachments = companyData.attachments
+  }
 
   return (
     <div className="m-3 flex flex-col items-start rounded-lg border-0 bg-white p-3 shadow-md">
@@ -38,9 +72,8 @@ const CompanyPage: React.FC = () => {
           </h3>
           <Button icon={RefreshIcon}>Attach Data</Button>
           <div className="flex space-x-4 py-4">
-            {attachments.map((attachment) => (
-              <CompanyAttachment key={attachment.id} attachment={attachment} />
-            ))}
+            {attachments &&
+              attachments.map((attachment) => <CompanyAttachment key={attachment.id} attachment={attachment} />)}
           </div>
         </div>
 

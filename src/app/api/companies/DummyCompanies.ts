@@ -1,33 +1,4 @@
-// dummyData.ts
-
-export interface Attachment {
-  id: number
-  name: string
-  filetype: string
-}
-
-export interface CompanyData {
-  name: string
-  description: string
-  attachments: Attachment[]
-}
-
-export interface Metric {
-  name: string
-  status: 'Active' | 'Inactive'
-}
-
-export interface Company {
-  name: string
-  description: string
-  activeDatasources: number
-  inactiveDatasources: number
-}
-
-export interface Datasource {
-  name: string
-  metrics: Metric[]
-}
+import type { Company, CompanyData, Datasource } from '@/types/companies'
 
 export const companyData: CompanyData = {
   name: 'Tesla',
@@ -48,6 +19,34 @@ export const companyData: CompanyData = {
 }
 
 export const dummyCompanies: Company[] = [
+  {
+    name: 'Pharmaceutical Company A',
+    description:
+      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer congue lacus odio, in molestie neque cursus at. Name consequat lobortis nulla, id consectetur eros iaculis in. Sed rhoncus ac ante id placerat. Sed quis velit luctus, convallis arcu eu, posuere turpis. Name id vehicula ante. ',
+    activeDatasources: 10,
+    inactiveDatasources: 2
+  },
+  {
+    name: 'Tech Innovators Inc.',
+    description:
+      'Maecenas auctor velit sed arcu vehicula, vitae aliquam sem pellentesque. Curabitur venenatis, sapien ac laoreet semper, diam quam placerat ex, id auctor orci risus aliquet odio. Aenean dignissim lacinia tincidunt.',
+    activeDatasources: 8,
+    inactiveDatasources: 4
+  },
+  {
+    name: 'Pharmaceutical Company A',
+    description:
+      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer congue lacus odio, in molestie neque cursus at. Name consequat lobortis nulla, id consectetur eros iaculis in. Sed rhoncus ac ante id placerat. Sed quis velit luctus, convallis arcu eu, posuere turpis. Name id vehicula ante. ',
+    activeDatasources: 10,
+    inactiveDatasources: 2
+  },
+  {
+    name: 'Tech Innovators Inc.',
+    description:
+      'Maecenas auctor velit sed arcu vehicula, vitae aliquam sem pellentesque. Curabitur venenatis, sapien ac laoreet semper, diam quam placerat ex, id auctor orci risus aliquet odio. Aenean dignissim lacinia tincidunt.',
+    activeDatasources: 8,
+    inactiveDatasources: 4
+  },
   {
     name: 'Pharmaceutical Company A',
     description:

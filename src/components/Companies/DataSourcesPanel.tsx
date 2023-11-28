@@ -1,7 +1,7 @@
 import React from 'react'
 import { MultiSelect, MultiSelectItem } from '@tremor/react'
-import { dummyDatasourceHealth } from './dummydata'
 import DatasourceHealth from './DatasourceHealth'
+import { dummyDatasourceHealth } from '@/app/api/companies/DummyCompanies'
 
 const DataSourcesPanel: React.FC = () => {
   return (

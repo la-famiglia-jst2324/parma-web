@@ -26,11 +26,10 @@ const getSourceMeasurementByID = async (id: number) => {
     const measurement = await prisma.sourceMeasurement.findUnique({
       where: { id }
     })
-    if (measurement) {
-      return measurement
-    } else {
+    if (!measurement) {
       throw new Error(`source measurement with ID ${id} not found.`)
     }
+    return measurement
   } catch (error) {
     console.error('Error getting the source measurement by ID:', error)
     throw error
@@ -81,7 +80,7 @@ const deleteSourceMeasurement = async (id: number) => {
   }
 }
 
-export default {
+export {
   createSourceMeasurement,
   getSourceMeasurementByID,
   getAllSourceMeasurements,

@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "prisma": {
-    "schema": "src/api/prisma/schema.prisma"
+    "schema": "src/pages/api/prisma/schema.prisma"
   },
   "scripts": {
     "dev": "next dev -p 3000",

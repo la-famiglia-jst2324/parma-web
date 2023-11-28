@@ -43,7 +43,6 @@
     "src/database/schema.prisma"
 ],
   "exclude": [
-    "node_modules",
-    "src/pages/api/**"
+    "node_modules"
   ]
 }

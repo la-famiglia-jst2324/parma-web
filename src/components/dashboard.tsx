@@ -26,10 +26,10 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
             method: 'POST',
             headers: {
               Authorization: `Bearer ${token}`
-            },
+            }
           })
           const response = await result.json()
-          alert(result.status + " - " + response?.message)
+          alert(result.status + ' - ' + response?.message)
         }
       }}
     >

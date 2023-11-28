@@ -19,11 +19,10 @@ const getCommentValueByID = async (id: number) => {
     const commentValue = await prisma.measurementCommentValue.findUnique({
       where: { id }
     })
-    if (commentValue) {
-      return commentValue
-    } else {
+    if (!commentValue) {
       throw new Error(`comment value with ID ${id} not found.`)
     }
+    return commentValue
   } catch (error) {
     console.error('Error getting the comment value by ID:', error)
     throw error

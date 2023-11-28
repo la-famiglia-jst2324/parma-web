@@ -19,11 +19,10 @@ const getTextValueByID = async (id: number) => {
     const textValue = await prisma.measurementTextValue.findUnique({
       where: { id }
     })
-    if (textValue) {
-      return textValue
-    } else {
+    if (!textValue) {
       throw new Error(`Text value with ID ${id} not found.`)
     }
+    return textValue
   } catch (error) {
     console.error('Error getting the text value by ID:', error)
     throw error

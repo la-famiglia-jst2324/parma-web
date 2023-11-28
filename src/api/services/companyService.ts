@@ -1,13 +1,12 @@
 import { prisma } from '../prismaClient'
 
-// check if the company already exists??? use name
 const createCompany = async (data: { name: string; description?: string; addedBy: number }) => {
   try {
     return await prisma.company.create({
       data: {
         name: data.name,
         description: data.description,
-        addedBy: data.addedBy // created_at and modified_at automatically
+        addedBy: data.addedBy
       }
     })
   } catch (error) {
@@ -21,11 +20,10 @@ const getCompanyByID = async (id: number) => {
     const company = await prisma.company.findUnique({
       where: { id }
     })
-    if (company) {
-      return company
-    } else {
+    if (!company) {
       throw new Error(`Company with ID ${id} not found.`)
     }
+    return company
   } catch (error) {
     console.error('Error getting a company by ID:', error)
     throw error
@@ -37,11 +35,10 @@ const getCompanyByName = async (name: string) => {
     const company = await prisma.company.findMany({
       where: { name }
     })
-    if (company) {
-      return company
-    } else {
+    if (!company) {
       throw new Error(`Company with name ${name} not found.`)
     }
+    return company
   } catch (error) {
     console.error('Error finding company by name:', error)
     throw error
@@ -58,7 +55,6 @@ const getAllCompanies = async () => {
   }
 }
 
-// who can update the info?  only the company creator? the addBy field can not be modified?
 const updateCompany = async (
   id: number,
   data: {
@@ -74,7 +70,6 @@ const updateCompany = async (
   })
 }
 
-// NEED: FR-06 when deleting a company from the system, should also delete its data
 const deleteCompany = async (id: number) => {
   try {
     const result = await prisma.$transaction(async (prisma) => {
@@ -84,7 +79,6 @@ const deleteCompany = async (id: number) => {
           companyId: id
         }
       })
-
       // delete company record
       return await prisma.company.delete({
         where: { id }

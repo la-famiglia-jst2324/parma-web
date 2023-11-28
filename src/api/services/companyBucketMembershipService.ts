@@ -1,6 +1,5 @@
 import { prisma } from '../prismaClient'
 
-// FR-13  user add a company to a bucket, update the lists in both company and bucket
 const addCompanyToBucket = async (companyId: number, bucketId: number) => {
   try {
     // can not add the same company repeatedly
@@ -45,11 +44,10 @@ const getCompaniesByBucketId = async (bucketId: number) => {
         // map list company，not CompanyBucketMembership
       }
     })
-    if (membership) {
-      return membership.map((membership) => membership.company)
-    } else {
+    if (!membership) {
       throw new Error(`bucket${bucketId} does not have any company.`)
     }
+    return membership.map((membership) => membership.company)
   } catch (error) {
     console.error('Error retrieving companies from bucket:', error)
     throw error
@@ -67,11 +65,10 @@ const getBucketsByCompanyId = async (companyId: number) => {
         bucket: true
       }
     })
-    if (membership) {
-      return membership.map((membership) => membership.bucket)
-    } else {
+    if (!membership) {
       throw new Error(`company${companyId} does not belong to any buckets.`)
     }
+    return membership.map((membership) => membership.bucket)
   } catch (error) {
     console.error('Error getting buckets in this company:', error)
     throw error
@@ -88,11 +85,10 @@ const getCompanyBucketByID = async (bucketId: number, companyId: number) => {
         }
       }
     })
-    if (companyBucket) {
-      return companyBucket
-    } else {
+    if (!companyBucket) {
       throw new Error(`not found.`)
     }
+    return companyBucket
   } catch (error) {
     console.error('Error getting by ID:', error)
     throw error

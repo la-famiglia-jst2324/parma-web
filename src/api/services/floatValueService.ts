@@ -19,11 +19,10 @@ const getFloatValueByID = async (id: number) => {
     const floatValue = await prisma.measurementFloatValue.findUnique({
       where: { id }
     })
-    if (floatValue) {
-      return floatValue
-    } else {
+    if (!floatValue) {
       throw new Error(`float value with ID ${id} not found.`)
     }
+    return floatValue
   } catch (error) {
     console.error('Error getting the float value by ID:', error)
     throw error

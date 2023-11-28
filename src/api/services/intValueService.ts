@@ -19,11 +19,10 @@ const getIntValueByID = async (id: number) => {
     const intValue = await prisma.measurementIntValue.findUnique({
       where: { id }
     })
-    if (intValue) {
-      return intValue
-    } else {
+    if (!intValue) {
       throw new Error(`int value with ID ${id} not found.`)
     }
+    return intValue
   } catch (error) {
     console.error('Error getting the int value by ID:', error)
     throw error

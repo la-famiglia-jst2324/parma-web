@@ -1,6 +1,5 @@
 import type { HealthStatus } from '@prisma/client'
 import { prisma } from '../prismaClient'
-// FR-04 Users add/edit/remove data sources for a company
 // add Datasource To Company
 const createCompanyDataSource = async (data: {
   dataSourceId: number
@@ -46,12 +45,11 @@ const getDataSourcesByCompanyId = async (companyId: number) => {
         dataSources: true
       }
     })
-    if (membership) {
-      // list data sources
-      return membership.map((membership) => membership.dataSources)
-    } else {
+    if (!membership) {
       throw new Error(`company${companyId} does not have any data sources.`)
     }
+    // list data sources
+    return membership.map((membership) => membership.dataSources)
   } catch (error) {
     console.error('Error getting data sources in this company:', error)
     throw error
@@ -59,22 +57,21 @@ const getDataSourcesByCompanyId = async (companyId: number) => {
 }
 
 // maybe dont need
-const getCompaniesByDataSourceId = async (datasourceId: number) => {
+const getCompaniesByDataSourceId = async (dataSourceId: number) => {
   try {
     const membership = await prisma.companyDataSource.findMany({
       where: {
-        dataSourceId: datasourceId
+        dataSourceId
       },
       include: {
         companies: true
       }
     })
-    if (membership) {
-      // list all company
-      return membership.map((membership) => membership.companies)
-    } else {
-      throw new Error(`the data source${datasourceId} does not have any company.`)
+    if (!membership) {
+      throw new Error(`the data source${dataSourceId} does not have any company.`)
     }
+    // list all company
+    return membership.map((membership) => membership.companies)
   } catch (error) {
     console.error('Error retrieving companies from data source:', error)
     throw error
@@ -108,13 +105,13 @@ const updateCompanyDataSource = async (
 }
 
 // remove Datasource from Company
-const deleteCompanyDataSource = async (companyId: number, datasourceId: number) => {
+const deleteCompanyDataSource = async (companyId: number, dataSourceId: number) => {
   try {
     const membership = await prisma.companyDataSource.delete({
       where: {
         dataSourceId_companyId: {
-          companyId,
-          dataSourceId: datasourceId
+          dataSourceId,
+          companyId
         }
       }
     })

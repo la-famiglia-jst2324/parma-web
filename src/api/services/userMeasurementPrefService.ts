@@ -15,26 +15,26 @@ const createUserPref = async (data: { dataSourceId: number; userId: number; impo
   }
 }
 
-// const getUserPrefByID = async (dataSourceId: number, userId: number) => {
-//   try {
-//     const pref = await prisma.userImportantMeasurementPreference.findUnique({
-//       where: {
-//         dataSourceId_userId: {
-//           dataSourceId,
-//           userId
-//         }
-//       }
-//     })
-//     if (pref) {
-//       return pref
-//     } else {
-//       throw new Error(`user preference with ID not found.`)
-//     }
-//   } catch (error) {
-//     console.error('Error getting the user preference by ID:', error)
-//     throw error
-//   }
-// }
+const getUserPrefByID = async (dataSourceId: number, userId: number, importantFieldName: string) => {
+  try {
+    const pref = await prisma.userImportantMeasurementPreference.findUnique({
+      where: {
+        dataSourceId_userId_importantFieldName: {
+          dataSourceId,
+          userId,
+          importantFieldName
+        }
+      }
+    })
+    if (!pref) {
+      throw new Error(`user preference with ID not found.`)
+    }
+    return pref
+  } catch (error) {
+    console.error('Error getting the user preference by ID:', error)
+    throw error
+  }
+}
 
 const getPrefsByUserId = async (userId: number) => {
   try {
@@ -50,30 +50,32 @@ const getPrefsByUserId = async (userId: number) => {
   }
 }
 
-// const updateUserPref = async (
-//   dataSourceId: number,
-//   userId: number,
-//   data: {
-//     importantFieldName: string
-//   }
-// ) => {
-//   try {
-//     return await prisma.userImportantMeasurementPreference.update({
-//       where: {
-//         dataSourceId_userId: {
-//           dataSourceId,
-//           userId
-//         }
-//       },
-//       data: {
-//         ...data
-//       }
-//     })
-//   } catch (error) {
-//     console.error('Error updating your prefs:', error)
-//     throw error
-//   }
-// }
+const updateUserPref = async (
+  dataSourceId: number,
+  userId: number,
+  importantFieldName: string,
+  data: {
+    importantFieldName: string
+  }
+) => {
+  try {
+    return await prisma.userImportantMeasurementPreference.update({
+      where: {
+        dataSourceId_userId_importantFieldName: {
+          dataSourceId,
+          userId,
+          importantFieldName
+        }
+      },
+      data: {
+        ...data
+      }
+    })
+  } catch (error) {
+    console.error('Error updating your prefs:', error)
+    throw error
+  }
+}
 
 const deleteUserPref = async (dataSourceId: number, userId: number, importantFieldName: string) => {
   try {
@@ -95,8 +97,8 @@ const deleteUserPref = async (dataSourceId: number, userId: number, importantFie
 
 export default {
   createUserPref,
-  // getUserPrefByID,
+  getUserPrefByID,
   getPrefsByUserId,
-  // updateUserPref,
+  updateUserPref,
   deleteUserPref
 }

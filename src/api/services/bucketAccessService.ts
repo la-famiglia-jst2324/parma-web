@@ -26,11 +26,10 @@ const getBucketAccessByID = async (bucketId: number, inviteeId: number) => {
         }
       }
     })
-    if (bucketAccess) {
-      return bucketAccess
-    } else {
+    if (!bucketAccess) {
       throw new Error(`not found.`)
     }
+    return bucketAccess
   } catch (error) {
     console.error('Error getting by ID:', error)
     throw error

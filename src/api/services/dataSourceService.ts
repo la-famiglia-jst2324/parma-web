@@ -28,40 +28,31 @@ const getDataSourceByID = async (id: number) => {
   try {
     const datasource = await prisma.dataSource.findUnique({
       where: { id }
-      // include: {
-      //   companyDataSource: true,
-      //   notifications: true,
-      //   sourceMeasurements: true,
-      //   userImportantMeasurementPreference: true,
-      // },
     })
-    if (datasource) {
-      return datasource
-    } else {
+    if (!datasource) {
       throw new Error(`Data source with ID ${id} not found.`)
     }
+    return datasource
   } catch (error) {
     console.error('Error getting a data source by ID:', error)
     throw error
   }
 }
 
-// if name is unique
-// const getDataSourceByName = async (sourceName: string) => {
-//   try {
-//     const datasource = await prisma.dataSource.findUnique({
-//       where: { sourceName },
-//     });
-//     if (datasource) {
-//       return datasource;
-//     } else {
-//       throw new Error(`DataSource with name ${sourceName} not found.`);
-//     }
-//   } catch (error) {
-//     console.error('Error finding data source by name:', error);
-//     throw error;
-//   }
-// };
+const getDataSourceByName = async (sourceName: string) => {
+  try {
+    const datasource = await prisma.dataSource.findMany({
+      where: { sourceName }
+    })
+    if (!datasource) {
+      throw new Error(`DataSource with name ${sourceName} not found.`)
+    }
+    return datasource
+  } catch (error) {
+    console.error('Error finding data source by name:', error)
+    throw error
+  }
+}
 
 const getAllDataSources = async () => {
   try {
@@ -79,7 +70,7 @@ const updateDataSource = async (
     sourceName?: string
     isActive?: boolean
     healthStatus?: HealthStatus
-    frequency?: Frequency
+    defaultFrequency?: Frequency
     description?: string
   }
 ) => {
@@ -96,13 +87,12 @@ const updateDataSource = async (
   }
 }
 
-// need also delete all data of this datasource????
 const deleteDataSource = async (id: number) => {
   try {
     const datasource = await prisma.dataSource.delete({
       where: { id }
     })
-    return datasource // if successful, return the deleted DataSource information
+    return datasource
   } catch (error) {
     console.error('Error deleting data source:', error)
     throw error
@@ -112,7 +102,7 @@ const deleteDataSource = async (id: number) => {
 export default {
   createDataSource,
   getDataSourceByID,
-  // getDataSourceByName,
+  getDataSourceByName,
   getAllDataSources,
   updateDataSource,
   deleteDataSource

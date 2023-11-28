@@ -19,11 +19,10 @@ const getParagraphValueByID = async (id: number) => {
     const paragraphValue = await prisma.measurementParagraphValue.findUnique({
       where: { id }
     })
-    if (paragraphValue) {
-      return paragraphValue
-    } else {
+    if (!paragraphValue) {
       throw new Error(`paragraph value with ID ${id} not found.`)
     }
+    return paragraphValue
   } catch (error) {
     console.error('Error getting the paragraph value by ID:', error)
     throw error

@@ -4,8 +4,8 @@
 [![CI](https://github.com/la-famiglia-jst2324/parma-web/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/la-famiglia-jst2324/parma-web/actions/workflows/ci.yml)
 [![Deploy](https://github.com/la-famiglia-jst2324/parma-web/actions/workflows/release.yml/badge.svg)](https://github.com/la-famiglia-jst2324/parma-web/actions/workflows/release.yml)
 [![Major Tag](https://github.com/la-famiglia-jst2324/parma-web/actions/workflows/tag-major.yml/badge.svg)](https://github.com/la-famiglia-jst2324/parma-web/actions/workflows/tag-major.yml)
-![Functions](https://img.shields.io/badge/functions-63.08%25-red.svg?style=flat)
-![Lines](https://img.shields.io/badge/lines-50.28%25-red.svg?style=flat)
+![Functions](https://img.shields.io/badge/functions-62.29%25-red.svg?style=flat)
+![Lines](https://img.shields.io/badge/lines-52.66%25-red.svg?style=flat)
 
 ParmaAI webstack including frontend and REST API backend.
 
@@ -123,14 +123,15 @@ The following steps will get you started with the project.
 
 Follow the steps below to update your local database with recent changes
 
-1.  Make sure your .env file contains:
-    `POSTGRES_URL="postgresql://parma-prod-db:parma-prod-db@localhost:9000/parma-prod-db"
-`
-2.  To apply the recent changes to your local database, run:
+1. Make sure your .env file contains:
 
-    ```
+   `POSTGRES_URL="postgresql://parma-prod-db:parma-prod-db@localhost:9000/parma-prod-db"`
+
+2. To apply the recent changes to your local database, run:
+
+   ```bash
     pnpm prisma migrate dev
-    ```
+   ```
 
 ## PR workflow
 

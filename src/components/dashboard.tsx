@@ -41,10 +41,10 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="flex flex-row">
-      <div className="sticky left-0 top-0 flex h-screen w-1/4 flex-col bg-primary">
+      <div className="sticky left-0 top-0 flex h-screen w-1/6 flex-col bg-primary">
         <div className="ml-4 flex grow flex-col overflow-y-auto">
-          <div className="mb-12">
-            <Link href="/" className="cursor-pointer text-3xl font-extrabold text-white">
+          <div className="mb-6 mt-4">
+            <Link href="/" className="cursor-pointer pt-6 text-3xl font-extrabold text-white">
               ParmaAI
             </Link>
           </div>

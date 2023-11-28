@@ -1,13 +1,13 @@
 import { PrismaClient } from '@prisma/client'
+import { genRandomDummyAuthId } from 'tests/services/utils/random'
 import {
   createUser,
   deleteUser,
   createCompany,
   deleteCompany,
-  deleteDataSource,
-  createDataSource
+  createDataSource,
+  deleteDataSource
 } from './utils/helperFunctions'
-import { genRandomDummyAuthId } from 'tests/services/utils/random'
 
 const prisma = new PrismaClient()
 

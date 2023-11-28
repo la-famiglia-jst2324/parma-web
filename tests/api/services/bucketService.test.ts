@@ -1,5 +1,5 @@
 import { PrismaClient, Role } from '@prisma/client'
-import { genRandomDummyAuthId } from './utils/random'
+import { genRandomDummyAuthId } from '../utils/random'
 import { createBucket, deleteBucket, getBucketById, updateBucket } from '@/pages/api/services/bucketService'
 import { createUser } from '@/pages/api/services/userService'
 

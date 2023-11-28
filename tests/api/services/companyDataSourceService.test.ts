@@ -1,5 +1,5 @@
 import { Frequency, HealthStatus, PrismaClient, Role } from '@prisma/client'
-import { genRandomDummyAuthId } from './utils/random'
+import { genRandomDummyAuthId } from '../utils/random'
 import {
   createCompanyDataSource,
   deleteCompanyDataSource,

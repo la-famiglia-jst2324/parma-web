@@ -1,5 +1,5 @@
 import { PrismaClient, Frequency, HealthStatus, Role } from '@prisma/client'
-import { genRandomDummyAuthId } from './utils/random'
+import { genRandomDummyAuthId } from '../utils/random'
 import { createCompany } from '@/pages/api/services/companyService'
 import { createDataSource } from '@/pages/api/services/dataSourceService'
 import {

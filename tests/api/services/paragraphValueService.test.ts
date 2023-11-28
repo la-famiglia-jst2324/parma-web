@@ -1,14 +1,14 @@
 import { PrismaClient, Frequency, HealthStatus, Role } from '@prisma/client'
-import { genRandomDummyAuthId } from './utils/random'
+import { genRandomDummyAuthId } from '../utils/random'
 import { createCompany } from '@/pages/api/services/companyService'
 import { createDataSource } from '@/pages/api/services/dataSourceService'
-import { createSourceMeasurement } from '@/pages/api/services/sourceMeasurementService'
 import {
-  createTextValue,
-  deleteTextValue,
-  getTextValueByID,
-  updateTextValue
-} from '@/pages/api/services/textValueService'
+  createParagraphValue,
+  deleteParagraphValue,
+  getParagraphValueByID,
+  updateParagraphValue
+} from '@/pages/api/services/paragraphValueService'
+import { createSourceMeasurement } from '@/pages/api/services/sourceMeasurementService'
 import { createUser } from '@/pages/api/services/userService'
 const prisma = new PrismaClient()
 
@@ -21,7 +21,7 @@ describe('text value Model Tests', () => {
     await prisma.$disconnect()
   })
 
-  let textValueId: number
+  let paragraphValueId: number
   let sourceMeasurementId: number
   let companyId: number
   let dataSourceId: number
@@ -69,32 +69,32 @@ describe('text value Model Tests', () => {
     expect(sourceMeasurement.measurementName).toBe('intMea')
   })
 
-  test('Create a new text value with valid details', async () => {
-    const textValue = await createTextValue({ sourceMeasurementId, value: 'text' })
-    textValueId = textValue.id
-    expect(textValue).toHaveProperty('id')
-    expect(textValue.sourceMeasurementId).toBe(sourceMeasurementId)
-    expect(textValue.value).toBe('text')
+  test('Create a new paragraph value with valid details', async () => {
+    const paragraphValue = await createParagraphValue({ sourceMeasurementId, value: 'paragraph' })
+    paragraphValueId = paragraphValue.id
+    expect(paragraphValue).toHaveProperty('id')
+    expect(paragraphValue.sourceMeasurementId).toBe(sourceMeasurementId)
+    expect(paragraphValue.value).toBe('paragraph')
   })
 
-  test('Retrieve a text value by ID', async () => {
-    const textValue = await getTextValueByID(textValueId)
-    expect(textValue).toBeTruthy()
-    expect(textValue?.id).toBe(textValueId)
+  test('Retrieve a paragraph value by ID', async () => {
+    const paragraphValue = await getParagraphValueByID(paragraphValueId)
+    expect(paragraphValue).toBeTruthy()
+    expect(paragraphValue?.id).toBe(paragraphValueId)
   })
 
-  test('Update text value', async () => {
-    const updatedValue = await updateTextValue(textValueId, {
+  test('Update paragraph value', async () => {
+    const updatedValue = await updateParagraphValue(paragraphValueId, {
       sourceMeasurementId,
-      value: 'updatedTextValue'
+      value: 'updatedParaValue'
     })
-    expect(updatedValue.value).toBe('updatedTextValue')
+    expect(updatedValue.value).toBe('updatedParaValue')
   })
 
-  test('Delete a text value', async () => {
-    await deleteTextValue(textValueId)
-    const deletedValue = await prisma.measurementTextValue.findUnique({
-      where: { id: textValueId }
+  test('Delete a paragraph value', async () => {
+    await deleteParagraphValue(paragraphValueId)
+    const deletedValue = await prisma.measurementParagraphValue.findUnique({
+      where: { id: paragraphValueId }
     })
     expect(deletedValue).toBeNull()
   })

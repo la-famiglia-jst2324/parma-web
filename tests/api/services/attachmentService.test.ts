@@ -1,5 +1,5 @@
 import { FileType, PrismaClient, Role } from '@prisma/client'
-import { genRandomDummyAuthId } from './utils/random'
+import { genRandomDummyAuthId } from '../utils/random'
 import {
   createAttachment,
   deleteAttachment,

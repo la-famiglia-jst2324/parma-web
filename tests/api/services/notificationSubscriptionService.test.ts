@@ -1,5 +1,5 @@
 import { ChannelType, Role, EntityType, PrismaClient } from '@prisma/client'
-import { genRandomDummyAuthId } from './utils/random'
+import { genRandomDummyAuthId } from '../utils/random'
 import { createCompany, deleteCompany } from '@/pages/api/services/companyService'
 import { createNotificationChannel } from '@/pages/api/services/notificationChannelService'
 import {

@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client'
-import { genRandomDummyAuthId } from 'tests/services/utils/random'
+import { genRandomDummyAuthId } from '@tests/api/utils/random'
 import {
   createUser,
   deleteUser,

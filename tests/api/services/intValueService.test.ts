@@ -1,18 +1,13 @@
 import { PrismaClient, Frequency, HealthStatus, Role } from '@prisma/client'
-import { genRandomDummyAuthId } from './utils/random'
-import {
-  createCommentValue,
-  deleteCommentValue,
-  getCommentValueByID,
-  updateCommentValue
-} from '@/pages/api/services/commentValueService'
+import { genRandomDummyAuthId } from '../utils/random'
 import { createCompany } from '@/pages/api/services/companyService'
 import { createDataSource } from '@/pages/api/services/dataSourceService'
+import { createIntValue, deleteIntValue, getIntValueByID, updateIntValue } from '@/pages/api/services/intValueService'
 import { createSourceMeasurement } from '@/pages/api/services/sourceMeasurementService'
 import { createUser } from '@/pages/api/services/userService'
 const prisma = new PrismaClient()
 
-describe('comment value Model Tests', () => {
+describe('int value Model Tests', () => {
   beforeAll(async () => {
     await prisma.$connect()
   })
@@ -21,7 +16,7 @@ describe('comment value Model Tests', () => {
     await prisma.$disconnect()
   })
 
-  let commentValueId: number
+  let intValueId: number
   let sourceMeasurementId: number
   let companyId: number
   let dataSourceId: number
@@ -69,32 +64,32 @@ describe('comment value Model Tests', () => {
     expect(sourceMeasurement.measurementName).toBe('intMea')
   })
 
-  test('Create a new comment value with valid details', async () => {
-    const commentValue = await createCommentValue({ sourceMeasurementId, value: 'comment' })
-    commentValueId = commentValue.id
-    expect(commentValue).toHaveProperty('id')
-    expect(commentValue.sourceMeasurementId).toBe(sourceMeasurementId)
-    expect(commentValue.value).toBe('comment')
+  test('Create a new int value with valid details', async () => {
+    const intValue = await createIntValue({ sourceMeasurementId, value: 1 })
+    intValueId = intValue.id
+    expect(intValue).toHaveProperty('id')
+    expect(intValue.sourceMeasurementId).toBe(sourceMeasurementId)
+    expect(intValue.value).toBe(1)
   })
 
-  test('Retrieve a comment value by ID', async () => {
-    const commentValue = await getCommentValueByID(commentValueId)
-    expect(commentValue).toBeTruthy()
-    expect(commentValue?.id).toBe(commentValueId)
+  test('Retrieve a int value by ID', async () => {
+    const intValue = await getIntValueByID(intValueId)
+    expect(intValue).toBeTruthy()
+    expect(intValue?.id).toBe(intValueId)
   })
 
-  test('Update a comment value name', async () => {
-    const updatedValue = await updateCommentValue(commentValueId, {
+  test('Update a int value name', async () => {
+    const updatedValue = await updateIntValue(intValueId, {
       sourceMeasurementId,
-      value: 'updatedComment'
+      value: 2
     })
-    expect(updatedValue.value).toBe('updatedComment')
+    expect(updatedValue.value).toBe(2)
   })
 
-  test('Delete a comment value', async () => {
-    await deleteCommentValue(commentValueId)
-    const deletedValue = await prisma.measurementCommentValue.findUnique({
-      where: { id: commentValueId }
+  test('Delete a int value', async () => {
+    await deleteIntValue(intValueId)
+    const deletedValue = await prisma.measurementIntValue.findUnique({
+      where: { id: intValueId }
     })
     expect(deletedValue).toBeNull()
   })

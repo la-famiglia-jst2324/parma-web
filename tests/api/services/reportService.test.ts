@@ -1,5 +1,5 @@
 import { PrismaClient, Role } from '@prisma/client'
-import { genRandomDummyAuthId } from './utils/random'
+import { genRandomDummyAuthId } from '../utils/random'
 import { createCompany } from '@/pages/api/services/companyService'
 import { createReport, deleteReport, getReportById, updateReport } from '@/pages/api/services/reportService'
 import { createUser } from '@/pages/api/services/userService'

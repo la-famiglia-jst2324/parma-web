@@ -1,5 +1,5 @@
 import { PrismaClient, Role } from '@prisma/client'
-import { genRandomDummyAuthId } from './utils/random'
+import { genRandomDummyAuthId } from '../utils/random'
 import { createUser, getUserById, deleteUser, updateUser } from '@/pages/api/services/userService'
 const prisma = new PrismaClient()
 

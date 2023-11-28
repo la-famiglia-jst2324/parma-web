@@ -1,5 +1,5 @@
 import { PrismaClient, Role, Frequency, HealthStatus } from '@prisma/client'
-import { genRandomDummyAuthId } from './utils/random'
+import { genRandomDummyAuthId } from '../utils/random'
 import { createDataSource, deleteDataSource } from '@/pages/api/services/dataSourceService'
 import { createUserPref, deleteUserPref, getUserPrefByID } from '@/pages/api/services/userMeasurementPrefService'
 import { createUser, deleteUser } from '@/pages/api/services/userService'

@@ -1,18 +1,18 @@
 import { PrismaClient, Frequency, HealthStatus, Role } from '@prisma/client'
-import { genRandomDummyAuthId } from './utils/random'
+import { genRandomDummyAuthId } from '../utils/random'
+import {
+  createCommentValue,
+  deleteCommentValue,
+  getCommentValueByID,
+  updateCommentValue
+} from '@/pages/api/services/commentValueService'
 import { createCompany } from '@/pages/api/services/companyService'
 import { createDataSource } from '@/pages/api/services/dataSourceService'
-import {
-  createParagraphValue,
-  deleteParagraphValue,
-  getParagraphValueByID,
-  updateParagraphValue
-} from '@/pages/api/services/paragraphValueService'
 import { createSourceMeasurement } from '@/pages/api/services/sourceMeasurementService'
 import { createUser } from '@/pages/api/services/userService'
 const prisma = new PrismaClient()
 
-describe('text value Model Tests', () => {
+describe('comment value Model Tests', () => {
   beforeAll(async () => {
     await prisma.$connect()
   })
@@ -21,7 +21,7 @@ describe('text value Model Tests', () => {
     await prisma.$disconnect()
   })
 
-  let paragraphValueId: number
+  let commentValueId: number
   let sourceMeasurementId: number
   let companyId: number
   let dataSourceId: number
@@ -69,32 +69,32 @@ describe('text value Model Tests', () => {
     expect(sourceMeasurement.measurementName).toBe('intMea')
   })
 
-  test('Create a new paragraph value with valid details', async () => {
-    const paragraphValue = await createParagraphValue({ sourceMeasurementId, value: 'paragraph' })
-    paragraphValueId = paragraphValue.id
-    expect(paragraphValue).toHaveProperty('id')
-    expect(paragraphValue.sourceMeasurementId).toBe(sourceMeasurementId)
-    expect(paragraphValue.value).toBe('paragraph')
+  test('Create a new comment value with valid details', async () => {
+    const commentValue = await createCommentValue({ sourceMeasurementId, value: 'comment' })
+    commentValueId = commentValue.id
+    expect(commentValue).toHaveProperty('id')
+    expect(commentValue.sourceMeasurementId).toBe(sourceMeasurementId)
+    expect(commentValue.value).toBe('comment')
   })
 
-  test('Retrieve a paragraph value by ID', async () => {
-    const paragraphValue = await getParagraphValueByID(paragraphValueId)
-    expect(paragraphValue).toBeTruthy()
-    expect(paragraphValue?.id).toBe(paragraphValueId)
+  test('Retrieve a comment value by ID', async () => {
+    const commentValue = await getCommentValueByID(commentValueId)
+    expect(commentValue).toBeTruthy()
+    expect(commentValue?.id).toBe(commentValueId)
   })
 
-  test('Update paragraph value', async () => {
-    const updatedValue = await updateParagraphValue(paragraphValueId, {
+  test('Update a comment value name', async () => {
+    const updatedValue = await updateCommentValue(commentValueId, {
       sourceMeasurementId,
-      value: 'updatedParaValue'
+      value: 'updatedComment'
     })
-    expect(updatedValue.value).toBe('updatedParaValue')
+    expect(updatedValue.value).toBe('updatedComment')
   })
 
-  test('Delete a paragraph value', async () => {
-    await deleteParagraphValue(paragraphValueId)
-    const deletedValue = await prisma.measurementParagraphValue.findUnique({
-      where: { id: paragraphValueId }
+  test('Delete a comment value', async () => {
+    await deleteCommentValue(commentValueId)
+    const deletedValue = await prisma.measurementCommentValue.findUnique({
+      where: { id: commentValueId }
     })
     expect(deletedValue).toBeNull()
   })

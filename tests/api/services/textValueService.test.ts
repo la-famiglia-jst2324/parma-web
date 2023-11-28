@@ -1,19 +1,18 @@
 import { PrismaClient, Frequency, HealthStatus, Role } from '@prisma/client'
-import { genRandomDummyAuthId } from './utils/random'
+import { genRandomDummyAuthId } from '../utils/random'
 import { createCompany } from '@/pages/api/services/companyService'
 import { createDataSource } from '@/pages/api/services/dataSourceService'
-import {
-  createFloatValue,
-  deleteFloatValue,
-  getFloatValueByID,
-  updateFloatValue
-} from '@/pages/api/services/floatValueService'
 import { createSourceMeasurement } from '@/pages/api/services/sourceMeasurementService'
+import {
+  createTextValue,
+  deleteTextValue,
+  getTextValueByID,
+  updateTextValue
+} from '@/pages/api/services/textValueService'
 import { createUser } from '@/pages/api/services/userService'
-
 const prisma = new PrismaClient()
 
-describe('float value Model Tests', () => {
+describe('text value Model Tests', () => {
   beforeAll(async () => {
     await prisma.$connect()
   })
@@ -22,7 +21,7 @@ describe('float value Model Tests', () => {
     await prisma.$disconnect()
   })
 
-  let floatValueId: number
+  let textValueId: number
   let sourceMeasurementId: number
   let companyId: number
   let dataSourceId: number
@@ -58,44 +57,44 @@ describe('float value Model Tests', () => {
   test('Create a new sourceMeasurement with valid details', async () => {
     const sourceMeasurement = await createSourceMeasurement({
       sourceModuleId: dataSourceId,
-      type: 'float',
+      type: 'int',
       companyId,
-      measurementName: 'floatMea'
+      measurementName: 'intMea'
     })
     sourceMeasurementId = sourceMeasurement.id
     expect(sourceMeasurement).toHaveProperty('id')
     expect(sourceMeasurement.sourceModuleId).toBe(dataSourceId)
-    expect(sourceMeasurement.type).toBe('float')
+    expect(sourceMeasurement.type).toBe('int')
     expect(sourceMeasurement.companyId).toBe(companyId)
-    expect(sourceMeasurement.measurementName).toBe('floatMea')
+    expect(sourceMeasurement.measurementName).toBe('intMea')
   })
 
-  test('Create a new float value with valid details', async () => {
-    const floatValue = await createFloatValue({ sourceMeasurementId, value: 1.1 })
-    floatValueId = floatValue.id
-    expect(floatValue).toHaveProperty('id')
-    expect(floatValue.sourceMeasurementId).toBe(sourceMeasurementId)
-    expect(floatValue.value).toBe(1.1)
+  test('Create a new text value with valid details', async () => {
+    const textValue = await createTextValue({ sourceMeasurementId, value: 'text' })
+    textValueId = textValue.id
+    expect(textValue).toHaveProperty('id')
+    expect(textValue.sourceMeasurementId).toBe(sourceMeasurementId)
+    expect(textValue.value).toBe('text')
   })
 
-  test('Retrieve a float value by ID', async () => {
-    const floatValue = await getFloatValueByID(floatValueId)
-    expect(floatValue).toBeTruthy()
-    expect(floatValue?.id).toBe(floatValueId)
+  test('Retrieve a text value by ID', async () => {
+    const textValue = await getTextValueByID(textValueId)
+    expect(textValue).toBeTruthy()
+    expect(textValue?.id).toBe(textValueId)
   })
 
-  test('Update a float value name', async () => {
-    const updatedValue = await updateFloatValue(floatValueId, {
+  test('Update text value', async () => {
+    const updatedValue = await updateTextValue(textValueId, {
       sourceMeasurementId,
-      value: 2.0
+      value: 'updatedTextValue'
     })
-    expect(updatedValue.value).toBe(2.0)
+    expect(updatedValue.value).toBe('updatedTextValue')
   })
 
-  test('Delete an int value', async () => {
-    await deleteFloatValue(floatValueId)
-    const deletedValue = await prisma.measurementFloatValue.findUnique({
-      where: { id: floatValueId }
+  test('Delete a text value', async () => {
+    await deleteTextValue(textValueId)
+    const deletedValue = await prisma.measurementTextValue.findUnique({
+      where: { id: textValueId }
     })
     expect(deletedValue).toBeNull()
   })

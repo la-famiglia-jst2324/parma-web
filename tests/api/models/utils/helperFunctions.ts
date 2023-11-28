@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client'
+import { genRandomDummyAuthId } from '@tests/api/utils/random'
 
 const prisma = new PrismaClient()
 
@@ -6,7 +7,7 @@ export async function createUser(name: string = 'Used in Tests') {
   return await prisma.user.create({
     data: {
       name,
-      authId: 'test_auth_id',
+      authId: genRandomDummyAuthId(),
       role: 'USER'
     }
   })

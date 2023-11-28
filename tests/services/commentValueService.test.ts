@@ -1,9 +1,10 @@
-import { PrismaClient, Frequency, HealthStatus } from '@prisma/client'
+import { PrismaClient, Frequency, HealthStatus, Role } from '@prisma/client'
 import commentValueService from '@/api/services/commentValueService'
 import companyService from '@/api/services/companyService'
 import dataSourceService from '@/api/services/dataSourceService'
 import sourceMeasurementService from '@/api/services/sourceMeasurementService'
-
+import userService from '@/api/services/userService'
+const { createUser } = userService
 const { createCompany } = companyService
 const { createCommentValue, getCommentValueByID, updateCommentValue, deleteCommentValue } = commentValueService
 const { createDataSource } = dataSourceService
@@ -23,14 +24,18 @@ describe('comment value Model Tests', () => {
   let sourceMeasurementId: number
   let companyId: number
   let dataSourceId: number
-
+  let userId: number
+  test('Create a new user with valid details', async () => {
+    const user = await createUser({ name: 'John Doe', role: Role.USER })
+    userId = user.id
+  })
   test('Create a new company with valid details', async () => {
-    const company = await createCompany({ name: 'google', description: 'Test Company', addedBy: 1 })
+    const company = await createCompany({ name: 'google', description: 'Test Company', addedBy: userId })
     companyId = company.id
     expect(company).toHaveProperty('id')
     expect(company.name).toBe('google')
     expect(company.description).toBe('Test Company')
-    expect(company.addedBy).toBe(1)
+    expect(company.addedBy).toBe(userId)
   })
 
   test('Create a new data source with valid details', async () => {

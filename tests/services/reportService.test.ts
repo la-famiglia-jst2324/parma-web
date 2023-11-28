@@ -1,8 +1,10 @@
-import { PrismaClient } from '@prisma/client'
+import { PrismaClient, Role } from '@prisma/client'
 
 import companyService from '@/api/services/companyService'
 import reportService from '@/api/services/reportService'
+import userService from '@/api/services/userService'
 const { createCompany } = companyService
+const { createUser } = userService
 const { createReport, deleteReport, getReportById, updateReport } = reportService
 const prisma = new PrismaClient()
 
@@ -16,14 +18,19 @@ describe('Report Model Tests', () => {
 
   let reportId: number
   let companyId: number
+  let userId: number
+  test('Create a new user with valid details', async () => {
+    const user = await createUser({ name: 'John Doe', role: Role.ADMIN })
+    userId = user.id
+  })
 
   test('Create a new company with valid details', async () => {
-    const company = await createCompany({ name: 'google', description: 'Test Company', addedBy: 1 })
+    const company = await createCompany({ name: 'google', description: 'Test Company', addedBy: userId })
     companyId = company.id
     expect(company).toHaveProperty('id')
     expect(company.name).toBe('google')
     expect(company.description).toBe('Test Company')
-    expect(company.addedBy).toBe(1)
+    expect(company.addedBy).toBe(userId)
   })
 
   test('Create a new report with valid details', async () => {

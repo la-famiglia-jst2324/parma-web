@@ -91,11 +91,4 @@ const deleteCompany = async (id: number) => {
   }
 }
 
-export default {
-  createCompany,
-  getCompanyByID,
-  getCompanyByName,
-  getAllCompanies,
-  updateCompany,
-  deleteCompany
-}
+export { createCompany, getCompanyByID, getCompanyByName, getAllCompanies, updateCompany, deleteCompany }

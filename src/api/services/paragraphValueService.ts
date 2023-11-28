@@ -71,7 +71,7 @@ const deleteParagraphValue = async (id: number) => {
   }
 }
 
-export default {
+export {
   createParagraphValue,
   getParagraphValueByID,
   getAllParagraphValues,

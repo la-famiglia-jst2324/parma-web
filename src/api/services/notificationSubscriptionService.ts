@@ -53,8 +53,4 @@ const deleteNotificationSubscription = async (userId: number, companyId: number,
   }
 }
 
-export default {
-  createNotificationSubscription,
-  getNotificationSubscription,
-  deleteNotificationSubscription
-}
+export { createNotificationSubscription, getNotificationSubscription, deleteNotificationSubscription }

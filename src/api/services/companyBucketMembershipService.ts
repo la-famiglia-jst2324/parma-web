@@ -95,7 +95,6 @@ const getCompanyBucketByID = async (bucketId: number, companyId: number) => {
   }
 }
 
-// FR-13 user remove a company from a bucket
 const removeCompanyFromBucket = async (companyId: number, bucketId: number) => {
   try {
     const membership = await prisma.companyBucketMembership.delete({
@@ -113,7 +112,7 @@ const removeCompanyFromBucket = async (companyId: number, bucketId: number) => {
   }
 }
 
-export default {
+export {
   addCompanyToBucket,
   getCompaniesByBucketId,
   getBucketsByCompanyId,

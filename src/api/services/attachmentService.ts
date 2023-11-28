@@ -87,10 +87,4 @@ const deleteAttachment = async (id: number) => {
   }
 }
 
-export default {
-  createAttachment,
-  getAttachmentByID,
-  getAllAttachmentsByID,
-  updateAttachment,
-  deleteAttachment
-}
+export { createAttachment, getAttachmentByID, getAllAttachmentsByID, updateAttachment, deleteAttachment }

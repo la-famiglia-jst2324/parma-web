@@ -1,14 +1,9 @@
 import { PrismaClient, Frequency, HealthStatus, Role } from '@prisma/client'
-import intValueService from '@/api/services/intValueService'
-import companyService from '@/api/services/companyService'
-import dataSourceService from '@/api/services/dataSourceService'
-import sourceMeasurementService from '@/api/services/sourceMeasurementService'
-import userService from '@/api/services/userService'
-const { createUser } = userService
-const { createCompany } = companyService
-const { createIntValue, getIntValueByID, updateIntValue, deleteIntValue } = intValueService
-const { createDataSource } = dataSourceService
-const { createSourceMeasurement } = sourceMeasurementService
+import { createCompany } from '@/api/services/companyService'
+import { createDataSource } from '@/api/services/dataSourceService'
+import { createIntValue, deleteIntValue, getIntValueByID, updateIntValue } from '@/api/services/intValueService'
+import { createSourceMeasurement } from '@/api/services/sourceMeasurementService'
+import { createUser } from '@/api/services/userService'
 const prisma = new PrismaClient()
 
 describe('int value Model Tests', () => {

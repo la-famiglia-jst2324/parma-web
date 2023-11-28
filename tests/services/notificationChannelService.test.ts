@@ -1,7 +1,10 @@
 import { ChannelType, EntityType, PrismaClient } from '@prisma/client'
-import notificationChannelService from '@/api/services/notificationChannelService'
-const { createNotificationChannel, deleteNotificationChannel, getNotificationChannelById, updateNotificationChannel } =
-  notificationChannelService
+import {
+  createNotificationChannel,
+  deleteNotificationChannel,
+  getNotificationChannelById,
+  updateNotificationChannel
+} from '@/api/services/notificationChannelService'
 const prisma = new PrismaClient()
 
 describe('Notification Channel Model Tests', () => {

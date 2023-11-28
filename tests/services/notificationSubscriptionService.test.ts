@@ -1,13 +1,12 @@
 import { ChannelType, Role, EntityType, PrismaClient } from '@prisma/client'
-import userService from '@/api/services/userService'
-import companyService from '@/api/services/companyService'
-import notificationChannelService from '@/api/services/notificationChannelService'
-import notificationSubscriptionService from '@/api/services/notificationSubscriptionService'
-const { createUser, deleteUser } = userService
-const { createCompany, deleteCompany } = companyService
-const { createNotificationChannel } = notificationChannelService
-const { createNotificationSubscription, deleteNotificationSubscription, getNotificationSubscription } =
-  notificationSubscriptionService
+import { createCompany, deleteCompany } from '@/api/services/companyService'
+import { createNotificationChannel } from '@/api/services/notificationChannelService'
+import {
+  createNotificationSubscription,
+  deleteNotificationSubscription,
+  getNotificationSubscription
+} from '@/api/services/notificationSubscriptionService'
+import { createUser, deleteUser } from '@/api/services/userService'
 const prisma = new PrismaClient()
 
 describe('Notification Subscription Model Tests', () => {

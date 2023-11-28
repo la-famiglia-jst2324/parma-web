@@ -1,14 +1,14 @@
 import { PrismaClient, Frequency, HealthStatus, Role } from '@prisma/client'
-import commentValueService from '@/api/services/commentValueService'
-import companyService from '@/api/services/companyService'
-import dataSourceService from '@/api/services/dataSourceService'
-import sourceMeasurementService from '@/api/services/sourceMeasurementService'
-import userService from '@/api/services/userService'
-const { createUser } = userService
-const { createCompany } = companyService
-const { createCommentValue, getCommentValueByID, updateCommentValue, deleteCommentValue } = commentValueService
-const { createDataSource } = dataSourceService
-const { createSourceMeasurement } = sourceMeasurementService
+import {
+  createCommentValue,
+  deleteCommentValue,
+  getCommentValueByID,
+  updateCommentValue
+} from '@/api/services/commentValueService'
+import { createCompany } from '@/api/services/companyService'
+import { createDataSource } from '@/api/services/dataSourceService'
+import { createSourceMeasurement } from '@/api/services/sourceMeasurementService'
+import { createUser } from '@/api/services/userService'
 const prisma = new PrismaClient()
 
 describe('comment value Model Tests', () => {

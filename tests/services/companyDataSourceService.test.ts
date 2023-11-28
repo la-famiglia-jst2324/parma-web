@@ -1,15 +1,14 @@
 import { Frequency, HealthStatus, PrismaClient, Role } from '@prisma/client'
+import {
+  createCompanyDataSource,
+  deleteCompanyDataSource,
+  getCompaniesByDataSourceId,
+  getDataSourcesByCompanyId
+} from '@/api/services/companyDataSourceService'
+import { createCompany, deleteCompany } from '@/api/services/companyService'
+import { createDataSource } from '@/api/services/dataSourceService'
+import { createUser, deleteUser } from '@/api/services/userService'
 
-import companyService from '@/api/services/companyService'
-import dataSourceService from '@/api/services/dataSourceService'
-import companyDataSourceService from '@/api/services/companyDataSourceService'
-import userService from '@/api/services/userService'
-
-const { createUser, deleteUser } = userService
-
-const { createCompany, deleteCompany } = companyService
-const { createDataSource } = dataSourceService
-const { createCompanyDataSource, getDataSourcesByCompanyId, getCompaniesByDataSourceId } = companyDataSourceService
 const prisma = new PrismaClient()
 
 describe('Company Datasource Model Tests', () => {
@@ -68,16 +67,16 @@ describe('Company Datasource Model Tests', () => {
     expect(companies[0].addedBy).toBe(userId)
   })
 
-  // test('Delete a Company Datasource Relation', async () => {
-  //   await deleteCompanyDataSource(membershipId.dataSourceId, membershipId.companyId)
-  //   const deletedMembership = await prisma.companyDataSource.findUnique({
-  //     where: {
-  //       dataSourceId_companyId: {
-  //         dataSourceId: membershipId.dataSourceId,
-  //         companyId: membershipId.companyId,
-  //       }
-  //     }
-  //   })
-  //   expect(deletedMembership).toBeNull()
-  // })
+  test('Delete a Company Datasource Relation', async () => {
+    await deleteCompanyDataSource(companyId, dataSourceId)
+    const deletedMembership = await prisma.companyDataSource.findUnique({
+      where: {
+        dataSourceId_companyId: {
+          dataSourceId: membershipId.dataSourceId,
+          companyId: membershipId.companyId
+        }
+      }
+    })
+    expect(deletedMembership).toBeNull()
+  })
 })

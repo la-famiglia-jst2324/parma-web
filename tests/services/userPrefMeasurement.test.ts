@@ -1,11 +1,7 @@
 import { PrismaClient, Role, Frequency, HealthStatus } from '@prisma/client'
-import dataSourceService from '@/api/services/dataSourceService'
-import userMeasurementPrefService from '@/api/services/userMeasurementPrefService'
-import userService from '@/api/services/userService'
-
-const { createDataSource, deleteDataSource } = dataSourceService
-const { createUserPref, deleteUserPref, getUserPrefByID } = userMeasurementPrefService
-const { createUser, deleteUser } = userService
+import { createDataSource, deleteDataSource } from '@/api/services/dataSourceService'
+import { createUserPref, deleteUserPref, getUserPrefByID } from '@/api/services/userMeasurementPrefService'
+import { createUser, deleteUser } from '@/api/services/userService'
 const prisma = new PrismaClient()
 
 describe('User Preference Measurement Model Tests', () => {

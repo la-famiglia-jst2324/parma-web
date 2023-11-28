@@ -80,7 +80,7 @@ const deleteSourceMeasurement = async (id: number) => {
   }
 }
 
-export default {
+export {
   createSourceMeasurement,
   getSourceMeasurementByID,
   getAllSourceMeasurements,

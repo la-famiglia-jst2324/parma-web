@@ -71,10 +71,4 @@ const deleteIntValue = async (id: number) => {
   }
 }
 
-export default {
-  createIntValue,
-  getIntValueByID,
-  getAllIntValues,
-  updateIntValue,
-  deleteIntValue
-}
+export { createIntValue, getIntValueByID, getAllIntValues, updateIntValue, deleteIntValue }

@@ -1,15 +1,14 @@
 import { PrismaClient, Frequency, HealthStatus, Role } from '@prisma/client'
-import paragraphValueService from '@/api/services/paragraphValueService'
-import companyService from '@/api/services/companyService'
-import dataSourceService from '@/api/services/dataSourceService'
-import sourceMeasurementService from '@/api/services/sourceMeasurementService'
-import userService from '@/api/services/userService'
-const { createUser } = userService
-const { createCompany } = companyService
-const { createParagraphValue, getParagraphValueByID, updateParagraphValue, deleteParagraphValue } =
-  paragraphValueService
-const { createDataSource } = dataSourceService
-const { createSourceMeasurement } = sourceMeasurementService
+import { createCompany } from '@/api/services/companyService'
+import { createDataSource } from '@/api/services/dataSourceService'
+import {
+  createParagraphValue,
+  deleteParagraphValue,
+  getParagraphValueByID,
+  updateParagraphValue
+} from '@/api/services/paragraphValueService'
+import { createSourceMeasurement } from '@/api/services/sourceMeasurementService'
+import { createUser } from '@/api/services/userService'
 const prisma = new PrismaClient()
 
 describe('text value Model Tests', () => {

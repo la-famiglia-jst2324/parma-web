@@ -1,8 +1,5 @@
 import { PrismaClient, Role } from '@prisma/client'
-import userService from '@/api/services/userService'
-
-const { createUser, getUserById, deleteUser, updateUser } = userService
-
+import { createUser, getUserById, deleteUser, updateUser } from '@/api/services/userService'
 const prisma = new PrismaClient()
 
 describe('User Model Tests', () => {

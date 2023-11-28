@@ -99,7 +99,7 @@ const deleteDataSource = async (id: number) => {
   }
 }
 
-export default {
+export {
   createDataSource,
   getDataSourceByID,
   getDataSourceByName,

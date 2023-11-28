@@ -1,9 +1,7 @@
 import { PrismaClient, Role } from '@prisma/client'
-import userService from '@/api/services/userService'
-import bucketService from '@/api/services/bucketService'
+import { createBucket, deleteBucket, getBucketById, updateBucket } from '@/api/services/bucketService'
+import { createUser } from '@/api/services/userService'
 
-const { createUser } = userService
-const { createBucket, getBucketById, deleteBucket, updateBucket } = bucketService
 const prisma = new PrismaClient()
 
 describe('Bucket Model Tests', () => {

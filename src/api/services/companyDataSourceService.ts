@@ -1,6 +1,6 @@
 import type { HealthStatus } from '@prisma/client'
 import { prisma } from '../prismaClient'
-// add Datasource To Company
+
 const createCompanyDataSource = async (data: {
   dataSourceId: number
   companyId: number
@@ -122,7 +122,7 @@ const deleteCompanyDataSource = async (companyId: number, dataSourceId: number) 
   }
 }
 
-export default {
+export {
   createCompanyDataSource,
   getDataSourcesByCompanyId,
   getCompaniesByDataSourceId,

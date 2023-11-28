@@ -71,10 +71,4 @@ const deleteFloatValue = async (id: number) => {
   }
 }
 
-export default {
-  createFloatValue,
-  getFloatValueByID,
-  getAllFloatValues,
-  updateFloatValue,
-  deleteFloatValue
-}
+export { createFloatValue, getFloatValueByID, getAllFloatValues, updateFloatValue, deleteFloatValue }

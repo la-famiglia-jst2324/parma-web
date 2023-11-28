@@ -1,9 +1,6 @@
 import { PrismaClient, Role } from '@prisma/client'
-import userService from '@/api/services/userService'
-import companyService from '@/api/services/companyService'
-
-const { createUser } = userService
-const { createCompany, deleteCompany, updateCompany, getCompanyByID } = companyService
+import { createCompany, deleteCompany, getCompanyByID, updateCompany } from '@/api/services/companyService'
+import { createUser } from '@/api/services/userService'
 const prisma = new PrismaClient()
 
 describe('Company Model Tests', () => {

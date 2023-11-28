@@ -71,10 +71,4 @@ const deleteCommentValue = async (id: number) => {
   }
 }
 
-export default {
-  createCommentValue,
-  getCommentValueByID,
-  getAllCommentValues,
-  updateCommentValue,
-  deleteCommentValue
-}
+export { createCommentValue, getCommentValueByID, getAllCommentValues, updateCommentValue, deleteCommentValue }

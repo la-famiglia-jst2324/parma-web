@@ -1,10 +1,12 @@
 import { FileType, PrismaClient, Role } from '@prisma/client'
-import userService from '@/api/services/userService'
-import companyService from '@/api/services/companyService'
-import attachmentService from '@/api/services/attachmentService'
-const { createUser } = userService
-const { createCompany } = companyService
-const { createAttachment, getAttachmentByID, updateAttachment, deleteAttachment } = attachmentService
+import {
+  createAttachment,
+  deleteAttachment,
+  getAttachmentByID,
+  updateAttachment
+} from '@/api/services/attachmentService'
+import { createCompany } from '@/api/services/companyService'
+import { createUser } from '@/api/services/userService'
 const prisma = new PrismaClient()
 
 describe('Company Attachment Model Tests', () => {

@@ -7,7 +7,6 @@ const createUser = async (data: { name: string; role: Role }) => {
       data: {
         name: data.name,
         role: data.role
-        // created_at  modified_at automatically
       }
     })
     return user
@@ -87,10 +86,4 @@ const deleteUser = async (id: number) => {
   }
 }
 
-export default {
-  createUser,
-  getUserById,
-  getAllUsers,
-  updateUser,
-  deleteUser
-}
+export { createUser, getUserById, getAllUsers, updateUser, deleteUser }

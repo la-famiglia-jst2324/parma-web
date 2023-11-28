@@ -120,12 +120,4 @@ const deleteBucket = async (id: number) => {
   }
 }
 
-export default {
-  createBucket,
-  getBucketById,
-  getBucketByName,
-  getAllBuckets,
-  getOwnBuckets,
-  updateBucket,
-  deleteBucket
-}
+export { createBucket, getBucketById, getBucketByName, getAllBuckets, getOwnBuckets, updateBucket, deleteBucket }

@@ -95,10 +95,4 @@ const deleteUserPref = async (dataSourceId: number, userId: number, importantFie
   }
 }
 
-export default {
-  createUserPref,
-  getUserPrefByID,
-  getPrefsByUserId,
-  updateUserPref,
-  deleteUserPref
-}
+export { createUserPref, getUserPrefByID, getPrefsByUserId, updateUserPref, deleteUserPref }

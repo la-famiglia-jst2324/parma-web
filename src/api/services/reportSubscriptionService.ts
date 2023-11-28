@@ -52,8 +52,4 @@ const deleteReportSubscription = async (userId: number, companyId: number, chann
     throw new Error('Unable to delete report subscription')
   }
 }
-export default {
-  createReportSubscription,
-  getReportSubscription,
-  deleteReportSubscription
-}
+export { createReportSubscription, getReportSubscription, deleteReportSubscription }

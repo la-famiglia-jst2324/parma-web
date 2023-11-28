@@ -78,9 +78,4 @@ const deleteBucketAccess = async (bucketId: number, inviteeId: number) => {
   }
 }
 
-export default {
-  createBucketAccess,
-  getBucketAccessByID,
-  updateBucketAccess,
-  deleteBucketAccess
-}
+export { createBucketAccess, getBucketAccessByID, updateBucketAccess, deleteBucketAccess }

@@ -1,14 +1,15 @@
 import { PrismaClient, Frequency, HealthStatus, Role } from '@prisma/client'
-import floatValueService from '@/api/services/floatValueService'
-import companyService from '@/api/services/companyService'
-import dataSourceService from '@/api/services/dataSourceService'
-import sourceMeasurementService from '@/api/services/sourceMeasurementService'
-import userService from '@/api/services/userService'
-const { createUser } = userService
-const { createCompany } = companyService
-const { createFloatValue, getFloatValueByID, updateFloatValue, deleteFloatValue } = floatValueService
-const { createDataSource } = dataSourceService
-const { createSourceMeasurement } = sourceMeasurementService
+import { createCompany } from '@/api/services/companyService'
+import { createDataSource } from '@/api/services/dataSourceService'
+import {
+  createFloatValue,
+  deleteFloatValue,
+  getFloatValueByID,
+  updateFloatValue
+} from '@/api/services/floatValueService'
+import { createSourceMeasurement } from '@/api/services/sourceMeasurementService'
+import { createUser } from '@/api/services/userService'
+
 const prisma = new PrismaClient()
 
 describe('float value Model Tests', () => {
@@ -90,7 +91,7 @@ describe('float value Model Tests', () => {
     expect(updatedValue.value).toBe(2.0)
   })
 
-  test('Delete a int value', async () => {
+  test('Delete an int value', async () => {
     await deleteFloatValue(floatValueId)
     const deletedValue = await prisma.measurementFloatValue.findUnique({
       where: { id: floatValueId }

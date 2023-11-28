@@ -1,6 +1,10 @@
 import { Frequency, HealthStatus, PrismaClient } from '@prisma/client'
-import dataSourceService from '@/api/services/dataSourceService'
-const { createDataSource, deleteDataSource, getDataSourceByID, updateDataSource } = dataSourceService
+import {
+  createDataSource,
+  deleteDataSource,
+  getDataSourceByID,
+  updateDataSource
+} from '@/api/services/dataSourceService'
 
 const prisma = new PrismaClient()
 

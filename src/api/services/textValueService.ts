@@ -71,10 +71,4 @@ const deleteTextValue = async (id: number) => {
   }
 }
 
-export default {
-  createTextValue,
-  getTextValueByID,
-  getAllTextValues,
-  updateTextValue,
-  deleteTextValue
-}
+export { createTextValue, getTextValueByID, getAllTextValues, updateTextValue, deleteTextValue }

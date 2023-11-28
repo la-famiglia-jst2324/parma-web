@@ -1,13 +1,13 @@
 import { PrismaClient, Frequency, HealthStatus, Role } from '@prisma/client'
-import companyService from '@/api/services/companyService'
-import dataSourceService from '@/api/services/dataSourceService'
-import notificationService from '@/api/services/notificationService'
-import userService from '@/api/services/userService'
-const { createUser } = userService
-const { createCompany } = companyService
-
-const { createDataSource } = dataSourceService
-const { createNotification, deleteNotification, getNotificationById, updateNotification } = notificationService
+import { createCompany } from '@/api/services/companyService'
+import { createDataSource } from '@/api/services/dataSourceService'
+import {
+  createNotification,
+  deleteNotification,
+  getNotificationById,
+  updateNotification
+} from '@/api/services/notificationService'
+import { createUser } from '@/api/services/userService'
 const prisma = new PrismaClient()
 
 describe('Notification Model Tests', () => {

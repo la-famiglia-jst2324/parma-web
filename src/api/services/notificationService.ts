@@ -56,9 +56,4 @@ const deleteNotification = async (id: number) => {
     throw new Error('Unable to delete notification')
   }
 }
-export default {
-  createNotification,
-  getNotificationById,
-  updateNotification,
-  deleteNotification
-}
+export { createNotification, getNotificationById, updateNotification, deleteNotification }

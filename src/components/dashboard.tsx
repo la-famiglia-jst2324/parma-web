@@ -22,11 +22,18 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
       onClick={async () => {
         if (user) {
           const token = await user.getIdToken()
-          console.log(token)
+          const result = await fetch('/api/auth/test', {
+            method: 'POST',
+            headers: {
+              Authorization: `Bearer ${token}`
+            },
+          })
+          const response = await result.json()
+          alert(result.status + " - " + response?.message)
         }
       }}
     >
-      Get Token
+      Dummy auth call
     </button>
   ) : (
     <span></span>

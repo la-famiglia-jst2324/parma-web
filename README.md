@@ -66,7 +66,12 @@ The following steps will get you started with the project.
    make install
    ```
 
-4. **Start the development server**
+4. **Setup Firebase Admin SDK**:
+
+   The Firebase Admin SDK is used to verify user tokens in the backend (Next API routes).
+   Please download [this secrest json file](https://www.notion.so/firebase-admin-sdk-certificate-4279aa3b4e904e1b927619ed69537045) from Notion and place it in `/src/api/.secrets/la-famiglia-parma-ai-firebase-adminsdk.json`.
+
+5. **Start the development server**
 
    ```bash
    make dev
@@ -74,14 +79,14 @@ The following steps will get you started with the project.
 
    **Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.**
 
-5. Optional: Running parts of the pre-commit pipeline manually
+6. Optional: Running parts of the pre-commit pipeline manually
 
    ```bash
    make lint  # runs linting
    make build  # builds the project
    ```
 
-6. Test your code and code coverage:
+7. Test your code and code coverage:
 
    As the tests require a postgres database to be running, you need a postgres database running locally.
    For that you can use the docker-compose file in the root directory of this project.
@@ -106,7 +111,7 @@ The following steps will get you started with the project.
    make test  # runs jest and typescript-coverage-report
    ```
 
-7. Optional: Run a production build (used in the CI pipeline)
+8. Optional: Run a production build (used in the CI pipeline)
 
    ```bash
    make start

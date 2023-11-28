@@ -35,12 +35,14 @@
     }
   },
   "include": [
+    ".eslintrc.js",
     "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx",
+    "src/**/*.ts",
+    "src/**/*.tsx",
     ".next/types/**/*.ts",
-    "src/types/types.d.ts"
-, "src/database/schema.prisma"  ],
+    "src/types/types.d.ts",
+    "src/database/schema.prisma"
+],
   "exclude": [
     "node_modules"
   ]

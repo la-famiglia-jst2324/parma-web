@@ -6,6 +6,7 @@ export async function createUser(name: string = 'Used in Tests') {
   return await prisma.user.create({
     data: {
       name,
+      authId: 'test_auth_id',
       role: 'USER'
     }
   })

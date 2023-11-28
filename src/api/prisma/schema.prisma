@@ -7,10 +7,13 @@ generator client {
   provider = "prisma-client-js"
 }
 
+// ------------------------------------- MODELS ----------------------------------------
+
 model User {
   id         Int      @id @default(autoincrement())
+  authId   String   @unique @map("auth_id")
   name       String
-  role       Role
+  role       Role  @default(USER)
   createdAt  DateTime @default(now()) @map("created_at")
   modifiedAt DateTime @updatedAt @map("modified_at")
 
@@ -339,7 +342,8 @@ model NewsSubscription {
   @@map("news_subscription")
 }
 
-// ENUMS
+// -------------------------------------- ENUMS ----------------------------------------
+
 enum Role {
   USER
   ADMIN

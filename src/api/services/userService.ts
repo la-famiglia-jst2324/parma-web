@@ -1,13 +1,13 @@
 import type { Role } from '@prisma/client'
 import { prisma } from '../prismaClient'
 
-const createUser = async (data: { name: string; role: Role }) => {
+const createUser = async (data: { authId: string; name: string; role: Role }) => {
   try {
     const user = await prisma.user.create({
       data: {
         name: data.name,
+        authId: data.authId,
         role: data.role
-        // created_at  modified_at automatically
       }
     })
     return user
@@ -34,6 +34,43 @@ const getUserById = async (id: number) => {
   } catch (error) {
     console.error('Error retrieving user:', error)
     throw new Error('Unable to retrieve user')
+  }
+}
+
+const getUserByAuthId = async (authId: string) => {
+  try {
+    const user = await prisma.user.findUnique({
+      where: { authId },
+      include: {
+        permissions: true
+      }
+    })
+    if (!user) {
+      throw new Error(`User with ID ${authId} not found`)
+    }
+    return user
+  } catch (error) {
+    console.error('Error retrieving user:', error)
+    throw new Error('Unable to retrieve user')
+  }
+}
+
+const upsertUserByAuth = async (authId: string, data: { name: string }) => {
+  try {
+    const user = await prisma.user.upsert({
+      where: { authId },
+      update: {
+        name: data.name
+      },
+      create: {
+        name: data.name,
+        authId
+      }
+    })
+    return user
+  } catch (error) {
+    console.error('Error upserting user:', error)
+    throw new Error('Unable to upsert user')
   }
 }
 
@@ -81,10 +118,4 @@ const deleteUser = async (id: number) => {
   }
 }
 
-export default {
-  createUser,
-  getUserById,
-  getAllUsers,
-  updateUser,
-  deleteUser
-}
+export { createUser, getUserById, getUserByAuthId, upsertUserByAuth, getAllUsers, updateUser, deleteUser }

@@ -71,9 +71,4 @@ const deleteNotificationChannel = async (id: number) => {
   }
 }
 
-export default {
-  createNotificationChannel,
-  getNotificationChannelById,
-  updateNotificationChannel,
-  deleteNotificationChannel
-}
+export { createNotificationChannel, getNotificationChannelById, updateNotificationChannel, deleteNotificationChannel }

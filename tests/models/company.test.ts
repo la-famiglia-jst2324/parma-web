@@ -41,7 +41,7 @@ describe('Company Model Tests', () => {
     })
 
     expect(company).toBeTruthy()
-    expect(company.id).toBe(companyId)
+    expect(company?.id).toBe(companyId)
     expect(company?.addedBy).toBe(userId)
   })
 
@@ -121,9 +121,9 @@ describe('CompanyAttachment Model Tests', () => {
     })
 
     expect(attachment).toBeTruthy()
-    expect(attachment.id).toBe(attachmentId)
-    expect(attachment.companyId).toBe(companyId)
-    expect(attachment.userId).toBe(userId)
+    expect(attachment?.id).toBe(attachmentId)
+    expect(attachment?.companyId).toBe(companyId)
+    expect(attachment?.userId).toBe(userId)
   })
 
   // Test for updating a CompanyAttachment

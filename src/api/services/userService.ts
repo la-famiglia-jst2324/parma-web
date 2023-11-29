@@ -7,7 +7,6 @@ const createUser = async (data: { name: string; role: Role }) => {
       data: {
         name: data.name,
         role: data.role
-        // created_at  modified_at automatically
       }
     })
     return user
@@ -68,23 +67,23 @@ const updateUser = async (
   }
 }
 
-// ???also delete his own buckets, attachments,subscriptions,permissions,userImportantMeasurementPreference?
 const deleteUser = async (id: number) => {
   try {
-    const user = await prisma.user.delete({
-      where: { id }
+    const transaction = await prisma.$transaction(async (prisma) => {
+      // delete associated data
+      await prisma.newsSubscription.deleteMany({ where: { userId: id } })
+      await prisma.userImportantMeasurementPreference.deleteMany({ where: { userId: id } })
+      await prisma.reportSubscription.deleteMany({ where: { userId: id } })
+      await prisma.notificationSubscription.deleteMany({ where: { userId: id } })
+      // delete user
+      return prisma.user.delete({ where: { id } })
     })
-    return user // if successful, return the deleted user information
+
+    return transaction
   } catch (error) {
     console.error('Error deleting user:', error)
     throw error
   }
 }
 
-export default {
-  createUser,
-  getUserById,
-  getAllUsers,
-  updateUser,
-  deleteUser
-}
+export { createUser, getUserById, getAllUsers, updateUser, deleteUser }

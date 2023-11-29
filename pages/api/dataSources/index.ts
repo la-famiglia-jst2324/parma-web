@@ -1,8 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 
-import dataSourceService from '@/api/services/dataSourceService'
-
-const { getAllDataSources, createDataSource } = dataSourceService
+import { getAllDataSources, createDataSource } from '@/api/services/dataSourceService'
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const { method } = req

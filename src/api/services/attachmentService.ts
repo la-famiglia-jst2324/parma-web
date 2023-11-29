@@ -29,11 +29,10 @@ const getAttachmentByID = async (id: number) => {
     const attachment = await prisma.companyAttachment.findUnique({
       where: { id }
     })
-    if (attachment) {
-      return attachment
-    } else {
+    if (!attachment) {
       throw new Error(`Company attachment with ID ${id} not found.`)
     }
+    return attachment
   } catch (error) {
     console.error('Error getting the company attachment by ID:', error)
     throw error
@@ -100,7 +99,7 @@ const getAllAttachmentsForCompany = async (companyId: number) => {
   }
 }
 
-export default {
+export {
   createAttachment,
   getAttachmentByID,
   getAllAttachmentsByID,

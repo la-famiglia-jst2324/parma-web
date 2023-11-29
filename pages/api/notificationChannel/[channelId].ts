@@ -1,9 +1,12 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 
-import notificationChannelService from '@/api/services/notificationChannelService'
+import {
+  getNotificationChannelById,
+  updateNotificationChannel,
+  deleteNotificationChannel
+} from '@/api/services/notificationChannelService'
 
 import { ItemNotFoundError } from '@/api/utils/errorUtils'
-const { getNotificationChannelById, updateNotificationChannel, deleteNotificationChannel } = notificationChannelService
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const { method } = req

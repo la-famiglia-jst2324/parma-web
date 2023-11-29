@@ -1,8 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 
-import bucketService from '@/api/services/bucketService'
+import { createBucket, getAllBuckets, getBucketByName } from '@/api/services/bucketService'
 import { ItemNotFoundError } from '@/api/utils/errorUtils'
-const { createBucket, getAllBuckets, getBucketByName } = bucketService
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const { method } = req

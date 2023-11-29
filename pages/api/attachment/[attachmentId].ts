@@ -1,9 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import attachmentService from '@/api/services/attachmentService'
+import { getAttachmentByID, deleteAttachment, updateAttachment } from '@/api/services/attachmentService'
 
 import { ItemNotFoundError } from '@/api/utils/errorUtils'
-
-const { getAttachmentByID, deleteAttachment, updateAttachment } = attachmentService
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const { method } = req

@@ -20,7 +20,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
     case 'POST':
       try {
-        // Create a new bucket
+        // Create a new data source
         const newBucket = await createDataSource(req.body)
         if (newBucket) {
           res.status(201).json(newBucket)

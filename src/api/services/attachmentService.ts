@@ -88,10 +88,23 @@ const deleteAttachment = async (id: number) => {
   }
 }
 
+const getAllAttachmentsForCompany = async (companyId: number) => {
+  try {
+    const attachments = await prisma.companyAttachment.findMany({
+      where: { companyId }
+    })
+    return attachments
+  } catch (error) {
+    console.error('Error fetching all attachments for company:', error)
+    throw error
+  }
+}
+
 export default {
   createAttachment,
   getAttachmentByID,
   getAllAttachmentsByID,
   updateAttachment,
-  deleteAttachment
+  deleteAttachment,
+  getAllAttachmentsForCompany
 }

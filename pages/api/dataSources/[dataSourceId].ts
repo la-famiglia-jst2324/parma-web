@@ -27,7 +27,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
           res.status(200).json(updatedBucket)
         } else {
           // Bucket not found
-          res.status(404).json({ error: 'Bucket not found' })
+          res.status(404).json({ error: 'Data source not found' })
         }
       } catch (error) {
         if (error instanceof ItemNotFoundError) res.status(404).json({ error: error.message })
@@ -38,7 +38,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     case 'DELETE':
       try {
         await deleteDataSource(Number(dataSourceId))
-        res.status(200).json({ message: 'Bucket successfully Deleted' })
+        res.status(200).json({ message: 'Data source successfully Deleted' })
       } catch (error) {
         res.status(500).json({ error: 'Internal Server Error' })
       }

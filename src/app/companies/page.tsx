@@ -43,6 +43,7 @@ async function getSubscribedCompanies() {
 const CompaniesPage: React.FC = () => {
   const [subscribedCompanies, setSubscribedCompanies] = useState<Company[]>([])
   const [companies, setCompanies] = useState<Company[]>([])
+  const [searchQuery, setSearchQuery] = useState<string>('')
 
   useEffect(() => {
     getSubscribedCompanies()
@@ -60,6 +61,10 @@ const CompaniesPage: React.FC = () => {
       })
   }, [])
 
+  const filteredCompanies = companies.filter((company) =>
+    company.name.toLowerCase().includes(searchQuery.toLowerCase())
+  )
+
   return (
     <div>
       <div className="m-3 flex flex-col items-start rounded-lg border-0 bg-white p-3 shadow-md">
@@ -71,6 +76,7 @@ const CompaniesPage: React.FC = () => {
             <div className="md:w-1/3">
               <CompanyCard
                 key={index}
+                id={company.id}
                 name={company.name}
                 description={company.description}
                 activeDatasources={company.activeDatasources}
@@ -89,14 +95,20 @@ const CompaniesPage: React.FC = () => {
             <h1 className="mb-2 text-2xl font-bold">Search for all companies</h1>
           </div>
           <div className="pl-2">
-            <TextInput icon={SearchIcon} placeholder="Search..." />
+            <TextInput
+              icon={SearchIcon}
+              placeholder="Search..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
           </div>
         </div>
         <div className="flex flex-wrap">
-          {companies.map((company, index) => (
+          {filteredCompanies.map((company, index) => (
             <div className="md:w-1/3">
               <CompanyCard
                 key={index}
+                id={company.id}
                 name={company.name}
                 description={company.description}
                 activeDatasources={company.activeDatasources}

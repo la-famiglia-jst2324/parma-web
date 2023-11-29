@@ -46,6 +46,7 @@ const SubscribedCompaniesPage: React.FC = () => {
           <div className="md:w-1/3">
             <CompanyCard
               key={index}
+              id={company.id}
               name={company.name}
               description={company.description}
               activeDatasources={company.activeDatasources}

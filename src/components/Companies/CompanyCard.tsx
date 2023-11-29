@@ -3,13 +3,14 @@ import Link from 'next/link'
 import { BadgeDelta, Button } from '@tremor/react'
 
 interface CompanyCardProps {
+  id: string
   name: string
   description: string
   activeDatasources: number
   inactiveDatasources: number
 }
 
-const CompanyCard: React.FC<CompanyCardProps> = ({ name, description, activeDatasources, inactiveDatasources }) => {
+const CompanyCard: React.FC<CompanyCardProps> = ({ id, name, description, activeDatasources, inactiveDatasources }) => {
   return (
     <div className="p-2">
       <div className="w-full rounded border border-gray-300 p-4">
@@ -26,7 +27,7 @@ const CompanyCard: React.FC<CompanyCardProps> = ({ name, description, activeData
           </div>
         </div>
         <div className="flex justify-end">
-          <Link href="/companies/1">
+          <Link href={`/companies/${id}`}>
             <Button size="xs" variant="secondary">
               View more
             </Button>

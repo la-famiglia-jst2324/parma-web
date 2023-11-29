@@ -1,11 +1,12 @@
 'use client'
 import React, { useEffect, useState } from 'react'
+import { MultiSelect, MultiSelectItem } from '@tremor/react'
 import NewsCard from '@/components/Dashboard/NewsCard'
 import type NewsItem from '@/types/news'
 
 async function getTrendingNews() {
   try {
-    const res = await fetch('/api/dashboard', {
+    const res = await fetch('/api/dashboard/news', {
       method: 'GET',
       cache: 'no-cache'
     })
@@ -36,7 +37,16 @@ export default function Home() {
       <div className="relative m-4 flex min-h-screen w-2/3 flex-col justify-start rounded bg-white shadow-lg">
         <div className="flex items-center justify-between p-4">
           <div className="mb-2 flex flex-col items-start space-y-4">
-            <h1 className="m-6 text-3xl font-bold text-[#374151]">Trending News</h1>
+            <div className="flex w-full items-center justify-between">
+              <h1 className="text-3xl font-bold text-[#374151]">Trending News</h1>
+              <div className="w-1/3 pb-3">
+                <MultiSelect placeholder="Filter companies" onValueChange={() => {}}>
+                  <MultiSelectItem value="1">Tesla</MultiSelectItem>
+                  <MultiSelectItem value="2">Amazon</MultiSelectItem>
+                  <MultiSelectItem value="3">Microsoft</MultiSelectItem>
+                </MultiSelect>
+              </div>
+            </div>
             <div className="grid grid-cols-2 gap-4">
               {news.map((item, index) => (
                 <NewsCard

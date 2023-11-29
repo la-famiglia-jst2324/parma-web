@@ -8,7 +8,11 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   switch (method) {
     case 'GET':
       try {
-        const dataSources = await getAllDataSources()
+        const name = (req.query.name as string) || ''
+        const page = parseInt(req.query.page as string, 10) || 1
+        const size = parseInt(req.query.size as string, 10) || 10
+
+        const dataSources = await getAllDataSources(page, size, name)
         if (dataSources.length > 0) res.status(200).json(dataSources)
         else res.status(400).json({ error: 'No Data Sources found' })
       } catch (error) {

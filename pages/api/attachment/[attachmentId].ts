@@ -32,9 +32,8 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     case 'PUT':
       try {
         // Update attachments for a company
-        const { id, ...data } = req.body
-        console.log(req.body)
-        await updateAttachment(id, { ...data, id: attachmentId })
+        const data = req.body
+        await updateAttachment(attachmentId, { ...data })
         res.status(200).json({ message: 'Attachments updated successfully' })
       } catch (error) {
         res.status(500).json({ error: 'Internal Server Error' })

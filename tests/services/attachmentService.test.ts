@@ -3,7 +3,8 @@ import {
   createAttachment,
   deleteAttachment,
   getAttachmentByID,
-  updateAttachment
+  updateAttachment,
+  getAllAttachmentsForCompany
 } from '@/api/services/attachmentService'
 import { createCompany } from '@/api/services/companyService'
 import { createUser } from '@/api/services/userService'
@@ -20,6 +21,7 @@ describe('Company Attachment Model Tests', () => {
   let userId: number
   let companyId: number
   let attachmentId: number
+  let attachmentId2: number
 
   test('Create a new user with valid details', async () => {
     const user = await createUser({ name: 'John Doe', role: Role.USER })
@@ -60,6 +62,24 @@ describe('Company Attachment Model Tests', () => {
     expect(updatedAttachment.fileType).toBe(FileType.TEXT)
     expect(updatedAttachment.fileUrl).toBe('new url')
     expect(updatedAttachment.title).toBe('new title')
+  })
+
+  test('Get attachments of a company', async () => {
+    // Add a second attachment to the company
+    const attachment2 = await createAttachment({
+      companyId,
+      fileType: FileType.JPG,
+      fileUrl: 'another_url',
+      userId,
+      title: 'attachment for microsoft'
+    })
+    attachmentId2 = attachment2.id
+
+    const attachments = await getAllAttachmentsForCompany(companyId)
+    expect(attachments).toBeTruthy()
+    expect(attachments.length).toEqual(2)
+    expect(attachments[0].id).toBe(attachmentId)
+    expect(attachments[1].id).toBe(attachmentId2)
   })
 
   test('Delete an attachment', async () => {

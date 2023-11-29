@@ -1,105 +1,65 @@
-import Image from 'next/image'
-import { Card, Flex, Metric, ProgressBar, Text } from '@tremor/react'
+'use client'
+import React, { useEffect, useState } from 'react'
+import NewsCard from '@/components/Dashboard/NewsCard'
+import type NewsItem from '@/types/news'
+
+async function getTrendingNews() {
+  try {
+    const res = await fetch('/api/dashboard', {
+      method: 'GET',
+      cache: 'no-cache'
+    })
+    if (!res.ok) {
+      console.log('Response status:', res.status)
+      throw new Error('HTTP response was not OK')
+    }
+    const json = await res.json()
+    return json
+  } catch (error) {
+    console.log('An error has occurred: ', error)
+  }
+}
 
 export default function Home() {
+  const [news, setNews] = useState<NewsItem[]>([])
+
+  useEffect(() => {
+    getTrendingNews()
+      .then(setNews)
+      .catch((error) => {
+        console.error('Failed to fetch companies:', error)
+      })
+  }, [])
+
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24" role="main">
-      <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Get started by editing&nbsp;
-          <code className="font-mono font-bold">src/app/page.tsx</code>
-        </p>
-        <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:h-auto lg:w-auto lg:bg-none">
-          <a
-            className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By <Image src="/vercel.svg" alt="Vercel Logo" className="dark:invert" width={100} height={24} priority />
-          </a>
+    <main className="m-4 flex flex-row items-start justify-start space-x-4" role="main">
+      <div className="relative m-4 flex min-h-screen w-2/3 flex-col justify-start rounded bg-white shadow-lg">
+        <div className="flex items-center justify-between p-4">
+          <div className="mb-2 flex flex-col items-start space-y-4">
+            <h1 className="m-6 text-3xl font-bold text-[#374151]">Trending News</h1>
+            <div className="grid grid-cols-2 gap-4">
+              {news.map((item, index) => (
+                <NewsCard
+                  key={index}
+                  title={item.title}
+                  description={item.description}
+                  company={item.companyName}
+                  datasource={item.datasourceName}
+                  timestamp={item.timestamp}
+                  link={item.link}
+                />
+              ))}
+            </div>
+          </div>
         </div>
       </div>
-
-      <div>
-        <Card className="mx-auto max-w-xs">
-          <Text>Sales</Text>
-          <Metric>$ 71,465</Metric>
-          <Flex className="mt-4">
-            <Text>32% of annual target</Text>
-            <Text>$ 225,000</Text>
-          </Flex>
-          <ProgressBar value={32} className="mt-2" />
-        </Card>
-        {/* TODO: continue with https://www.tremor.so/docs/getting-started/demo-dashboard */}
-      </div>
-
-      <div className="mb-32 grid text-center lg:mb-0 lg:w-full lg:max-w-5xl lg:grid-cols-4 lg:text-left">
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Docs{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Learn{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Learn about Next.js in an interactive course with&nbsp;quizzes!
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Templates{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>Explore the Next.js 13 playground.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Deploy{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
+      <div className="relative m-4 flex min-h-screen w-2/6 flex-col justify-start rounded bg-white shadow-lg">
+        <div className="flex items-center justify-between p-4">
+          <div className="mb-2 flex items-center justify-start space-x-4">
+            <h1 className="m-6 text-3xl font-bold text-[#374151]">Top Buckets</h1>
+            {/* TODO: Add Top Buckets component here */}
+          </div>
+        </div>
       </div>
     </main>
   )

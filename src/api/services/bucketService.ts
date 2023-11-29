@@ -37,18 +37,15 @@ const getBucketById = async (id: number) => {
   }
 }
 
-// FR-30 search a bucket
 const getBucketByName = async (title: string) => {
   try {
-    // if name unique, use findunique
     const bucket = await prisma.bucket.findMany({
       where: { title }
     })
-    if (bucket) {
-      return bucket
-    } else {
+    if (!bucket) {
       throw new Error(`Bucket with name ${title} not found.`)
     }
+    return bucket
   } catch (error) {
     console.error('Error finding bucket by name:', error)
     throw error
@@ -123,12 +120,4 @@ const deleteBucket = async (id: number) => {
   }
 }
 
-export default {
-  createBucket,
-  getBucketById,
-  getBucketByName,
-  getAllBuckets,
-  getOwnBuckets,
-  updateBucket,
-  deleteBucket
-}
+export { createBucket, getBucketById, getBucketByName, getAllBuckets, getOwnBuckets, updateBucket, deleteBucket }

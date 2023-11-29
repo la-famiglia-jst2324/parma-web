@@ -1,9 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 
-import notificationService from '@/api/services/notificationService'
+import { getNotificationById, updateNotification, deleteNotification } from '@/api/services/notificationService'
 
 import { ItemNotFoundError } from '@/api/utils/errorUtils'
-const { getNotificationById, updateNotification, deleteNotification } = notificationService
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const { method } = req

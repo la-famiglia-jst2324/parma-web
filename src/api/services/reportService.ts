@@ -59,9 +59,4 @@ const deleteReport = async (id: number) => {
     throw new Error('Unable to delete report')
   }
 }
-export default {
-  createReport,
-  getReportById,
-  updateReport,
-  deleteReport
-}
+export { createReport, getReportById, updateReport, deleteReport }

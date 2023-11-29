@@ -1,11 +1,12 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 
-import companyBucketMembershipService from '@/api/services/companyBucketMembershipService'
-
+import {
+  addCompanyToBucket,
+  getCompaniesByBucketId,
+  getBucketsByCompanyId,
+  removeCompanyFromBucket
+} from '@/api/services/companyBucketMembershipService'
 import { ItemNotFoundError } from '@/api/utils/errorUtils'
-
-const { addCompanyToBucket, getCompaniesByBucketId, getBucketsByCompanyId, removeCompanyFromBucket } =
-  companyBucketMembershipService
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const { method } = req

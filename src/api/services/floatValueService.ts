@@ -19,11 +19,10 @@ const getFloatValueByID = async (id: number) => {
     const floatValue = await prisma.measurementFloatValue.findUnique({
       where: { id }
     })
-    if (floatValue) {
-      return floatValue
-    } else {
+    if (!floatValue) {
       throw new Error(`float value with ID ${id} not found.`)
     }
+    return floatValue
   } catch (error) {
     console.error('Error getting the float value by ID:', error)
     throw error
@@ -72,10 +71,4 @@ const deleteFloatValue = async (id: number) => {
   }
 }
 
-export default {
-  createFloatValue,
-  getFloatValueByID,
-  getAllFloatValues,
-  updateFloatValue,
-  deleteFloatValue
-}
+export { createFloatValue, getFloatValueByID, getAllFloatValues, updateFloatValue, deleteFloatValue }

@@ -16,10 +16,10 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
   const user = useContext(AuthContext)
   return (
     <div className="flex flex-row">
-      <div className="sticky left-0 top-0 flex h-screen w-1/4 flex-col bg-primary">
+      <div className="sticky left-0 top-0 flex h-screen w-1/6 flex-col bg-primary">
         <div className="ml-4 flex grow flex-col overflow-y-auto">
-          <div className="mb-12">
-            <Link href="/" className="cursor-pointer text-3xl font-extrabold text-white">
+          <div className="mb-6 mt-4">
+            <Link href="/" className="cursor-pointer pt-6 text-3xl font-extrabold text-white">
               ParmaAI
             </Link>
           </div>
@@ -71,7 +71,7 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
         </div>
       </div>
       <div className="w-full">
-        <div className="sticky top-0 flex items-center justify-end gap-4 bg-white p-4 shadow-lg">
+        <div className="sticky top-0 z-50 flex items-center justify-end gap-4 bg-white p-4 shadow-lg">
           <div className=" mr-4 inline-flex h-9 w-32 items-center justify-center rounded-md bg-gray-200">
             <Link
               href="/settings"

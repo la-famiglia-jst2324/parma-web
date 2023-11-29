@@ -1,18 +1,17 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 
-import bucketService from '@/api/services/bucketService'
+import { createBucket, getBucketByName, getAllBuckets } from '@/api/services/bucketService'
 import { ItemNotFoundError } from '@/api/utils/errorUtils'
-const { createBucket, getAllBuckets, getBucketByName } = bucketService
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const { method } = req
-  const bucketName = String(req.query.name)
+  const bucketName = req.query.name
 
   switch (method) {
     case 'GET':
       try {
         if (bucketName) {
-          const bucket = await getBucketByName(bucketName)
+          const bucket = await getBucketByName(String(bucketName))
           if (bucket) res.status(200).json(bucket)
           else res.status(400).json({ error: 'No Bucket found' })
         } else {

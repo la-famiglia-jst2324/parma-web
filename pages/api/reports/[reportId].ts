@@ -1,9 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 
-import reportService from '@/api/services/reportService'
+import { getReportById, updateReport, deleteReport } from '@/api/services/reportService'
 
 import { ItemNotFoundError } from '@/api/utils/errorUtils'
-const { getReportById, updateReport, deleteReport } = reportService
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const { method } = req

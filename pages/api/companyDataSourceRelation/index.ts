@@ -1,15 +1,14 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 
-import companyDataSourceService from '@/api/services/companyDataSourceService'
-import { ItemNotFoundError } from '@/api/utils/errorUtils'
-
-const {
+import {
   createCompanyDataSource,
-  getDataSourcesByCompanyId,
+  deleteCompanyDataSource,
   getCompaniesByDataSourceId,
-  updateCompanyDataSource,
-  deleteCompanyDataSource
-} = companyDataSourceService
+  getDataSourcesByCompanyId,
+  updateCompanyDataSource
+} from '@/api/services/companyDataSourceService'
+
+import { ItemNotFoundError } from '@/api/utils/errorUtils'
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const { method } = req

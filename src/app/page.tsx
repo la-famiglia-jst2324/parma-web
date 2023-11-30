@@ -107,9 +107,9 @@ export default function Home() {
       </div>
       <div className="relative m-4 flex h-full min-h-screen w-2/6 flex-col justify-start rounded bg-white shadow-lg">
         <div className="flex items-center justify-between p-4">
-          <div className="m-4 w-full">
+          <div className="w-full">
             <div className="flex items-center justify-between">
-              <h1 className="text-2xl font-bold text-[#374151]">Top Buckets</h1>
+              <h1 className="text-3xl font-bold text-[#374151]">Top Buckets</h1>
               {TopBuckets.length > 5 && (
                 <Link href="/top-buckets" className="text-lg text-gray-500 underline">
                   See more

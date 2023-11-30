@@ -18,9 +18,6 @@ const config: Config = {
         primary: 'var(--primary-color)',
         secondary: 'var(--secondary-color)',
         'light-gray': 'var(--light-gray)',
-        'dark-gray': '#374151',
-        'custom-gray-1': 'rgba(55, 65, 81, 1)',
-        'custom-gray-2': '#6B7280',
         // light mode
         tremor: {
           brand: {

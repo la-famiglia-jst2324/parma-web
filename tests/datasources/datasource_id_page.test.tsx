@@ -1,6 +1,5 @@
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import { useParams } from 'next/navigation'
 import DatasourcePage from '@/app/datasources/[id]/page'
 
 jest.mock('next/navigation', () => ({

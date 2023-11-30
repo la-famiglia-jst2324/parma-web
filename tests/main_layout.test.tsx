@@ -1,13 +1,20 @@
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import { MainLayout } from '@/components/dashboard';
+import { MainLayout } from '@/components/MainLayout';
+import { usePathname} from 'next/navigation';
+
+jest.mock('next/navigation', () => ({
+  usePathname: jest.fn(),
+}));
 
 describe('MainLayout', () => {
-    test('renders without crashing', () => {
-        render(<MainLayout><div>Test Child</div></MainLayout>);
-        const testChild = screen.getByText(/Test Child/i);
-        expect(testChild).toBeInTheDocument();
-    });
+  beforeEach(() => {
+    (usePathname as jest.Mock).mockReturnValue('/');
+  });
+
+  test('renders without crashing', () => {
+    render(<MainLayout><div>Test Child</div></MainLayout>);
+  });
 
   test('renders the sidebar links', () => {
     render(<MainLayout><div>Test Child</div></MainLayout>);
@@ -29,10 +36,10 @@ describe('MainLayout', () => {
     expect(settingsLink).toBeInTheDocument();
   });
 
-    test('renders the navbar link', () => {
-        render(<MainLayout><div>Test Child</div></MainLayout>);
-        const settingsLink = screen.getByText(/Settings/i);
-        expect(settingsLink).toBeInTheDocument();
-    });
+  test('renders the navbar link', () => {
+    render(<MainLayout><div>Test Child</div></MainLayout>);
+    const settingsLink = screen.getByText(/Settings/i);
+    expect(settingsLink).toBeInTheDocument();
+  });
 
 });

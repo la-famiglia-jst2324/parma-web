@@ -1,5 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import TopBucketsCard from '@/components/Dashboard/TopBucketsCard';
+import '@testing-library/jest-dom';
 
 describe('TopBucketsCard Test', () => {
   const mockBucketItem = {

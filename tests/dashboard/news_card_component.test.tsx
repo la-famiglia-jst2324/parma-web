@@ -1,5 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import NewsCard from '@/components/Dashboard/NewsCard';
+import '@testing-library/jest-dom';
 
 describe('NewsCard', () => {
   const mockNewsItem = {

@@ -6,6 +6,7 @@ type NewsItem = {
   timestamp: string
   description: string
   link: string
+  icon: string
 }
 
 export default NewsItem

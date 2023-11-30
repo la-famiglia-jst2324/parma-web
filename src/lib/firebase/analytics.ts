@@ -1,4 +1,9 @@
-import { getAnalytics } from 'firebase/analytics'
+import { getAnalytics, isSupported } from 'firebase/analytics'
 import { firebaseApp } from './main'
 
-export const analytics = getAnalytics(firebaseApp)
+// only initialize analytics if run in browser
+const analytics = isSupported().then((v) => {
+  return v ? getAnalytics(firebaseApp) : null
+})
+
+export { analytics }

@@ -4,8 +4,8 @@
 [![CI](https://github.com/la-famiglia-jst2324/parma-web/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/la-famiglia-jst2324/parma-web/actions/workflows/ci.yml)
 [![Deploy](https://github.com/la-famiglia-jst2324/parma-web/actions/workflows/release.yml/badge.svg)](https://github.com/la-famiglia-jst2324/parma-web/actions/workflows/release.yml)
 [![Major Tag](https://github.com/la-famiglia-jst2324/parma-web/actions/workflows/tag-major.yml/badge.svg)](https://github.com/la-famiglia-jst2324/parma-web/actions/workflows/tag-major.yml)
-![Functions](https://img.shields.io/badge/functions-62.29%25-red.svg?style=flat)
-![Lines](https://img.shields.io/badge/lines-52.66%25-red.svg?style=flat)
+![Functions](https://img.shields.io/badge/functions-59.89%25-red.svg?style=flat)
+![Lines](https://img.shields.io/badge/lines-50.24%25-red.svg?style=flat)
 
 ParmaAI webstack including frontend and REST API backend.
 
@@ -66,7 +66,12 @@ The following steps will get you started with the project.
    make install
    ```
 
-4. **Start the development server**
+4. **Setup Firebase Admin SDK**:
+
+   The Firebase Admin SDK is used to verify user tokens in the backend (Next API routes).
+   Please download [this secrets json file](https://www.notion.so/firebase-admin-sdk-certificate-4279aa3b4e904e1b927619ed69537045) from Notion and place it in `/src/api/.secrets/la-famiglia-parma-ai-firebase-adminsdk.json`.
+
+5. **Start the development server**
 
    ```bash
    make dev
@@ -74,14 +79,14 @@ The following steps will get you started with the project.
 
    **Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.**
 
-5. Optional: Running parts of the pre-commit pipeline manually
+6. Optional: Running parts of the pre-commit pipeline manually
 
    ```bash
    make lint  # runs linting
    make build  # builds the project
    ```
 
-6. Test your code and code coverage:
+7. Test your code and code coverage:
 
    As the tests require a postgres database to be running, you need a postgres database running locally.
    For that you can use the docker-compose file in the root directory of this project.
@@ -106,7 +111,7 @@ The following steps will get you started with the project.
    make test  # runs jest and typescript-coverage-report
    ```
 
-7. Optional: Run a production build (used in the CI pipeline)
+8. Optional: Run a production build (used in the CI pipeline)
 
    ```bash
    make start
@@ -118,14 +123,15 @@ The following steps will get you started with the project.
 
 Follow the steps below to update your local database with recent changes
 
-1.  Make sure your .env file contains:
-    `POSTGRES_URL="postgresql://parma-prod-db:parma-prod-db@localhost:9000/parma-prod-db"
-`
-2.  To apply the recent changes to your local database, run:
+1. Make sure your .env file contains:
 
-    ```
+   `POSTGRES_URL="postgresql://parma-prod-db:parma-prod-db@localhost:9000/parma-prod-db"`
+
+2. To apply the recent changes to your local database, run:
+
+   ```bash
     pnpm prisma migrate dev
-    ```
+   ```
 
 ## PR workflow
 

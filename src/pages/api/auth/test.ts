@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import type { User } from '@prisma/client'
-import { withAuthValidation } from './middleware'
+import { withAuthValidation } from '@/api/middleware/auth'
 
 type ResponseData = {
   message: string

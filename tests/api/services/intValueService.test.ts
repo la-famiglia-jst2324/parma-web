@@ -1,10 +1,10 @@
 import { PrismaClient, Frequency, HealthStatus, Role } from '@prisma/client'
 import { genRandomDummyAuthId } from '../utils/random'
-import { createCompany } from '@/pages/api/services/companyService'
-import { createDataSource } from '@/pages/api/services/dataSourceService'
-import { createIntValue, deleteIntValue, getIntValueByID, updateIntValue } from '@/pages/api/services/intValueService'
-import { createSourceMeasurement } from '@/pages/api/services/sourceMeasurementService'
-import { createUser } from '@/pages/api/services/userService'
+import { createCompany } from '@/api/db/services/companyService'
+import { createDataSource } from '@/api/db/services/dataSourceService'
+import { createIntValue, deleteIntValue, getIntValueByID, updateIntValue } from '@/api/db/services/intValueService'
+import { createSourceMeasurement } from '@/api/db/services/sourceMeasurementService'
+import { createUser } from '@/api/db/services/userService'
 const prisma = new PrismaClient()
 
 describe('int value Model Tests', () => {

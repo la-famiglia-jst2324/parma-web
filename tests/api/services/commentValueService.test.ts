@@ -5,11 +5,11 @@ import {
   deleteCommentValue,
   getCommentValueByID,
   updateCommentValue
-} from '@/pages/api/services/commentValueService'
-import { createCompany } from '@/pages/api/services/companyService'
-import { createDataSource } from '@/pages/api/services/dataSourceService'
-import { createSourceMeasurement } from '@/pages/api/services/sourceMeasurementService'
-import { createUser } from '@/pages/api/services/userService'
+} from '@/api/db/services/commentValueService'
+import { createCompany } from '@/api/db/services/companyService'
+import { createDataSource } from '@/api/db/services/dataSourceService'
+import { createSourceMeasurement } from '@/api/db/services/sourceMeasurementService'
+import { createUser } from '@/api/db/services/userService'
 const prisma = new PrismaClient()
 
 describe('comment value Model Tests', () => {

@@ -4,7 +4,7 @@ import {
   deleteNotificationChannel,
   getNotificationChannelById,
   updateNotificationChannel
-} from '@/pages/api/services/notificationChannelService'
+} from '@/api/db/services/notificationChannelService'
 const prisma = new PrismaClient()
 
 describe('Notification Channel Model Tests', () => {

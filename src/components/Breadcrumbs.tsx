@@ -4,7 +4,7 @@ import Link from 'next/link'
 
 const Breadcrumbs = () => {
   const pathname = usePathname()
-  const pathNames = pathname.split('/').filter((path) => path)
+  const pathNames = (pathname ?? '/').split('/').filter((path) => path)
 
   const formatBreadcrumb = (string: string) => {
     return string.replace(/-/g, ' ').replace(/^[a-z]/, (letter) => letter.toUpperCase())

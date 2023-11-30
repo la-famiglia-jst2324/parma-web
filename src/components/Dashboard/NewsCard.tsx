@@ -20,17 +20,17 @@ const NewsCard: React.FC<NewsCardProps> = ({
           <div className="flex h-12 items-center justify-center">
             <Image src={icon} alt={companyName} width={50} height={50} />
           </div>
-          <h2 className="mt-2 text-lg font-bold">{title}</h2>
+          <h2 className="mt-2 text-lg font-bold text-custom-gray-1">{title}</h2>
         </div>
         <div className="mb-4 flex grow flex-wrap justify-between">
           <div className="w-full">
-            <p className="text-sm text-[#6B7280]">
-              Company: <span className="font-bold">{companyName}</span>
+            <p className="text-sm text-custom-gray-2">
+              Company: <span className="font-bold">{companyName} </span>
             </p>
-            <p className="text-sm text-[#6B7280]">
+            <p className="text-sm text-custom-gray-2">
               Datasource: <span className="font-bold">{datasourceName}</span>
             </p>
-            <p className="mt-2 text-xs text-[#6B7280]">Published: {timestamp}</p>
+            <p className="mt-2 text-xs text-custom-gray-2">Published: {timestamp}</p>
             <div className="h-44">
               <p className="mt-2 text-sm">
                 {description.length > 300 ? description.substring(0, 300) + '...' : description}

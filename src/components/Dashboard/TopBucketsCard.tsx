@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import React from 'react'
+import { truncateString } from '../../utils/stringUtils'
 
 interface TopBucketsCardProps {
   id: number
@@ -14,9 +15,7 @@ const TopBucketsCard: React.FC<TopBucketsCardProps> = ({ id, name, description, 
       <div className="w-full rounded-b border-b border-gray-200 p-2">
         <h2 className="text-base font-bold">{name}</h2>
         <span className="mb-2 line-clamp-3 overflow-hidden text-xs text-gray-700">{numberOfCompanies} companies</span>
-        <p className="mb-1 block text-sm">
-          {description.length > 100 ? description.substring(0, 100) + '...' : description}
-        </p>
+        <p className="mb-1 block text-sm">{truncateString(description, 100)}</p>
         <div className="flex justify-end">
           <Link
             href={`/buckets/${id}`}

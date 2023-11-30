@@ -64,7 +64,7 @@ export default function Home() {
   }, [])
 
   const news = data.news as NewsItem[]
-  const TopBuckets = data.topBuckets as TopBucket[]
+  const topBuckets = data.topBuckets as TopBucket[]
   const uniqueCompanies = Array.from(new Set(subscribedCompanies.map((company) => company.name)))
 
   return (
@@ -73,7 +73,7 @@ export default function Home() {
         <div className="flex items-center justify-between p-4">
           <div className="mb-2 flex flex-col items-start space-y-4">
             <div className="flex w-full items-center justify-between">
-              <h1 className="text-3xl font-bold text-[#374151]">Trending News</h1>
+              <h1 className="text-3xl font-bold text-dark-gray">Trending News</h1>
               <div className="absolute right-0 top-0 mr-4 mt-4 w-1/3">
                 <MultiSelect placeholder="Filter companies" onValueChange={(values) => setSelectedCompanies(values)}>
                   {uniqueCompanies.map((companyName, index) => (
@@ -109,14 +109,14 @@ export default function Home() {
         <div className="flex items-center justify-between p-4">
           <div className="w-full">
             <div className="flex items-center justify-between">
-              <h1 className="text-3xl font-bold text-[#374151]">Top Buckets</h1>
-              {TopBuckets.length > 5 && (
+              <h1 className="text-3xl font-bold text-dark-gray">Top Buckets</h1>
+              {topBuckets.length > 5 && (
                 <Link href="/top-buckets" className="text-lg text-gray-500 underline">
                   See more
                 </Link>
               )}
             </div>
-            {TopBuckets.slice(0, 7).map((item, index) => (
+            {topBuckets.slice(0, 7).map((item, index) => (
               <TopBucketsCard
                 key={index}
                 id={item.id}

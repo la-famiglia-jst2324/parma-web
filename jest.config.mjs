@@ -18,6 +18,7 @@ const config = {
   collectCoverage: true,
   collectCoverageFrom: [
     "src/**/*.{js,jsx,ts,tsx}",
+    "!src/pages/api/**/*.{js,jsx,ts,tsx}",
     "!**/node_modules/**",
     "!**/vendor/**"
   ],

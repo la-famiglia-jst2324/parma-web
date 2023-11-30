@@ -1,2 +1,3 @@
 dist/** linguist-generated=true
 pnpm-lock.yaml linguist-generated=true
+**/prisma/migrations/** linguist-generated=true

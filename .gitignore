@@ -433,3 +433,4 @@ $RECYCLE.BIN/
 !next-env.d.ts
 coverage-ts
 **/.secrets
+.vscode/

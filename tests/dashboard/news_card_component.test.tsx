@@ -31,7 +31,7 @@ describe('NewsCard', () => {
 
   it('renders the timestamp', () => {
     render(<NewsCard {...mockNewsItem} />);
-    expect(screen.getByText('2022-01-01')).toBeInTheDocument();
+    expect(screen.getByText("Published: 2022-01-01")).toBeInTheDocument();
   });
 
   it('renders the description', () => {

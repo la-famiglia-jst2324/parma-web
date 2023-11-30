@@ -5,7 +5,7 @@ import {
   getCompaniesByBucketId,
   getBucketsByCompanyId,
   removeCompanyFromBucket
-} from '@/api/services/companyBucketMembershipService'
+} from '@/pages/api/services/companyBucketMembershipService'
 import { ItemNotFoundError } from '@/api/utils/errorUtils'
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {

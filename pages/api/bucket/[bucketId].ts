@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 
-import { deleteBucket, getBucketById, updateBucket } from '@/api/services/bucketService'
+import { deleteBucket, getBucketById, updateBucket } from '@/pages/api/services/bucketService'
 import { ItemNotFoundError } from '@/api/utils/errorUtils'
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {

@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 
-import { createNotification } from '@/api/services/notificationService'
+import { createNotification } from '@/pages/api/services/notificationService'
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const { method } = req

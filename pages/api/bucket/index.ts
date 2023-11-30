@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 
-import { createBucket, getBucketByName, getAllBuckets } from '@/api/services/bucketService'
+import { createBucket, getBucketByName, getAllBuckets } from '@/pages/api/services/bucketService'
 import { ItemNotFoundError } from '@/api/utils/errorUtils'
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {

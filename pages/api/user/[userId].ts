@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 
-import { getUserById, updateUser, deleteUser } from '@/api/services/userService'
+import { getUserById, updateUser, deleteUser } from '@/pages/api/services/userService'
 
 import { ItemNotFoundError } from '@/api/utils/errorUtils'
 

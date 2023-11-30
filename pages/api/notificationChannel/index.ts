@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 
-import { createNotificationChannel } from '@/api/services/notificationChannelService'
+import { createNotificationChannel } from '@/pages/api/services/notificationChannelService'
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const { method } = req

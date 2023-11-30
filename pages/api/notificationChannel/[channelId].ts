@@ -4,7 +4,7 @@ import {
   deleteNotificationChannel,
   getNotificationChannelById,
   updateNotificationChannel
-} from '@/api/services/notificationChannelService'
+} from '@/pages/api/services/notificationChannelService'
 
 import { ItemNotFoundError } from '@/api/utils/errorUtils'
 

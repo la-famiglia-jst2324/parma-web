@@ -6,7 +6,7 @@ import {
   getCompaniesByDataSourceId,
   getDataSourcesByCompanyId,
   updateCompanyDataSource
-} from '@/api/services/companyDataSourceService'
+} from '@/pages/api/services/companyDataSourceService'
 
 import { ItemNotFoundError } from '@/api/utils/errorUtils'
 

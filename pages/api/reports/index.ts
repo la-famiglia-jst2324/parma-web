@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 
-import { createReport } from '@/api/services/reportService'
+import { createReport } from '@/pages/api/services/reportService'
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const { method } = req

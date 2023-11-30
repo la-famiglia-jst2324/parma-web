@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 
-import { getNotificationById, updateNotification, deleteNotification } from '@/api/services/notificationService'
+import { getNotificationById, updateNotification, deleteNotification } from '@/pages/api/services/notificationService'
 
 import { ItemNotFoundError } from '@/api/utils/errorUtils'
 

@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 
-import { deleteDataSource, getDataSourceByID, updateDataSource } from '@/api/services/dataSourceService'
+import { deleteDataSource, getDataSourceByID, updateDataSource } from '@/pages/api/services/dataSourceService'
 
 import { ItemNotFoundError } from '@/api/utils/errorUtils'
 

@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 
-import { deleteCompany, getCompanyByID, updateCompany } from '@/api/services/companyService'
+import { deleteCompany, getCompanyByID, updateCompany } from '@/pages/api/services/companyService'
 import { ItemNotFoundError } from '@/api/utils/errorUtils'
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {

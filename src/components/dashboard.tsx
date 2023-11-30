@@ -14,6 +14,31 @@ import { AuthContext, authLogin, authLogout } from '@/lib/firebase/auth'
 
 export function MainLayout({ children }: { children: React.ReactNode }) {
   const user = useContext(AuthContext)
+
+  const getTokenButton = user ? (
+    <button
+      className="mb-6 text-white"
+      key="getTokenButton"
+      onClick={async () => {
+        if (user) {
+          const token = await user.getIdToken()
+          const result = await fetch('/api/auth/test', {
+            method: 'POST',
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
+          })
+          const response = await result.json()
+          alert(result.status + ' - ' + response?.message)
+        }
+      }}
+    >
+      Dummy auth call
+    </button>
+  ) : (
+    <span></span>
+  )
+
   return (
     <div className="flex flex-row">
       <div className="sticky left-0 top-0 flex h-screen w-1/6 flex-col bg-primary">
@@ -24,6 +49,7 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
             </Link>
           </div>
           <span className="text-white">{user ? 'Logged in as <' + user.displayName + '>' : ''}</span>
+          {getTokenButton}
           <button
             className="mb-6 text-white"
             onClick={async () => {

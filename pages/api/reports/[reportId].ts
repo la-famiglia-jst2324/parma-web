@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 
-import { getReportById, updateReport, deleteReport } from '@/api/services/reportService'
+import { getReportById, updateReport, deleteReport } from '@/pages/api/services/reportService'
 
 import { ItemNotFoundError } from '@/api/utils/errorUtils'
 

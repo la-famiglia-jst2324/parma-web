@@ -1,8 +1,8 @@
 import { PrismaClient, Role, Frequency, HealthStatus } from '@prisma/client'
 import { genRandomDummyAuthId } from '../utils/random'
-import { createDataSource, deleteDataSource } from '@/pages/api/services/dataSourceService'
-import { createUserPref, deleteUserPref, getUserPrefByID } from '@/pages/api/services/userMeasurementPrefService'
-import { createUser, deleteUser } from '@/pages/api/services/userService'
+import { createDataSource, deleteDataSource } from '@/api/db/services/dataSourceService'
+import { createUserPref, deleteUserPref, getUserPrefByID } from '@/api/db/services/userMeasurementPrefService'
+import { createUser, deleteUser } from '@/api/db/services/userService'
 const prisma = new PrismaClient()
 
 describe('User Preference Measurement Model Tests', () => {

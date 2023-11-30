@@ -1,7 +1,7 @@
 import { PrismaClient, Role } from '@prisma/client'
 import { genRandomDummyAuthId } from '../utils/random'
-import { createCompany, deleteCompany, getCompanyByID, updateCompany } from '@/pages/api/services/companyService'
-import { createUser } from '@/pages/api/services/userService'
+import { createCompany, deleteCompany, getCompanyByID, updateCompany } from '@/api/db/services/companyService'
+import { createUser } from '@/api/db/services/userService'
 const prisma = new PrismaClient()
 
 describe('Company Model Tests', () => {

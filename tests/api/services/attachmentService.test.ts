@@ -5,9 +5,9 @@ import {
   deleteAttachment,
   getAttachmentByID,
   updateAttachment
-} from '@/pages/api/services/attachmentService'
-import { createCompany } from '@/pages/api/services/companyService'
-import { createUser } from '@/pages/api/services/userService'
+} from '@/api/db/services/attachmentService'
+import { createCompany } from '@/api/db/services/companyService'
+import { createUser } from '@/api/db/services/userService'
 const prisma = new PrismaClient()
 
 describe('Company Attachment Model Tests', () => {

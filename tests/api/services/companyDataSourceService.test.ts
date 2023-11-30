@@ -5,10 +5,10 @@ import {
   deleteCompanyDataSource,
   getCompaniesByDataSourceId,
   getDataSourcesByCompanyId
-} from '@/pages/api/services/companyDataSourceService'
-import { createCompany, deleteCompany } from '@/pages/api/services/companyService'
-import { createDataSource } from '@/pages/api/services/dataSourceService'
-import { createUser, deleteUser } from '@/pages/api/services/userService'
+} from '@/api/db/services/companyDataSourceService'
+import { createCompany, deleteCompany } from '@/api/db/services/companyService'
+import { createDataSource } from '@/api/db/services/dataSourceService'
+import { createUser, deleteUser } from '@/api/db/services/userService'
 
 const prisma = new PrismaClient()
 

@@ -1,15 +1,15 @@
 import { PrismaClient, Frequency, HealthStatus, Role } from '@prisma/client'
 import { genRandomDummyAuthId } from '../utils/random'
-import { createCompany } from '@/pages/api/services/companyService'
-import { createDataSource } from '@/pages/api/services/dataSourceService'
+import { createCompany } from '@/api/db/services/companyService'
+import { createDataSource } from '@/api/db/services/dataSourceService'
 import {
   createFloatValue,
   deleteFloatValue,
   getFloatValueByID,
   updateFloatValue
-} from '@/pages/api/services/floatValueService'
-import { createSourceMeasurement } from '@/pages/api/services/sourceMeasurementService'
-import { createUser } from '@/pages/api/services/userService'
+} from '@/api/db/services/floatValueService'
+import { createSourceMeasurement } from '@/api/db/services/sourceMeasurementService'
+import { createUser } from '@/api/db/services/userService'
 
 const prisma = new PrismaClient()
 

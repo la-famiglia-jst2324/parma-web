@@ -1,14 +1,14 @@
 import { PrismaClient, Frequency, HealthStatus, Role } from '@prisma/client'
 import { genRandomDummyAuthId } from '../utils/random'
-import { createCompany } from '@/pages/api/services/companyService'
-import { createDataSource } from '@/pages/api/services/dataSourceService'
+import { createCompany } from '@/api/db/services/companyService'
+import { createDataSource } from '@/api/db/services/dataSourceService'
 import {
   createNotification,
   deleteNotification,
   getNotificationById,
   updateNotification
-} from '@/pages/api/services/notificationService'
-import { createUser } from '@/pages/api/services/userService'
+} from '@/api/db/services/notificationService'
+import { createUser } from '@/api/db/services/userService'
 const prisma = new PrismaClient()
 
 describe('Notification Model Tests', () => {

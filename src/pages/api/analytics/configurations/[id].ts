@@ -18,7 +18,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     switch (method) {
       case 'DELETE': {
-        // Note the indentation here
         const { id } = customizaitonDeleteQuerySchema.parse(req.query)
         await deleteUserCustomization(id)
         res.status(200).json({ message: `Customization with id ${id} deleted successfully` })

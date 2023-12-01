@@ -2,6 +2,7 @@ import { Frequency, HealthStatus, PrismaClient } from '@prisma/client'
 import {
   createDataSource,
   deleteDataSource,
+  getAllDataSources,
   getDataSourceByID,
   updateDataSource
 } from '@/api/db/services/dataSourceService'
@@ -54,6 +55,30 @@ describe('Data Source Model Tests', () => {
     expect(updatedDataSource.defaultFrequency).toBe(Frequency.WEEKLY)
     expect(updatedDataSource.healthStatus).toBe(HealthStatus.UP)
     expect(updatedDataSource.description).toBe('update data source')
+  })
+
+  test('Get first page of data sources', async () => {
+    const page = 1
+    const size = 10
+    const name = ''
+
+    const dataSources = await getAllDataSources(page, size, name)
+
+    // Check that the correct number of data sources is returned
+    expect(dataSources.length).toBeLessThanOrEqual(size)
+  })
+
+  test('Get second page of data sources', async () => {
+    const page = 1
+    const size = 1
+    const name = 'source'
+
+    const dataSources = await getAllDataSources(page, size, name)
+
+    // Check that the correct number of data sources is returned
+    expect(dataSources.length).toBeLessThanOrEqual(size)
+    expect(dataSources.length).toBeGreaterThan(0)
+    expect(dataSources[0].sourceName).toContain(name)
   })
 
   test('Delete a data source', async () => {

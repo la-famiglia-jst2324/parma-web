@@ -1,6 +1,12 @@
 import { PrismaClient, Role } from '@prisma/client'
 import { genRandomDummyAuthId } from '../utils/random'
-import { createCompany, deleteCompany, getCompanyByID, updateCompany } from '@/api/db/services/companyService'
+import {
+  createCompany,
+  deleteCompany,
+  getCompanyByID,
+  updateCompany,
+  getAllCompanies
+} from '@/api/db/services/companyService'
 import { createUser } from '@/api/db/services/userService'
 const prisma = new PrismaClient()
 
@@ -38,6 +44,19 @@ describe('Company Model Tests', () => {
   test('Update a company name', async () => {
     const updatedCompany = await updateCompany(companyId, { name: 'github' })
     expect(updatedCompany.name).toBe('github')
+  })
+
+  test('Retrieve all companies', async () => {
+    const companies = await getAllCompanies()
+    expect(Array.isArray(companies)).toBe(true)
+    expect(companies.length).toBeGreaterThan(0)
+    if (companies.length > 0) {
+      expect(companies[0]).toHaveProperty('id')
+      expect(companies[0]).toHaveProperty('name')
+      expect(companies[0]).toHaveProperty('addedBy')
+      expect(companies[0]).toHaveProperty('addedBy')
+    }
+    expect(companies).toBeTruthy()
   })
 
   test('Delete a company', async () => {

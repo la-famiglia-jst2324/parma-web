@@ -3,23 +3,26 @@ import React, { useState } from 'react'
 interface EditInformationModalProps {
   isOpen: boolean
   handleClose: () => void
-  name: string
+  sourceName: string
   description: string
   url: string
-  handleSave: (name: string, description: string, url: string) => void
+  isActive: boolean
+  handleSave: (sourceName: string, description: string, url: string, isActive: boolean) => void
 }
 
 const EditInformationModal: React.FC<EditInformationModalProps> = ({
   isOpen,
   handleClose,
-  name: nameProp,
+  sourceName: nameProp,
   description: descriptionProp,
   url: urlProp,
+  isActive: isActiveProp,
   handleSave
 }) => {
-  const [name, setName] = useState(nameProp)
+  const [sourceName, setName] = useState(nameProp)
   const [description, setDescription] = useState(descriptionProp)
   const [url, setUrl] = useState(urlProp)
+  const [isActive] = useState(isActiveProp)
 
   if (!isOpen) {
     return null
@@ -33,7 +36,7 @@ const EditInformationModal: React.FC<EditInformationModalProps> = ({
   }
 
   const handleSaveClick = () => {
-    handleSave(name, description, url)
+    handleSave(sourceName, description, url, isActive)
     handleClose()
   }
 
@@ -62,9 +65,9 @@ const EditInformationModal: React.FC<EditInformationModalProps> = ({
               Datasource Name
             </label>
             <input
-              id="datasource-name"
+              id="sourceName"
               type="text"
-              value={name}
+              value={sourceName}
               onChange={(event) => handleInputChange(event, setName)}
               placeholder="Datasource Name"
               className="focus:shadow-outline w-full appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow focus:outline-none"

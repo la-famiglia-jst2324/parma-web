@@ -18,7 +18,7 @@ const DatasourceTable: React.FC<TableProps> = ({ data }: TableProps) => {
           <tr>
             <th className="whitespace-nowrap px-6 py-3 text-left">Datasource Name</th>
             <th className="whitespace-nowrap px-6 py-3 text-left">Description</th>
-            <th className="whitespace-nowrap px-6 py-3 text-left">Status</th>
+            <th className="w-96 whitespace-nowrap px-6 py-3 text-left">Status</th>
           </tr>
         </thead>
         <tbody>

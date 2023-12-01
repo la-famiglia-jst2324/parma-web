@@ -5,12 +5,40 @@ import { TrashIcon } from '@heroicons/react/outline'
 interface DeleteModalProps {
   isOpen: boolean
   handleClose: () => void
+  id: string
 }
 
-const DeleteModal: React.FC<DeleteModalProps> = ({ isOpen, handleClose }) => {
+async function deleteDatasource(id: string) {
+  try {
+    const res = await fetch(`/api/dataSources/${id}`, {
+      method: 'DELETE',
+      cache: 'no-cache'
+    })
+    if (!res.ok) {
+      console.log('Response status:', res.status)
+      throw new Error('HTTP response was not OK')
+    }
+    const json = await res.json()
+    return json
+  } catch (error) {
+    console.log('An error has occurred: ', error)
+  }
+}
+
+const DeleteModal: React.FC<DeleteModalProps> = ({ isOpen, handleClose, id }) => {
+  const handleDelete = async () => {
+    try {
+      await deleteDatasource(id)
+      handleClose()
+    } catch (error) {
+      console.error('Failed to delete datasource:', error)
+    }
+  }
+
   if (!isOpen) {
     return null
   }
+
   return (
     <div className="fixed inset-0 z-10 flex items-center justify-center overflow-y-auto">
       {/* Background overlay */}
@@ -42,6 +70,7 @@ const DeleteModal: React.FC<DeleteModalProps> = ({ isOpen, handleClose }) => {
           <button
             type="button"
             className="mt-2 inline-flex w-full justify-center rounded-md border border-transparent bg-red-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-red-700 sm:ml-3 sm:mt-0 sm:w-auto sm:text-sm"
+            onClick={handleDelete}
           >
             <TrashIcon className="mr-2 h-5 w-5 text-white" />
             Delete Permanently

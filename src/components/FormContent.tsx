@@ -5,9 +5,11 @@ interface FormContentProps {
   label: string
   name: string
   placeholder: string
+  value?: string
+  onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void
 }
 
-export const FormContent: React.FC<FormContentProps> = ({ id, name, label, placeholder }) => {
+export const FormContent: React.FC<FormContentProps> = ({ id, name, label, placeholder, value, onChange }) => {
   return (
     <div className="mb-4 flex flex-col">
       <label className="mb-2 block text-sm font-bold text-gray-700" htmlFor={id}>
@@ -19,6 +21,8 @@ export const FormContent: React.FC<FormContentProps> = ({ id, name, label, place
         id={id}
         name={name}
         placeholder={`Please enter ${placeholder.toLowerCase()}`}
+        value={value}
+        onChange={onChange}
       />
     </div>
   )

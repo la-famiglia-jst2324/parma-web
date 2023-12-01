@@ -1,11 +1,34 @@
 import React from 'react'
+import { editDatasource } from '@/utils/datasources/editDatasource'
 
 interface ModalComponentProps {
   isOpen: boolean
   handleClose: () => void
+  id: string
+  sourceName: string
+  description: string
+  status: boolean
+  url: string
 }
 
-const ModalComponent: React.FC<ModalComponentProps> = ({ isOpen, handleClose }) => {
+const ModalComponent: React.FC<ModalComponentProps> = ({
+  isOpen,
+  handleClose,
+  id,
+  sourceName,
+  description,
+  status,
+  url
+}) => {
+  const handleDisable = async () => {
+    try {
+      await editDatasource(id, sourceName, !status, description, url)
+      handleClose()
+    } catch (error) {
+      console.error('Failed to disable datasource:', error)
+    }
+  }
+
   if (!isOpen) {
     return null
   }
@@ -39,6 +62,7 @@ const ModalComponent: React.FC<ModalComponentProps> = ({ isOpen, handleClose }) 
           <button
             type="button"
             className="mt-2 inline-flex w-full justify-center rounded-md border border-transparent bg-red-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-red-700 sm:ml-3 sm:mt-0 sm:w-auto sm:text-sm"
+            onClick={handleDisable}
           >
             Disable
           </button>

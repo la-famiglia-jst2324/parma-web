@@ -23,9 +23,9 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     case 'POST':
       try {
         // Create a new data source
-        const newBucket = await createDataSource(req.body)
-        if (newBucket) {
-          res.status(201).json(newBucket)
+        const newDataSource = await createDataSource(req.body)
+        if (newDataSource) {
+          res.status(201).json(newDataSource)
         } else res.status(400).json({ error: 'Invalid request parameters' })
       } catch (error) {
         res.status(500).json({ error: 'Internal Server Error' })

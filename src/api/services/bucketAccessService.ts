@@ -36,6 +36,27 @@ const getBucketAccessByID = async (bucketId: number, inviteeId: number) => {
   }
 }
 
+const getInviteesByBucketId = async (bucketId: number) => {
+  try {
+    const membership = await prisma.bucketAccess.findMany({
+      where: {
+        bucketId
+      },
+      include: {
+        user: true
+      }
+    })
+    if (!membership) {
+      throw new Error(`invitees not found.`)
+    }
+    // include user 
+    return membership.map((membership) => membership.user)
+  } catch (error) {
+    console.error('Error getting by ID:', error)
+    throw error
+  }
+
+}
 const updateBucketAccess = async (
   bucketId: number,
   inviteeId: number,
@@ -78,4 +99,4 @@ const deleteBucketAccess = async (bucketId: number, inviteeId: number) => {
   }
 }
 
-export { createBucketAccess, getBucketAccessByID, updateBucketAccess, deleteBucketAccess }
+export { createBucketAccess, getBucketAccessByID, getInviteesByBucketId, updateBucketAccess, deleteBucketAccess }

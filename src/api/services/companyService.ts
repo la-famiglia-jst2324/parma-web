@@ -33,7 +33,12 @@ const getCompanyByID = async (id: number) => {
 const getCompanyByName = async (name: string) => {
   try {
     const company = await prisma.company.findMany({
-      where: { name }
+      where: { name },
+      include: {
+        companyAttachments: true,
+        companyDataSource: true,   // how to display 测试时候看response啥样
+        sourceMeasurements: true,
+      }
     })
     if (!company) {
       throw new Error(`Company with name ${name} not found.`)

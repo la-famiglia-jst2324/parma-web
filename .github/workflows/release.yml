@@ -14,14 +14,6 @@ defaults:
     shell: bash -el {0}
 
 jobs:
-  prod-deployment:
-    name: Publish release
-    runs-on: ubuntu-latest
-    if: github.event_name == 'release'
-    steps:
-      - name: Trigger deploy webhook
-        run: curl ${{ secrets.VERCEL_DEPLOY_HOOK_URL_RELEASE }}
-
   database-migration:
     name: Database migration
     runs-on: ubuntu-latest
@@ -50,3 +42,27 @@ jobs:
         run: pnpx prisma migrate deploy
         env:
           POSTGRES_URL: ${{ github.event_name == 'release' && secrets.PROD_POSTGRES_URL || secrets.STAGING_POSTGRES_URL }}
+
+  # syncing main to staging branch (as vercel deployments are branch based)
+  staging-deployment:
+    name: Deploy to staging
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    steps:
+      # force update staging to main
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Update staging branch
+        run: |
+          git fetch origin
+          git checkout -B staging origin/main
+          git push -f origin staging
+
+  # represents the main branch, but not deployed on merge (see vercel.json)
+  prod-deployment:
+    name: Publish release
+    runs-on: ubuntu-latest
+    if: github.event_name == 'release'
+    steps:
+      - name: Trigger deploy webhook
+        run: curl ${{ secrets.VERCEL_DEPLOY_HOOK_URL_RELEASE }}

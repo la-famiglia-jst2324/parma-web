@@ -2,14 +2,19 @@
 
 [![Chore](https://github.com/la-famiglia-jst2324/parma-web/actions/workflows/chore.yml/badge.svg?branch=main)](https://github.com/la-famiglia-jst2324/parma-web/actions/workflows/chore.yml)
 [![CI](https://github.com/la-famiglia-jst2324/parma-web/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/la-famiglia-jst2324/parma-web/actions/workflows/ci.yml)
-[![Deploy](https://github.com/la-famiglia-jst2324/parma-web/actions/workflows/release.yml/badge.svg)](https://github.com/la-famiglia-jst2324/parma-web/actions/workflows/release.yml)
+[![Deploy](https://github.com/la-famiglia-jst2324/parma-web/actions/workflows/release.yml/badge.svg?event=release)](https://parma.software)
+[![Deploy](https://github.com/la-famiglia-jst2324/parma-web/actions/workflows/release.yml/badge.svg?event=push)](https://staging.parma.software)
 [![Major Tag](https://github.com/la-famiglia-jst2324/parma-web/actions/workflows/tag-major.yml/badge.svg)](https://github.com/la-famiglia-jst2324/parma-web/actions/workflows/tag-major.yml)
-![Functions](https://img.shields.io/badge/functions-54.07%25-red.svg?style=flat)
-![Lines](https://img.shields.io/badge/lines-36.91%25-red.svg?style=flat)
+![Functions](https://img.shields.io/badge/functions-52.98%25-red.svg?style=flat)
+![Lines](https://img.shields.io/badge/lines-34.3%25-red.svg?style=flat)
 
 ParmaAI webstack including frontend and REST API backend.
 
-![Screenshot](./docs/images/landing_page.png)
+[![Screenshot](./docs/images/landing_page.png)](https://parma.software)
+
+## Deployment
+
+You can find the latest deployment of this project on [parma.software](https://parma.software). The staging deployment is available on [staging.parma.software](https://staging.parma.software).
 
 ## Getting Started
 

@@ -52,6 +52,18 @@ const getAllAttachmentsByID = async (userId: number) => {
   }
 }
 
+const getAllAttachmentsForCompany = async (companyId: number) => {
+  try {
+    const attachments = await prisma.companyAttachment.findMany({
+      where: { companyId }
+    })
+    return attachments
+  } catch (error) {
+    console.error('Error fetching all attachments for company:', error)
+    throw error
+  }
+}
+
 // only owner can?    userId can't change
 const updateAttachment = async (
   id: number,
@@ -87,4 +99,11 @@ const deleteAttachment = async (id: number) => {
   }
 }
 
-export { createAttachment, getAttachmentByID, getAllAttachmentsByID, updateAttachment, deleteAttachment }
+export {
+  createAttachment,
+  getAttachmentByID,
+  getAllAttachmentsByID,
+  updateAttachment,
+  deleteAttachment,
+  getAllAttachmentsForCompany
+}

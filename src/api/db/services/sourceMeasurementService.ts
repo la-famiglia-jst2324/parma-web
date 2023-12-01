@@ -36,7 +36,7 @@ const getSourceMeasurementByID = async (id: number) => {
   }
 }
 
-// get all measurements of a data source 
+// get all measurements of a data source
 const getMeasurementsBySourceId = async (sourceModuleId: number) => {
   try {
     const measurements = await prisma.sourceMeasurement.findMany({

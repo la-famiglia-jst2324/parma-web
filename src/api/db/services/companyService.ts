@@ -36,8 +36,8 @@ const getCompanyByName = async (name: string) => {
       where: { name },
       include: {
         companyAttachments: true,
-        companyDataSource: true,   // how to display 测试时候看response啥样
-        sourceMeasurements: true,
+        companyDataSource: true, // how to display 测试时候看response啥样
+        sourceMeasurements: true
       }
     })
     if (!company) {

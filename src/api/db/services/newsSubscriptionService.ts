@@ -1,9 +1,6 @@
-import { prisma } from '../prismaClient'
+import { prisma } from '../prisma/prismaClient'
 
-const createNewsSubscription = async (data: {
-  userId: number
-  companyId: number
-}) => {
+const createNewsSubscription = async (data: { userId: number; companyId: number }) => {
   try {
     const existingSubscription = await prisma.newsSubscription.findUnique({
       where: {
@@ -19,7 +16,7 @@ const createNewsSubscription = async (data: {
     const subscription = await prisma.newsSubscription.create({
       data: {
         userId: data.userId,
-        companyId: data.companyId,
+        companyId: data.companyId
       }
     })
     return subscription
@@ -37,7 +34,7 @@ const getNewsSubscriptionById = async (userId: number, companyId: number) => {
           userId,
           companyId
         }
-      },
+      }
     })
     if (!subscription) {
       throw new Error(`does not have the subscription.`)
@@ -87,9 +84,4 @@ const deleteNewsSubscription = async (companyId: number, dataSourceId: number) =
   }
 }
 
-export {
-  createNewsSubscription,
-  getNewsSubscriptionById,
-  getNewsSubscriptionsByUserId,
-  deleteNewsSubscription
-}
+export { createNewsSubscription, getNewsSubscriptionById, getNewsSubscriptionsByUserId, deleteNewsSubscription }

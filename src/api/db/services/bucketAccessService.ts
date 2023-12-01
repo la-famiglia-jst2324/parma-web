@@ -49,13 +49,12 @@ const getInviteesByBucketId = async (bucketId: number) => {
     if (!membership) {
       throw new Error(`invitees not found.`)
     }
-    // include user 
+    // include user
     return membership.map((membership) => membership.user)
   } catch (error) {
     console.error('Error getting by ID:', error)
     throw error
   }
-
 }
 const updateBucketAccess = async (
   bucketId: number,

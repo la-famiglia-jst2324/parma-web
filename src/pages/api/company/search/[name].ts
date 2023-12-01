@@ -1,15 +1,15 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { getInviteesByBucketId } from '@/api/services/bucketAccessService'
+import { getCompanyByName } from '@/api/db/services/companyService'
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const { method } = req
-  const { bucketId } = req.query
+  const { companyName } = req.query
 
   switch (method) {
-    case ('GET'):
+    case 'GET':
       try {
-        const invitees = await getInviteesByBucketId(Number(bucketId))
-        if (invitees) res.status(200).json(invitees)
-        else res.status(400).json({ error: 'No invitees found' })
+        const companies = await getCompanyByName(String(companyName))
+        if (companies) res.status(200).json(companies)
+        else res.status(400).json({ error: 'No companies found' })
       } catch (error) {
         res.status(500).json({ error: 'Internal Server Error' })
       }

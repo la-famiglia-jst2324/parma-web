@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { getDataSourceByID, updateDataSource } from '@/api/services/dataSourceService'
+import { getDataSourceByID, updateDataSource } from '@/api/db/services/dataSourceService'
 import { ItemNotFoundError } from '@/api/utils/errorUtils'
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {

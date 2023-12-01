@@ -1,14 +1,15 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { getMeasurementsBySourceId } from '@/api/services/sourceMeasurementService'
+import { getNewsSubscriptionsByUserId } from '@/api/db/services/newsSubscriptionService'
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const { method } = req
-  const { sourceModuleId } = req.query
+  const { userId } = req.query
+
   switch (method) {
-    case ('GET'):
+    case 'GET':
       try {
-        const measurements = await getMeasurementsBySourceId(Number(sourceModuleId))
-        if (measurements) res.status(200).json(measurements)
-        else res.status(400).json({ error: 'No Data Source Measurements found' })
+        const companies = await getNewsSubscriptionsByUserId(Number(userId))
+        if (companies) res.status(200).json(companies)
+        else res.status(400).json({ error: 'No companies found' })
       } catch (error) {
         res.status(500).json({ error: 'Internal Server Error' })
       }

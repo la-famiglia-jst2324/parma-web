@@ -14,7 +14,6 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
           const updatedBucket = await updateDataSource(Number(dataSourceId), req.body)
           res.status(200).json(updatedBucket)
         } else {
-          // Bucket not found
           res.status(404).json({ error: 'Bucket not found' })
         }
       } catch (error) {

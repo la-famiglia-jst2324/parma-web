@@ -1,26 +1,15 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-
-import {
-  createBucketAccess
-  // getBucketAccessByID,
-  // updateBucketAccess,
-  // deleteBucketAccess
-} from '@/api/db/services/bucketAccessService'
+import { createNewsSubscription } from '@/api/db/services/newsSubscriptionService'
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const { method } = req
-  const { bucketId } = req.query
+
   switch (method) {
-    // Share a bucket with other users
     case 'POST':
       try {
-        const data = {
-          bucketId,
-          ...req.body
-        }
-        const newAccess = await createBucketAccess(data)
-        if (newAccess) {
-          res.status(201).json(newAccess)
+        const newSubscription = await createNewsSubscription(req.body)
+        if (newSubscription) {
+          res.status(201).json(newSubscription)
         } else res.status(400).json({ error: 'Invalid request parameters' })
       } catch (error) {
         res.status(500).json({ error: 'Internal Server Error' })

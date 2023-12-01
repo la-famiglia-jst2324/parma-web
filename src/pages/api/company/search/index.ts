@@ -2,12 +2,12 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import { getCompanyByName } from '@/api/db/services/companyService'
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const { method } = req
-  const { companyName } = req.query
+  const name = req.query.name
 
   switch (method) {
     case 'GET':
       try {
-        const companies = await getCompanyByName(String(companyName))
+        const companies = await getCompanyByName(String(name))
         if (companies) res.status(200).json(companies)
         else res.status(400).json({ error: 'No companies found' })
       } catch (error) {

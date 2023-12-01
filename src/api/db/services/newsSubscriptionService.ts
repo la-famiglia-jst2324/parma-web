@@ -67,12 +67,12 @@ const getNewsSubscriptionsByUserId = async (userId: number) => {
   }
 }
 
-const deleteNewsSubscription = async (companyId: number, dataSourceId: number) => {
+const deleteNewsSubscription = async (userId: number, companyId: number) => {
   try {
-    const membership = await prisma.companyDataSource.delete({
+    const membership = await prisma.newsSubscription.delete({
       where: {
-        dataSourceId_companyId: {
-          dataSourceId,
+        userId_companyId: {
+          userId,
           companyId
         }
       }

@@ -9,7 +9,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       try {
         const invitees = await getInviteesByBucketId(Number(bucketId))
         if (invitees) res.status(200).json(invitees)
-        else res.status(400).json({ error: 'No invitees found' })
+        else res.status(400).json({ error: 'No Invitees found' })
       } catch (error) {
         res.status(500).json({ error: 'Internal Server Error' })
       }

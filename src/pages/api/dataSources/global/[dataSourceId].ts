@@ -5,7 +5,6 @@ import { ItemNotFoundError } from '@/api/utils/errorUtils'
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const { method } = req
   const { dataSourceId } = req.query
-
   switch (method) {
     case 'PUT':
       try {

@@ -32,14 +32,11 @@ describe('UserMetricCustomization Model Tests', () => {
       companyId: company.id,
       measurementName: 'test'
     })
-    userId = user.id
     userCustomizationId = userCustomization.id
-    companyId = company.id
     sourceMeasurementId = sourceMeasurement.id
     await prisma.$connect()
   })
   afterAll(async () => {
-    // await deleteUser(userId)
     await prisma.$disconnect()
   })
 

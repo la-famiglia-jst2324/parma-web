@@ -3,6 +3,7 @@ import { genRandomDummyAuthId } from '../utils/random'
 import {
   createAttachment,
   deleteAttachment,
+  getAllAttachmentsForCompany,
   getAttachmentByID,
   updateAttachment
 } from '@/api/db/services/attachmentService'
@@ -61,6 +62,25 @@ describe('Company Attachment Model Tests', () => {
     expect(updatedAttachment.fileType).toBe(FileType.TEXT)
     expect(updatedAttachment.fileUrl).toBe('new url')
     expect(updatedAttachment.title).toBe('new title')
+  })
+
+  test('Get attachments of a company', async () => {
+    // Add a second attachment to the company
+    const attachment2 = await createAttachment({
+      companyId,
+      fileType: FileType.JPG,
+      fileUrl: 'another_url',
+      userId,
+      title: 'attachment for microsoft'
+    })
+    const attachmentId2 = attachment2.id
+
+    const attachments = await getAllAttachmentsForCompany(companyId)
+    expect(attachments).toBeTruthy()
+    expect(attachments.length).toEqual(2)
+    expect(attachments[0].id).toBe(attachmentId)
+    expect(attachments[1].id).toBe(attachmentId2)
+    await deleteAttachment(attachmentId2)
   })
 
   test('Delete an attachment', async () => {

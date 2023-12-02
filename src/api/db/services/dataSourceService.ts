@@ -54,9 +54,18 @@ const getDataSourceByName = async (sourceName: string) => {
   }
 }
 
-const getAllDataSources = async () => {
+const getAllDataSources = async (page: number, size: number, name: string) => {
   try {
-    const datasources = await prisma.dataSource.findMany()
+    const datasources = await prisma.dataSource.findMany({
+      where: {
+        sourceName: {
+          contains: name,
+          mode: 'insensitive' // case-insensitive
+        }
+      },
+      skip: (page - 1) * size,
+      take: size
+    })
     return datasources
   } catch (error) {
     console.error('Error getting all data sources:', error)

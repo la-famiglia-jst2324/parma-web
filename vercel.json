@@ -3,7 +3,8 @@
     "installCommand": "pnpm install",
     "git": {
         "deploymentEnabled": {
-            "main": false
+            "main": false,
+            "staging": true
         }
     }
   }

@@ -210,7 +210,7 @@ export default function DatasourcePage({ params: { id } }: { params: { id: strin
         </TabList>
         <TabPanels>
           <TabPanel>
-            <CompaniesTable />
+            <CompaniesTable id={data.id.toString()} />
           </TabPanel>
           <TabPanel>
             <div className="flex flex-col items-center justify-center">

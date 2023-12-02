@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { LibraryIcon, DatabaseIcon, TruckIcon, PresentationChartLineIcon, ServerIcon } from '@heroicons/react/outline'
 import { useContext } from 'react'
+import Image from 'next/image'
 import { AuthContext, authLogin, authLogout } from '@/lib/firebase/auth'
 
 const Sidebar = () => {
@@ -14,19 +15,49 @@ const Sidebar = () => {
             ParmaAI
           </Link>
         </div>
-        <span className="text-white">{user ? 'Logged in as <' + user.displayName + '>' : ''}</span>
-        <button
-          className="mb-6 text-white"
-          onClick={async () => {
-            if (user) {
-              await authLogout()
-            } else {
-              await authLogin({ provider: 'google' })
-            }
-          }}
-        >
-          {user ? 'Log Out' : 'Log In'}
-        </button>
+        <div className="mb-4 flex flex-col items-center">
+          <div className={`mr-3 flex space-x-2 ${user ? 'mb-2' : ''}`}>
+            {user && (
+              <>
+                <div className="flex items-center space-x-2 rounded-full bg-white p-2">
+                  <h1 className="text-sm font-medium text-gray-900">{user.displayName}</h1>
+                </div>
+              </>
+            )}
+          </div>
+          <div className="ml-1 flex w-full">
+            <button
+              className={`w-55% flex items-center justify-start rounded-full border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700`}
+              onClick={async () => {
+                if (user) {
+                  await authLogout()
+                } else {
+                  await authLogin({ provider: 'google' })
+                }
+              }}
+            >
+              {user ? (
+                <div className="flex items-center space-x-2">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    className="h-5 w-5"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7" />
+                  </svg>
+                  <span>Log Out</span>
+                </div>
+              ) : (
+                <div className="flex items-center">
+                  <Image src="google.svg" width={18} height={20} alt="Google Icon" />
+                  <span className="ml-2 text-xs">Sign in with Google</span>
+                </div>
+              )}
+            </button>
+          </div>
+        </div>
         <div className="flex flex-col text-white">
           <Link
             href="/"

@@ -24,8 +24,11 @@ repos:
     rev: v1.16.22
     hooks:
       - id: typos
+        always_run: true
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.5.0
     hooks:
       - id: trailing-whitespace
+        always_run: true
       - id: end-of-file-fixer
+        always_run: true

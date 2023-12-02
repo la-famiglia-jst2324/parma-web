@@ -1,32 +1,25 @@
 import React from 'react'
-import { editDatasource } from '@/utils/datasources/editDatasource'
 
 interface ModalComponentProps {
   isOpen: boolean
   handleClose: () => void
-  id: string
   sourceName: string
   description: string
-  status: boolean
   url: string
+  handleSave: (sourceName: string, description: string, url: string, isActive: boolean) => void
 }
 
 const ModalComponent: React.FC<ModalComponentProps> = ({
   isOpen,
   handleClose,
-  id,
   sourceName,
   description,
-  status,
-  url
+  url,
+  handleSave
 }) => {
   const handleDisable = async () => {
-    try {
-      await editDatasource(id, sourceName, !status, description, url)
-      handleClose()
-    } catch (error) {
-      console.error('Failed to disable datasource:', error)
-    }
+    handleSave(sourceName, description, url, false)
+    handleClose()
   }
 
   if (!isOpen) {

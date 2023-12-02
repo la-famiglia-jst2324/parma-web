@@ -70,7 +70,7 @@ const EditInformationModal: React.FC<EditInformationModalProps> = ({
               value={sourceName}
               onChange={(event) => handleInputChange(event, setName)}
               placeholder="Datasource Name"
-              className="focus:shadow-outline w-full appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow focus:outline-none"
+              className="w-full appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow focus:shadow-lg focus:outline-none"
             />
             <label className="mb-2 mt-4 block text-sm font-bold text-gray-700" htmlFor="description">
               Description
@@ -80,7 +80,7 @@ const EditInformationModal: React.FC<EditInformationModalProps> = ({
               value={description}
               onChange={(event) => handleInputChange(event, setDescription)}
               placeholder="Description"
-              className="focus:shadow-outline h-32 w-full appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow focus:outline-none"
+              className="h-32 w-full appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow focus:shadow-lg focus:outline-none"
             />
             <label className="mb-2 mt-4 block text-sm font-bold text-gray-700" htmlFor="url">
               URL
@@ -91,7 +91,7 @@ const EditInformationModal: React.FC<EditInformationModalProps> = ({
               value={url}
               onChange={(event) => handleInputChange(event, setUrl)}
               placeholder="url"
-              className="focus:shadow-outline w-full appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow focus:outline-none"
+              className="w-full appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow focus:shadow-lg focus:outline-none"
             />
           </div>
         </div>

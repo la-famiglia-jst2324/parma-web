@@ -74,15 +74,17 @@ export default function CreateDatasourcePage() {
               label="Datasource Name"
               placeholder="Please enter datasource name"
               value={name}
+              type="input"
               onChange={(e) => setName(e.target.value)}
             />
             <FormContent
-              id="url"
-              name="url"
-              label="Datasource URL"
-              placeholder="Please enter datasource URL"
-              value={url}
-              onChange={(e) => setUrl(e.target.value)}
+              id="description"
+              name="description"
+              label="Datasource Description"
+              placeholder="Please enter datasource description"
+              value={description}
+              type="textarea"
+              onChange={(e) => setDescription(e.target.value)}
             />
             <div className="mb-4 flex flex-col">
               <label className="mb-2 block text-sm font-bold text-gray-700">Frequency</label>
@@ -92,12 +94,13 @@ export default function CreateDatasourcePage() {
               </Select>
             </div>
             <FormContent
-              id="description"
-              name="description"
-              label="Datasource Description"
-              placeholder="Please enter datasource description"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
+              id="url"
+              name="url"
+              label="Datasource URL"
+              placeholder="Please enter datasource URL"
+              value={url}
+              type="input"
+              onChange={(e) => setUrl(e.target.value)}
             />
             <div>
               <button

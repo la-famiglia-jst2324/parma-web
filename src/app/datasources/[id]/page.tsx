@@ -22,8 +22,7 @@ const sourceUrl = 'https://www.linkedin.com/feed/'
 async function getDatasource(id: string) {
   try {
     const res = await fetch(`/api/dataSources/${id}`, {
-      method: 'GET',
-      cache: 'no-cache'
+      method: 'GET'
     })
     if (!res.ok) {
       console.log('Response status:', res.status)
@@ -80,6 +79,17 @@ export default function DatasourcePage({ params: { id } }: { params: { id: strin
 
   const handleDeleteButtonClick = async () => {
     setIsDeleteModalOpen(true)
+  }
+
+  const handleEnableButtonClick = async () => {
+    try {
+      const updatedDatasource = await editDatasource(id, sourceName, true, description, url)
+      if (data.id === Number(id)) {
+        setData(updatedDatasource)
+      }
+    } catch (error) {
+      console.error('Failed to update datasource:', error)
+    }
   }
 
   const handleEditButtonClick = async () => {
@@ -153,15 +163,22 @@ export default function DatasourcePage({ params: { id } }: { params: { id: strin
                 <ModalComponent
                   isOpen={isDisableModalOpen}
                   handleClose={handleClose}
-                  id={data.id.toString()}
                   sourceName={data.sourceName}
                   description={data.description}
-                  status={data.isActive}
                   url={sourceUrl}
+                  handleSave={async (newName: string, newDescription: string, newUrl: string, newStatus: boolean) => {
+                    try {
+                      await handleSave(newName, newStatus, newDescription, newUrl)
+                    } catch (error) {
+                      console.error('Failed to save:', error)
+                    }
+                  }}
                 />
               </>
             ) : (
-              <Button color="gray">Enable</Button>
+              <Button color="gray" onClick={handleEnableButtonClick}>
+                Enable
+              </Button>
             )}
           </div>
           <div>

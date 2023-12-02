@@ -3,9 +3,9 @@ import type { FormEvent } from 'react'
 import React, { useState } from 'react'
 import { Select, SelectItem, Callout } from '@tremor/react'
 import { CheckCircleIcon, ExclamationCircleIcon } from '@heroicons/react/solid'
+import { Frequency } from '@prisma/client'
 import GoBackButton from '@/components/Datasources/GoBackButton'
 import { FormContent } from '@/components/FormContent'
-import { Frequency } from '@/types/datasource'
 
 export default function CreateDatasourcePage() {
   const [name, setName] = useState('')

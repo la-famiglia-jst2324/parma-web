@@ -48,7 +48,13 @@ export default function DatasourcesPage() {
           <div className="p-8">
             <div className="mx-4 rounded-lg border-0 bg-white shadow-md">
               <div>
-                <Table data={data} />
+                {data ? (
+                  <Table data={data} />
+                ) : (
+                  <p className="text-bold text-lg text-gray-700">
+                    No datasources available yet. Start by creating one.
+                  </p>
+                )}
               </div>
             </div>
           </div>

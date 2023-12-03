@@ -32,7 +32,7 @@ export default function CreateDatasourcePage() {
       defaultFrequency: frequencyEnum,
       healthStatus: 'UP',
       modifiedAt: new Date().toISOString(),
-      // url: formData.get('url') as string,
+      url: formData.get('url') as string,
       description: formData.get('description') as string
     }
 

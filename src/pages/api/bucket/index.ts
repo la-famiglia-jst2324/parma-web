@@ -6,17 +6,22 @@ import { ItemNotFoundError } from '@/api/utils/errorUtils'
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const { method } = req
   const bucketName = req.query.name
+  const { page = 1, pageSize = 10 } = req.query
 
   switch (method) {
     case 'GET':
       try {
         if (bucketName) {
-          const bucket = await getBucketByName(String(bucketName))
+          const bucket = await getBucketByName(
+            String(bucketName),
+            parseInt(page as string),
+            parseInt(pageSize as string)
+          )
           if (bucket) res.status(200).json(bucket)
           else res.status(400).json({ error: 'No Bucket found' })
         } else {
-          const buckets = await getAllBuckets()
-          if (buckets.length > 0) res.status(200).json(buckets)
+          const buckets = await getAllBuckets(parseInt(page as string), parseInt(pageSize as string))
+          if (buckets) res.status(200).json(buckets)
           else res.status(400).json({ error: 'No Buckets found' })
         }
       } catch (error) {

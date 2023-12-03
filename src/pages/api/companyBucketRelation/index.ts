@@ -10,19 +10,19 @@ import { ItemNotFoundError } from '@/api/utils/errorUtils'
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const { method } = req
-  const bucketId = req.query.bucketId
-  const companyId = req.query.companyId
+  const bucketId = Number(req.query.bucketId)
+  const companyId = Number(req.query.companyId)
 
   switch (method) {
     case 'GET':
       try {
         if (!bucketId && !companyId) res.status(400).json({ error: 'Invalid Arguments' })
         if (bucketId) {
-          const companies = await getCompaniesByBucketId(Number(bucketId))
+          const companies = await getCompaniesByBucketId(bucketId)
           if (companies) res.status(200).json(companies)
           else res.status(400).json({ error: 'No Companies found' })
         } else if (companyId) {
-          const buckets = await getBucketsByCompanyId(Number(companyId))
+          const buckets = await getBucketsByCompanyId(companyId)
           if (buckets) res.status(200).json(buckets)
           else res.status(400).json({ error: 'No Buckets found' })
         }
@@ -34,7 +34,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
     case 'POST':
       try {
-        const membership = await addCompanyToBucket(Number(companyId), Number(bucketId))
+        const membership = await addCompanyToBucket(companyId, bucketId)
         res.status(200).json(membership)
       } catch (error) {
         res.status(500).json({ error: 'Internal Server Error' })
@@ -42,7 +42,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       break
     case 'DELETE':
       try {
-        await removeCompanyFromBucket(Number(companyId), Number(bucketId))
+        await removeCompanyFromBucket(companyId, bucketId)
         res.status(200).json({ message: 'Company Removed from Bucket Successfully' })
       } catch (error) {
         if (error instanceof ItemNotFoundError) res.status(404).json({ error: error.message })

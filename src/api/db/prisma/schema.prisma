@@ -149,22 +149,43 @@ model CompanyAttachment {
 }
 
 model DataSource {
-  id               Int          @id @default(autoincrement())
-  sourceName       String       @map("source_name")
-  isActive         Boolean      @map("is_active")
-  defaultFrequency Frequency    @map("default_frequency")
-  healthStatus     HealthStatus @map("health_status")
-  description      String?
-  createdAt        DateTime     @default(now()) @map("created_at")
-  modifiedAt       DateTime     @updatedAt @map("modified_at")
+  id                     Int          @id @default(autoincrement())
+  sourceName             String       @map("source_name")
+  isActive               Boolean      @map("is_active")
+  defaultFrequency       Frequency    @map("default_frequency")
+  healthStatus           HealthStatus @map("health_status")
+  description            String?
+  createdAt              DateTime     @default(now()) @map("created_at")
+  modifiedAt             DateTime     @updatedAt @map("modified_at")
+  version                String
+  maximumExpectedRunTime Int          @map("maximum_expected_run_time")
+  invocationEndpoint     String       @map("invocation_endpoint")
+  additionalParams       Json?        @map("additional_params")
 
   // Relations
   companyDataSource                  CompanyDataSource[]
   notifications                      Notification[]
   sourceMeasurements                 SourceMeasurement[]
   userImportantMeasurementPreference UserImportantMeasurementPreference[]
+  scheduledTasks                     ScheduledTasks[]
 
   @@map("data_source")
+}
+
+model ScheduledTasks {
+  taskId        Int        @id @default(autoincrement()) @map("task_id")
+  dataSourceId  Int        @map("data_source_id")
+  startedAt     DateTime   @default(now()) @map("started_at")
+  lockedAt      DateTime   @map("locked_at")
+  endedAt       DateTime   @map("ended_at")
+  resultSummary String?    @map("result_summary")
+  status        TaskStatus
+  attempts      Int
+
+  // Relations
+  dataSource DataSource @relation(fields: [dataSourceId], references: [id])
+
+  @@map("scheduled_tasks")
 }
 
 model CompanyDataSource {
@@ -392,4 +413,13 @@ enum BucketPermission {
   MODERATOR
 
   @@map("bucket_permission")
+}
+
+enum TaskStatus {
+  PENDING
+  PROCESSING
+  SUCCESS
+  FAILED
+
+  @@map("task_status")
 }

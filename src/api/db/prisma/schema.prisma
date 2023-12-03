@@ -10,12 +10,13 @@ generator client {
 // ------------------------------------- MODELS ----------------------------------------
 
 model User {
-  id         Int      @id @default(autoincrement())
-  authId     String   @unique @map("auth_id")
-  name       String
-  role       Role     @default(USER)
-  createdAt  DateTime @default(now()) @map("created_at")
-  modifiedAt DateTime @updatedAt @map("modified_at")
+  id             Int      @id @default(autoincrement())
+  authId         String   @unique @map("auth_id")
+  name           String
+  profilePicture String?  @map("profile_picture")
+  role           Role     @default(USER)
+  createdAt      DateTime @default(now()) @map("created_at")
+  modifiedAt     DateTime @updatedAt @map("modified_at")
 
   // Relation fields
   addedCompanies                     Company[]                            @relation("UserAddsCompany")
@@ -26,6 +27,7 @@ model User {
   permissions                        BucketAccess[]
   userImportantMeasurementPreference UserImportantMeasurementPreference[]
   newsSubscription                   NewsSubscription[]
+  UserCustomization                  UserCustomization[]
 
   @@map("user")
 }
@@ -49,6 +51,7 @@ model Company {
   reports                   Report[]
   sourceMeasurements        SourceMeasurement[]
   newsSubscription          NewsSubscription[]
+  userCompanyCustomizations UserCompanyCustomization[]
 
   @@map("company")
 }
@@ -157,9 +160,9 @@ model DataSource {
   description            String?
   createdAt              DateTime     @default(now()) @map("created_at")
   modifiedAt             DateTime     @updatedAt @map("modified_at")
-  version                String
-  maximumExpectedRunTime Int          @map("maximum_expected_run_time")
-  invocationEndpoint     String       @map("invocation_endpoint")
+  version                String       @default("1.0")
+  maximumExpectedRunTime Int          @default(60) @map("maximum_expected_run_time") // Assuming time is in minutes
+  invocationEndpoint     String       @default("") @map("invocation_endpoint")
   additionalParams       Json?        @map("additional_params")
 
   // Relations
@@ -180,7 +183,7 @@ model ScheduledTasks {
   endedAt       DateTime   @map("ended_at")
   resultSummary String?    @map("result_summary")
   status        TaskStatus
-  attempts      Int
+  attempts      Int        @default(0)
 
   // Relations
   dataSource DataSource @relation(fields: [dataSourceId], references: [id])
@@ -251,6 +254,7 @@ model SourceMeasurement {
   measurementFloatValues     MeasurementFloatValue[]
   measurementCommentValues   MeasurementCommentValue[]
   measurementParagraphValues MeasurementParagraphValue[]
+  userMetricCustomization    UserMetricCustomization[]
 
   @@map("source_measurement")
 }
@@ -361,6 +365,49 @@ model NewsSubscription {
 
   @@id([userId, companyId])
   @@map("news_subscription")
+}
+
+model UserCustomization {
+  id         Int      @id @default(autoincrement())
+  name       String
+  userId     Int      @map("user_id")
+  createdAt  DateTime @default(now()) @map("created_at")
+  modifiedAt DateTime @updatedAt @map("modified_at")
+
+  // relations
+  user                      User                       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userCompanyCustomizations UserCompanyCustomization[]
+  userMetricCustomizations  UserMetricCustomization[]
+
+  @@map("user_customization")
+}
+
+model UserCompanyCustomization {
+  id              Int      @id @default(autoincrement())
+  customizationId Int      @map("customization_id")
+  companyId       Int      @map("company_id")
+  createdAt       DateTime @default(now()) @map("created_at")
+  modifiedAt      DateTime @updatedAt @map("modified_at")
+
+  // relations
+  company           Company           @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  userCustomization UserCustomization @relation(fields: [customizationId], references: [id], onDelete: Cascade)
+
+  @@map("user_company_customization")
+}
+
+model UserMetricCustomization {
+  id                  Int      @id @default(autoincrement())
+  customizationId     Int      @map("customization_id")
+  sourceMeasurementId Int      @map("source_measurement_id")
+  createdAt           DateTime @default(now()) @map("created_at")
+  modifiedAt          DateTime @updatedAt @map("modified_at")
+
+  // relations
+  userCustomization UserCustomization @relation(fields: [customizationId], references: [id], onDelete: Cascade)
+  sourceMeasurement SourceMeasurement @relation(fields: [sourceMeasurementId], references: [id], onDelete: Cascade)
+
+  @@map("user_metric_customization")
 }
 
 // -------------------------------------- ENUMS ----------------------------------------

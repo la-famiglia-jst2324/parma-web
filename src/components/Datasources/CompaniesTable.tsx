@@ -42,44 +42,46 @@ export const CompaniesTable = (id: CompaniesTableProps) => {
       })
   }, [dataSourceId])
 
+  if (!data || data.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center">
+        <h1 className="text-2xl font-bold">No data available</h1>
+        <p className="text-gray-500">No data has been collected yet</p>
+      </div>
+    )
+  }
+
   return (
     <div className="flex max-w-full flex-col">
       <div className="-my-2 sm:-mx-6 lg:-mx-8">
         <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
           <div className="overflow-hidden border-b border-gray-200 shadow sm:rounded-lg">
-            {data && data.length > 0 ? (
-              <table className="min-w-full divide-y divide-gray-200">
-                <thead className="bg-gray-50">
-                  <tr>
-                    <th
-                      scope="col"
-                      className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
-                    >
-                      Name
-                    </th>
-                    <th
-                      scope="col"
-                      className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
-                    >
-                      Description
-                    </th>
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th
+                    scope="col"
+                    className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
+                  >
+                    Name
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
+                  >
+                    Description
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-200 bg-white">
+                {data.map((company) => (
+                  <tr key={company.name}>
+                    <td className="whitespace-nowrap px-6 py-4 text-sm font-medium text-gray-900">{company.name}</td>
+                    <td className="break-words px-6 py-4 text-sm text-gray-500">{company.description}</td>
                   </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-200 bg-white">
-                  {data.map((company) => (
-                    <tr key={company.name}>
-                      <td className="whitespace-nowrap px-6 py-4 text-sm font-medium text-gray-900">{company.name}</td>
-                      <td className="break-words px-6 py-4 text-sm text-gray-500">{company.description}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            ) : (
-              <div className="flex flex-col items-center justify-center">
-                <h1 className="text-2xl font-bold">No data available</h1>
-                <p className="text-gray-500">No data has been collected yet</p>
-              </div>
-            )}
+                ))}
+              </tbody>
+            </table>
           </div>
         </div>
       </div>

@@ -43,7 +43,7 @@ export const CompaniesTable = (id: CompaniesTableProps) => {
   }, [dataSourceId])
 
   return (
-    <div className="flex max-w-full flex-col overflow-x-auto">
+    <div className="flex max-w-full flex-col">
       <div className="-my-2 sm:-mx-6 lg:-mx-8">
         <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
           <div className="overflow-hidden border-b border-gray-200 shadow sm:rounded-lg">

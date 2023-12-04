@@ -5,6 +5,7 @@ import {
   PencilIcon,
   StatusOnlineIcon,
   PresentationChartLineIcon,
+  ShieldCheckIcon,
   OfficeBuildingIcon
 } from '@heroicons/react/outline'
 import { Button, Tab, TabGroup, TabList, TabPanel, TabPanels } from '@tremor/react'
@@ -203,7 +204,7 @@ export default function DatasourcePage({ params: { id } }: { params: { id: strin
       <TabGroup>
         <TabList className="mt-8" variant="solid">
           <Tab icon={OfficeBuildingIcon}>Companies Monitored</Tab>
-          <Tab icon={PresentationChartLineIcon}>Datasource Health</Tab>
+          <Tab icon={ShieldCheckIcon}>Datasource Health</Tab>
           <Tab icon={PresentationChartLineIcon}>Scheduling Tasks</Tab>
         </TabList>
         <TabPanels>

@@ -51,7 +51,7 @@ export default function DatasourcesPage() {
                 {data ? (
                   <Table data={data} />
                 ) : (
-                  <p className="text-bold text-lg text-gray-700">
+                  <p className="text-lg font-bold text-gray-700">
                     No datasources available yet. Start by creating one.
                   </p>
                 )}

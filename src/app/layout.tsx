@@ -1,8 +1,7 @@
 import './globals.css'
 import { Inter } from 'next/font/google'
 import type { Metadata } from 'next'
-import { AuthProvider } from '@/context/auth'
-import { MainLayout } from '@/components/MainLayout'
+import { UserCheckComponent } from '@/components/UserCheck'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -15,9 +14,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <body className={inter.className}>
-        <AuthProvider>
-          <MainLayout>{children}</MainLayout>
-        </AuthProvider>
+        <UserCheckComponent children={children} />
       </body>
     </html>
   )

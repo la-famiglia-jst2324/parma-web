@@ -1,9 +1,9 @@
 'use client'
 import React, { useEffect, useState } from 'react'
 import Table from '../../components/Datasources/Table'
-import DatasourcesLayout from './layout'
 import CreateDatasource from '@/components/Datasources/CreateDatasource'
 import type Datasource from '@/types/datasource'
+import { MainLayout } from '@/components/MainLayout'
 
 async function getDatasources() {
   try {
@@ -35,7 +35,7 @@ export default function DatasourcesPage() {
 
   return (
     <>
-      <DatasourcesLayout>
+      <MainLayout>
         <div className="relative m-5 flex min-h-screen w-auto flex-col justify-start bg-white shadow-lg">
           <div className="flex items-center justify-between p-4">
             <div className="mb-2 flex items-center justify-start space-x-4">
@@ -53,7 +53,7 @@ export default function DatasourcesPage() {
             </div>
           </div>
         </div>
-      </DatasourcesLayout>
+      </MainLayout>
     </>
   )
 }

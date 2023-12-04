@@ -1,8 +1,8 @@
 'use client'
 
-import React from 'react'
 import Link from 'next/link'
 import { TextInput, Button } from '@tremor/react'
+import GoogleAuthButton from '@/components/GoogleAuthButton'
 
 export default function LoginPage() {
   return (
@@ -43,9 +43,7 @@ export default function LoginPage() {
             <Link href="/signup">Create a free account</Link>
           </span>
         </p>
-        <Button size="xl" className="mt-6 w-full" variant="secondary">
-          Authenticate with Google
-        </Button>
+        <GoogleAuthButton />
       </div>
     </div>
   )

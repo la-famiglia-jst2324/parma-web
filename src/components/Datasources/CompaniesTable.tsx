@@ -10,7 +10,11 @@ async function getCompanies(dataSourceId: string) {
   return fetch(`/api/companyDataSourceRelation?dataSourceId=${dataSourceId}`, { method: 'GET' })
     .then((response) => {
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`)
+        if (response.status === 400) {
+          console.log('There seem to be no companies liked to this datasource!')
+        }
+        console.log(`HTTP error! status: ${response.status}`)
+        return null
       }
       return response.json()
     })

@@ -30,11 +30,13 @@ export default function CreateDatasourcePage() {
       sourceName: formData.get('name') as string,
       isActive: true,
       defaultFrequency: frequencyEnum,
-      healthStatus: 'UP',
+      healthStatus: 'UP', // TODO: Should this be the default value?
       modifiedAt: new Date().toISOString(),
       url: formData.get('url') as string,
       description: formData.get('description') as string
     }
+
+    console.log('dataSource: ', dataSource)
 
     fetch('/api/dataSources', {
       method: 'POST',

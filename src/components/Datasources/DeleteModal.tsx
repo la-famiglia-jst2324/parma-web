@@ -1,6 +1,7 @@
 'use client'
 import React from 'react'
 import { TrashIcon } from '@heroicons/react/outline'
+import { useRouter } from 'next/navigation'
 
 interface DeleteModalProps {
   isOpen: boolean
@@ -8,24 +9,28 @@ interface DeleteModalProps {
   id: string
 }
 
-async function deleteDatasource(id: string) {
-  try {
-    const res = await fetch(`/api/dataSources/${id}`, {
-      method: 'DELETE',
-      cache: 'no-cache'
-    })
-    if (!res.ok) {
-      console.log('Response status:', res.status)
-      throw new Error('HTTP response was not OK')
-    }
-    const json = await res.json()
-    return json
-  } catch (error) {
-    console.log('An error has occurred: ', error)
-  }
-}
-
 const DeleteModal: React.FC<DeleteModalProps> = ({ isOpen, handleClose, id }) => {
+  const router = useRouter()
+
+  async function deleteDatasource(id: string) {
+    try {
+      const res = await fetch(`/api/dataSources/${id}`, {
+        method: 'DELETE',
+        cache: 'no-cache'
+      })
+      if (!res.ok) {
+        console.log('Response status:', res.status)
+        throw new Error('HTTP response was not OK')
+      }
+      const json = await res.json()
+      router.push('/datasources')
+      // Add success message callout here later
+      return json
+    } catch (error) {
+      console.log('An error has occurred: ', error)
+    }
+  }
+
   const handleDelete = async () => {
     try {
       await deleteDatasource(id)

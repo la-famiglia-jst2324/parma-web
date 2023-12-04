@@ -9,7 +9,7 @@ if (admin.apps.length === 0) {
   } else {
     certString = process.env.FIREBASE_ADMINSDK_CERTIFICATE
   }
-
+  console.log(certString)
   if (!certString) {
     throw new Error('FIREBASE_ADMINSDK_CERTIFICATE not found')
   }

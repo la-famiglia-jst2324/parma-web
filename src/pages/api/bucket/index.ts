@@ -2,11 +2,13 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 
 import { createBucket, getBucketByName, getAllBuckets } from '@/api/db/services/bucketService'
 import { ItemNotFoundError } from '@/api/utils/errorUtils'
+import { User } from '@prisma/client'
+import { withAuthValidation } from '@/api/middleware/auth'
 
-export default async (req: NextApiRequest, res: NextApiResponse) => {
+const handler = async (req: NextApiRequest, res: NextApiResponse, user: User) => {
   const { method } = req
   const bucketName = req.query.name
-
+  const userId = user.id
   switch (method) {
     case 'GET':
       try {
@@ -28,7 +30,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     case 'POST':
       try {
         // Create a new bucket
-        const newBucket = await createBucket(req.body)
+        const newBucket = await createBucket({ userId, ...req.body })
         if (newBucket) {
           res.status(201).json(newBucket)
         } else res.status(400).json({ error: 'Invalid request parameters' })
@@ -42,3 +44,4 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       break
   }
 }
+export default withAuthValidation(handler)

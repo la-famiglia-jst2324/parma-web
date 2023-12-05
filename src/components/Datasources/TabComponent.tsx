@@ -20,7 +20,7 @@ export const TabComponent = () => {
       </div>
       <TabContent label="Companies Monitored" activeTab={activeTab}>
         <div className="mt-10">
-          <CompaniesTable id="" />
+          <CompaniesTable datasourceId="" />
         </div>
       </TabContent>
       <TabContent label="Scraping Information" activeTab={activeTab}>

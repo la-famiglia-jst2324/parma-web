@@ -5,7 +5,7 @@ import '@testing-library/jest-dom';
 describe('CompaniesTable', () => {
 
   test('renders without crashing', () => {
-    render(<CompaniesTable id="1" />);
+    render(<CompaniesTable datasourceId="1" />);
   });
 
 });

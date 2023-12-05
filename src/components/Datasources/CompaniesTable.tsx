@@ -2,16 +2,12 @@
 import type { Company } from '@prisma/client'
 import React, { useState, useEffect } from 'react'
 
-interface CompaniesTableProps {
-  id: string
-}
-
 async function getCompanies(dataSourceId: string) {
   return fetch(`/api/companyDataSourceRelation?dataSourceId=${dataSourceId}`, { method: 'GET' })
     .then((response) => {
       if (!response.ok) {
         if (response.status === 400) {
-          console.log('There seem to be no companies liked to this datasource!')
+          console.log('No companies liked to this datasource!')
         }
         console.log(`HTTP error! status: ${response.status}`)
         return null
@@ -27,10 +23,14 @@ async function getCompanies(dataSourceId: string) {
     })
 }
 
-export const CompaniesTable = (id: CompaniesTableProps) => {
+interface CompaniesTableProps {
+  datasourceId: string
+}
+
+export const CompaniesTable = ({ datasourceId }: CompaniesTableProps) => {
   const [data, setData] = useState<Company[] | undefined>()
 
-  const dataSourceId = id.id
+  const dataSourceId = datasourceId
 
   useEffect(() => {
     getCompanies(dataSourceId)

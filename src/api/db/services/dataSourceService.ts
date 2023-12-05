@@ -7,7 +7,7 @@ const createDataSource = async (data: {
   defaultFrequency: Frequency
   healthStatus: HealthStatus
   description?: string
-  url: string
+  invocationEndpoint: string
 }) => {
   try {
     return await prisma.dataSource.create({
@@ -17,7 +17,7 @@ const createDataSource = async (data: {
         defaultFrequency: data.defaultFrequency,
         healthStatus: data.healthStatus,
         description: data.description,
-        url: data.url
+        invocationEndpoint: data.invocationEndpoint
       }
     })
   } catch (error) {
@@ -83,7 +83,7 @@ const updateDataSource = async (
     healthStatus?: HealthStatus
     defaultFrequency?: Frequency
     description?: string
-    url?: string
+    invocationEndpoint?: string
   }
 ) => {
   try {

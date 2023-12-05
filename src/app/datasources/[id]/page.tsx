@@ -10,6 +10,7 @@ import {
 } from '@heroicons/react/outline'
 import { Button, Tab, TabGroup, TabList, TabPanel, TabPanels } from '@tremor/react'
 import type { DataSource } from '@prisma/client'
+import Link from 'next/link'
 import GoBackButton from '@/components/Datasources/GoBackButton'
 import ModalComponent from '@/components/Datasources/DisableModal'
 import DeleteModal from '@/components/Datasources/DeleteModal'
@@ -40,7 +41,7 @@ export default function DatasourcePage({ params: { id } }: { params: { id: strin
   const [isEditModalOpen, setIsEditModalOpen] = useState(false)
   const [sourceName, setName] = useState('')
   const [description, setDescription] = useState('')
-  const [url, setUrl] = useState('')
+  const [invocationEndpoint, SetInvocationEndpoint] = useState('')
   const [status, setStatus] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
 
@@ -50,7 +51,7 @@ export default function DatasourcePage({ params: { id } }: { params: { id: strin
         setData(datasource)
         setName(datasource.sourceName)
         setDescription(datasource.description)
-        setUrl(datasource.url)
+        SetInvocationEndpoint(datasource.invocationEndpoint)
         setStatus(datasource.isActive)
         setIsLoading(false)
       })
@@ -81,7 +82,7 @@ export default function DatasourcePage({ params: { id } }: { params: { id: strin
 
   const handleEnableButtonClick = async () => {
     try {
-      const updatedDatasource = await editDatasource(id, sourceName, true, description, url)
+      const updatedDatasource = await editDatasource(id, sourceName, true, description, invocationEndpoint)
       if (data.id === Number(id)) {
         setData(updatedDatasource)
       }
@@ -141,7 +142,7 @@ export default function DatasourcePage({ params: { id } }: { params: { id: strin
               handleClose={handleClose}
               sourceName={sourceName}
               description={description}
-              url={url}
+              url={invocationEndpoint}
               isActive={status}
               handleSave={async (newName: string, newDescription: string, newUrl: string, newStatus: boolean) => {
                 try {
@@ -163,7 +164,7 @@ export default function DatasourcePage({ params: { id } }: { params: { id: strin
                   handleClose={handleClose}
                   sourceName={data.sourceName}
                   description={data.description || ''}
-                  url={data.url || ''}
+                  url={data.invocationEndpoint || ''}
                   handleSave={async (newName: string, newDescription: string, newUrl: string, newStatus: boolean) => {
                     try {
                       await handleSave(newName, newStatus, newDescription, newUrl)
@@ -193,14 +194,14 @@ export default function DatasourcePage({ params: { id } }: { params: { id: strin
         </div>
       </div>
       <p className="mb-1 ml-9 mr-10 text-base text-gray-700">{data.description}</p>
-      <a
-        href={data.url || undefined}
+      <Link
+        href={data.invocationEndpoint}
         target="_blank"
         rel="noopener noreferrer"
         className="mb-1 ml-9 text-base text-gray-900 hover:text-blue-600"
       >
-        Source Link: {data.url}
-      </a>
+        Source Link: {data.invocationEndpoint}
+      </Link>
       <TabGroup>
         <TabList className="mt-8" variant="solid">
           <Tab icon={OfficeBuildingIcon}>Companies Monitored</Tab>

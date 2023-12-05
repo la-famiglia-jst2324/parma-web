@@ -26,13 +26,15 @@ export default function CreateDatasourcePage() {
 
     const frequencyEnum = Frequency[defaultFrequency as keyof typeof Frequency]
 
+    console.log('Form url', formData.get('url'))
+
     const dataSource = {
       sourceName: formData.get('name') as string,
       isActive: false,
       defaultFrequency: frequencyEnum,
       healthStatus: 'DOWN',
       modifiedAt: new Date().toISOString(),
-      url: formData.get('url') as string,
+      invocationEndpoint: formData.get('url') as string,
       description: formData.get('description') as string
     }
 

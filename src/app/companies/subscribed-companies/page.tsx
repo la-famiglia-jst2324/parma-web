@@ -5,6 +5,7 @@ import type { Company } from '@/types/companies'
 import CompanyCard from '@/components/Companies/CompanyCard'
 import GoBackButton from '@/components/Companies/GoBackButton'
 import { MainLayout } from '@/components/MainLayout'
+import AuthCheck from '@/components/Authentication/AuthCheck'
 
 async function getSubscribedCompanies() {
   try {
@@ -61,4 +62,4 @@ const SubscribedCompaniesPage: React.FC = () => {
   )
 }
 
-export default SubscribedCompaniesPage
+export default AuthCheck(SubscribedCompaniesPage)

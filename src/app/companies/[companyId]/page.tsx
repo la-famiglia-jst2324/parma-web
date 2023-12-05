@@ -10,6 +10,7 @@ import CompanyAttachment from '@/components/Companies/CompanyAttachment'
 import DataSourcesPanel from '@/components/Companies/DataSourcesPanel'
 import PerformancePanel from '@/components/Companies/PerformancePanel'
 import { MainLayout } from '@/components/MainLayout'
+import AuthCheck from '@/components/Authentication/AuthCheck'
 
 async function getCompanyData() {
   try {
@@ -99,4 +100,4 @@ const CompanyPage: React.FC = () => {
   )
 }
 
-export default CompanyPage
+export default AuthCheck(CompanyPage)

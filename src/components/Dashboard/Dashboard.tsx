@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { MultiSelect, MultiSelectItem } from '@tremor/react'
 import Link from 'next/link'
 import { MainLayout } from '../MainLayout'
+import AuthCheck from '../Authentication/AuthCheck'
 import NewsCard from '@/components/Dashboard/NewsCard'
 import type NewsItem from '@/types/news'
 import TopBucketsCard from '@/components/Dashboard/TopBucketsCard'
@@ -43,7 +44,7 @@ async function getSubscribedCompanies() {
   }
 }
 
-export default function Home() {
+function Home() {
   const [data, setData] = useState({ topBuckets: [], news: [] })
   const [subscribedCompanies, setSubscribedCompanies] = useState<Company[]>([])
   const [selectedCompanies, setSelectedCompanies] = useState<string[]>([])
@@ -134,3 +135,5 @@ export default function Home() {
     </MainLayout>
   )
 }
+
+export default AuthCheck(Home)

@@ -7,8 +7,9 @@ import GoBackButton from '@/components/Datasources/GoBackButton'
 import { FormContent } from '@/components/FormContent'
 import { Frequency } from '@/types/datasource'
 import { MainLayout } from '@/components/MainLayout'
+import AuthCheck from '@/components/Authentication/AuthCheck'
 
-export default function CreateDatasourcePage() {
+function CreateDatasourcePage() {
   const [name, setName] = useState('')
   const [url, setUrl] = useState('')
   const [description, setDescription] = useState('')
@@ -131,3 +132,5 @@ export default function CreateDatasourcePage() {
     </>
   )
 }
+
+export default AuthCheck(CreateDatasourcePage)

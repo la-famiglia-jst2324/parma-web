@@ -16,6 +16,7 @@ import EditInformationModal from '@/components/Datasources/EditInformationModal'
 import { CompaniesTable } from '@/components/Datasources/CompaniesTable'
 import { editDatasource } from '@/utils/datasources/editDatasource'
 import { MainLayout } from '@/components/MainLayout'
+import AuthCheck from '@/components/Authentication/AuthCheck'
 
 // Replace with the URL of the datasource
 const sourceUrl = 'https://www.linkedin.com/feed/'
@@ -36,7 +37,7 @@ async function getDatasource(id: string) {
   }
 }
 
-export default function DatasourcePage({ params: { id } }: { params: { id: string } }) {
+function DatasourcePage({ params: { id } }: { params: { id: string } }) {
   const [data, setData] = useState<Datasource>()
   const [isDisableModalOpen, setIsDisableModalOpen] = useState(false)
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
@@ -226,3 +227,5 @@ export default function DatasourcePage({ params: { id } }: { params: { id: strin
     </MainLayout>
   )
 }
+
+export default AuthCheck(DatasourcePage)

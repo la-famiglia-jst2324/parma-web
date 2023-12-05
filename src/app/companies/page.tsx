@@ -6,6 +6,7 @@ import { TextInput } from '@tremor/react'
 import type { Company } from '@/types/companies'
 import CompanyCard from '@/components/Companies/CompanyCard'
 import { MainLayout } from '@/components/MainLayout'
+import AuthCheck from '@/components/Authentication/AuthCheck'
 
 async function getCompanies() {
   try {
@@ -113,4 +114,4 @@ const CompaniesPage: React.FC = () => {
   )
 }
 
-export default CompaniesPage
+export default AuthCheck(CompaniesPage)

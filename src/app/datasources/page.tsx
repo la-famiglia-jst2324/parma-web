@@ -4,6 +4,7 @@ import Table from '../../components/Datasources/Table'
 import CreateDatasource from '@/components/Datasources/CreateDatasource'
 import type Datasource from '@/types/datasource'
 import { MainLayout } from '@/components/MainLayout'
+import AuthCheck from '@/components/Authentication/AuthCheck'
 
 async function getDatasources() {
   try {
@@ -22,7 +23,7 @@ async function getDatasources() {
   }
 }
 
-export default function DatasourcesPage() {
+function DatasourcesPage() {
   const [data, setData] = useState<Datasource[]>([])
 
   useEffect(() => {
@@ -57,3 +58,5 @@ export default function DatasourcesPage() {
     </>
   )
 }
+
+export default AuthCheck(DatasourcesPage)

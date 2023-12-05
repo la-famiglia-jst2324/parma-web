@@ -1,14 +1,18 @@
-import type { Company, CompanyData, Datasource, Attachment } from '@/types/companies'
+import type { Company, CompanyData, Datasource } from '@/types/companies'
 
 export const companyData: CompanyData = {
   name: 'Tesla',
-  description: `Tesla, Inc., founded in 2003, is a pioneering American electric vehicle and clean energy company led by CEO Elon Musk since 2008. Renowned for its cutting-edge electric vehicles, including the Model S, Model 3, Model X, and Model Y, Tesla has revolutionized the automotive industry with high-performance capabilities and innovative features. Beyond electric cars, Tesla extends its impact to sustainable energy solutions, producing solar panels, solar roof tiles, and energy storage products like the Powerwall, Powerpack, and Megapack. Operating Gigafactories globally, including in the United States, China, and Germany, Tesla aims to scale up production. The company's commitment to autonomy and its Supercharger network for fast-charging further underscore Tesla's influence in the automotive and renewable energy sectors.`
+  description: `tiam tincidunt arcu bibendum velit viverra laoreet eu accumsan orci. Cras non nisl finibus, aliquam lectus ac,
+    ultricies urna. Nullam dolor sem, dapibus vitae quam volutpat, commodo bibendum nulla. tiam tincidunt arcu
+    bibendum velit viverra laoreet eu accumsan orci. Cras non nisl finibus, aliquam lectus ac, ultricies urna.
+    Nullam dolor sem, dapibus vitae quam volutpat, commodo bibendum nulla. tiam tincidunt arcu bibendum velit
+    viverra laoreet eu accumsan orci. Cras non nisl finibus, aliquam lectus ac, ultricies urna. Nullam dolor sem,
+    dapibus vitae quam volutpat, commodo bibendum nulla. tiam tincidunt arcu bibendum velit viverra laoreet eu
+    accumsan orci. Cras non nisl finibus, aliquam lectus ac, ultricies urna. Nullam dolor sem, dapibus vitae quam
+    volutpat, commodo bibendum nulla. tiam tincidunt arcu bibendum velit viverra laoreet eu accumsan orci. Cras
+    non nisl finibus, aliquam lectus ac, ultricies urna. Nullam dolor sem, dapibus vitae quam volutpat, commodo
+    bibendum nulla.`
 }
-
-export const companyAttachments: Attachment[] = [
-  { id: '1', name: 'Attachment 1', filetype: 'pdf' },
-  { id: '2', name: 'Attachment 2', filetype: 'jpg' }
-]
 
 export const dummyCompanies: Company[] = [
   {
@@ -66,41 +70,6 @@ export const dummyCompanies: Company[] = [
       'Accenture plc is a global professional services company that provides a broad range of services and solutions in strategy, consulting, digital, technology, and operations. It is one of the largest consulting firms in the world.',
     activeDatasources: 12,
     inactiveDatasources: 1
-  }
-]
-
-export const dummySearchedCompanies: Company[] = [
-  {
-    id: '1',
-    name: 'Pfizer Inc.',
-    description:
-      "Pfizer Inc. is a multinational pharmaceutical company headquartered in New York City. It is one of the world's largest pharmaceutical companies, known for its contributions to the development of various vaccines and medications.",
-    activeDatasources: 10,
-    inactiveDatasources: 2
-  },
-  {
-    id: '2',
-    name: 'Apple Inc.',
-    description:
-      'Apple Inc. is a technology company known for designing, manufacturing, and selling consumer electronics, computer software, and online services. It is a global innovator in the tech industry.',
-    activeDatasources: 8,
-    inactiveDatasources: 4
-  },
-  {
-    id: '3',
-    name: 'Johnson & Johnson',
-    description:
-      'Johnson & Johnson is a multinational healthcare company that focuses on pharmaceuticals, medical devices, and consumer goods. It is one of the largest and most well-known healthcare companies globally.',
-    activeDatasources: 10,
-    inactiveDatasources: 2
-  },
-  {
-    id: '4',
-    name: 'Microsoft Corporation',
-    description:
-      'Microsoft Corporation is a leading technology company that develops, licenses, and sells computer software, consumer electronics, and other personal computing and communications products and services.',
-    activeDatasources: 8,
-    inactiveDatasources: 4
   }
 ]
 

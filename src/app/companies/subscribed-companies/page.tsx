@@ -26,11 +26,15 @@ const SubscribedCompaniesPage: React.FC = () => {
   const [subscribedCompanies, setSubscribedCompanies] = useState<Company[]>([])
 
   useEffect(() => {
-    getSubscribedCompanies()
-      .then((res) => setSubscribedCompanies(res))
-      .catch((error) => {
+    const fetchData = async () => {
+      try {
+        const data = await getSubscribedCompanies()
+        setSubscribedCompanies(data)
+      } catch (error) {
         console.error('Failed to fetch subscribed companies:', error)
-      })
+      }
+    }
+    fetchData()
   }, [])
 
   return (
@@ -41,17 +45,10 @@ const SubscribedCompaniesPage: React.FC = () => {
         </div>
         <h1 className="py-2 pl-2 text-2xl font-bold">Subscribed companies</h1>
       </div>
-      <div className="flex flex-wrap">
+      <div className="flex w-full flex-wrap">
         {subscribedCompanies?.map((company, index) => (
           <div className="md:w-1/3">
-            <CompanyCard
-              key={index}
-              id={company.id}
-              name={company.name}
-              description={company.description}
-              activeDatasources={company.activeDatasources}
-              inactiveDatasources={company.inactiveDatasources}
-            />
+            <CompanyCard key={index} id={company.id} name={company.name} description={company.description} />
           </div>
         ))}
       </div>

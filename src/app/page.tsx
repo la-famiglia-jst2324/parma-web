@@ -1,11 +1,23 @@
 'use client'
-import React, { useContext } from 'react'
+import React, { useContext, useState, useEffect } from 'react'
 import { AuthContext } from '@/lib/firebase/auth'
 import Home from '@/components/Dashboard/Dashboard'
-import LadingPage from '@/components/LandingPage'
+import LandingPage from '@/components/LandingPage'
+import Spinner from '@/components/Spinner'
 
 export default function Page() {
   const user = useContext(AuthContext)
+  const [isLoading, setIsLoading] = useState(true)
 
-  return <>{user ? <Home /> : <LadingPage />}</>
+  useEffect(() => {
+    if (user !== undefined) {
+      setIsLoading(false)
+    }
+  }, [user])
+
+  if (isLoading) {
+    return <Spinner />
+  }
+
+  return <>{user ? <Home /> : <LandingPage />}</>
 }

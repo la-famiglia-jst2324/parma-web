@@ -8,7 +8,7 @@ const Sidebar = () => {
   const user = useContext(AuthContext)
 
   return (
-    <div className="fixed z-10 flex min-h-screen w-1/6 flex-col bg-primary">
+    <div className="fixed z-10 flex min-h-screen w-full flex-col bg-primary md:w-1/6">
       <div className="ml-4 flex grow flex-col overflow-y-auto">
         <div className="mb-14 mt-4">
           <Link href="/" className="cursor-pointer pt-6 text-3xl font-extrabold text-white">

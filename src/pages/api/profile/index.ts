@@ -1,9 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
+import type { User } from '@prisma/client'
 import { updateUser, getUserById } from '@/api/db/services/userService'
 import { ItemNotFoundError } from '@/api/utils/errorUtils'
-import type { User } from '@prisma/client'
 import { withAuthValidation } from '@/api/middleware/auth'
-
 const handler = async (req: NextApiRequest, res: NextApiResponse, user: User) => {
   const { method } = req
   const userId = user.id

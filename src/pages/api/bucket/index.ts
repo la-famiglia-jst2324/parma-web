@@ -1,8 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-
+import type { User } from '@prisma/client'
 import { createBucket, getBucketByName, getAllBuckets } from '@/api/db/services/bucketService'
 import { ItemNotFoundError } from '@/api/utils/errorUtils'
-import { User } from '@prisma/client'
 import { withAuthValidation } from '@/api/middleware/auth'
 
 const handler = async (req: NextApiRequest, res: NextApiResponse, user: User) => {
@@ -30,7 +29,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse, user: User) =>
     case 'POST':
       try {
         // Create a new bucket
-        const newBucket = await createBucket({ userId, ...req.body })
+        const newBucket = await createBucket({ ownerId: userId, ...req.body })
         if (newBucket) {
           res.status(201).json(newBucket)
         } else res.status(400).json({ error: 'Invalid request parameters' })

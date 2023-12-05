@@ -156,6 +156,7 @@ model DataSource {
   sourceName             String       @map("source_name")
   isActive               Boolean      @map("is_active")
   defaultFrequency       Frequency    @map("default_frequency")
+  frequencyPattern       String?      @map("frequency_pattern")
   healthStatus           HealthStatus @map("health_status")
   description            String?
   createdAt              DateTime     @default(now()) @map("created_at")
@@ -176,14 +177,15 @@ model DataSource {
 }
 
 model ScheduledTasks {
-  taskId        Int        @id @default(autoincrement()) @map("task_id")
-  dataSourceId  Int        @map("data_source_id")
-  startedAt     DateTime   @default(now()) @map("started_at")
-  lockedAt      DateTime   @map("locked_at")
-  endedAt       DateTime   @map("ended_at")
-  resultSummary String?    @map("result_summary")
+  taskId        Int          @id @default(autoincrement()) @map("task_id")
+  dataSourceId  Int          @map("data_source_id")
+  scheduleType  ScheduleType @map("schedule_type")
+  startedAt     DateTime     @default(now()) @map("started_at")
+  lockedAt      DateTime     @map("locked_at")
+  endedAt       DateTime     @map("ended_at")
+  resultSummary String?      @map("result_summary")
   status        TaskStatus
-  attempts      Int        @default(0)
+  attempts      Int          @default(0)
 
   // Relations
   dataSource DataSource @relation(fields: [dataSourceId], references: [id])
@@ -451,6 +453,7 @@ enum HealthStatus {
 enum Frequency {
   DAILY
   WEEKLY
+  CRON
 
   @@map("frequency")
 }
@@ -469,4 +472,11 @@ enum TaskStatus {
   FAILED
 
   @@map("task_status")
+}
+
+enum ScheduleType {
+  ON_DEMAND
+  REGULAR
+
+  @@map("schedule_type")
 }

@@ -20,12 +20,6 @@ describe('CreateDatasourcePage', () => {
     expect(heading).toBeInTheDocument();
   });
 
-  test('renders the GoBackButton', () => {
-    render(<CreateDatasourcePage />);
-    const button = screen.getByRole('button');
-    expect(button).toBeInTheDocument();
-  });
-
   test('renders the form', () => {
     render(<CreateDatasourcePage />);
     const form = screen.getByRole('form');

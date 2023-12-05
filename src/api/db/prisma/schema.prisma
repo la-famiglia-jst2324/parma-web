@@ -181,8 +181,8 @@ model ScheduledTasks {
   dataSourceId  Int          @map("data_source_id")
   scheduleType  ScheduleType @map("schedule_type")
   startedAt     DateTime     @default(now()) @map("started_at")
-  lockedAt      DateTime     @map("locked_at")
-  endedAt       DateTime     @map("ended_at")
+  lockedAt      DateTime?    @map("locked_at")
+  endedAt       DateTime?    @map("ended_at")
   resultSummary String?      @map("result_summary")
   status        TaskStatus
   attempts      Int          @default(0)

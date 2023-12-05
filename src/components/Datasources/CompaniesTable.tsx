@@ -7,7 +7,7 @@ async function getCompanies(dataSourceId: string) {
     .then((response) => {
       if (!response.ok) {
         if (response.status === 400) {
-          console.log('No companies liked to this datasource!')
+          console.log('No companies linked to this datasource!')
         }
         console.log(`HTTP error! status: ${response.status}`)
         return null

@@ -66,8 +66,7 @@ const DeleteModal: React.FC<DeleteModalProps> = ({ isOpen, handleClose, id }) =>
           <h3 className="text-lg font-semibold leading-6 text-gray-900">Delete this Datasource</h3>
           <div className="mt-2">
             <p className="text-sm text-red-500">
-              Are you sure you want to delete the datasource ? This will permanently remove it and this cannot be
-              undone.
+              Are you sure you want to delete the datasource? This will permanently remove it and this cannot be undone.
             </p>
           </div>
         </div>

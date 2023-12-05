@@ -28,9 +28,9 @@ export default function CreateDatasourcePage() {
 
     const dataSource = {
       sourceName: formData.get('name') as string,
-      isActive: true,
+      isActive: false,
       defaultFrequency: frequencyEnum,
-      healthStatus: 'UP', // TODO: Should this be the default value?
+      healthStatus: 'DOWN',
       modifiedAt: new Date().toISOString(),
       url: formData.get('url') as string,
       description: formData.get('description') as string

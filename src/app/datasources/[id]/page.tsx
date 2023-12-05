@@ -194,7 +194,7 @@ export default function DatasourcePage({ params: { id } }: { params: { id: strin
       </div>
       <p className="mb-1 ml-9 mr-10 text-base text-gray-700">{data.description}</p>
       <a
-        href="https://www.linkedin.com/feed/"
+        href={data.url || undefined}
         target="_blank"
         rel="noopener noreferrer"
         className="mb-1 ml-9 text-base text-gray-900 hover:text-blue-600"

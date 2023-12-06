@@ -42,7 +42,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse, user: User) =>
             userId: user.id,
             title: fileName
           })
-          res.status(201).json(createdAttachment)
+          const { id, title, createdAt, modifiedAt } = createdAttachment
+          res.status(201).json({ id, title, fileType, companyId, createdAt, modifiedAt })
         } else res.status(404).json({ error: 'Company not Found' })
       } catch (error) {
         if (error instanceof ZodError) res.status(400).json({ error: formatZodErrors(error) })

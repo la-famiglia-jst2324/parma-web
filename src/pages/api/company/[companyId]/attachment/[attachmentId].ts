@@ -48,9 +48,10 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         const company = await getCompanyByID(Number(companyId))
         const companyAttachment = await getAttachmentByID(Number(attachmentId))
         if (company && companyAttachment) {
-          await deleteAttachment(Number(attachmentId))
+          const deletedCompany = await deleteAttachment(Number(attachmentId))
           await deleteFileFromFirebaseStorage(companyAttachment.fileUrl)
-          res.status(200).json({ message: 'Attachment deleted', ...companyAttachment })
+          const { id, companyId, fileType, title, createdAt, modifiedAt } = deletedCompany
+          res.status(200).json({ message: 'Attachment deleted', id, companyId, fileType, title, createdAt, modifiedAt })
         } else res.status(404).json({ error: 'Company or Attachment not Found' })
       } catch (error) {
         if (error instanceof ItemNotFoundError) res.status(404).json({ error: error.message })

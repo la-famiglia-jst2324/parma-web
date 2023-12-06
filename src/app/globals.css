@@ -15,3 +15,79 @@ body {
   color: rgb(var(--foreground-rgb));
   background-color: #EDEDED;
 }
+
+
+/* Add this to your global styles.css or equivalent */
+
+/* Basic reset for input and button elements */
+input, button {
+  padding: 8px;
+  margin: 5px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+/* Style for the profile container */
+.profile-container {
+  max-width: 1500px;
+  margin: 20px auto;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+/* Style for the form elements */
+.profile-form label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.profile-form input[type="text"],
+.profile-form input[type="email"],
+.profile-form input[type="password"] {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 20px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+/* Style for the profile image */
+.profile-image {
+  display: block;
+  width: 100px; /* Adjust as per your image size */
+  height: 100px; /* Adjust as per your image size */
+  border-radius: 50%;
+  margin-bottom: 20px;
+}
+
+/* Style for the buttons */
+.profile-form button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  cursor: pointer;
+}
+
+.profile-form button:hover {
+  background-color: #0056b3;
+}
+
+/* Additional styles for the structure and layout */
+.profile-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.profile-form div {
+  margin-bottom: 20px;
+}
+
+.profile-form h1 {
+  color: #333;
+  margin-bottom: 20px;
+}

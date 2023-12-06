@@ -35,14 +35,14 @@ const handler = async (req: NextApiRequest, res: NextApiResponse, user: User) =>
         if (existingCompany) {
           const { fileDest, fileName, fileType } = await uploadFileToFirebase(req, companyId)
           // create attachment entry in db
-          await createAttachment({
+          const createdAttachment = await createAttachment({
             companyId: Number(companyId),
             fileType,
             fileUrl: fileDest,
             userId: user.id,
             title: fileName
           })
-          res.status(201).json({ message: 'Attachment created' })
+          res.status(201).json(createdAttachment)
         } else res.status(404).json({ error: 'Company not Found' })
       } catch (error) {
         if (error instanceof ZodError) res.status(400).json({ error: formatZodErrors(error) })

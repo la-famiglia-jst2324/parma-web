@@ -1,23 +1,23 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import type { User } from '@prisma/client'
 import { z, ZodError } from 'zod'
-import formatZodErrors from '../lib/utils/zodCustomMessage'
+import formatZodErrors from '../../lib/utils/zodCustomMessage'
 import {
-  createNewsSubscription,
-  deleteNewsSubscription,
-  getNewsSubscriptionById,
-  getNewsSubscriptionsByUserId
-} from '@/api/db/services/newsSubscriptionService'
+  createCompanySubscription,
+  deleteCompanySubscription,
+  getCompanySubscriptionsByUserId,
+  getCompanySubscriptionById
+} from '@/api/db/services/companySubscriptionService'
 import { withAuthValidation } from '@/api/middleware/auth'
 import { ItemNotFoundError } from '@/api/utils/errorUtils'
 
-const newsSubscriptionSchema = z.object({
+const companySubscriptionSchema = z.object({
   companyId: z.number().int().positive()
 })
 
 const handler = async (req: NextApiRequest, res: NextApiResponse, user: User) => {
   const { method } = req
-  const { companyId } = newsSubscriptionSchema.parse(req.body)
+  const { companyId } = companySubscriptionSchema.parse(req.body)
   const userId = user.id
   const flag = req.query.subscribe
 
@@ -25,17 +25,17 @@ const handler = async (req: NextApiRequest, res: NextApiResponse, user: User) =>
     case 'POST':
       try {
         if (flag === 'true') {
-          const newSubscription = await createNewsSubscription({ userId, companyId })
+          const newSubscription = await createCompanySubscription({ userId, companyId })
           if (newSubscription) {
             res.status(201).json(newSubscription)
           } else res.status(400).json({ error: 'Invalid request parameters' })
         } else {
-          const existingSubscription = await getNewsSubscriptionById(userId, companyId)
+          const existingSubscription = await getCompanySubscriptionById(userId, companyId)
           if (existingSubscription) {
-            await deleteNewsSubscription(userId, companyId)
-            res.status(200).json({ message: 'news subscription successfully Deleted' })
+            await deleteCompanySubscription(userId, companyId)
+            res.status(200).json({ message: 'company subscription successfully Deleted' })
           } else {
-            res.status(404).json({ error: 'news subscription not found' })
+            res.status(404).json({ error: 'company subscription not found' })
           }
         }
       } catch (error) {
@@ -46,7 +46,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse, user: User) =>
 
     case 'GET':
       try {
-        const companies = await getNewsSubscriptionsByUserId(userId)
+        const companies = await getCompanySubscriptionsByUserId(userId)
         if (companies) res.status(200).json(companies)
         else res.status(400).json({ error: 'No subscribed companies found' })
       } catch (error) {

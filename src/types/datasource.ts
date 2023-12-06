@@ -1,7 +1,4 @@
-export enum Frequency {
-  DAILY = 'DAILY',
-  WEEKLY = 'WEEKLY'
-}
+import type { Frequency } from '@prisma/client'
 
 type Datasource = {
   id: number

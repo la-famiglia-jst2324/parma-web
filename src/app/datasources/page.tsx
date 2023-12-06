@@ -37,10 +37,10 @@ function DatasourcesPage() {
   return (
     <>
       <MainLayout>
-        <div className="relative m-5 flex min-h-screen w-auto flex-col justify-start bg-white shadow-lg">
+        <div className="relative m-5 flex min-h-screen w-auto flex-col justify-start rounded-md bg-white shadow-lg">
           <div className="flex items-center justify-between p-4">
             <div className="mb-4 flex items-center justify-start space-x-4">
-              <h1 className="m-4">Datasources</h1>
+              <h1 className="m-4 text-4xl text-black">Datasources</h1>
             </div>
             <div className="m-4">
               <CreateDatasource />

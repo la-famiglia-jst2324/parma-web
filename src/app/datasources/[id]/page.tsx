@@ -121,7 +121,7 @@ function DatasourcePage({ params: { id } }: { params: { id: string } }) {
         <div className="mb-3 flex w-full items-center justify-between space-x-4">
           <div className="mb-2 flex items-center justify-start space-x-4">
             <GoBackButton />
-            <h1> {data.sourceName} </h1>
+            <h1 className="text-4xl text-black"> {data.sourceName} </h1>
             <div
               className={`inline-flex items-center rounded-full px-2 py-1 text-sm ${
                 data.isActive ? 'bg-blue-200 text-blue-700' : 'bg-red-200 text-red-700'

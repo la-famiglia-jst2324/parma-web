@@ -15,7 +15,7 @@ const AuthCheck = <P extends object>(WrappedComponent: React.ComponentType<P>) =
       }
     }, [user, router])
 
-    return <WrappedComponent {...props} />
+    return user ? <WrappedComponent {...props} /> : null
   }
 
   return WithAuth

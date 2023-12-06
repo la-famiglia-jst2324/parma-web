@@ -1,6 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import type { SourceMeasurement } from '@prisma/client'
-import { DataSource } from '@prisma/client'
 import { getMeasurementsBySourceIdAndCompanyId } from '@/api/db/services/sourceMeasurementService'
 import { getDataSourceByName } from '@/api/db/services/dataSourceService'
 

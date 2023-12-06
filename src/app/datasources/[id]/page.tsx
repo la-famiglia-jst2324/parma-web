@@ -5,11 +5,13 @@ import {
   PencilIcon,
   StatusOnlineIcon,
   PresentationChartLineIcon,
+  ShieldCheckIcon,
   OfficeBuildingIcon
 } from '@heroicons/react/outline'
 import { Button, Tab, TabGroup, TabList, TabPanel, TabPanels } from '@tremor/react'
+import type { DataSource } from '@prisma/client'
+import Link from 'next/link'
 import GoBackButton from '@/components/Datasources/GoBackButton'
-import type Datasource from '@/types/datasource'
 import ModalComponent from '@/components/Datasources/DisableModal'
 import DeleteModal from '@/components/Datasources/DeleteModal'
 import EditInformationModal from '@/components/Datasources/EditInformationModal'
@@ -17,9 +19,6 @@ import { CompaniesTable } from '@/components/Datasources/CompaniesTable'
 import { editDatasource } from '@/utils/datasources/editDatasource'
 import { MainLayout } from '@/components/MainLayout'
 import AuthCheck from '@/components/Authentication/AuthCheck'
-
-// Replace with the URL of the datasource
-const sourceUrl = 'https://www.linkedin.com/feed/'
 
 async function getDatasource(id: string) {
   try {
@@ -38,13 +37,13 @@ async function getDatasource(id: string) {
 }
 
 function DatasourcePage({ params: { id } }: { params: { id: string } }) {
-  const [data, setData] = useState<Datasource>()
+  const [data, setData] = useState<DataSource>()
   const [isDisableModalOpen, setIsDisableModalOpen] = useState(false)
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
   const [isEditModalOpen, setIsEditModalOpen] = useState(false)
   const [sourceName, setName] = useState('')
   const [description, setDescription] = useState('')
-  const [url, setUrl] = useState('')
+  const [invocationEndpoint, SetInvocationEndpoint] = useState('')
   const [status, setStatus] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
 
@@ -54,7 +53,7 @@ function DatasourcePage({ params: { id } }: { params: { id: string } }) {
         setData(datasource)
         setName(datasource.sourceName)
         setDescription(datasource.description)
-        setUrl(datasource.url)
+        SetInvocationEndpoint(datasource.invocationEndpoint)
         setStatus(datasource.isActive)
         setIsLoading(false)
       })
@@ -85,7 +84,7 @@ function DatasourcePage({ params: { id } }: { params: { id: string } }) {
 
   const handleEnableButtonClick = async () => {
     try {
-      const updatedDatasource = await editDatasource(id, sourceName, true, description, url)
+      const updatedDatasource = await editDatasource(id, sourceName, true, description, invocationEndpoint)
       if (data.id === Number(id)) {
         setData(updatedDatasource)
       }
@@ -146,7 +145,7 @@ function DatasourcePage({ params: { id } }: { params: { id: string } }) {
                 handleClose={handleClose}
                 sourceName={sourceName}
                 description={description}
-                url={url}
+                url={invocationEndpoint}
                 isActive={status}
                 handleSave={async (newName: string, newDescription: string, newUrl: string, newStatus: boolean) => {
                   try {
@@ -167,8 +166,8 @@ function DatasourcePage({ params: { id } }: { params: { id: string } }) {
                     isOpen={isDisableModalOpen}
                     handleClose={handleClose}
                     sourceName={data.sourceName}
-                    description={data.description}
-                    url={sourceUrl}
+                    description={data.description || ''}
+                    url={data.invocationEndpoint || ''}
                     handleSave={async (newName: string, newDescription: string, newUrl: string, newStatus: boolean) => {
                       try {
                         await handleSave(newName, newStatus, newDescription, newUrl)
@@ -198,22 +197,29 @@ function DatasourcePage({ params: { id } }: { params: { id: string } }) {
           </div>
         </div>
         <p className="mb-1 ml-9 mr-10 text-base text-gray-700">{data.description}</p>
-        <a
-          href="https://www.linkedin.com/feed/"
+        <Link
+          href={data.invocationEndpoint}
           target="_blank"
           rel="noopener noreferrer"
           className="mb-1 ml-9 text-base text-gray-900 hover:text-blue-600"
         >
-          {sourceUrl}
-        </a>
+          Source Link: {data.invocationEndpoint}
+        </Link>
         <TabGroup>
           <TabList className="mt-8" variant="solid">
             <Tab icon={OfficeBuildingIcon}>Companies Monitored</Tab>
-            <Tab icon={PresentationChartLineIcon}>Datasource Health</Tab>
+            <Tab icon={ShieldCheckIcon}>Datasource Health</Tab>
+            <Tab icon={PresentationChartLineIcon}>Scheduling Tasks</Tab>
           </TabList>
           <TabPanels>
             <TabPanel>
-              <CompaniesTable />
+              <CompaniesTable datasourceId={data.id.toString()} />
+            </TabPanel>
+            <TabPanel>
+              <div className="flex flex-col items-center justify-center">
+                <h1 className="text-2xl font-bold">No data available</h1>
+                <p className="text-gray-500">No data has been collected yet</p>
+              </div>
             </TabPanel>
             <TabPanel>
               <div className="flex flex-col items-center justify-center">

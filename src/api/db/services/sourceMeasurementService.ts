@@ -51,6 +51,19 @@ const getMeasurementsBySourceId = async (sourceModuleId: number) => {
     throw error
   }
 }
+
+const getMeasurementsBySourceIdAndCompanyId = async (sourceModuleId: number, companyId: number) => {
+  try {
+    const measurements = await prisma.sourceMeasurement.findMany({
+      where: { sourceModuleId, companyId }
+    })
+    return measurements
+  } catch (error) {
+    console.error('Error getting the source measurements of data source :', error)
+    throw error
+  }
+}
+
 const getAllSourceMeasurements = async () => {
   try {
     const measurements = await prisma.sourceMeasurement.findMany()
@@ -101,5 +114,6 @@ export {
   getAllSourceMeasurements,
   getMeasurementsBySourceId,
   updateSourceMeasurement,
-  deleteSourceMeasurement
+  deleteSourceMeasurement,
+  getMeasurementsBySourceIdAndCompanyId
 }

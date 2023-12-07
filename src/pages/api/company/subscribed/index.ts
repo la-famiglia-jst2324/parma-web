@@ -5,8 +5,7 @@ import formatZodErrors from '../../lib/utils/zodCustomMessage'
 import {
   createCompanySubscription,
   deleteCompanySubscription,
-  getCompanySubscriptionsByUserId,
-  getCompanySubscriptionById
+  getUserCompanySubscriptions
 } from '@/api/db/services/companySubscriptionService'
 import { withAuthValidation } from '@/api/middleware/auth'
 import { ItemNotFoundError } from '@/api/utils/errorUtils'
@@ -17,20 +16,20 @@ const companySubscriptionSchema = z.object({
 
 const handler = async (req: NextApiRequest, res: NextApiResponse, user: User) => {
   const { method } = req
-  const { companyId } = companySubscriptionSchema.parse(req.body)
   const userId = user.id
   const flag = req.query.subscribe
 
   switch (method) {
     case 'POST':
       try {
+        const { companyId } = companySubscriptionSchema.parse(req.body)
         if (flag === 'true') {
           const newSubscription = await createCompanySubscription({ userId, companyId })
           if (newSubscription) {
             res.status(201).json(newSubscription)
           } else res.status(400).json({ error: 'Invalid request parameters' })
         } else {
-          const existingSubscription = await getCompanySubscriptionById(userId, companyId)
+          const existingSubscription = await getUserCompanySubscriptions(userId, companyId)
           if (existingSubscription) {
             await deleteCompanySubscription(userId, companyId)
             res.status(200).json({ message: 'company subscription successfully Deleted' })
@@ -46,7 +45,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse, user: User) =>
 
     case 'GET':
       try {
-        const companies = await getCompanySubscriptionsByUserId(userId)
+        const companies = await getUserCompanySubscriptions(userId)
         if (companies) res.status(200).json(companies)
         else res.status(400).json({ error: 'No subscribed companies found' })
       } catch (error) {

@@ -26,42 +26,39 @@ const createCompanySubscription = async (data: { userId: number; companyId: numb
   }
 }
 
-const getCompanySubscriptionById = async (userId: number, companyId: number) => {
+const getUserCompanySubscriptions = async (userId: number, companyId?: number) => {
   try {
-    const subscription = await prisma.companySubscription.findUnique({
-      where: {
-        userId_companyId: {
-          userId,
-          companyId
+    if (companyId !== undefined) {
+      // Get a specific company subscription
+      const subscription = await prisma.companySubscription.findUnique({
+        where: {
+          userId_companyId: {
+            userId,
+            companyId
+          }
         }
+      })
+      if (!subscription) {
+        throw new Error(`User does not have a subscription with company ID: ${companyId}.`)
       }
-    })
-    if (!subscription) {
-      throw new Error(`does not have the subscription.`)
-    }
-    return subscription
-  } catch (error) {
-    console.error('Error getting subscribed companies:', error)
-    throw error
-  }
-}
-
-const getCompanySubscriptionsByUserId = async (userId: number) => {
-  try {
-    const subscriptions = await prisma.companySubscription.findMany({
-      where: {
-        userId
-      },
-      include: {
-        company: true
+      return subscription
+    } else {
+      // Get all subscriptions for the user
+      const subscriptions = await prisma.companySubscription.findMany({
+        where: {
+          userId
+        },
+        include: {
+          company: true
+        }
+      })
+      if (subscriptions.length === 0) {
+        throw new Error(`User ${userId} does not have any subscriptions.`)
       }
-    })
-    if (!subscriptions) {
-      throw new Error(`the user ${userId} does not have any subscriptions.`)
+      return subscriptions.map((subscription) => subscription.company)
     }
-    return subscriptions.map((membership) => membership.company)
   } catch (error) {
-    console.error('Error retrieving subscriptions for user:', error)
+    console.error('Error retrieving company subscriptions:', error)
     throw error
   }
 }
@@ -83,9 +80,4 @@ const deleteCompanySubscription = async (userId: number, companyId: number) => {
   }
 }
 
-export {
-  createCompanySubscription,
-  getCompanySubscriptionById,
-  getCompanySubscriptionsByUserId,
-  deleteCompanySubscription
-}
+export { createCompanySubscription, getUserCompanySubscriptions, deleteCompanySubscription }

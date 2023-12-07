@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { z, ZodError } from 'zod'
 import type { User } from '@prisma/client'
+import fileValidation from '../../lib/utils/fileValidation'
 import { getCompanyByID } from '@/api/db/services/companyService'
 import { createAttachment } from '@/api/db/services/attachmentService'
 import { withAuthValidation } from '@/api/middleware/auth'
@@ -33,7 +34,15 @@ const handler = async (req: NextApiRequest, res: NextApiResponse, user: User) =>
       try {
         const existingCompany = await getCompanyByID(Number(companyId))
         if (existingCompany) {
-          const { fileDest, fileName, fileType } = await uploadFileToFirebase(req, companyId)
+          const fileDestPrefix = `Company/${companyId}/`
+          const { incomingFile, fileExtension, name, type } = await fileValidation(req)
+          const { fileDest, fileName, fileType } = await uploadFileToFirebase(
+            incomingFile,
+            fileExtension,
+            name,
+            type,
+            fileDestPrefix
+          )
           // create attachment entry in db
           const createdAttachment = await createAttachment({
             companyId: Number(companyId),

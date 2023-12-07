@@ -35,14 +35,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse, user: User) =>
         const existingCompany = await getCompanyByID(Number(companyId))
         if (existingCompany) {
           const fileDestPrefix = `Company/${companyId}/`
-          const { incomingFile, fileExtension, name, type } = await fileValidation(req)
-          const { fileDest, fileName, fileType } = await uploadFileToFirebase(
-            incomingFile,
-            fileExtension,
-            name,
-            type,
-            fileDestPrefix
-          )
+          const { incomingFile, name, type } = await fileValidation(req)
+          const { fileDest, fileName, fileType } = await uploadFileToFirebase(incomingFile, type, name, fileDestPrefix)
           // create attachment entry in db
           const createdAttachment = await createAttachment({
             companyId: Number(companyId),

@@ -8,12 +8,12 @@ const uploadFileToFirebase = async (
   incomingFile: formidable.File,
   fileExtension: string,
   fileName: string,
-  fileType: string,
   fileDestPrefix: string
 ) => {
   return new Promise<{ fileDest: string; fileName: string; fileType: FileType }>((resolve, reject) => {
     const bucket = admin.storage().bucket()
     const fileDest = fileDestPrefix + `${fileName}-${Date.now()}.${fileExtension.toLowerCase()}`
+    fileExtension = fileExtension.toUpperCase()
     const blob = bucket.file(fileDest)
     const uuid = UUID()
 
@@ -31,7 +31,7 @@ const uploadFileToFirebase = async (
       .on('error', reject)
       .on('finish', async () => {
         fs.unlinkSync(incomingFile.filepath)
-        resolve({ fileDest, fileName, fileType: fileType as FileType })
+        resolve({ fileDest, fileName, fileType: fileExtension as FileType })
       })
   })
 }

@@ -1,6 +1,8 @@
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import DatasourceTable from '@/components/Datasources/Table';
+import { Frequency } from '@prisma/client';
+import Datasource from '@/types/datasource';
 
 jest.mock('next/navigation', () => ({
   useRouter: () => ({
@@ -9,22 +11,22 @@ jest.mock('next/navigation', () => ({
 }));
 
 describe('DatasourceTable', () => {
-  const mockData = [
+  const mockData : Datasource[] = [
     {
-        id: 1,
-        sourceName: 'datasource 1',
-        description: 'description',
-        isActive: true,
-        defaultFrequency: '',
-        healthStatus: 'up' as 'up' | 'down' | 'unknown',
-      },
+      id: 1,
+      sourceName: 'Source 1',
+      description: 'Description 1',
+      isActive: true,
+      defaultFrequency: Frequency.DAILY,
+      healthStatus: 'UP',
+    },
       {
         id: 2,
         sourceName: 'datasource 2',
         description: 'description',
         isActive: false,
-        defaultFrequency: '',
-        healthStatus: 'down' as 'up' | 'down' | 'unknown',
+        defaultFrequency: Frequency.WEEKLY,
+        healthStatus: 'DOWN'
       },
   ];
 

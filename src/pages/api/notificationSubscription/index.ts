@@ -1,27 +1,18 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 
+import type { User } from '@prisma/client'
 import {
   createNotificationSubscription,
   deleteNotificationSubscription
 } from '@/api/db/services/notificationSubscriptionService'
-export default async (req: NextApiRequest, res: NextApiResponse) => {
+export default async (req: NextApiRequest, res: NextApiResponse, user: User) => {
   const { method } = req
-  const { userId, companyId, channelId } = req.body
-
+  const userId = user.id
+  const { companyId, channelId } = req.body
   switch (method) {
-    // case 'GET':
-    //   try {
-    //     const notificationChannel = await getNotificationSubscription(userId,companyId,channelId)
-    //     if (notificationChannel) {
-    //       res.status(201).json(notificationChannel)
-    //     } else res.status(400).json({ error: 'No subscription found' })
-    //   } catch (error) {
-    //     res.status(500).json({ error: 'Internal Server Error' })
-    //   }
-    //   break
     case 'POST':
       try {
-        const notificationChannel = await createNotificationSubscription(req.body)
+        const notificationChannel = await createNotificationSubscription({ userId, ...req.body })
         if (notificationChannel) {
           res.status(201).json(notificationChannel)
         } else res.status(400).json({ error: 'Invalid request parameters' })

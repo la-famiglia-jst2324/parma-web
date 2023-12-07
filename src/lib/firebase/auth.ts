@@ -5,7 +5,12 @@ import { EmailAuthProvider, GoogleAuthProvider, getAuth, signInWithPopup } from 
 import React from 'react'
 require('@/lib/firebase/main')
 
-export const AuthContext = React.createContext<User | null>(null)
+type AuthContextType = {
+  user: User | null
+  role: string | null
+}
+
+export const AuthContext = React.createContext<AuthContextType | null>(null)
 
 const auth = getAuth()
 const googleAuthProvider = new GoogleAuthProvider()

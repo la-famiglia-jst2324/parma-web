@@ -1,6 +1,12 @@
 import Link from 'next/link'
-import { LibraryIcon, DatabaseIcon, TruckIcon, PresentationChartLineIcon, ServerIcon } from '@heroicons/react/outline'
 import { useContext } from 'react'
+import {
+  BuildingLibraryIcon,
+  CircleStackIcon,
+  PresentationChartLineIcon,
+  ServerIcon,
+  TruckIcon
+} from '@heroicons/react/20/solid'
 import { AuthContext, authLogin, authLogout } from '@/lib/firebase/auth'
 
 const Sidebar = () => {
@@ -35,13 +41,13 @@ const Sidebar = () => {
             href="/"
             className="mb-6 flex cursor-pointer flex-row gap-3 text-lg font-extralight  hover:font-semibold"
           >
-            <LibraryIcon className="h-6 w-6"></LibraryIcon>Dashboard
+            <BuildingLibraryIcon className="h-6 w-6"></BuildingLibraryIcon>Dashboard
           </Link>
           <Link
             href="/buckets"
             className="mb-6 flex cursor-pointer flex-row gap-3 text-lg font-extralight hover:font-semibold"
           >
-            <DatabaseIcon className="h-6 w-6"></DatabaseIcon> Buckets
+            <CircleStackIcon className="h-6 w-6"></CircleStackIcon> Buckets
           </Link>
           <Link
             href="/companies"

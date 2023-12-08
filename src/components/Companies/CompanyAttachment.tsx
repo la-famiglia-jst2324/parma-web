@@ -1,5 +1,5 @@
+import { PaperClipIcon } from '@heroicons/react/20/solid'
 import React from 'react'
-import { DotsHorizontalIcon } from '@heroicons/react/solid'
 
 interface Attachment {
   id: number
@@ -16,7 +16,7 @@ const CompanyAttachment: React.FC<CompanyAttachmentProps> = ({ attachment }) => 
     <div className="w-48 overflow-hidden rounded-md border p-3 shadow-md">
       <div className="flex justify-end">
         <div className="cursor-pointer text-gray-500">
-          <DotsHorizontalIcon className="h-6 w-6" />
+          <PaperClipIcon className="h-6 w-6" />
         </div>
       </div>
       <h2 className="text-xl font-bold">{attachment.name}</h2>

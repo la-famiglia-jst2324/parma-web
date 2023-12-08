@@ -28,7 +28,7 @@ model User {
   userImportantMeasurementPreference UserImportantMeasurementPreference[]
   newsSubscription                   NewsSubscription[]
   UserCustomization                  UserCustomization[]
-
+  companySubscription                CompanySubscription[]
   @@map("user")
 }
 
@@ -52,7 +52,7 @@ model Company {
   sourceMeasurements        SourceMeasurement[]
   newsSubscription          NewsSubscription[]
   userCompanyCustomizations UserCompanyCustomization[]
-
+  companySubscription       CompanySubscription[]
   @@map("company")
 }
 
@@ -411,6 +411,20 @@ model UserMetricCustomization {
   sourceMeasurement SourceMeasurement @relation(fields: [sourceMeasurementId], references: [id], onDelete: Cascade)
 
   @@map("user_metric_customization")
+}
+
+model CompanySubscription {
+  userId     Int      @map("user_id")
+  companyId  Int      @map("company_id")
+  createdAt  DateTime @default(now()) @map("created_at")
+  modifiedAt DateTime @updatedAt @map("modified_at")
+
+  // relations
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  @@id([userId, companyId])
+  @@map("company_subscription")
 }
 
 // -------------------------------------- ENUMS ----------------------------------------

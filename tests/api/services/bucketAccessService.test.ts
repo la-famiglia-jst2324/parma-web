@@ -49,8 +49,9 @@ describe('Bucket Access Service Tests', () => {
     expect(Array.isArray(invitees)).toBe(true)
     expect(invitees.length).toBeGreaterThan(0)
     if (invitees.length > 0) {
-      expect(invitees[0]).toHaveProperty('id')
-      expect(invitees[0]).toHaveProperty('name')
+      expect(invitees[0]).toHaveProperty('bucketId')
+      expect(invitees[0]).toHaveProperty('permission')
+      expect(invitees[0]).toHaveProperty('user')
     }
     expect(invitees).toBeTruthy()
   })

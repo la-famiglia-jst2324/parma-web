@@ -1,6 +1,6 @@
 'use client'
 import React from 'react'
-import { ArrowLeftIcon } from '@heroicons/react/solid'
+import { ArrowLeftIcon } from '@heroicons/react/20/solid'
 import Link from 'next/link'
 
 const GoBackButton = () => {

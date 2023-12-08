@@ -1,16 +1,16 @@
 'use client'
 import React, { useEffect, useState } from 'react'
-import {
-  TrashIcon,
-  PencilIcon,
-  StatusOnlineIcon,
-  PresentationChartLineIcon,
-  ShieldCheckIcon,
-  OfficeBuildingIcon
-} from '@heroicons/react/outline'
 import { Button, Tab, TabGroup, TabList, TabPanel, TabPanels } from '@tremor/react'
 import type { DataSource } from '@prisma/client'
 import Link from 'next/link'
+import {
+  BuildingOffice2Icon,
+  PencilIcon,
+  PresentationChartLineIcon,
+  ShieldCheckIcon,
+  TrashIcon,
+  WifiIcon
+} from '@heroicons/react/20/solid'
 import GoBackButton from '@/components/Datasources/GoBackButton'
 import ModalComponent from '@/components/Datasources/DisableModal'
 import DeleteModal from '@/components/Datasources/DeleteModal'
@@ -124,7 +124,7 @@ export default function DatasourcePage({ params: { id } }: { params: { id: strin
               data.isActive ? 'bg-blue-200 text-blue-700' : 'bg-red-200 text-red-700'
             }`}
           >
-            <StatusOnlineIcon className="mr-2 h-5 w-5" />
+            <WifiIcon className="mr-2 h-5 w-5" />
             {data.isActive ? 'Active' : 'Inactive'}
           </div>
         </div>
@@ -204,7 +204,7 @@ export default function DatasourcePage({ params: { id } }: { params: { id: strin
       </Link>
       <TabGroup>
         <TabList className="mt-8" variant="solid">
-          <Tab icon={OfficeBuildingIcon}>Companies Monitored</Tab>
+          <Tab icon={BuildingOffice2Icon}>Companies Monitored</Tab>
           <Tab icon={ShieldCheckIcon}>Datasource Health</Tab>
           <Tab icon={PresentationChartLineIcon}>Scheduling Tasks</Tab>
         </TabList>

@@ -1,7 +1,7 @@
 'use client'
 import React from 'react'
-import { TrashIcon } from '@heroicons/react/outline'
 import { useRouter } from 'next/navigation'
+import { TrashIcon } from '@heroicons/react/20/solid'
 
 interface DeleteModalProps {
   isOpen: boolean

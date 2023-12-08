@@ -3,11 +3,12 @@
 import type { User } from 'firebase/auth'
 import { EmailAuthProvider, GoogleAuthProvider, getAuth, signInWithPopup } from 'firebase/auth'
 import React from 'react'
+import type { Role } from '@prisma/client'
 require('@/lib/firebase/main')
 
 type AuthContextType = {
   user: User | null
-  role: string | null
+  roles: Role[] | null
 }
 
 export const AuthContext = React.createContext<AuthContextType | null>(null)

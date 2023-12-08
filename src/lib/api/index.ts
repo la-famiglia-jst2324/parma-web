@@ -3,10 +3,11 @@
 import type { User } from 'firebase/auth'
 import type { Role } from '@prisma/client'
 
-export const fetchUserRole = async (firebaseUser: User | null): Promise<Role | null> => {
+export const fetchUserRoles = async (firebaseUser: User | null): Promise<Role[] | null> => {
   try {
     if (!firebaseUser) return null
 
+    // Get user by authId
     const authId = await firebaseUser.getIdToken()
 
     const response = await fetch('/api/user/auth', {
@@ -16,10 +17,11 @@ export const fetchUserRole = async (firebaseUser: User | null): Promise<Role | n
       }
     })
 
-    const data = await response.json()
-    return data.role || null
+    const user = await response.json()
+
+    return user?.roles || null
   } catch (error) {
-    console.error('Error fetching user role:', error)
+    console.error('Error fetching user roles:', error)
     return null
   }
 }

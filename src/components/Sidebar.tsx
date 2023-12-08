@@ -6,7 +6,7 @@ import { AuthContext, authLogin, authLogout } from '@/lib/firebase/auth'
 const Sidebar = () => {
   const contextType = useContext(AuthContext)
   const user = contextType?.user
-  const role = contextType?.role
+  const roles = contextType?.roles
 
   return (
     <div className="flex min-h-screen w-1/6 flex-col bg-primary">
@@ -17,7 +17,7 @@ const Sidebar = () => {
           </Link>
         </div>
         <span className="text-white">{user ? 'Logged in as <' + user.displayName + '>' : ''}</span>
-        <span className="text-white">{role ? 'Role <' + role.toString() + '>' : ''}</span>
+        <span className="text-white">{roles ? `Roles <${roles.join(', ')}>` : ''}</span>
         <button
           className="mb-6 text-white"
           onClick={async () => {

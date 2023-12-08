@@ -47,14 +47,14 @@ describe('Company Model Tests', () => {
   })
 
   test('Retrieve all companies', async () => {
-    const companies = await getAllCompanies()
-    expect(Array.isArray(companies)).toBe(true)
-    expect(companies.length).toBeGreaterThan(0)
-    if (companies.length > 0) {
-      expect(companies[0]).toHaveProperty('id')
-      expect(companies[0]).toHaveProperty('name')
-      expect(companies[0]).toHaveProperty('addedBy')
-      expect(companies[0]).toHaveProperty('addedBy')
+    const companies = await getAllCompanies(1, 10)
+    expect(Array.isArray(companies.companies)).toBe(true)
+    expect(companies.companies.length).toBeGreaterThan(0)
+    if (companies.companies.length > 0) {
+      expect(companies.companies[0]).toHaveProperty('id')
+      expect(companies.companies[0]).toHaveProperty('name')
+      expect(companies.companies[0]).toHaveProperty('addedBy')
+      expect(companies.companies[0]).toHaveProperty('addedBy')
     }
     expect(companies).toBeTruthy()
   })

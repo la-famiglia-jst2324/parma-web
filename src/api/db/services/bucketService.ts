@@ -23,7 +23,6 @@ const getBucketById = async (id: number) => {
       where: { id },
       include: {
         user: true,
-        companyBucketMember: true,
         permissions: true
       }
     })
@@ -37,24 +36,60 @@ const getBucketById = async (id: number) => {
   }
 }
 
-const getBucketByName = async (title: string) => {
+const getBucketByName = async (title: string, page: number, pageSize: number) => {
   try {
-    const bucket = await prisma.bucket.findMany({
-      where: { title }
+    const skip = (page - 1) * pageSize
+    const buckets = await prisma.bucket.findMany({
+      where: {
+        title
+      },
+      skip,
+      take: pageSize
     })
-    if (!bucket) {
+
+    const totalCount = await prisma.bucket.count({
+      where: {
+        title
+      }
+    })
+    const totalPages = Math.ceil(totalCount / pageSize)
+    if (buckets) {
+      return {
+        buckets,
+        pagination: {
+          currentPage: page,
+          pageSize,
+          totalPages,
+          totalCount
+        }
+      }
+    } else {
       throw new Error(`Bucket with name ${title} not found.`)
     }
-    return bucket
   } catch (error) {
     console.error('Error finding bucket by name:', error)
     throw error
   }
 }
 
-const getAllBuckets = async () => {
+const getAllBuckets = async (page: number, pageSize: number) => {
   try {
-    return await prisma.bucket.findMany()
+    const skip = (page - 1) * pageSize
+    const buckets = await prisma.bucket.findMany({
+      skip,
+      take: pageSize
+    })
+    const totalCount = await prisma.bucket.count()
+    const totalPages = Math.ceil(totalCount / pageSize)
+    return {
+      buckets,
+      pagination: {
+        currentPage: page,
+        pageSize,
+        totalPages,
+        totalCount
+      }
+    }
   } catch (error) {
     console.error('Error retrieving all buckets:', error)
     throw new Error('Unable to retrieve buckets')

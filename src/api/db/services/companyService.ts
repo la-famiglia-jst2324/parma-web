@@ -30,16 +30,34 @@ const getCompanyByID = async (id: number) => {
   }
 }
 
-const getCompanyByName = async (name: string) => {
+const getCompanyByName = async (name: string, page: number, pageSize: number) => {
   try {
+    const skip = (page - 1) * pageSize
     const company = await prisma.company.findMany({
-      where: { name },
-      include: {
-        companyAttachments: true,
-        companyDataSource: true, // how to display the response
-        sourceMeasurements: true
+      where: {
+        name
+      },
+      skip,
+      take: pageSize
+    })
+
+    const totalCount = await prisma.company.count({
+      where: {
+        name
       }
     })
+    const totalPages = Math.ceil(totalCount / pageSize)
+    if (company) {
+      return {
+        company,
+        pagination: {
+          currentPage: page,
+          pageSize,
+          totalPages,
+          totalCount
+        }
+      }
+    }
     if (!company) {
       throw new Error(`Company with name ${name} not found.`)
     }
@@ -50,10 +68,24 @@ const getCompanyByName = async (name: string) => {
   }
 }
 
-const getAllCompanies = async () => {
+const getAllCompanies = async (page: number, pageSize: number) => {
   try {
-    const companies = await prisma.company.findMany()
-    return companies
+    const skip = (page - 1) * pageSize
+    const companies = await prisma.company.findMany({
+      skip,
+      take: pageSize
+    })
+    const totalCount = await prisma.bucket.count()
+    const totalPages = Math.ceil(totalCount / pageSize)
+    return {
+      companies,
+      pagination: {
+        currentPage: page,
+        pageSize,
+        totalPages,
+        totalCount
+      }
+    }
   } catch (error) {
     console.error('Error fetching all companies:', error)
     throw error

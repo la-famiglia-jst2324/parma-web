@@ -3,7 +3,7 @@ import { getMeasurementsOfCompaniesBySourceId } from '@/api/db/services/sourceMe
 import { getDataSourceByName } from '@/api/db/services/dataSourceService'
 
 const newsSources = await getDataSourceByName('News') // Change when available
-const newsSource = newsSources[0]
+const newsSourceId = Number(newsSources[0])
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const { method } = req
@@ -17,9 +17,9 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
           const companyIdsList = String(companyIds)
             .split(',')
             .map((x) => Number(x))
-          companyMeasurements = await getMeasurementsOfCompaniesBySourceId(newsSource.id, companyIdsList)
+          companyMeasurements = await getMeasurementsOfCompaniesBySourceId(newsSourceId, companyIdsList)
         } else {
-          companyMeasurements = await getMeasurementsOfCompaniesBySourceId(newsSource.id)
+          companyMeasurements = await getMeasurementsOfCompaniesBySourceId(newsSourceId)
         }
 
         if (companyMeasurements) res.status(200).json(companyMeasurements)

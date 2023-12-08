@@ -44,7 +44,7 @@ The following steps will get you started with the project.
 
    **Skip to 4. if everything worked**
 
-   In case you encounter errors while installing **_pre-commit_**, do _one_ of the following :
+   In case you encounter errors while installing **_pre-commit_**, do _one_ of the following:
 
    1. Install pre-commit with sudo:
 

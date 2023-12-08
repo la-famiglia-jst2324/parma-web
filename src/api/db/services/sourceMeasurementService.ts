@@ -5,6 +5,7 @@ const createSourceMeasurement = async (data: {
   type: string
   companyId: number
   measurementName: string
+  parentMeasurementId?: number
 }) => {
   try {
     return await prisma.sourceMeasurement.create({
@@ -12,7 +13,8 @@ const createSourceMeasurement = async (data: {
         sourceModuleId: data.sourceModuleId,
         type: data.type,
         companyId: data.companyId,
-        measurementName: data.measurementName
+        measurementName: data.measurementName,
+        parentMeasurementId: data.parentMeasurementId
       }
     })
   } catch (error) {
@@ -101,6 +103,7 @@ const updateSourceMeasurement = async (
     type?: string
     companyId?: number
     measurementName?: string
+    parentMeasurementId?: number | null
   }
 ) => {
   try {
@@ -128,12 +131,40 @@ const deleteSourceMeasurement = async (id: number) => {
   }
 }
 
+const getChildMeasurementsByParentId = async (id: number) => {
+  try {
+    const measurements = await prisma.sourceMeasurement.findMany({
+      where: { parentMeasurementId: id }
+    })
+    if (!measurements) {
+      throw new Error(`child measurements of parent source measurement ID ${id} not found.`)
+    }
+    return measurements
+  } catch (error) {
+    console.error('Error getting the child measurements of parent source measurement:', error)
+    throw error
+  }
+}
+
+const updateParentMeasurementId = async (childId: number, newParentId: number | null) => {
+  try {
+    return await prisma.sourceMeasurement.update({
+      where: { id: childId },
+      data: { parentMeasurementId: newParentId }
+    })
+  } catch (error) {
+    console.error('Error updating child source measurement parent:', error)
+    throw new Error('Unable to update child source measurement parent')
+  }
+}
 export {
   createSourceMeasurement,
   getSourceMeasurementByID,
   getAllSourceMeasurements,
   getMeasurementsBySourceId,
   updateSourceMeasurement,
+  getChildMeasurementsByParentId,
+  updateParentMeasurementId,
   deleteSourceMeasurement,
   getMeasurementsOfCompaniesBySourceId
 }

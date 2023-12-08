@@ -241,13 +241,14 @@ model Notification {
 }
 
 model SourceMeasurement {
-  id              Int      @id @default(autoincrement())
-  sourceModuleId  Int      @map("source_module_id")
-  type            String
-  companyId       Int      @map("company_id")
-  measurementName String   @map("measurement_name")
-  createdAt       DateTime @default(now()) @map("created_at")
-  modifiedAt      DateTime @updatedAt @map("modified_at")
+  id                  Int      @id @default(autoincrement())
+  sourceModuleId      Int      @map("source_module_id")
+  type                String
+  companyId           Int      @map("company_id")
+  measurementName     String   @map("measurement_name")
+  parentMeasurementId Int?     @map("parent_measurement_id")
+  createdAt           DateTime @default(now()) @map("created_at")
+  modifiedAt          DateTime @updatedAt @map("modified_at")
 
   // Relations
   dataSource                 DataSource                  @relation(fields: [sourceModuleId], references: [id], onDelete: Cascade)
@@ -258,6 +259,8 @@ model SourceMeasurement {
   measurementCommentValues   MeasurementCommentValue[]
   measurementParagraphValues MeasurementParagraphValue[]
   userMetricCustomization    UserMetricCustomization[]
+  parentSourceMeasurement    SourceMeasurement?          @relation(name: "ParentChild", fields: [parentMeasurementId], references: [id], onDelete: Cascade)
+  childSourceMeasurements    SourceMeasurement[]         @relation("ParentChild")
 
   @@map("source_measurement")
 }

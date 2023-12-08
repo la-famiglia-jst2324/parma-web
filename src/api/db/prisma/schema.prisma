@@ -49,7 +49,7 @@ model Company {
   companyDataSource         CompanyDataSource[]
   notifications             Notification[]
   reports                   Report[]
-  sourceMeasurements        SourceMeasurement[]
+  companySourceMeasurements CompanySourceMeasurement[]
   newsSubscription          NewsSubscription[]
   userCompanyCustomizations UserCompanyCustomization[]
   companySubscription       CompanySubscription[]
@@ -241,91 +241,100 @@ model Notification {
 }
 
 model SourceMeasurement {
-  id                  Int      @id @default(autoincrement())
-  sourceModuleId      Int      @map("source_module_id")
-  type                String
-  companyId           Int      @map("company_id")
-  measurementName     String   @map("measurement_name")
-  parentMeasurementId Int?     @map("parent_measurement_id")
-  createdAt           DateTime @default(now()) @map("created_at")
-  modifiedAt          DateTime @updatedAt @map("modified_at")
+  id              Int      @id @default(autoincrement())
+  sourceModuleId  Int      @map("source_module_id")
+  type            String
+  measurementName String   @map("measurement_name")
+  createdAt       DateTime @default(now()) @map("created_at")
+  modifiedAt      DateTime @updatedAt @map("modified_at")
 
   // Relations
   dataSource                 DataSource                  @relation(fields: [sourceModuleId], references: [id], onDelete: Cascade)
-  company                    Company                     @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  companySourceMeasurements  CompanySourceMeasurement[]
+  userMetricCustomization    UserMetricCustomization[]
+
+  @@map("source_measurement")
+}
+
+model CompanySourceMeasurement {
+  companyMeasurementId Int   @id @map("company_measurement_id")
+  sourceMeasurementId  Int   @map("source_measurement_id")
+  companyId            Int   @map("company_id")
+
+  // relations
+  sourceMeasurement    SourceMeasurement    @relation(fields: [sourceMeasurementId], references: [id], onDelete: Cascade)
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
   measurementTextValues      MeasurementTextValue[]
   measurementIntValues       MeasurementIntValue[]
   measurementFloatValues     MeasurementFloatValue[]
   measurementCommentValues   MeasurementCommentValue[]
   measurementParagraphValues MeasurementParagraphValue[]
-  userMetricCustomization    UserMetricCustomization[]
-  parentSourceMeasurement    SourceMeasurement?          @relation(name: "ParentChild", fields: [parentMeasurementId], references: [id], onDelete: Cascade)
-  childSourceMeasurements    SourceMeasurement[]         @relation("ParentChild")
 
-  @@map("source_measurement")
+  @@map("company_source_measurement")
 }
 
 model MeasurementTextValue {
   id                  Int      @id @default(autoincrement())
-  sourceMeasurementId Int      @map("source_measurement_id")
+  companyMeasurementId Int      @map("company_measurement_id")
   value               String
   createdAt           DateTime @default(now()) @map("created_at")
   modifiedAt          DateTime @updatedAt @map("modified_at")
 
   // Relations
-  sourceMeasurement SourceMeasurement @relation(fields: [sourceMeasurementId], references: [id], onDelete: Cascade)
+  companySourceMeasurement CompanySourceMeasurement @relation(fields: [companyMeasurementId], references: [companyMeasurementId], onDelete: Cascade)
 
   @@map("measurement_text_value")
 }
 
 model MeasurementIntValue {
   id                  Int      @id @default(autoincrement())
-  sourceMeasurementId Int      @map("source_measurement_id")
+  companyMeasurementId Int      @map("company_measurement_id")
   value               Int
   createdAt           DateTime @default(now()) @map("created_at")
   modifiedAt          DateTime @updatedAt @map("modified_at")
 
   // Relations
-  sourceMeasurement SourceMeasurement @relation(fields: [sourceMeasurementId], references: [id], onDelete: Cascade)
+  companySourceMeasurement CompanySourceMeasurement @relation(fields: [companyMeasurementId], references: [companyMeasurementId], onDelete: Cascade)
 
   @@map("measurement_int_value")
 }
 
 model MeasurementFloatValue {
   id                  Int      @id @default(autoincrement())
-  sourceMeasurementId Int      @map("source_measurement_id")
+  companyMeasurementId Int      @map("company_measurement_id")
   value               Float
   createdAt           DateTime @default(now()) @map("created_at")
   modifiedAt          DateTime @updatedAt @map("modified_at")
 
   // Relations
-  sourceMeasurement SourceMeasurement @relation(fields: [sourceMeasurementId], references: [id], onDelete: Cascade)
+   companySourceMeasurement CompanySourceMeasurement @relation(fields: [companyMeasurementId], references: [companyMeasurementId], onDelete: Cascade)
 
   @@map("measurement_float_value")
 }
 
 model MeasurementCommentValue {
   id                  Int      @id @default(autoincrement())
-  sourceMeasurementId Int      @map("source_measurement_id")
+  companyMeasurementId Int      @map("company_measurement_id")
   value               String
   createdAt           DateTime @default(now()) @map("created_at")
   modifiedAt          DateTime @updatedAt @map("modified_at")
 
   // Relations
-  sourceMeasurement SourceMeasurement @relation(fields: [sourceMeasurementId], references: [id], onDelete: Cascade)
+   companySourceMeasurement CompanySourceMeasurement @relation(fields: [companyMeasurementId], references: [companyMeasurementId], onDelete: Cascade)
 
   @@map("measurement_comment_value")
 }
 
 model MeasurementParagraphValue {
   id                  Int      @id @default(autoincrement())
-  sourceMeasurementId Int      @map("source_measurement_id")
+  companyMeasurementId Int      @map("company_measurement_id")
   value               String
   createdAt           DateTime @default(now()) @map("created_at")
   modifiedAt          DateTime @updatedAt @map("modified_at")
 
   // Relations
-  sourceMeasurement SourceMeasurement @relation(fields: [sourceMeasurementId], references: [id], onDelete: Cascade)
+   companySourceMeasurement CompanySourceMeasurement @relation(fields: [companyMeasurementId], references: [companyMeasurementId], onDelete: Cascade)
 
   @@map("measurement_paragraph_value")
 }

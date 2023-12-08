@@ -1,4 +1,5 @@
 import type { Bucket } from '@prisma/client'
+
 import { PrismaClient, Role } from '@prisma/client'
 import { genRandomDummyAuthId } from '../utils/random'
 import {
@@ -54,7 +55,7 @@ describe('Bucket Model Tests', () => {
   })
 
   test('Retrieve a bucket by name', async () => {
-    const bucket = await getBucketByName(createdbucket.title)
+    const bucket = await getBucketByName(createdbucket.title, 1, 10)
     expect(bucket).toBeTruthy()
   })
 
@@ -71,13 +72,13 @@ describe('Bucket Model Tests', () => {
   })
 
   test('Retrieve all buckets', async () => {
-    const bucket = await getAllBuckets()
-    expect(Array.isArray(bucket)).toBe(true)
-    expect(bucket.length).toBeGreaterThan(0)
-    if (bucket.length > 0) {
-      expect(bucket[0]).toHaveProperty('id')
-      expect(bucket[0]).toHaveProperty('ownerId')
-      expect(bucket[0]).toHaveProperty('title')
+    const bucket = await getAllBuckets(1, 10)
+    expect(Array.isArray(bucket.buckets)).toBe(true)
+    expect(bucket.buckets.length).toBeGreaterThan(0)
+    if (bucket.buckets.length > 0) {
+      expect(bucket.buckets[0]).toHaveProperty('id')
+      expect(bucket.buckets[0]).toHaveProperty('ownerId')
+      expect(bucket.buckets[0]).toHaveProperty('title')
     }
     expect(bucket).toBeTruthy()
   })

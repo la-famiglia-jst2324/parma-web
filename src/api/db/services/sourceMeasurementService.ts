@@ -52,12 +52,32 @@ const getMeasurementsBySourceId = async (sourceModuleId: number) => {
   }
 }
 
-const getMeasurementsBySourceIdAndCompanyId = async (sourceModuleId: number, companyId: number) => {
+/**
+ * Returns a dictionary with company ids as keys and their corresponding source measurements with sourceModuleId
+ * @param sourceModuleId
+ * @param companyIds
+ * @returns
+ */
+const getMeasurementsOfCompaniesBySourceId = async (sourceModuleId: number, companyIds?: number[]) => {
   try {
     const measurements = await prisma.sourceMeasurement.findMany({
-      where: { sourceModuleId, companyId }
+      where: {
+        sourceModuleId,
+        companyId: companyIds ? { in: companyIds } : undefined
+      }
     })
-    return measurements
+    const measurementsByCompanyId = measurements.reduce(
+      (acc, measurement) => {
+        if (!acc[measurement.companyId]) {
+          acc[measurement.companyId] = []
+        }
+        acc[measurement.companyId].push(measurement)
+        return acc
+      },
+      {} as Record<number, typeof measurements>
+    )
+
+    return measurementsByCompanyId
   } catch (error) {
     console.error('Error getting the source measurements of data source :', error)
     throw error
@@ -115,5 +135,5 @@ export {
   getMeasurementsBySourceId,
   updateSourceMeasurement,
   deleteSourceMeasurement,
-  getMeasurementsBySourceIdAndCompanyId
+  getMeasurementsOfCompaniesBySourceId
 }

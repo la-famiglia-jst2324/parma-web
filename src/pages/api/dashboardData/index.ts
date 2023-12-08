@@ -1,9 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import type { SourceMeasurement } from '@prisma/client'
-import { getMeasurementsBySourceIdAndCompanyId } from '@/api/db/services/sourceMeasurementService'
+import { getMeasurementsOfCompaniesBySourceId } from '@/api/db/services/sourceMeasurementService'
 import { getDataSourceByName } from '@/api/db/services/dataSourceService'
 
-const newsSource = await getDataSourceByName('News') // Change when available
+const newsSources = await getDataSourceByName('News') // Change when available
+const newsSource = newsSources[0]
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const { method } = req
@@ -12,24 +12,18 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   switch (method) {
     case 'GET':
       try {
+        let companyMeasurements = null
         if (companyIds) {
-          const idsArray = String(companyIds).split(',')
-          const promises = idsArray.map((id) => getMeasurementsBySourceIdAndCompanyId(newsSource[0].id, Number(id)))
-          const companyMeasurements = await Promise.all(promises)
-          // dictionary with company ids and their corresponding data sources
-          const companyDataMeasurementDict = idsArray.reduce<Record<string, SourceMeasurement[] | undefined>>(
-            (acc, id, index) => {
-              acc[id] = companyMeasurements[index]
-              return acc
-            },
-            {}
-          )
-
-          if (companyDataMeasurementDict) res.status(200).json(companyDataMeasurementDict)
-          else res.status(400).json({ error: 'No data found' })
+          const companyIdsList = String(companyIds)
+            .split(',')
+            .map((x) => Number(x))
+          companyMeasurements = await getMeasurementsOfCompaniesBySourceId(newsSource.id, companyIdsList)
         } else {
-          res.status(400).json({ error: 'No companyIds provided' })
+          companyMeasurements = await getMeasurementsOfCompaniesBySourceId(newsSource.id)
         }
+
+        if (companyMeasurements) res.status(200).json(companyMeasurements)
+        else res.status(400).json({ error: 'No data found' })
       } catch (error) {
         res.status(500).json({ error: 'Internal Server Error' })
       }

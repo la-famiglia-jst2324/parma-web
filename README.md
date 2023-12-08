@@ -14,7 +14,7 @@ ParmaAI webstack including frontend and REST API backend.
 
 ## Deployment
 
-You can find the latest deployment of this project on [parma.software](https://parma.software). The staging deployment is available on [staging.parma.software](https://staging.parma.software).
+You can find the latest deployment on [parma.software](https://parma.software). The staging deployment is available on [staging.parma.software](https://staging.parma.software).
 
 ## Getting Started
 

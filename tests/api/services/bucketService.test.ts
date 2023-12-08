@@ -1,24 +1,38 @@
+import type { Bucket } from '@prisma/client'
 import { PrismaClient, Role } from '@prisma/client'
 import { genRandomDummyAuthId } from '../utils/random'
-import { createBucket, deleteBucket, getBucketById, updateBucket } from '@/api/db/services/bucketService'
+import {
+  createBucket,
+  deleteBucket,
+  getBucketById,
+  updateBucket,
+  getOwnBuckets,
+  getAllBuckets,
+  getBucketByName
+} from '@/api/db/services/bucketService'
 import { createUser } from '@/api/db/services/userService'
 
 const prisma = new PrismaClient()
 
 describe('Bucket Model Tests', () => {
+  let userId: number
+  let bucketId: number
+  let createdbucket: Bucket
+
   beforeAll(async () => {
+    const user = await createUser({ name: 'John Doe', authId: genRandomDummyAuthId(), role: Role.USER })
+    userId = user.id
+    const bucket = await createBucket({ title: 'bucket', description: 'Test bucket', ownerId: userId, isPublic: true })
+    createdbucket = bucket
     await prisma.$connect()
   })
   afterAll(async () => {
     await prisma.$disconnect()
   })
 
-  let userId: number
-  let bucketId: number
-
   test('Create a new user with valid details', async () => {
-    const user = await createUser({ name: 'John Doe', authId: genRandomDummyAuthId(), role: Role.USER })
-    userId = user.id
+    await createUser({ name: 'John Doe', authId: genRandomDummyAuthId(), role: Role.USER })
+    await createBucket({ title: 'bucket', description: 'Test bucket', ownerId: userId, isPublic: true })
   })
 
   test('Create a new bucket with valid details', async () => {
@@ -37,6 +51,35 @@ describe('Bucket Model Tests', () => {
     expect(bucket?.id).toBe(bucketId)
     expect(bucket.ownerId).toBe(userId)
     expect(bucket.title).toBe('bucket')
+  })
+
+  test('Retrieve a bucket by name', async () => {
+    const bucket = await getBucketByName(createdbucket.title)
+    expect(bucket).toBeTruthy()
+  })
+
+  test('Retrieve own buckets', async () => {
+    const bucket = await getOwnBuckets(userId)
+    expect(Array.isArray(bucket)).toBe(true)
+    expect(bucket.length).toBeGreaterThan(0)
+    if (bucket.length > 0) {
+      expect(bucket[0]).toHaveProperty('id')
+      expect(bucket[0]).toHaveProperty('ownerId')
+      expect(bucket[0]).toHaveProperty('title')
+    }
+    expect(bucket).toBeTruthy()
+  })
+
+  test('Retrieve all buckets', async () => {
+    const bucket = await getAllBuckets()
+    expect(Array.isArray(bucket)).toBe(true)
+    expect(bucket.length).toBeGreaterThan(0)
+    if (bucket.length > 0) {
+      expect(bucket[0]).toHaveProperty('id')
+      expect(bucket[0]).toHaveProperty('ownerId')
+      expect(bucket[0]).toHaveProperty('title')
+    }
+    expect(bucket).toBeTruthy()
   })
 
   test('Update a bucket', async () => {

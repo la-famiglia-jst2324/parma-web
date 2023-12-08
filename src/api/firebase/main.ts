@@ -9,13 +9,13 @@ if (admin.apps.length === 0) {
   } else {
     certString = process.env.FIREBASE_ADMINSDK_CERTIFICATE
   }
-
   if (!certString) {
     throw new Error('FIREBASE_ADMINSDK_CERTIFICATE not found')
   }
 
   admin.initializeApp({
-    credential: admin.credential.cert(JSON.parse(certString))
+    credential: admin.credential.cert(JSON.parse(certString)),
+    storageBucket: 'gs://la-famiglia-parma-ai-staging.appspot.com'
   })
 }
 

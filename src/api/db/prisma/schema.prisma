@@ -10,12 +10,13 @@ generator client {
 // ------------------------------------- MODELS ----------------------------------------
 
 model User {
-  id         Int      @id @default(autoincrement())
-  authId     String   @unique @map("auth_id")
-  name       String
-  role       Role     @default(USER)
-  createdAt  DateTime @default(now()) @map("created_at")
-  modifiedAt DateTime @updatedAt @map("modified_at")
+  id             Int      @id @default(autoincrement())
+  authId         String   @unique @map("auth_id")
+  name           String
+  profilePicture String?  @map("profile_picture")
+  role           Role     @default(USER)
+  createdAt      DateTime @default(now()) @map("created_at")
+  modifiedAt     DateTime @updatedAt @map("modified_at")
 
   // Relation fields
   addedCompanies                     Company[]                            @relation("UserAddsCompany")
@@ -26,7 +27,8 @@ model User {
   permissions                        BucketAccess[]
   userImportantMeasurementPreference UserImportantMeasurementPreference[]
   newsSubscription                   NewsSubscription[]
-
+  UserCustomization                  UserCustomization[]
+  companySubscription                CompanySubscription[]
   @@map("user")
 }
 
@@ -49,7 +51,8 @@ model Company {
   reports                   Report[]
   sourceMeasurements        SourceMeasurement[]
   newsSubscription          NewsSubscription[]
-
+  userCompanyCustomizations UserCompanyCustomization[]
+  companySubscription       CompanySubscription[]
   @@map("company")
 }
 
@@ -149,22 +152,45 @@ model CompanyAttachment {
 }
 
 model DataSource {
-  id               Int          @id @default(autoincrement())
-  sourceName       String       @map("source_name")
-  isActive         Boolean      @map("is_active")
-  defaultFrequency Frequency    @map("default_frequency")
-  healthStatus     HealthStatus @map("health_status")
-  description      String?
-  createdAt        DateTime     @default(now()) @map("created_at")
-  modifiedAt       DateTime     @updatedAt @map("modified_at")
+  id                     Int          @id @default(autoincrement())
+  sourceName             String       @map("source_name")
+  isActive               Boolean      @map("is_active")
+  defaultFrequency       Frequency    @map("default_frequency")
+  frequencyPattern       String?      @map("frequency_pattern")
+  healthStatus           HealthStatus @map("health_status")
+  description            String?
+  createdAt              DateTime     @default(now()) @map("created_at")
+  modifiedAt             DateTime     @updatedAt @map("modified_at")
+  version                String       @default("1.0")
+  maximumExpectedRunTime Int          @default(60) @map("maximum_expected_run_time") // Assuming time is in minutes
+  invocationEndpoint     String       @default("") @map("invocation_endpoint")
+  additionalParams       Json?        @map("additional_params")
 
   // Relations
   companyDataSource                  CompanyDataSource[]
   notifications                      Notification[]
   sourceMeasurements                 SourceMeasurement[]
   userImportantMeasurementPreference UserImportantMeasurementPreference[]
+  scheduledTasks                     ScheduledTasks[]
 
   @@map("data_source")
+}
+
+model ScheduledTasks {
+  taskId        Int          @id @default(autoincrement()) @map("task_id")
+  dataSourceId  Int          @map("data_source_id")
+  scheduleType  ScheduleType @map("schedule_type")
+  startedAt     DateTime     @default(now()) @map("started_at")
+  lockedAt      DateTime?    @map("locked_at")
+  endedAt       DateTime?    @map("ended_at")
+  resultSummary String?      @map("result_summary")
+  status        TaskStatus
+  attempts      Int          @default(0)
+
+  // Relations
+  dataSource DataSource @relation(fields: [dataSourceId], references: [id])
+
+  @@map("scheduled_tasks")
 }
 
 model CompanyDataSource {
@@ -230,6 +256,7 @@ model SourceMeasurement {
   measurementFloatValues     MeasurementFloatValue[]
   measurementCommentValues   MeasurementCommentValue[]
   measurementParagraphValues MeasurementParagraphValue[]
+  userMetricCustomization    UserMetricCustomization[]
 
   @@map("source_measurement")
 }
@@ -342,6 +369,63 @@ model NewsSubscription {
   @@map("news_subscription")
 }
 
+model UserCustomization {
+  id         Int      @id @default(autoincrement())
+  name       String
+  userId     Int      @map("user_id")
+  createdAt  DateTime @default(now()) @map("created_at")
+  modifiedAt DateTime @updatedAt @map("modified_at")
+
+  // relations
+  user                      User                       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userCompanyCustomizations UserCompanyCustomization[]
+  userMetricCustomizations  UserMetricCustomization[]
+
+  @@map("user_customization")
+}
+
+model UserCompanyCustomization {
+  id              Int      @id @default(autoincrement())
+  customizationId Int      @map("customization_id")
+  companyId       Int      @map("company_id")
+  createdAt       DateTime @default(now()) @map("created_at")
+  modifiedAt      DateTime @updatedAt @map("modified_at")
+
+  // relations
+  company           Company           @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  userCustomization UserCustomization @relation(fields: [customizationId], references: [id], onDelete: Cascade)
+
+  @@map("user_company_customization")
+}
+
+model UserMetricCustomization {
+  id                  Int      @id @default(autoincrement())
+  customizationId     Int      @map("customization_id")
+  sourceMeasurementId Int      @map("source_measurement_id")
+  createdAt           DateTime @default(now()) @map("created_at")
+  modifiedAt          DateTime @updatedAt @map("modified_at")
+
+  // relations
+  userCustomization UserCustomization @relation(fields: [customizationId], references: [id], onDelete: Cascade)
+  sourceMeasurement SourceMeasurement @relation(fields: [sourceMeasurementId], references: [id], onDelete: Cascade)
+
+  @@map("user_metric_customization")
+}
+
+model CompanySubscription {
+  userId     Int      @map("user_id")
+  companyId  Int      @map("company_id")
+  createdAt  DateTime @default(now()) @map("created_at")
+  modifiedAt DateTime @updatedAt @map("modified_at")
+
+  // relations
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  @@id([userId, companyId])
+  @@map("company_subscription")
+}
+
 // -------------------------------------- ENUMS ----------------------------------------
 
 enum Role {
@@ -383,6 +467,7 @@ enum HealthStatus {
 enum Frequency {
   DAILY
   WEEKLY
+  CRON
 
   @@map("frequency")
 }
@@ -392,4 +477,20 @@ enum BucketPermission {
   MODERATOR
 
   @@map("bucket_permission")
+}
+
+enum TaskStatus {
+  PENDING
+  PROCESSING
+  SUCCESS
+  FAILED
+
+  @@map("task_status")
+}
+
+enum ScheduleType {
+  ON_DEMAND
+  REGULAR
+
+  @@map("schedule_type")
 }

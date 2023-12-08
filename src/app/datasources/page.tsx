@@ -7,7 +7,7 @@ import type Datasource from '@/types/datasource'
 
 async function getDatasources() {
   try {
-    const res = await fetch('/api/datasources', {
+    const res = await fetch('/api/dataSources', {
       method: 'GET',
       cache: 'no-cache'
     })
@@ -36,19 +36,25 @@ export default function DatasourcesPage() {
   return (
     <>
       <DatasourcesLayout>
-        <div className="relative m-5 flex min-h-screen w-auto flex-col justify-start bg-white shadow-lg">
+        <div className="relative m-6 flex min-h-screen w-auto flex-col justify-start rounded-lg bg-white shadow-lg">
           <div className="flex items-center justify-between p-4">
-            <div className="mb-2 flex items-center justify-start space-x-4">
-              <h1 className="m-6">Datasources</h1>
+            <div className="mb-4 flex items-center justify-start space-x-4">
+              <h1 className="m-4">Datasources</h1>
             </div>
-            <div className="m-6">
+            <div className="m-4">
               <CreateDatasource />
             </div>
           </div>
-          <div className="p-14">
-            <div className="mx-6 rounded-lg border-0 bg-white shadow-md">
+          <div className="p-8">
+            <div className="mx-4 rounded-lg border-0 bg-white shadow-md">
               <div>
-                <Table data={data} />
+                {data ? (
+                  <Table data={data} />
+                ) : (
+                  <p className="text-lg font-bold text-gray-700">
+                    No datasources available yet. Start by creating one.
+                  </p>
+                )}
               </div>
             </div>
           </div>

@@ -77,29 +77,25 @@ const getMeasurementsOfCompaniesBySourceId = async (sourceModuleId: number, comp
       }
     })
 
-    console.log(measurements)
-
+    // add the companyMeasurementId and companyId to the result.
     const flattenedMeasurements = measurements.flatMap((measurement) =>
-      measurement.companySourceMeasurements.map((csm) => ({
-        ...measurement,
-        ...csm
-      }))
+      measurement.companySourceMeasurements.map((csm) => {
+        const { ...rest } = { ...measurement, ...csm }
+        return rest
+      })
     )
 
-    console.log(flattenedMeasurements)
-
-    // const measurementsByCompanyId = measurements.reduce(
-    //   (acc, measurement) => {
-    //     if (!acc[flattenedMeasurements.companyId]) {
-    //       acc[flattenedMeasurements.companyId] = []
-    //     }
-    //     acc[flattenedMeasurements.companyId].push(measurement)
-    //     return acc
-    //   },
-    //   {} as Record<number, typeof measurements>
-    // )
-
-    return {} // measurementsByCompanyId
+    const measurementsByCompanyId = flattenedMeasurements.reduce(
+      (acc, measurement) => {
+        if (!acc[measurement.companyId]) {
+          acc[measurement.companyId] = []
+        }
+        acc[measurement.companyId].push(measurement)
+        return acc
+      },
+      {} as Record<number, typeof flattenedMeasurements>
+    )
+    return measurementsByCompanyId
   } catch (error) {
     console.error('Error getting the source measurements of data source :', error)
     throw error
@@ -151,7 +147,7 @@ const deleteSourceMeasurement = async (id: number) => {
   }
 }
 
-const getChildMeasurementsByParentId = async (id: number): Promise<any[]> => {
+const getChildMeasurementsByParentId = async (id: number) => {
   const measurements = await prisma.sourceMeasurement.findMany({
     where: { parentMeasurementId: id },
     include: { childSourceMeasurements: true }
@@ -161,7 +157,6 @@ const getChildMeasurementsByParentId = async (id: number): Promise<any[]> => {
     const children = await getChildMeasurementsByParentId(measurements[i].id)
     measurements[i].childSourceMeasurements = children
   }
-
   return measurements
 }
 

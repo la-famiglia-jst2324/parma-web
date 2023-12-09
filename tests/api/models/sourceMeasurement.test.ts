@@ -102,9 +102,9 @@ describe('CompanySourceMeasurement Model Tests', () => {
   })
 
   afterAll(async () => {
+    await deleteSourceMeasurement(sourceMeasurementId)
     await deleteCompany(companyId)
     await deleteDataSource(dataSourceId)
-    await deleteSourceMeasurement(sourceMeasurementId)
     await deleteUser(userId)
     await prisma.$disconnect()
   })
@@ -274,7 +274,7 @@ describe('MeasurementIntValue Model Tests', () => {
     intValueId = intValue.id
 
     expect(intValue).toHaveProperty('id')
-    expect(intValue.companyMeasurementId).toBe(sourceMeasurementId)
+    expect(intValue.companyMeasurementId).toBe(companySourceMeasurementId)
     expect(intValue.value).toBe(68)
   })
 

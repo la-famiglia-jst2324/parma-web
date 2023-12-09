@@ -26,8 +26,10 @@ describe('Company Datasource Model Tests', () => {
       isActive: true,
       defaultFrequency: Frequency.DAILY,
       healthStatus: HealthStatus.UP,
-      description: 'a new data source'
+      description: 'a new data source',
+      invocationEndpoint: 'dummy endpoint'
     })
+
     userId = user.id
     companyId = company.id
     dataSourceId = dataSource.id

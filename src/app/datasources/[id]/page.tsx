@@ -17,7 +17,7 @@ function DatasourcePage({ params: { id } }: { params: { id: string } }) {
   const editModal = useModal()
   const [sourceName, setName] = useState('')
   const [description, setDescription] = useState('')
-  const [invocationEndpoint, setInvocationEndpoint] = useState('')
+  const [invocationEndpoint, setInvocationEndpoint] = useState<String>('')
   const [, setStatus] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
 

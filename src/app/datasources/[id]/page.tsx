@@ -15,11 +15,11 @@ function DatasourcePage({ params: { id } }: { params: { id: string } }) {
   const disableModal = useModal()
   const deleteModal = useModal()
   const editModal = useModal()
-  const [sourceName, setName] = useState('')
-  const [description, setDescription] = useState('')
-  const [invocationEndpoint, setInvocationEndpoint] = useState<String>('')
-  const [, setStatus] = useState(false)
-  const [isLoading, setIsLoading] = useState(true)
+  const [sourceName, setName] = useState<string>('')
+  const [description, setDescription] = useState<string>('')
+  const [invocationEndpoint, setInvocationEndpoint] = useState<string>('')
+  const [, setStatus] = useState<boolean>(false)
+  const [isLoading, setIsLoading] = useState<boolean>(true)
 
   useEffect(() => {
     getDatasource(id)

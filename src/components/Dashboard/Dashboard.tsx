@@ -11,56 +11,62 @@ import type TopBucket from '@/types/topBuckets'
 import type { Company } from '@/types/companies'
 
 async function getDashboardData() {
-  try {
-    const res = await fetch('/api/dashboard', {
-      method: 'GET',
-      cache: 'no-cache'
-    })
-    if (!res.ok) {
-      console.log('Response status:', res.status)
-      throw new Error('HTTP response was not OK')
-    }
-    return await res.json()
-  } catch (error) {
-    console.log('An error has occurred: ', error)
+  const res = await fetch('/api/dashboard', {
+    method: 'GET',
+    cache: 'no-cache'
+  })
+
+  if (!res.ok) {
+    console.error('Response status:', res.status)
+    throw new Error('HTTP response was not OK')
   }
+
+  return await res.json()
 }
 
 async function getSubscribedCompanies() {
-  try {
-    const res = await fetch('/api/companies/subscribed-companies', {
-      method: 'GET',
-      cache: 'no-cache'
-    })
-    if (!res.ok) {
-      console.log('Response status:', res.status)
-      throw new Error('HTTP response was not OK')
-    }
-    return await res.json()
-  } catch (error) {
-    console.log('An error has occurred: ', error)
+  const res = await fetch('/api/companies/subscribed-companies', {
+    method: 'GET',
+    cache: 'no-cache'
+  })
+  if (!res.ok) {
+    console.error('Response status:', res.status)
+    throw new Error('HTTP response was not OK')
   }
+
+  return await res.json()
+}
+
+interface DashboardData {
+  topBuckets: TopBucket[]
+  news: NewsItem[]
 }
 
 function Home() {
-  const [data, setData] = useState({ topBuckets: [], news: [] })
+  const [data, setData] = useState<DashboardData>({ topBuckets: [], news: [] })
   const [subscribedCompanies, setSubscribedCompanies] = useState<Company[]>([])
   const [selectedCompanies, setSelectedCompanies] = useState<string[]>([])
 
   useEffect(() => {
-    getDashboardData()
-      .then(setData)
-      .catch((error) => {
+    ;(async () => {
+      try {
+        const data = await getDashboardData()
+        setData(data)
+      } catch (error) {
         console.error('Failed to fetch data:', error)
-      })
+      }
+    })().catch((error) => console.error('Error in useEffect:', error))
   }, [])
 
   useEffect(() => {
-    getSubscribedCompanies()
-      .then((res) => setSubscribedCompanies(res))
-      .catch((error) => {
+    ;(async () => {
+      try {
+        const res = await getSubscribedCompanies()
+        setSubscribedCompanies(res)
+      } catch (error) {
         console.error('Failed to fetch subscribed companies:', error)
-      })
+      }
+    })().catch((error) => console.error('Error in useEffect:', error))
   }, [])
 
   const news = data.news as NewsItem[]

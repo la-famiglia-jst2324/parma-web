@@ -11,13 +11,13 @@ import AuthCheck from '@/components/Authentication/AuthCheck'
 import CustomButton from '@/components/BlueButton'
 
 function CreateDatasourcePage() {
-  const [name, setName] = useState('')
-  const [url, setUrl] = useState('')
-  const [description, setDescription] = useState('')
-  const [defaultFrequency, setDefaultFrequency] = useState('')
-  const [showSuccess, setShowSuccess] = useState(false)
-  const [showError, setShowError] = useState(false)
-  const [errorMessage, setErrorMessage] = useState('')
+  const [name, setName] = useState<string>('')
+  const [url, setUrl] = useState<string>('')
+  const [description, setDescription] = useState<string>('')
+  const [defaultFrequency, setDefaultFrequency] = useState<string>('')
+  const [showSuccess, setShowSuccess] = useState<boolean>(false)
+  const [showError, setShowError] = useState<boolean>(false)
+  const [errorMessage, setErrorMessage] = useState<string>('')
 
   async function createDatasource(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()

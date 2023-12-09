@@ -24,7 +24,7 @@ const ModalComponent: React.FC<ModalComponentProps> = ({
   handleSave
 }) => {
   const handleDisable = async () => {
-    handleSave({
+    await handleSave({
       newName: sourceName,
       newDescription: description,
       newUrl: url,

@@ -17,14 +17,17 @@ function CreateDatasourcePage() {
   const [defaultFrequency, setDefaultFrequency] = useState('')
   const [showSuccess, setShowSuccess] = useState(false)
   const [showError, setShowError] = useState(false)
+  const [errorMessage, setErrorMessage] = useState('')
 
   async function createDatasource(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
 
     const formData = new FormData(event.currentTarget)
 
-    if (!(defaultFrequency in Frequency)) {
-      throw new Error(`Invalid frequency: ${defaultFrequency}`)
+    if (formData.get('frequency') === null) {
+      setErrorMessage('You need to select a frequency for the datasource!')
+      setShowError(true)
+      return
     }
 
     const frequencyEnum = Frequency[defaultFrequency as keyof typeof Frequency]
@@ -59,6 +62,7 @@ function CreateDatasourcePage() {
       })
       .then((data) => console.log(data))
       .catch((error) => {
+        setErrorMessage('Any error happened while creating datasource! Please Try again.')
         setShowError(true)
         setTimeout(() => setShowSuccess(false), 5000)
         console.error('Error:', error)
@@ -122,8 +126,8 @@ function CreateDatasourcePage() {
               </Callout>
             )}
             {showError && (
-              <Callout title="Error creating datasource" icon={ExclamationCircleIcon} color="red">
-                There was an error creating the datasource. Please try again.
+              <Callout title="Error while creating Datasource" icon={ExclamationCircleIcon} color="red">
+                {errorMessage}
               </Callout>
             )}
           </div>

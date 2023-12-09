@@ -10,9 +10,6 @@ import { ButtonGroup } from '@/components/Datasources/ButtonGroup'
 import { TabComponent } from '@/components/Datasources/DatasourceTabComponent'
 import { useModal } from '@/components/Datasources/hooks/useModal'
 
-// TODO: Add callout to handle for errors (when frequency is null)
-// TODO: Add pagination to DS table
-
 function DatasourcePage({ params: { id } }: { params: { id: string } }) {
   const [data, setData] = useState<DataSource>()
   const disableModal = useModal()

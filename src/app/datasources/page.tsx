@@ -53,17 +53,17 @@ function DatasourcesPage() {
             </div>
           </div>
           <div className="p-8">
-            <div className="mx-4 rounded-lg border-0 bg-white shadow-md">
-              <div>
-                {data ? (
+            {data ? (
+              <div className="mx-4 rounded-lg border-0 bg-white shadow-md">
+                <div>
                   <Table data={data} />
-                ) : (
-                  <p className="text-lg font-bold text-gray-700">
-                    No datasources available yet. Start by creating one.
-                  </p>
-                )}
+                </div>
               </div>
-            </div>
+            ) : (
+              <p className="text-lg font-semibold text-gray-600">
+                No datasources available yet. Start by creating one.
+              </p>
+            )}
           </div>
         </div>
       </MainLayout>

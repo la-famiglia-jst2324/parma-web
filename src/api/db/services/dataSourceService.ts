@@ -68,7 +68,27 @@ const getAllDataSources = async (page: number, size: number, name: string) => {
       skip: (page - 1) * size,
       take: size
     })
-    return datasources
+
+    const totalCount = await prisma.dataSource.count({
+      where: {
+        sourceName: {
+          contains: name,
+          mode: 'insensitive' // case-insensitive
+        }
+      }
+    })
+
+    const totalPages = Math.ceil(totalCount / size)
+
+    return {
+      datasources,
+      pagination: {
+        currentPage: page,
+        pageSize: size,
+        totalPages,
+        totalCount
+      }
+    }
   } catch (error) {
     console.error('Error getting all data sources:', error)
     throw error

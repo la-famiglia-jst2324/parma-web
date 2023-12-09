@@ -1,13 +1,13 @@
 'use client'
 import React, { useEffect, useState } from 'react'
+import type { DataSource } from '@prisma/client'
 import Table from '../../components/Datasources/Table'
 import DatasourcesLayout from './layout'
 import CreateDatasource from '@/components/Datasources/CreateDatasource'
-import type Datasource from '@/types/datasource'
 
-async function getDatasources() {
+async function getDatasources(page: number, size: number) {
   try {
-    const res = await fetch('/api/dataSources', {
+    const res = await fetch(`/api/dataSources?page=${page}&size=${size}`, {
       method: 'GET',
       cache: 'no-cache'
     })
@@ -16,22 +16,41 @@ async function getDatasources() {
       throw new Error('HTTP response was not OK')
     }
     const json = await res.json()
-    return json
+    return {
+      datasources: json.datasources,
+      pagination: json.pagination
+    }
   } catch (error) {
-    console.log('An error has occurred: ', error)
+    console.error('An error has occurred: ', error)
+    throw error
   }
 }
 
 export default function DatasourcesPage() {
-  const [data, setData] = useState<Datasource[]>([])
+  const [data, setData] = useState<DataSource[] | null>(null)
+  const [pagination, setPagination] = useState({ currentPage: 1, pageSize: 10, totalPages: 0, totalCount: 0 })
 
   useEffect(() => {
-    getDatasources()
-      .then(setData)
+    getDatasources(pagination.currentPage, pagination.pageSize)
+      .then((response) => {
+        setData(response.datasources)
+        setPagination(response.pagination)
+      })
       .catch((error) => {
         console.error('Failed to fetch datasources:', error)
       })
-  }, [])
+  }, [pagination.currentPage, pagination.pageSize])
+
+  console.log('data: ', data)
+  console.log('pagination: ', pagination)
+
+  const handlePageChange = (newPage: number) => {
+    setPagination((prevState) => ({ ...prevState, currentPage: newPage }))
+  }
+
+  const handleItemsPerPageChange = (newSize: number) => {
+    setPagination((prevState) => ({ ...prevState, pageSize: newSize }))
+  }
 
   return (
     <>
@@ -49,7 +68,12 @@ export default function DatasourcesPage() {
             <div className="mx-4 rounded-lg border-0 bg-white shadow-md">
               <div>
                 {data ? (
-                  <Table data={data} />
+                  <Table
+                    initialData={data}
+                    pagination={pagination}
+                    onPageChange={handlePageChange}
+                    onItemsPerPageChange={handleItemsPerPageChange}
+                  />
                 ) : (
                   <p className="text-lg font-bold text-gray-700">
                     No datasources available yet. Start by creating one.

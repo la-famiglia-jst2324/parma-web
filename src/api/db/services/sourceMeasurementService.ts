@@ -3,7 +3,6 @@ import { prisma } from '../prisma/prismaClient'
 const createSourceMeasurement = async (data: {
   sourceModuleId: number
   type: string
-  companyId: number
   measurementName: string
   parentMeasurementId?: number
 }) => {
@@ -12,7 +11,6 @@ const createSourceMeasurement = async (data: {
       data: {
         sourceModuleId: data.sourceModuleId,
         type: data.type,
-        companyId: data.companyId,
         measurementName: data.measurementName,
         parentMeasurementId: data.parentMeasurementId
       }
@@ -65,21 +63,44 @@ const getMeasurementsOfCompaniesBySourceId = async (sourceModuleId: number, comp
     const measurements = await prisma.sourceMeasurement.findMany({
       where: {
         sourceModuleId,
-        companyId: companyIds ? { in: companyIds } : undefined
-      }
-    })
-    const measurementsByCompanyId = measurements.reduce(
-      (acc, measurement) => {
-        if (!acc[measurement.companyId]) {
-          acc[measurement.companyId] = []
-        }
-        acc[measurement.companyId].push(measurement)
-        return acc
       },
-      {} as Record<number, typeof measurements>
-    )
+      include: {
+        companySourceMeasurements: {
+          where: {
+            companyId: companyIds ? { in: companyIds } : undefined
+          },
+          select: {
+            companyMeasurementId: true,
+            companyId: true
+          }
+        }
+      }
 
-    return measurementsByCompanyId
+    })
+
+    console.log(measurements)
+
+    const flattenedMeasurements = measurements.flatMap(measurement => 
+      measurement.companySourceMeasurements.map(csm => ({
+        ...measurement,
+        ...csm
+      }))
+    );
+
+    console.log(flattenedMeasurements)
+
+    // const measurementsByCompanyId = measurements.reduce(
+    //   (acc, measurement) => {
+    //     if (!acc[flattenedMeasurements.companyId]) {
+    //       acc[flattenedMeasurements.companyId] = []
+    //     }
+    //     acc[flattenedMeasurements.companyId].push(measurement)
+    //     return acc
+    //   },
+    //   {} as Record<number, typeof measurements>
+    // )
+
+    return {} //measurementsByCompanyId
   } catch (error) {
     console.error('Error getting the source measurements of data source :', error)
     throw error

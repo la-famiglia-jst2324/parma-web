@@ -245,6 +245,7 @@ model SourceMeasurement {
   sourceModuleId  Int      @map("source_module_id")
   type            String
   measurementName String   @map("measurement_name")
+  parentMeasurementId Int?     @map("parent_measurement_id")
   createdAt       DateTime @default(now()) @map("created_at")
   modifiedAt      DateTime @updatedAt @map("modified_at")
 
@@ -252,6 +253,8 @@ model SourceMeasurement {
   dataSource                 DataSource                  @relation(fields: [sourceModuleId], references: [id], onDelete: Cascade)
   companySourceMeasurements  CompanySourceMeasurement[]
   userMetricCustomization    UserMetricCustomization[]
+  parentSourceMeasurement    SourceMeasurement?          @relation(name: "ParentChild", fields: [parentMeasurementId], references: [id], onDelete: Cascade)
+  childSourceMeasurements    SourceMeasurement[]         @relation("ParentChild")                         
 
   @@map("source_measurement")
 }

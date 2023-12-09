@@ -1,21 +1,32 @@
 'use client'
-import { useEffect, useContext } from 'react'
+import { useEffect, useContext, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { AuthContext } from '@/lib/firebase/auth'
+import Spinner from '@/components/Spinner'
 
 const AuthCheck = <P extends object>(WrappedComponent: React.ComponentType<P>) => {
   const WithAuth: React.FC<P> = (props) => {
     const router = useRouter()
     const user = useContext(AuthContext)
+    const [isLoading, setIsLoading] = useState(true)
 
     useEffect(() => {
-      // Redirect to login if user is not authenticated
-      if (!user) {
-        router.push('/login')
+      const checkAuth = () => {
+        setIsLoading(false)
+        if (!user) {
+          router.push('/login')
+        }
       }
+
+      if (user === null) {
+        setIsLoading(true)
+        return
+      }
+
+      checkAuth()
     }, [user, router])
 
-    return user ? <WrappedComponent {...props} /> : null
+    return isLoading ? <Spinner /> : user ? <WrappedComponent {...props} /> : null
   }
 
   return WithAuth

@@ -1,11 +1,14 @@
+'use client'
 import Link from 'next/link'
 import { LibraryIcon, DatabaseIcon, TruckIcon, PresentationChartLineIcon, ServerIcon } from '@heroicons/react/outline'
 import { useContext } from 'react'
+import { useRouter } from 'next/navigation'
 import Image from 'next/image'
 import { AuthContext, authLogout } from '@/lib/firebase/auth'
 
 const Sidebar = () => {
   const user = useContext(AuthContext)
+  const router = useRouter()
 
   return (
     <div className="fixed z-10 flex min-h-screen w-full flex-col bg-primary md:w-1/6">
@@ -53,6 +56,7 @@ const Sidebar = () => {
             onClick={async () => {
               if (user) {
                 await authLogout()
+                router.push('/')
               }
             }}
           >

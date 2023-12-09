@@ -1,8 +1,8 @@
 'use client'
 
-import { CogIcon } from '@heroicons/react/outline'
 import Link from 'next/link'
 import { useContext } from 'react'
+import { CogIcon } from '@heroicons/react/20/solid'
 import Breadcrumbs from './Breadcrumbs'
 import Sidebar from './Sidebar'
 import { AuthContext } from '@/lib/firebase/auth'

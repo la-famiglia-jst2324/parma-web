@@ -1,8 +1,8 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
-import { SearchIcon } from '@heroicons/react/solid'
 import { TextInput } from '@tremor/react'
+import { MagnifyingGlassIcon } from '@heroicons/react/20/solid'
 import type { Company } from '@/types/companies'
 import CompanyCard from '@/components/Companies/CompanyCard'
 import { MainLayout } from '@/components/MainLayout'
@@ -92,7 +92,7 @@ const CompaniesPage: React.FC = () => {
               <h1 className="mb-2 text-2xl font-bold">Search for all companies</h1>
             </div>
             <div className="pl-2">
-              <TextInput icon={SearchIcon} placeholder="Search..." />
+              <TextInput icon={MagnifyingGlassIcon} placeholder="Search..." />
             </div>
           </div>
           <div className="flex flex-wrap">

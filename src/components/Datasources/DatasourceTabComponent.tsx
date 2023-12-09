@@ -1,5 +1,5 @@
 import { Tab, TabGroup, TabList, TabPanel, TabPanels } from '@tremor/react'
-import { OfficeBuildingIcon, PresentationChartLineIcon, ShieldCheckIcon } from '@heroicons/react/outline'
+import { BuildingOffice2Icon, PresentationChartLineIcon, ShieldCheckIcon } from '@heroicons/react/20/solid'
 import { CompaniesTable } from './CompaniesTable'
 
 export const NoData: React.FC = () => (
@@ -17,7 +17,7 @@ export const TabComponent: React.FC<TabComponentProps> = ({ sourceId }) => {
   return (
     <TabGroup>
       <TabList className="mt-8" variant="solid">
-        <Tab icon={OfficeBuildingIcon}>Companies Monitored</Tab>
+        <Tab icon={BuildingOffice2Icon}>Companies Monitored</Tab>
         <Tab icon={ShieldCheckIcon}>Datasource Health</Tab>
         <Tab icon={PresentationChartLineIcon}>Scheduling Tasks</Tab>
       </TabList>

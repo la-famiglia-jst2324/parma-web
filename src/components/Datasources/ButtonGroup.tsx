@@ -1,8 +1,8 @@
-import { PencilIcon, TrashIcon } from '@heroicons/react/solid'
 import { Button } from '@tremor/react'
-import EditInformationModal from './EditInformationModal'
+import { PencilIcon, TrashIcon } from '@heroicons/react/20/solid'
 import ModalComponent from './DisableModal'
 import DeleteModal from './DeleteModal'
+import EditInformationModal from './EditInformationModal'
 import type { useModal } from './hooks/useModal'
 
 interface DataProps {

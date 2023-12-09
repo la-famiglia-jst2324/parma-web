@@ -1,4 +1,4 @@
-import { StatusOnlineIcon } from '@heroicons/react/solid'
+import { WifiIcon } from '@heroicons/react/20/solid'
 import GoBackButton from '@/components/Datasources/GoBackButton'
 
 interface HeaderProps {
@@ -17,7 +17,7 @@ export const HeaderComponent: React.FC<HeaderProps> = ({ data }) => (
         data.isActive ? 'bg-blue-200 text-blue-700' : 'bg-red-200 text-red-700'
       }`}
     >
-      <StatusOnlineIcon className="mr-2 h-5 w-5" />
+      <WifiIcon className="mr-2 h-5 w-5" />
       {data.isActive ? 'Active' : 'Inactive'}
     </div>
   </div>

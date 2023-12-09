@@ -42,7 +42,7 @@ const getAllTextValues = async () => {
 const updateTextValue = async (
   id: number,
   data: {
-    sourceMeasurementId: number
+    companyMeasurementId: number
     value: string
   }
 ) => {

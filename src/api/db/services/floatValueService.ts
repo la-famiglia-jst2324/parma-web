@@ -42,7 +42,7 @@ const getAllFloatValues = async () => {
 const updateFloatValue = async (
   id: number,
   data: {
-    sourceMeasurementId: number
+    companyMeasurementId: number
     value: number
   }
 ) => {

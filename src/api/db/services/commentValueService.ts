@@ -42,7 +42,7 @@ const getAllCommentValues = async () => {
 const updateCommentValue = async (
   id: number,
   data: {
-    sourceMeasurementId: number
+    companyMeasurementId: number
     value: string
   }
 ) => {

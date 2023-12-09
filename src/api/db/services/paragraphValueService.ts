@@ -42,7 +42,7 @@ const getAllParagraphValues = async () => {
 const updateParagraphValue = async (
   id: number,
   data: {
-    sourceMeasurementId: number
+    companyMeasurementId: number
     value: string
   }
 ) => {

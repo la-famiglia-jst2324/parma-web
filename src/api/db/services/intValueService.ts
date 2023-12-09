@@ -42,7 +42,7 @@ const getAllIntValues = async () => {
 const updateIntValue = async (
   id: number,
   data: {
-    sourceMeasurementId: number
+    companyMeasurementId: number
     value: number
   }
 ) => {

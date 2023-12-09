@@ -7,8 +7,10 @@ import {
   deleteDataSource,
   createDataSource,
   createSourceMeasurement,
-  deleteSourceMeasurement
+  deleteSourceMeasurement,
+  createCompanySourceMeasurement
 } from './utils/helperFunctions'
+import { deleteCompanySourceMeasurement } from '@/api/db/services/companySourceMeasurementService'
 
 const prisma = new PrismaClient()
 
@@ -38,7 +40,6 @@ describe('SourceMeasurement Model Tests', () => {
       data: {
         sourceModuleId: dataSourceId,
         type: 'MeasurementType', // Replace with your actual type
-        companyId,
         measurementName: 'Test Measurement'
       }
     })
@@ -47,7 +48,6 @@ describe('SourceMeasurement Model Tests', () => {
 
     expect(sourceMeasurement).toHaveProperty('id')
     expect(sourceMeasurement.sourceModuleId).toBe(dataSourceId)
-    expect(sourceMeasurement.companyId).toBe(companyId)
     expect(sourceMeasurement.measurementName).toBe('Test Measurement')
   })
 
@@ -60,7 +60,6 @@ describe('SourceMeasurement Model Tests', () => {
     expect(sourceMeasurement).toBeTruthy()
     expect(sourceMeasurement?.id).toBe(sourceMeasurementId)
     expect(sourceMeasurement?.sourceModuleId).toBe(dataSourceId)
-    expect(sourceMeasurement?.companyId).toBe(companyId)
   })
 
   // Update SourceMeasurement Test
@@ -87,9 +86,84 @@ describe('SourceMeasurement Model Tests', () => {
   })
 })
 
+describe('CompanySourceMeasurement Model Tests', () => {
+  let sourceMeasurementId: number
+  let companySourceMeasurementId: number
+  let dataSourceId: number
+  let companyId: number
+  let userId: number
+
+  beforeAll(async () => {
+    userId = (await createUser()).id
+    companyId = (await createCompany(userId)).id
+    dataSourceId = (await createDataSource()).id
+    sourceMeasurementId = (await createSourceMeasurement(dataSourceId)).id
+    await prisma.$connect()
+  })
+
+  afterAll(async () => {
+    await deleteCompany(companyId)
+    await deleteDataSource(dataSourceId)
+    await deleteSourceMeasurement(sourceMeasurementId)
+    await deleteUser(userId)
+    await prisma.$disconnect()
+  })
+
+  // Create CompanySourceMeasurement Test
+  test('Create a new CompanySourceMeasurement', async () => {
+    const companySourceMeasurement = await prisma.companySourceMeasurement.create({
+      data: {
+        sourceMeasurementId,
+        companyId
+      }
+    })
+
+    companySourceMeasurementId = companySourceMeasurement.companyMeasurementId
+
+    expect(companySourceMeasurement).toHaveProperty('companyMeasurementId')
+    expect(companySourceMeasurement.companyId).toBe(companyId)
+  })
+
+  // Read CompanySourceMeasurement Test
+  test('Retrieve a CompanySourceMeasurement', async () => {
+    const companySourceMeasurement = await prisma.companySourceMeasurement.findUnique({
+      where: { companyMeasurementId: companySourceMeasurementId }
+    })
+
+    expect(companySourceMeasurement).toBeTruthy()
+    expect(companySourceMeasurement?.companyMeasurementId).toBe(companySourceMeasurementId)
+    expect(companySourceMeasurement?.companyId).toBe(companyId)
+    expect(companySourceMeasurement?.sourceMeasurementId).toBe(sourceMeasurementId)
+  })
+
+  // Update CompanySourceMeasurement Test
+  test('Update a CompanySourceMeasurement', async () => {
+    const updatedCompanyMeasurement = await prisma.companySourceMeasurement.update({
+      where: { companyMeasurementId: companySourceMeasurementId },
+      data: { sourceMeasurementId }
+    })
+
+    expect(updatedCompanyMeasurement.sourceMeasurementId).toBe(sourceMeasurementId)
+  })
+
+  // Delete CompanySourceMeasurement Test
+  test('Delete a CompanySourceMeasurement', async () => {
+    await prisma.companySourceMeasurement.delete({
+      where: { companyMeasurementId: companySourceMeasurementId }
+    })
+
+    const companySourceMeasurement = await prisma.companySourceMeasurement.findUnique({
+      where: { companyMeasurementId: companySourceMeasurementId }
+    })
+
+    expect(companySourceMeasurement).toBeNull()
+  })
+})
+
 describe('MeasurementTextValue Model Tests', () => {
   let textValueId: number
   let sourceMeasurementId: number
+  let companySourceMeasurementId: number
   let companyId: number
   let userId: number
   let dataSourceId: number
@@ -97,7 +171,9 @@ describe('MeasurementTextValue Model Tests', () => {
     userId = (await createUser()).id
     companyId = (await createCompany(userId)).id
     dataSourceId = (await createDataSource()).id
-    sourceMeasurementId = (await createSourceMeasurement(dataSourceId, companyId)).id
+    sourceMeasurementId = (await createSourceMeasurement(dataSourceId)).id
+    companySourceMeasurementId = (await createCompanySourceMeasurement(sourceMeasurementId, companyId))
+      .companyMeasurementId
     await prisma.$connect()
   })
 
@@ -113,7 +189,7 @@ describe('MeasurementTextValue Model Tests', () => {
   test('Create a new MeasurementTextValue', async () => {
     const textValue = await prisma.measurementTextValue.create({
       data: {
-        sourceMeasurementId,
+        companyMeasurementId: companySourceMeasurementId,
         value: 'Sample Text'
       }
     })
@@ -121,7 +197,7 @@ describe('MeasurementTextValue Model Tests', () => {
     textValueId = textValue.id
 
     expect(textValue).toHaveProperty('id')
-    expect(textValue.sourceMeasurementId).toBe(sourceMeasurementId)
+    expect(textValue.companyMeasurementId).toBe(companySourceMeasurementId)
     expect(textValue.value).toBe('Sample Text')
   })
 
@@ -132,9 +208,9 @@ describe('MeasurementTextValue Model Tests', () => {
     })
 
     expect(textValue).toBeTruthy()
-    expect(textValue.id).toBe(textValueId)
-    expect(textValue.sourceMeasurementId).toBe(sourceMeasurementId)
-    expect(textValue.value).toBe('Sample Text')
+    expect(textValue?.id).toBe(textValueId)
+    expect(textValue?.companyMeasurementId).toBe(companySourceMeasurementId)
+    expect(textValue?.value).toBe('Sample Text')
   })
 
   // Update MeasurementTextValue Test
@@ -164,6 +240,7 @@ describe('MeasurementTextValue Model Tests', () => {
 describe('MeasurementIntValue Model Tests', () => {
   let intValueId: number
   let sourceMeasurementId: number
+  let companySourceMeasurementId: number
   let companyId: number
   let userId: number
   let dataSourceId: number
@@ -171,12 +248,15 @@ describe('MeasurementIntValue Model Tests', () => {
     userId = (await createUser()).id
     companyId = (await createCompany(userId)).id
     dataSourceId = (await createDataSource()).id
-    sourceMeasurementId = (await createSourceMeasurement(dataSourceId, companyId)).id
+    sourceMeasurementId = (await createSourceMeasurement(dataSourceId)).id
+    companySourceMeasurementId = (await createCompanySourceMeasurement(sourceMeasurementId, companyId))
+      .companyMeasurementId
     await prisma.$connect()
   })
 
   afterAll(async () => {
-    await deleteSourceMeasurement(sourceMeasurementId, dataSourceId, companyId)
+    await deleteCompanySourceMeasurement(companySourceMeasurementId)
+    await deleteSourceMeasurement(sourceMeasurementId)
     await deleteDataSource(dataSourceId)
     await deleteCompany(companyId)
     await deleteUser(userId)
@@ -186,7 +266,7 @@ describe('MeasurementIntValue Model Tests', () => {
   test('Create a new MeasurementIntValue', async () => {
     const intValue = await prisma.measurementIntValue.create({
       data: {
-        sourceMeasurementId,
+        companyMeasurementId: companySourceMeasurementId,
         value: 68
       }
     })
@@ -194,7 +274,7 @@ describe('MeasurementIntValue Model Tests', () => {
     intValueId = intValue.id
 
     expect(intValue).toHaveProperty('id')
-    expect(intValue.sourceMeasurementId).toBe(sourceMeasurementId)
+    expect(intValue.companyMeasurementId).toBe(sourceMeasurementId)
     expect(intValue.value).toBe(68)
   })
 
@@ -204,9 +284,9 @@ describe('MeasurementIntValue Model Tests', () => {
     })
 
     expect(intValue).toBeTruthy()
-    expect(intValue.id).toBe(intValueId)
-    expect(intValue.sourceMeasurementId).toBe(sourceMeasurementId)
-    expect(intValue.value).toBe(68)
+    expect(intValue?.id).toBe(intValueId)
+    expect(intValue?.companyMeasurementId).toBe(companySourceMeasurementId)
+    expect(intValue?.value).toBe(68)
   })
 
   test('Update a MeasurementIntValue', async () => {
@@ -234,6 +314,7 @@ describe('MeasurementIntValue Model Tests', () => {
 describe('MeasurementFloatValue Model Tests', () => {
   let floatValueId: number
   let sourceMeasurementId: number
+  let companySourceMeasurementId: number
   let companyId: number
   let userId: number
   let dataSourceId: number
@@ -241,12 +322,15 @@ describe('MeasurementFloatValue Model Tests', () => {
     userId = (await createUser()).id
     companyId = (await createCompany(userId)).id
     dataSourceId = (await createDataSource()).id
-    sourceMeasurementId = (await createSourceMeasurement(dataSourceId, companyId)).id
+    sourceMeasurementId = (await createSourceMeasurement(dataSourceId)).id
+    companySourceMeasurementId = (await createCompanySourceMeasurement(sourceMeasurementId, companyId))
+      .companyMeasurementId
     await prisma.$connect()
   })
 
   afterAll(async () => {
-    await deleteSourceMeasurement(sourceMeasurementId, dataSourceId, companyId)
+    await deleteCompanySourceMeasurement(companySourceMeasurementId)
+    await deleteSourceMeasurement(sourceMeasurementId)
     await deleteDataSource(dataSourceId)
     await deleteCompany(companyId)
     await deleteUser(userId)
@@ -256,7 +340,7 @@ describe('MeasurementFloatValue Model Tests', () => {
   test('Create a new MeasurementFloatValue', async () => {
     const floatValue = await prisma.measurementFloatValue.create({
       data: {
-        sourceMeasurementId,
+        companyMeasurementId: companySourceMeasurementId,
         value: 68.99
       }
     })
@@ -264,7 +348,7 @@ describe('MeasurementFloatValue Model Tests', () => {
     floatValueId = floatValue.id
 
     expect(floatValue).toHaveProperty('id')
-    expect(floatValue.sourceMeasurementId).toBe(sourceMeasurementId)
+    expect(floatValue.companyMeasurementId).toBe(companySourceMeasurementId)
     expect(floatValue.value).toBe(68.99)
   })
 
@@ -274,9 +358,9 @@ describe('MeasurementFloatValue Model Tests', () => {
     })
 
     expect(floatValue).toBeTruthy()
-    expect(floatValue.id).toBe(floatValueId)
-    expect(floatValue.sourceMeasurementId).toBe(sourceMeasurementId)
-    expect(floatValue.value).toBe(68.99)
+    expect(floatValue?.id).toBe(floatValueId)
+    expect(floatValue?.companyMeasurementId).toBe(companySourceMeasurementId)
+    expect(floatValue?.value).toBe(68.99)
   })
 
   test('Update a MeasurementFloatValue', async () => {
@@ -304,6 +388,7 @@ describe('MeasurementFloatValue Model Tests', () => {
 describe('MeasurementCommentValue Model Tests', () => {
   let commentValueId: number
   let sourceMeasurementId: number
+  let companySourceMeasurementId: number
   let companyId: number
   let userId: number
   let dataSourceId: number
@@ -311,12 +396,15 @@ describe('MeasurementCommentValue Model Tests', () => {
     userId = (await createUser()).id
     companyId = (await createCompany(userId)).id
     dataSourceId = (await createDataSource()).id
-    sourceMeasurementId = (await createSourceMeasurement(dataSourceId, companyId)).id
+    sourceMeasurementId = (await createSourceMeasurement(dataSourceId)).id
+    companySourceMeasurementId = (await createCompanySourceMeasurement(sourceMeasurementId, companyId))
+      .companyMeasurementId
     await prisma.$connect()
   })
 
   afterAll(async () => {
-    await deleteSourceMeasurement(sourceMeasurementId, dataSourceId, companyId)
+    await deleteCompanySourceMeasurement(companySourceMeasurementId)
+    await deleteSourceMeasurement(sourceMeasurementId)
     await deleteDataSource(dataSourceId)
     await deleteCompany(companyId)
     await deleteUser(userId)
@@ -326,7 +414,7 @@ describe('MeasurementCommentValue Model Tests', () => {
   test('Create a new MeasurementCommentValue', async () => {
     const commentValue = await prisma.measurementCommentValue.create({
       data: {
-        sourceMeasurementId,
+        companyMeasurementId: companySourceMeasurementId,
         value: 'This is splendid'
       }
     })
@@ -334,7 +422,7 @@ describe('MeasurementCommentValue Model Tests', () => {
     commentValueId = commentValue.id
 
     expect(commentValue).toHaveProperty('id')
-    expect(commentValue.sourceMeasurementId).toBe(sourceMeasurementId)
+    expect(commentValue.companyMeasurementId).toBe(companySourceMeasurementId)
     expect(commentValue.value).toBe('This is splendid')
   })
 
@@ -344,9 +432,9 @@ describe('MeasurementCommentValue Model Tests', () => {
     })
 
     expect(commentValue).toBeTruthy()
-    expect(commentValue.id).toBe(commentValueId)
-    expect(commentValue.sourceMeasurementId).toBe(sourceMeasurementId)
-    expect(commentValue.value).toBe('This is splendid')
+    expect(commentValue?.id).toBe(commentValueId)
+    expect(commentValue?.companyMeasurementId).toBe(companySourceMeasurementId)
+    expect(commentValue?.value).toBe('This is splendid')
   })
 
   test('Update a MeasurementCommentValue', async () => {
@@ -376,6 +464,7 @@ describe('MeasurementParagraphValue Model Tests', () => {
     'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean nec dolor suscipit neque laoreet lacinia at interdum dui. Nulla venenatis dolor vitae orci cursus, et viverra nisi gravida. Vivamus laoreet blandit gravida. Donec consectetur nunc eros, nec lobortis lectus congue at. Duis sed efficitur.'
   let paragraphValueId: number
   let sourceMeasurementId: number
+  let companySourceMeasurementId: number
   let companyId: number
   let userId: number
   let dataSourceId: number
@@ -383,12 +472,15 @@ describe('MeasurementParagraphValue Model Tests', () => {
     userId = (await createUser()).id
     companyId = (await createCompany(userId)).id
     dataSourceId = (await createDataSource()).id
-    sourceMeasurementId = (await createSourceMeasurement(dataSourceId, companyId)).id
+    sourceMeasurementId = (await createSourceMeasurement(dataSourceId)).id
+    companySourceMeasurementId = (await createCompanySourceMeasurement(sourceMeasurementId, companyId))
+      .companyMeasurementId
     await prisma.$connect()
   })
 
   afterAll(async () => {
-    await deleteSourceMeasurement(sourceMeasurementId, dataSourceId, companyId)
+    await deleteCompanySourceMeasurement(companySourceMeasurementId)
+    await deleteSourceMeasurement(sourceMeasurementId)
     await deleteDataSource(dataSourceId)
     await deleteCompany(companyId)
     await deleteUser(userId)
@@ -398,7 +490,7 @@ describe('MeasurementParagraphValue Model Tests', () => {
   test('Create a new MeasurementParagraphValue', async () => {
     const paragraphValue = await prisma.measurementParagraphValue.create({
       data: {
-        sourceMeasurementId,
+        companyMeasurementId: companySourceMeasurementId,
         value: paragraph
       }
     })
@@ -406,7 +498,7 @@ describe('MeasurementParagraphValue Model Tests', () => {
     paragraphValueId = paragraphValue.id
 
     expect(paragraphValue).toHaveProperty('id')
-    expect(paragraphValue.sourceMeasurementId).toBe(sourceMeasurementId)
+    expect(paragraphValue.companyMeasurementId).toBe(companySourceMeasurementId)
     expect(paragraphValue.value).toBe(paragraph)
   })
 
@@ -416,9 +508,9 @@ describe('MeasurementParagraphValue Model Tests', () => {
     })
 
     expect(paragraphValue).toBeTruthy()
-    expect(paragraphValue.id).toBe(paragraphValueId)
-    expect(paragraphValue.sourceMeasurementId).toBe(sourceMeasurementId)
-    expect(paragraphValue.value).toBe(paragraph)
+    expect(paragraphValue?.id).toBe(paragraphValueId)
+    expect(paragraphValue?.companyMeasurementId).toBe(companySourceMeasurementId)
+    expect(paragraphValue?.value).toBe(paragraph)
   })
 
   test('Delete a MeasurementParagraphValue', async () => {

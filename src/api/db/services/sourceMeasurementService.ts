@@ -4,7 +4,7 @@ const createSourceMeasurement = async (data: {
   sourceModuleId: number
   type: string
   measurementName: string
-  parentMeasurementId?: number
+  parentMeasurementId?: number | null
 }) => {
   try {
     return await prisma.sourceMeasurement.create({
@@ -62,7 +62,7 @@ const getMeasurementsOfCompaniesBySourceId = async (sourceModuleId: number, comp
   try {
     const measurements = await prisma.sourceMeasurement.findMany({
       where: {
-        sourceModuleId,
+        sourceModuleId
       },
       include: {
         companySourceMeasurements: {
@@ -75,17 +75,16 @@ const getMeasurementsOfCompaniesBySourceId = async (sourceModuleId: number, comp
           }
         }
       }
-
     })
 
     console.log(measurements)
 
-    const flattenedMeasurements = measurements.flatMap(measurement => 
-      measurement.companySourceMeasurements.map(csm => ({
+    const flattenedMeasurements = measurements.flatMap((measurement) =>
+      measurement.companySourceMeasurements.map((csm) => ({
         ...measurement,
         ...csm
       }))
-    );
+    )
 
     console.log(flattenedMeasurements)
 
@@ -100,7 +99,7 @@ const getMeasurementsOfCompaniesBySourceId = async (sourceModuleId: number, comp
     //   {} as Record<number, typeof measurements>
     // )
 
-    return {} //measurementsByCompanyId
+    return {} // measurementsByCompanyId
   } catch (error) {
     console.error('Error getting the source measurements of data source :', error)
     throw error
@@ -152,19 +151,18 @@ const deleteSourceMeasurement = async (id: number) => {
   }
 }
 
-const getChildMeasurementsByParentId = async (id: number) => {
-  try {
-    const measurements = await prisma.sourceMeasurement.findMany({
-      where: { parentMeasurementId: id }
-    })
-    if (!measurements) {
-      throw new Error(`child measurements of parent source measurement ID ${id} not found.`)
-    }
-    return measurements
-  } catch (error) {
-    console.error('Error getting the child measurements of parent source measurement:', error)
-    throw error
+const getChildMeasurementsByParentId = async (id: number): Promise<any[]> => {
+  const measurements = await prisma.sourceMeasurement.findMany({
+    where: { parentMeasurementId: id },
+    include: { childSourceMeasurements: true }
+  })
+
+  for (let i = 0; i < measurements.length; i++) {
+    const children = await getChildMeasurementsByParentId(measurements[i].id)
+    measurements[i].childSourceMeasurements = children
   }
+
+  return measurements
 }
 
 const updateParentMeasurementId = async (childId: number, newParentId: number | null) => {

@@ -254,13 +254,13 @@ model SourceMeasurement {
   companySourceMeasurements  CompanySourceMeasurement[]
   userMetricCustomization    UserMetricCustomization[]
   parentSourceMeasurement    SourceMeasurement?          @relation(name: "ParentChild", fields: [parentMeasurementId], references: [id], onDelete: Cascade)
-  childSourceMeasurements    SourceMeasurement[]         @relation("ParentChild")                         
+  childSourceMeasurements    SourceMeasurement[]         @relation("ParentChild")
 
   @@map("source_measurement")
 }
 
 model CompanySourceMeasurement {
-  companyMeasurementId Int   @id @map("company_measurement_id")
+  companyMeasurementId Int   @id @default(autoincrement()) @map("company_measurement_id")
   sourceMeasurementId  Int   @map("source_measurement_id")
   companyId            Int   @map("company_id")
 

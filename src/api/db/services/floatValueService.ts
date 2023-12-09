@@ -1,10 +1,10 @@
 import { prisma } from '../prisma/prismaClient'
 
-const createFloatValue = async (data: { companySourceMeasurement: number; value: number }) => {
+const createFloatValue = async (data: { companyMeasurementId: number; value: number }) => {
   try {
     return await prisma.measurementFloatValue.create({
       data: {
-        companySourceMeasurement: data.companySourceMeasurement,
+        companyMeasurementId: data.companyMeasurementId,
         value: data.value
       }
     })

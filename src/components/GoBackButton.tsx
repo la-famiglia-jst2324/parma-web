@@ -1,4 +1,4 @@
-import { ArrowLeftIcon } from '@heroicons/react/outline'
+import { ArrowLeftIcon } from '@heroicons/react/20/solid'
 import Link from 'next/link'
 
 export const GoBackButton = ({ url }: { url: string }) => {

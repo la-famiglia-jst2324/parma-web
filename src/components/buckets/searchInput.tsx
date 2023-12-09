@@ -1,5 +1,4 @@
 'use client'
-import { SearchIcon } from '@heroicons/react/outline'
 import { TextInput } from '@tremor/react'
 import { useState, useEffect } from 'react'
 
@@ -23,7 +22,7 @@ function SearchInput({ inputValue }: { inputValue: (searchTerm: string) => void 
 
   return (
     <TextInput
-      icon={SearchIcon}
+      // icon={SearchIcon}
       value={searchTerm}
       onChange={(e) => setSearchTerm(e.target.value)}
       placeholder="Search..."

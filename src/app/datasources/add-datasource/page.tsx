@@ -2,10 +2,10 @@
 import type { FormEvent } from 'react'
 import React, { useState } from 'react'
 import { Select, SelectItem, Callout } from '@tremor/react'
-import { CheckCircleIcon, ExclamationCircleIcon } from '@heroicons/react/solid'
+import { Frequency } from '@prisma/client'
+import { CheckCircleIcon, ExclamationCircleIcon } from '@heroicons/react/20/solid'
 import GoBackButton from '@/components/Datasources/GoBackButton'
 import { FormContent } from '@/components/FormContent'
-import { Frequency } from '@/types/datasource'
 
 export default function CreateDatasourcePage() {
   const [name, setName] = useState('')
@@ -26,15 +26,19 @@ export default function CreateDatasourcePage() {
 
     const frequencyEnum = Frequency[defaultFrequency as keyof typeof Frequency]
 
+    console.log('Form url', formData.get('url'))
+
     const dataSource = {
       sourceName: formData.get('name') as string,
-      isActive: true,
+      isActive: false,
       defaultFrequency: frequencyEnum,
-      healthStatus: 'UP',
+      healthStatus: 'DOWN',
       modifiedAt: new Date().toISOString(),
-      // url: formData.get('url') as string,
+      invocationEndpoint: formData.get('url') as string,
       description: formData.get('description') as string
     }
+
+    console.log('dataSource: ', dataSource)
 
     fetch('/api/dataSources', {
       method: 'POST',

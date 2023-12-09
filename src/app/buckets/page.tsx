@@ -1,9 +1,9 @@
 'use client'
-import { PlusCircleIcon } from '@heroicons/react/outline'
 import { Button } from '@tremor/react'
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import type { Bucket } from '@prisma/client'
+import { PlusCircleIcon } from '@heroicons/react/20/solid'
 import BucketCard from '@/components/buckets/bucketCard'
 import SearchInput from '@/components/buckets/searchInput'
 

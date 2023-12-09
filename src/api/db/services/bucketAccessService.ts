@@ -43,14 +43,19 @@ const getInviteesByBucketId = async (bucketId: number) => {
         bucketId
       },
       include: {
-        user: true
+        user: {
+          select: {
+            id: true,
+            name: true,
+            profilePicture: true
+          }
+        }
       }
     })
     if (!membership) {
       throw new Error(`invitees not found.`)
     }
-    // include user
-    return membership.map((membership) => membership.user)
+    return membership
   } catch (error) {
     console.error('Error getting by ID:', error)
     throw error

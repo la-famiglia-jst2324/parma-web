@@ -1,5 +1,5 @@
-import { CheckCircleIcon } from '@heroicons/react/outline'
 import { Callout } from '@tremor/react'
+import { CheckCircleIcon } from '@heroicons/react/20/solid'
 import { PopupENUM } from '@/types/popup'
 
 export const Popup = ({ text, title, popupType }: { text: string; title: string; popupType: PopupENUM }) => {

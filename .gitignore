@@ -437,3 +437,5 @@ $RECYCLE.BIN/
 coverage-ts
 **/.secrets
 .vscode/
+.data/
+.idea/

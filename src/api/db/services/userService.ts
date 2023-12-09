@@ -83,12 +83,13 @@ const getAllUsers = async () => {
     throw error
   }
 }
-// who can update
+
 const updateUser = async (
   id: number,
   data: {
     name?: string
     role?: Role
+    profilePicture?: string
   }
 ) => {
   try {

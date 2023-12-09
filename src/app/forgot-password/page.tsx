@@ -1,11 +1,36 @@
 'use client'
 
-import React from 'react'
+import React, { useState } from 'react'
 import Link from 'next/link'
 import { TextInput, Callout, Button } from '@tremor/react'
 import { CheckCircleIcon } from '@heroicons/react/20/solid'
+import ErrorInfo from '@/components/Authentication/ErrorInfo'
+import { authResetPassword } from '@/lib/firebase/auth'
+import SuccessInfo from '@/components/Authentication/SuccessInfo'
 
 export default function ForgotPasswordPage() {
+  const [loading, setLoading] = useState(false)
+  const [email, setEmail] = useState('')
+  const [error, setError] = useState('')
+  const [success, setSuccess] = useState('')
+
+  const handleSubmit = async () => {
+    setLoading(true)
+    try {
+      // TODO: further form validation
+      // TODO: add timeout
+      setError('')
+      setSuccess('')
+      await authResetPassword(email)
+      setError('')
+      setSuccess('We have sent instructions on your given email to reset your password.')
+    } catch (error) {
+      setError(error instanceof Error ? error.message : 'Something went wrong.')
+    } finally {
+      setLoading(false)
+    }
+  }
+
   return (
     <div className="flex h-screen items-center justify-center bg-white">
       <div>
@@ -18,15 +43,32 @@ export default function ForgotPasswordPage() {
             We have sent instructions on your given email to reset your password.
           </Callout>
         </div>
+
+        {error ? (
+          <div className="mt-5">
+            <ErrorInfo msg={error} />
+          </div>
+        ) : null}
+        {success ? (
+          <div className="mt-5">
+            <SuccessInfo msg={success} />
+          </div>
+        ) : null}
+
         <div className="py-6">
           <div className="mb-4">
             <label htmlFor="email" className="block text-sm font-bold text-gray-600">
               Email
             </label>
-            <TextInput onValueChange={() => {}} />
+            <TextInput
+              type="email"
+              onValueChange={(val) => {
+                setEmail(val)
+              }}
+            />
           </div>
         </div>
-        <Button size="xl" className="w-full" variant="primary">
+        <Button onClick={() => handleSubmit()} loading={loading} size="xl" className="w-full" variant="primary">
           Request reset link
         </Button>
         <p className="mt-4 text-center">

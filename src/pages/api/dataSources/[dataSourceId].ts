@@ -39,7 +39,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     case 'DELETE':
       try {
         await deleteDataSource(Number(dataSourceId))
-        res.status(200).json({ message: 'Bucket successfully Deleted' })
+        res.status(200).json({ message: 'Bucket successfully deleted' })
       } catch (error) {
         res.status(500).json({ error: 'Internal Server Error' })
       }

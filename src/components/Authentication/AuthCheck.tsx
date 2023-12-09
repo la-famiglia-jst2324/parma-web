@@ -26,7 +26,13 @@ const AuthCheck = <P extends object>(WrappedComponent: React.ComponentType<P>) =
       checkAuth()
     }, [user, router])
 
-    return isLoading ? <Spinner /> : user ? <WrappedComponent {...props} /> : null
+    if ( isLoading ) {
+        return <Spinner />
+    }
+    if ( user ) {
+        return <WrappedComponent {...props} />
+    }
+    return null;
   }
 
   return WithAuth

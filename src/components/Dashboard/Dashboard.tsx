@@ -36,7 +36,6 @@ async function getSubscribedCompanies() {
       console.log('Response status:', res.status)
       throw new Error('HTTP response was not OK')
     }
-    const json = await res.json()
     return await res.json()
   } catch (error) {
     console.log('An error has occurred: ', error)

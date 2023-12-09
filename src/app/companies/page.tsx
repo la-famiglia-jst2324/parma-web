@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
-import { SearchIcon } from '@heroicons/react/solid'
+// import { SearchIcon } from '@heroicons/react/20/solid'
 import { Button, TextInput } from '@tremor/react'
 import type { Company } from '@/types/companies'
 import CompanyCard from '@/components/Companies/CompanyCard'
@@ -91,6 +91,7 @@ const CompaniesPage: React.FC = () => {
 
     fetchData()
     setOffset((prevOffset) => prevOffset + 1)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const fetchMoreCompanies = async () => {
@@ -137,7 +138,7 @@ const CompaniesPage: React.FC = () => {
           </div>
           <div className="flex pl-2">
             <TextInput
-              icon={SearchIcon}
+              // icon={SearchIcon}
               placeholder="Search for companies"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}

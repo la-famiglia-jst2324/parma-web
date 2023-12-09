@@ -19,7 +19,9 @@ export const TabComponent = () => {
         <TabButton label="Datasource Health" activeTab={activeTab} handleTabClick={handleTabClick} />
       </div>
       <TabContent label="Companies Monitored" activeTab={activeTab}>
-        <CompaniesTable />
+        <div className="mt-10">
+          <CompaniesTable datasourceId="" />
+        </div>
       </TabContent>
       <TabContent label="Scraping Information" activeTab={activeTab}>
         <div className="mt-10"></div>

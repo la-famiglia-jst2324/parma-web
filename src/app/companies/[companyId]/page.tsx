@@ -2,8 +2,7 @@
 
 import React, { useState, useEffect } from 'react'
 import { Tab, TabGroup, TabList, TabPanel, TabPanels, Button, Callout } from '@tremor/react'
-import { UserGroupIcon, UserIcon, CheckCircleIcon } from '@heroicons/react/solid'
-import { LinkIcon } from '@heroicons/react/outline'
+import { ArrowPathIcon, UserGroupIcon, UserIcon, CheckCircleIcon } from '@heroicons/react/20/solid'
 import type { CompanyData, Attachment } from '@/types/companies'
 import GoBackButton from '@/components/Companies/GoBackButton'
 import CompanyAttachment from '@/components/Companies/CompanyAttachment'
@@ -283,7 +282,7 @@ const CompanyPage = ({ params: { companyId } }: { params: { companyId: string } 
           <h3 className="pb-2 font-bold">
             You can also attach data to this company that will only be displayed to you
           </h3>
-          <Button icon={LinkIcon}>Attach Data</Button>
+          <Button icon={ArrowPathIcon}>Attach Data</Button>
           <div className="flex space-x-4 py-4">
             {companyAttachments &&
               companyAttachments?.map((attachment) => (

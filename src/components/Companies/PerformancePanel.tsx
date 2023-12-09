@@ -1,8 +1,11 @@
 'use client'
 
 import React from 'react'
-import { CalculatorIcon } from '@heroicons/react/outline'
-import { Card, LineChart, Title, Select, SelectItem, Button } from '@tremor/react'
+// import { CalculatorIcon } from '@heroicons/react/20/outline'
+// import { Card, LineChart, Title, Select, SelectItem, Button } from '@tremor/react'
+// import Link from 'next/link'
+// import { ArrowLeftIcon } from '@heroicons/react/20/solid'
+import { Card, LineChart, Title } from '@tremor/react'
 
 const PerformancePanel = () => {
   // const [datasources, setDatasources] = useState<string[]>([])
@@ -83,35 +86,35 @@ const PerformancePanel = () => {
   return (
     <div className="mt-4">
       <div className="flex space-x-4">
-        <Select value={''} onValueChange={() => {}}>
-          <SelectItem value="1" icon={CalculatorIcon}>
+        {/* <Select value={''} onValueChange={() => {}}>
+          <SelectItem value="1" >
             Kilometers
           </SelectItem>
-          <SelectItem value="2" icon={CalculatorIcon}>
+          <SelectItem value="2" >
             Meters
           </SelectItem>
-          <SelectItem value="3" icon={CalculatorIcon}>
+          <SelectItem value="3" >
             Miles
           </SelectItem>
-          <SelectItem value="4" icon={CalculatorIcon}>
+          <SelectItem value="4" >
             Nautical Miles
           </SelectItem>
         </Select>
         <Select value={''} onValueChange={() => {}}>
-          <SelectItem value="1" icon={CalculatorIcon}>
+          <SelectItem value="1" >
             Kilometers
           </SelectItem>
-          <SelectItem value="2" icon={CalculatorIcon}>
+          <SelectItem value="2">
             Meters
           </SelectItem>
-          <SelectItem value="3" icon={CalculatorIcon}>
+          <SelectItem value="3" >
             Miles
           </SelectItem>
-          <SelectItem value="4" icon={CalculatorIcon}>
+          <SelectItem value="4" >
             Nautical Miles
           </SelectItem>
         </Select>
-        <Button>Show Data</Button>
+        <Button>Show Data</Button> */}
       </div>
       <div className="mt-4">
         <Card>

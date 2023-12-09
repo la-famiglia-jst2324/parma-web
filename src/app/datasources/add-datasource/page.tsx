@@ -24,15 +24,13 @@ function CreateDatasourcePage() {
 
     const formData = new FormData(event.currentTarget)
 
-    if (formData.get('frequency') === null) {
+    if (defaultFrequency === undefined || defaultFrequency === '') {
       setErrorMessage('You need to select a frequency for the datasource!')
       setShowError(true)
       return
     }
 
     const frequencyEnum = Frequency[defaultFrequency as keyof typeof Frequency]
-
-    console.log('Form url', formData.get('url'))
 
     const dataSource = {
       sourceName: formData.get('name') as string,

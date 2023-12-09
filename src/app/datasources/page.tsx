@@ -1,10 +1,11 @@
 'use client'
 import React, { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
 import Table from '../../components/Datasources/Table'
-import CreateDatasource from '@/components/Datasources/CreateDatasource'
 import type Datasource from '@/types/datasource'
 import { MainLayout } from '@/components/MainLayout'
 import AuthCheck from '@/components/Authentication/AuthCheck'
+import CustomButton from '@/components/BlueButton'
 
 async function getDatasources() {
   try {
@@ -34,6 +35,11 @@ function DatasourcesPage() {
       })
   }, [])
 
+  const router = useRouter()
+  const navigateToCreate = () => {
+    router.push('/datasources/add-datasource')
+  }
+
   return (
     <>
       <MainLayout>
@@ -43,7 +49,7 @@ function DatasourcesPage() {
               <h1 className="m-4 text-4xl text-black">Datasources</h1>
             </div>
             <div className="m-4">
-              <CreateDatasource />
+              <CustomButton text="Create Datasource" onClick={navigateToCreate} />
             </div>
           </div>
           <div className="p-8">

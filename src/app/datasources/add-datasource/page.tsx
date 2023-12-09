@@ -8,6 +8,7 @@ import GoBackButton from '@/components/Datasources/GoBackButton'
 import { FormContent } from '@/components/FormContent'
 import { MainLayout } from '@/components/MainLayout'
 import AuthCheck from '@/components/Authentication/AuthCheck'
+import CustomButton from '@/components/BlueButton'
 
 function CreateDatasourcePage() {
   const [name, setName] = useState('')
@@ -110,12 +111,7 @@ function CreateDatasourcePage() {
                 onChange={(e) => setUrl(e.target.value)}
               />
               <div>
-                <button
-                  className="rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700 focus:outline-none"
-                  type="submit"
-                >
-                  Create Datasource
-                </button>
+                <CustomButton text="Create Datasource" type="submit" />
               </div>
             </form>
           </div>

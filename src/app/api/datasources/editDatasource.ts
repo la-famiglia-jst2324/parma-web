@@ -1,19 +1,19 @@
-export async function editDatasource(
+export default async function editDatasource(
   id: string,
-  sourceName: string,
-  isActive: boolean,
-  description: string,
-  url: string
+  updates: {
+    sourceName?: string
+    isActive?: boolean
+    description?: string
+    invocationEndpoint?: string
+  }
 ) {
   try {
-    console.log(url)
     const res = await fetch(`/api/dataSources/${id}`, {
       method: 'PUT',
-      cache: 'no-cache',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ sourceName, isActive, description })
+      body: JSON.stringify(updates)
     })
     if (!res.ok) {
       console.log('Response status:', res.status)

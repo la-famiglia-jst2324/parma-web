@@ -6,8 +6,7 @@ interface EditInformationModalProps {
   sourceName: string
   description: string
   url: string
-  isActive: boolean
-  handleSave: (sourceName: string, description: string, url: string, isActive: boolean) => void
+  handleSave: (updates: { newName: string; newDescription: string; newUrl: string }) => Promise<void>
 }
 
 const EditInformationModal: React.FC<EditInformationModalProps> = ({
@@ -16,13 +15,11 @@ const EditInformationModal: React.FC<EditInformationModalProps> = ({
   sourceName: nameProp,
   description: descriptionProp,
   url: urlProp,
-  isActive: isActiveProp,
   handleSave
 }) => {
   const [sourceName, setName] = useState(nameProp)
   const [description, setDescription] = useState(descriptionProp)
   const [url, setUrl] = useState(urlProp)
-  const [isActive] = useState(isActiveProp)
 
   if (!isOpen) {
     return null
@@ -36,7 +33,13 @@ const EditInformationModal: React.FC<EditInformationModalProps> = ({
   }
 
   const handleSaveClick = () => {
-    handleSave(sourceName, description, url, isActive)
+    handleSave({
+      newName: sourceName,
+      newDescription: description,
+      newUrl: url
+    }).catch((error) => {
+      console.error('An error occurred:', error)
+    })
     handleClose()
   }
 

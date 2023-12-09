@@ -4,9 +4,15 @@ interface ModalComponentProps {
   isOpen: boolean
   handleClose: () => void
   sourceName: string
+  isActive: boolean
   description: string
   url: string
-  handleSave: (sourceName: string, description: string, url: string, isActive: boolean) => void
+  handleSave: (updates: {
+    newName: string
+    newDescription: string
+    newUrl: string
+    newStatus: boolean
+  }) => Promise<void>
 }
 
 const ModalComponent: React.FC<ModalComponentProps> = ({
@@ -18,13 +24,21 @@ const ModalComponent: React.FC<ModalComponentProps> = ({
   handleSave
 }) => {
   const handleDisable = async () => {
-    handleSave(sourceName, description, url, false)
+    handleSave({
+      newName: sourceName,
+      newDescription: description,
+      newUrl: url,
+      newStatus: false
+    }).catch((error) => {
+      console.error('An error occurred:', error)
+    })
     handleClose()
   }
 
   if (!isOpen) {
     return null
   }
+
   return (
     <div className="fixed inset-0 z-10 flex items-center justify-center overflow-y-auto">
       {/* Background overlay */}

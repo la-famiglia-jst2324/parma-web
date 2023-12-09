@@ -1,19 +1,22 @@
-import React, { useContext } from 'react'
+'use client'
+import React, { useEffect, useContext } from 'react'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
 import { authLogin, AuthContext } from '@/lib/firebase/auth'
 
 const GoogleAuthButton = () => {
-  const user = useContext(AuthContext)
-  const router = useRouter()
-
   const handleLogin = async () => {
     await authLogin({ provider: 'google' })
   }
 
-  if (user) {
-    router.push('/')
-  }
+  const user = useContext(AuthContext)
+  const router = useRouter()
+
+  useEffect(() => {
+    if (user) {
+      router.push('/')
+    }
+  }, [user, router])
 
   return (
     <button

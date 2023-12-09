@@ -10,7 +10,7 @@ export default function Page() {
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
-    if (user !== undefined) {
+    if (user !== undefined && user !== null) {
       setIsLoading(false)
     }
   }, [user])

@@ -80,7 +80,9 @@ const getMeasurementsOfCompaniesBySourceId = async (sourceModuleId: number, comp
     // add the companyMeasurementId and companyId to the result.
     const flattenedMeasurements = measurements.flatMap((measurement) =>
       measurement.companySourceMeasurements.map((csm) => {
-        const { ...rest } = { ...measurement, ...csm }
+        // here we want to filter out companySourceMeasurements from the output
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { companySourceMeasurements, ...rest } = { ...measurement, ...csm }
         return rest
       })
     )

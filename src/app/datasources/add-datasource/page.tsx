@@ -34,9 +34,9 @@ function CreateDatasourcePage() {
 
     const dataSource = {
       sourceName: formData.get('name') as string,
-      isActive: false,
+      isActive: true,
       defaultFrequency: frequencyEnum,
-      healthStatus: 'DOWN',
+      healthStatus: 'UP',
       modifiedAt: new Date().toISOString(),
       invocationEndpoint: formData.get('url') as string,
       description: formData.get('description') as string

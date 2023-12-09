@@ -18,6 +18,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   switch (method) {
     case 'GET':
       try {
+        if (dataSourceId && companyId) res.status(400).json({ error: 'Invalid Arguments' })
         if (dataSourceId) {
           const companies = await getCompaniesByDataSourceId(dataSourceId)
           if (companies.length > 0) res.status(200).json(companies)
@@ -26,7 +27,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
           const buckets = await getDataSourcesByCompanyId(companyId)
           if (buckets.length > 0) res.status(200).json(buckets)
           else res.status(400).json({ error: 'No Buckets found' })
-        } else res.status(400).json({ error: 'Invalid Arguments' })
+        }
       } catch (error) {
         if (error instanceof ItemNotFoundError) res.status(404).json({ error: error.message })
         else res.status(500).json({ error: 'Internal Server Error' })

@@ -96,6 +96,7 @@ model NotificationChannel {
   entityType  EntityType  @map("entity_type")
   channelType ChannelType @map("channel_type")
   destination String
+  apiKey      String?
   createdAt   DateTime    @default(now()) @map("created_at")
   modifiedAt  DateTime    @updatedAt @map("modified_at")
 

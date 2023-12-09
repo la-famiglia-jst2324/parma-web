@@ -18,9 +18,25 @@ describe('Notification Channel Model Tests', () => {
 
   let channelId: number
 
-  test('Create a new channel with valid details', async () => {
+  test('Create a new slack channel with valid details', async () => {
     const channel = await createNotificationChannel({
       entityId: 'entity1',
+      entityType: EntityType.NOTIFICATION,
+      channelType: ChannelType.SLACK,
+      destination: 'la-famiglia-data-analytics',
+      apiKey: 'my beloved key'
+    })
+    channelId = channel.id
+    expect(channel).toHaveProperty('id')
+    expect(channel.entityType).toBe(EntityType.NOTIFICATION)
+    expect(channel.channelType).toBe(ChannelType.SLACK)
+    expect(channel.destination).toBe('la-famiglia-data-analytics')
+    expect(channel.apiKey).toBe('my beloved key')
+  })
+
+  test('Create a new channel without api key', async () => {
+    const channel = await createNotificationChannel({
+      entityId: 'entity2',
       entityType: EntityType.NOTIFICATION,
       channelType: ChannelType.EMAIL,
       destination: 'emailaddress'

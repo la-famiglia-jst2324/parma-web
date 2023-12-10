@@ -5,8 +5,8 @@
 [![Deploy](https://github.com/la-famiglia-jst2324/parma-web/actions/workflows/release.yml/badge.svg?event=release)](https://parma.software)
 [![Deploy](https://github.com/la-famiglia-jst2324/parma-web/actions/workflows/release.yml/badge.svg?event=push)](https://staging.parma.software)
 [![Major Tag](https://github.com/la-famiglia-jst2324/parma-web/actions/workflows/tag-major.yml/badge.svg)](https://github.com/la-famiglia-jst2324/parma-web/actions/workflows/tag-major.yml)
-![Functions](https://img.shields.io/badge/functions-49.55%25-red.svg?style=flat)
-![Lines](https://img.shields.io/badge/lines-39.18%25-red.svg?style=flat)
+![Functions](https://img.shields.io/badge/functions-27.65%25-red.svg?style=flat)
+![Lines](https://img.shields.io/badge/lines-21.14%25-red.svg?style=flat)
 
 ParmaAI webstack including frontend and REST API backend.
 
@@ -14,7 +14,7 @@ ParmaAI webstack including frontend and REST API backend.
 
 ## Deployment
 
-You can find the latest deployment on [parma.software](https://parma.software). The staging deployment is available on [staging.parma.software](https://staging.parma.software).
+You can find the latest deployment of this project on [parma.software](https://parma.software). The staging deployment is available on [staging.parma.software](https://staging.parma.software).
 
 ## Getting Started
 
@@ -44,7 +44,7 @@ The following steps will get you started with the project.
 
    **Skip to 4. if everything worked**
 
-   In case you encounter errors while installing **_pre-commit_**, do _one_ of the following:
+   In case you encounter errors while installing **_pre-commit_**, do _one_ of the following :
 
    1. Install pre-commit with sudo:
 

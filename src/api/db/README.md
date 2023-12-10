@@ -2,139 +2,179 @@
 
 ```mermaid
 erDiagram
-    BUCKET ||--o{ COMPANY_BUCKET_MEMBERSHIP : ""
-    BUCKET ||--o{ BUCKET_ACCESS : ""
-    COMPANY ||--o{ COMPANY_BUCKET_MEMBERSHIP : ""
-    COMPANY ||--o{ NOTIFICATION_SUBSCRIPTION : "has"
-    COMPANY ||--o{ REPORT_SUBSCRIPTION : ""
-    COMPANY ||--o{ COMPANY_ATTACHMENT : "has"
-    COMPANY ||--o{ NOTIFICATION : ""
-    COMPANY ||--o{ COMPANY_DATA_SOURCE : ""
-    COMPANY ||--|| DATA_SOURCE_MEASUREMENT_NEWS_SUBSCRIPTION :""
-    DATA_SOURCE ||--o{ COMPANY_DATA_SOURCE : ""
-    DATA_SOURCE ||--o{ SOURCE_MEASUREMENT : ""
-    DATA_SOURCE ||--o{ NOTIFICATION : ""
-    DATA_SOURCE ||--|| USER_IMPORTANT_MEASUREMENT_PREFERENCE : ""
-    NOTIFICATION_SUBSCRIPTION ||--o{ NOTIFICATION_CHANNEL : ""
-    REPORT ||--o{ COMPANY : "contains"
-    REPORT_SUBSCRIPTION ||--o{ NOTIFICATION_CHANNEL : ""
-    USER ||--o{ USER_IMPORTANT_MEASUREMENT_PREFERENCE : "chooses"
-    USER ||--o{ NOTIFICATION_SUBSCRIPTION : ""
-    USER ||--|| REPORT_SUBSCRIPTION : ""
-    USER ||--o{ COMPANY : "subscribes"
-    USER ||--o{ BUCKET_ACCESS : "has"
-    USER ||--|| DATA_SOURCE_MEASUREMENT_NEWS_SUBSCRIPTION :""
-    USER ||--o{ COMPANY_ATTACHMENT : "attaches"
-    SOURCE_MEASUREMENT ||--o{ MEASUREMENT_TEXT_VALUE : ""
-    SOURCE_MEASUREMENT ||--o{ MEASUREMENT_INT_VALUE : ""
-    BUCKET {
-        uuid id PK
+    bucket ||--o{ company_bucket_membership : ""
+    bucket ||--o{ bucket_access : ""
+    company ||--o{ company_bucket_membership : ""
+    company ||--o{ notification_subscription : "has"
+    company ||--o{ report_subscription : ""
+    company ||--o{ company_attachment : "has"
+    company ||--o{ notification : ""
+    company ||--o{ company_data_source : ""
+    company ||--|| news_subscription :""
+    data_source ||--o{ company_data_source : ""
+    data_source ||--o{ SOURCE_MEASUREMENT : ""
+    data_source ||--o{ NOTIFICATION : ""
+    data_source ||--|| user_important_measurement_preference : ""
+    notification_subscription ||--o{ notification_channel : ""
+    report ||--o{ company : "contains"
+    report_subscription ||--o{ notification_channel : ""
+    user ||--o{ user_important_measurement_preference : "chooses"
+    user ||--o{ notification_subscription : ""
+    user ||--|| report_subscription : ""
+    user ||--o{ company : "subscribes"
+    user ||--o{ bucket_access : "has"
+    user ||--|| news_subscription :""
+    user ||--o{ company_attachment : "attaches"
+    source_measurement ||--o{ measurement_text_value : ""
+    source_measurement ||--o{ measurement_int_value : ""
+    bucket {
+        int id PK
         string title
         string description
         boolean is_public
-        uuid owner_id FK
-        string created_at
+        int owner_id FK
+        datetime created_at
+        datetime modified_at
+        int user_id FK
     }
-    BUCKET_ACCESS{
-        uuid id PK,FK
-        uuid invitee_id PK,FK
-        tbd  permission
+    bucket_access{
+        int bucket_id PK,FK
+        int invitee_id PK,FK
+        string permission
+        datetime created_at
+        datetime modified_at
+
     }
-    COMPANY {
-        uuid id PK
+    company {
+        int id PK
         string name
         string description
-        uuid added_by FK
+        int added_by FK
+        datetime created_at
+        datetime modified_at
     }
-    COMPANY_ATTACHMENT {
-        uuid id PK
-        uuid company_id FK
+    company_attachment {
+        int id PK
+        int company_id FK
         string file_type
         string file_url
-        uuid user_id FK
+        int user_id FK
         string title
-        date created_at
+        datetime created_at
+        datetime modified_at
     }
-    COMPANY_BUCKET_MEMBERSHIP{
-        uuid bucket_id PK,FK
-        uuid company_id PK,FK
+    company_bucket_membership {
+        int bucket_id PK,FK
+        int company_id PK,FK
+        datetime created_at
+        datetime modified_at
     }
-    COMPANY_DATA_SOURCE {
-        uuid data_source_id PK, FK
-        uuid company_id PK, FK
-        string frequency
+    company_data_source {
+        int data_source_id PK,FK
+        int company_id PK,FK
         boolean is_data_source_active
         string health_status
+        datetime created_at
+        datetime modified_at
     }
-    DATA_SOURCE {
-        uuid source_module_id PK
+    data_source {
+        int id PK
         string source_name
         boolean is_active
         string default_frequency
+        string frequency_pattern
         string health_status
+        string description
+        datetime created_at
+        datetime modified_at
+        string version
+        int maximum_expected_run_time
+        string invocation_endpoint
+        json additional_params
     }
-    DATA_SOURCE_MEASUREMENT_NEWS_SUBSCRIPTION{
-        uuid id PK
-        uuid user_id FK
-        uuid company_id FK
+    news_subscription {
+        int user_id PK,FK
+        int company_id PK,FK
+        datetime created_at
+        datetime modified_at
     }
-    NOTIFICATION {
-        uuid id PK
+    notification {
+        int id PK
         string message
-        uuid company_id FK
-        uuid data_source_id FK
-        date timestamp
+        int company_id FK
+        int data_source_id FK
+        datetime created_at
+        datetime modified_at
     }
-    NOTIFICATION_CHANNEL {
-        uuid channel_id PK, FK
-        uuid entity_id FK
+    notification_channel {
+        int id PK
+        int entity_id FK
         string entity_type
         string channel_type
         string destination
+        string encryptedApiKey
+        datetime created_at
+        datetime modified_at
     }
-    NOTIFICATION_SUBSCRIPTION {
-        uuid user_id FK, PK
-        uuid company_id FK, PK
-        uuid channel_id FK, PK
+    notification_subscription {
+        int user_id FK, PK
+        int company_id FK, PK
+        int channel_id FK, PK
+        datetime created_at
+        datetime modified_at
     }
-    REPORT{
-        uuid id PK
+    report{
+        int id PK
+        int company_id FK
         string name
-        date timestamp
-        blob content
-        uuid company_id FK
+        string report_file_url
+        datetime created_at
+        datetime modified_at
     }
-    REPORT_SUBSCRIPTION {
-        uuid user_id FK, PK
-        uuid company_id FK, PK
-        uuid channel_id FK, PK
+    report_subscription {
+        int user_id FK,PK
+        int company_id FK,PK
+        int channel_id FK,PK
+        datetime created_at
+        datetime modified_at
     }
-    SOURCE_MEASUREMENT {
-        uuid source_measurement_id PK
-        uuid source_module_id FK
+    source_measurement {
+        int id PK
+        int source_module_id FK
         string type
+        int company_id FK
         string measurement_name
+        datetime created_at
+        datetime modified_at
     }
-    USER {
-        uuid id PK
+    user {
+        int id PK
+        string auth_id
         string name
+        profile_picture string
         string role
+        datetime created_at
+        datetime modified_at
     }
-    USER_IMPORTANT_MEASUREMENT_PREFERENCE {
-        uuid data_source_id PK, FK
-        uuid user_id PK, FK
+    user_important_measurement_preference {
+        int data_source_id PK,FK
+        int user_id PK,FK
         string important_field_name
+        datetime created_at
+        datetime modified_at
     }
-    MEASUREMENT_TEXT_VALUE {
+    measurement_text_value {
         id measurement_value_id PK
         id source_measurement_id FK
-        timestamp timestamp
         string value
+        datetime created_at
+        datetime modified_at
     }
-    MEASUREMENT_INT_VALUE {
+    measurement_int_value {
         id measurement_value_id PK
         id source_measurement_id FK
-        timestamp timestamp
         int value
+        datetime created_at
+        datetime modified_at
     }
 ```

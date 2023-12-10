@@ -1,9 +1,11 @@
 'use client'
 import React, { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
 import type { DataSource } from '@prisma/client'
 import Table from '../../components/Datasources/Table'
-import DatasourcesLayout from './layout'
-import CreateDatasource from '@/components/Datasources/CreateDatasource'
+import { MainLayout } from '@/components/MainLayout'
+import AuthCheck from '@/components/Authentication/AuthCheck'
+import CustomButton from '@/components/BlueButton'
 
 async function getDatasources(page: number, size: number) {
   try {
@@ -26,7 +28,7 @@ async function getDatasources(page: number, size: number) {
   }
 }
 
-export default function DatasourcesPage() {
+function DatasourcesPage() {
   const [data, setData] = useState<DataSource[] | null>(null)
   const [pagination, setPagination] = useState({ currentPage: 1, pageSize: 10, totalPages: 0, totalCount: 0 })
 
@@ -52,21 +54,28 @@ export default function DatasourcesPage() {
     setPagination((prevState) => ({ ...prevState, pageSize: newSize }))
   }
 
+  const router = useRouter()
+  const navigateToCreate = () => {
+    router.push('/datasources/add-datasource')
+  }
+
   return (
     <>
-      <DatasourcesLayout>
-        <div className="relative m-6 flex min-h-screen w-auto flex-col justify-start rounded-lg bg-white shadow-lg">
-          <div className="flex items-center justify-between p-4">
+      <MainLayout>
+        <div className="relative m-5 flex min-h-screen w-auto flex-col justify-start rounded-md bg-white shadow-lg">
+          <div className="flex items-center justify-between p-6">
             <div className="mb-4 flex items-center justify-start space-x-4">
-              <h1 className="m-4">Datasources</h1>
+              <h1 className="m-4 text-4xl text-black">Datasources</h1>
             </div>
-            <div className="m-4">
-              <CreateDatasource />
+            <div className="m-5">
+              <CustomButton text="Create Datasource" onClick={navigateToCreate} />
             </div>
           </div>
-          <div className="p-8">
-            <div className="mx-4 rounded-lg border-0 bg-white shadow-md">
-              <div>
+          <div className="mb-8">
+            <div className="mx-auto max-w-6xl overflow-auto rounded-lg border-0 bg-white shadow-md">
+              {' '}
+              {/* Added overflow-auto */}
+              <div className="w-full">
                 {data ? (
                   <Table
                     initialData={data}
@@ -83,7 +92,9 @@ export default function DatasourcesPage() {
             </div>
           </div>
         </div>
-      </DatasourcesLayout>
+      </MainLayout>
     </>
   )
 }
+
+export default AuthCheck(DatasourcesPage)

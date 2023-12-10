@@ -28,7 +28,9 @@ const Pagination: React.FC<PaginationProps> = ({
   }
 
   return (
-    <div className="flex items-center justify-between rounded-lg p-4 shadow-lg">
+    <div className="flex items-center justify-between rounded-lg bg-transparent p-4">
+      {' '}
+      {/* Removed shadow-lg and added bg-transparent */}
       <div className="flex-1 text-sm font-semibold text-gray-700">
         Page {currentPage} of {totalPages}
       </div>

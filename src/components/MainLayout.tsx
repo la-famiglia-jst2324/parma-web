@@ -11,11 +11,11 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
   const user = useContext(AuthContext)
 
   return (
-    <div className="flex flex-row">
+    <div className="flex flex-col md:flex-row">
       {/* Sidebar */}
       <Sidebar />
       {/* Navbar */}
-      <div className="w-full pl-4 md:pl-64">
+      <div className="w-full md:pl-64">
         <div className="sticky top-0 z-50 flex items-center justify-between bg-white p-4 shadow-lg">
           <div className="flex items-center">
             <Breadcrumbs />

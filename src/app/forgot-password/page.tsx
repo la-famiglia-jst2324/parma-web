@@ -2,8 +2,7 @@
 
 import React, { useState } from 'react'
 import Link from 'next/link'
-import { TextInput, Callout, Button } from '@tremor/react'
-import { CheckCircleIcon } from '@heroicons/react/20/solid'
+import { TextInput, Button } from '@tremor/react'
 import ErrorInfo from '@/components/Authentication/ErrorInfo'
 import { authResetPassword } from '@/lib/firebase/auth'
 import SuccessInfo from '@/components/Authentication/SuccessInfo'
@@ -21,6 +20,12 @@ export default function ForgotPasswordPage() {
       // TODO: add timeout
       setError('')
       setSuccess('')
+
+      if (!email) {
+        setError('Please enter your email.')
+        return
+      }
+
       await authResetPassword(email)
       setError('')
       setSuccess('We have sent instructions on your given email to reset your password.')
@@ -38,11 +43,6 @@ export default function ForgotPasswordPage() {
         <p className="mb-4">
           Please enter your email address and we will send you <br /> instructions to reset your password
         </p>
-        <div className="max-w-md">
-          <Callout className="mt-4" title="Please check your email" icon={CheckCircleIcon} color="teal">
-            We have sent instructions on your given email to reset your password.
-          </Callout>
-        </div>
 
         {error ? (
           <div className="mt-5">

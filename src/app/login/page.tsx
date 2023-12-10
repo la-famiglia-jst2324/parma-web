@@ -3,24 +3,57 @@
 import Link from 'next/link'
 import { TextInput, Button } from '@tremor/react'
 import { useState } from 'react'
+import type firebase from 'firebase/app'
 import GoogleAuthButton from '@/components/GoogleAuthButton'
 import { authLogin } from '@/lib/firebase/auth'
 import ErrorInfo from '@/components/Authentication/ErrorInfo'
 
 export default function LoginPage() {
-  const [loading, setLoading] = useState(false)
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [error, setError] = useState('')
+  const [loading, setLoading] = useState<boolean>(false)
+  const [email, setEmail] = useState<string>('')
+  const [password, setPassword] = useState<string>('')
+  const [error, setError] = useState<string>('')
 
   const handleSubmit = async () => {
     setLoading(true)
     try {
-      // TODO: further form validation
-      // TODO: add timeout
       setError('')
-      await authLogin(email, password)
+
+      // Further form validation
+      if (!email || !password) {
+        setError('All fields are required')
+        return
+      }
+
+      // Add timeout
+      const timeoutId = setTimeout(() => {
+        setError('Your request could not be processed. Please try again.')
+        setLoading(false)
+      }, 10000)
+
+      try {
+        await authLogin(email, password)
+        // If successful, clear timeout and handle success (if needed)
+        clearTimeout(timeoutId)
+        // Handle successful login, redirect to the dashboard
+      } catch (loginError) {
+        clearTimeout(timeoutId)
+        // Handle specific login errors
+        if (loginError instanceof Error) {
+          const errorCode = (loginError as firebase.FirebaseError).code
+          if (errorCode === 'auth/user-not-found' || errorCode === 'auth/wrong-password') {
+            setError('Email or password is incorrect. Please try again.')
+          } else if (errorCode === 'auth/invalid-email') {
+            setError('The email address is not valid. Please provide a valid email address.')
+          } else {
+            setError('Login failed. Please try again.')
+          }
+        } else {
+          setError('Login failed. Please try again.')
+        }
+      }
     } catch (error) {
+      // Handle general errors
       setError(error instanceof Error ? error.message : 'Something went wrong.')
     } finally {
       setLoading(false)

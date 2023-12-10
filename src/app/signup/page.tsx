@@ -3,29 +3,68 @@
 import React, { useState } from 'react'
 import Link from 'next/link'
 import { TextInput, Button } from '@tremor/react'
+import type firebase from 'firebase/app'
 import GoogleAuthButton from '@/components/GoogleAuthButton'
 import { authSignup } from '@/lib/firebase/auth'
 import ErrorInfo from '@/components/Authentication/ErrorInfo'
 
 export default function SignupPage() {
-  const [loading, setLoading] = useState(false)
-  const [name, setName] = useState('')
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [confirm, setConfirm] = useState('')
-  const [error, setError] = useState('')
+  const [loading, setLoading] = useState<boolean>(false)
+  const [name, setName] = useState<string>('')
+  const [email, setEmail] = useState<string>('')
+  const [password, setPassword] = useState<string>('')
+  const [confirm, setConfirm] = useState<string>('')
+  const [error, setError] = useState<string>('')
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (): Promise<void> => {
     setLoading(true)
     try {
-      // TODO: further form validation
-      // TODO: add timeout
       setError('')
-      if (password !== confirm) {
-        throw new Error('Passwords do not match')
+
+      // Further form validation
+      if (!name || !email || !password || !confirm) {
+        setError('All fields are required')
+        return
       }
-      await authSignup(name, email, password)
+
+      if (password !== confirm) {
+        setError('Passwords do not match')
+        return
+      }
+
+      // Add timeout for server response
+      const timeoutId = setTimeout(() => {
+        setError('Your request could not be processed. Please try again.')
+        setLoading(false)
+      }, 10000)
+
+      // Attempt signup
+      try {
+        await authSignup(name, email, password)
+        clearTimeout(timeoutId)
+        // Handle successful signup, redirect to the login page
+      } catch (signupError) {
+        clearTimeout(timeoutId)
+        // Handle specific signup errors
+        if (signupError instanceof Error) {
+          const errorCode = (signupError as firebase.FirebaseError).code
+          if (errorCode === 'auth/email-already-in-use') {
+            setError('The provided email is already in use. Please use a different email address.')
+          } else if (errorCode === 'auth/weak-password') {
+            setError(
+              'Password is too weak. It must be at least 8 characters long and include a mix of letters, numbers, and symbols.'
+            )
+          } else if (errorCode === 'auth/invalid-email') {
+            setError('The email address is not valid. Please provide a valid email address.')
+          } else {
+            setError('Login failed. Please try again.')
+          }
+        } else {
+          setError('Signup failed. Please try again.')
+        }
+      }
     } catch (error) {
+      // Handle general errors
       setError(error instanceof Error ? error.message : 'Something went wrong.')
     } finally {
       setLoading(false)
@@ -83,11 +122,6 @@ export default function SignupPage() {
                 setConfirm(val)
               }}
             />
-          </div>
-          <div className="mb-3 flex items-center justify-between">
-            <Link href="/forgot-password" className="text-base font-bold hover:underline">
-              Forgot password?
-            </Link>
           </div>
         </div>
 

@@ -1,7 +1,15 @@
+import React from 'react'
+import { CheckCircleIcon } from '@heroicons/react/20/solid'
+import { Callout } from '@tremor/react'
+
 export default function SuccessInfo({ msg }: { msg: string }) {
   return (
-    <div className="relative rounded border border-green-400 bg-green-100 px-4 py-3 text-red-700" role="alert">
-      <span className="block sm:inline">{msg}</span>
+    <div className="mx-auto flex max-w-xs items-center justify-center overflow-auto">
+      <div className="w-full">
+        <Callout title="Please check your email" icon={CheckCircleIcon} color="teal">
+          {msg}
+        </Callout>
+      </div>
     </div>
   )
 }

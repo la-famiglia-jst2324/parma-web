@@ -1,113 +1,60 @@
 'use client'
-import React from 'react'
-import { MultiSelect, MultiSelectItem, AreaChart } from '@tremor/react'
+import React, { useState } from 'react'
+import { MultiSelect, MultiSelectItem, Button, SearchSelectItem, SearchSelect } from '@tremor/react'
 import { MainLayout } from '@/components/MainLayout'
 import useSubscribedCompanies from '@/components/hooks/useSubscribedCompanies'
 import useDatasources from '@/components/hooks/useDatasources'
-
-const chartdata = [
-  {
-    date: 'Jan 22',
-    SemiAnalysis: 2890,
-    'The Pragmatic Engineer': 2338
-  },
-  {
-    date: 'Feb 22',
-    SemiAnalysis: 2756,
-    'The Pragmatic Engineer': 2103
-  },
-  {
-    date: 'Mar 22',
-    SemiAnalysis: 3322,
-    'The Pragmatic Engineer': 2194
-  },
-  {
-    date: 'Apr 22',
-    SemiAnalysis: 3470,
-    'The Pragmatic Engineer': 2108
-  },
-  {
-    date: 'May 22',
-    SemiAnalysis: 3475,
-    'The Pragmatic Engineer': 1812
-  },
-  {
-    date: 'Jun 22',
-    SemiAnalysis: 3129,
-    'The Pragmatic Engineer': 1726
-  }
-]
-
-const valueFormatter = function (number: number) {
-  return '$ ' + new Intl.NumberFormat('us').format(number).toString()
-}
+import UserCustomizationComponent from '@/components/Analytics/UserCustomization'
+import RevenueChart from '@/components/Analytics/Graph'
 
 const AnalyticsPage: React.FC = () => {
   const subscribedCompanies = useSubscribedCompanies()
   const { data } = useDatasources(1, 10)
-  const userCustomizations: { title: string; source: string }[] = []
+
+  const [selectedCompanies, setSelectedCompanies] = useState<Array<string>>([])
+  const [selectedDatasources, setSelectedDatasources] = useState<string>('')
 
   return (
     <MainLayout>
       <div className="m-6 flex flex-col items-start rounded-lg border-0 bg-white p-4 shadow-md">
-        <div className="mb-6">
-          <h1 className="mx-4 mb-2 text-2xl font-semibold text-gray-700">Your saved Customizations</h1>
-          {userCustomizations && userCustomizations.length > 0 ? (
-            userCustomizations.map((customization, index) => (
-              <div key={index}>
-                <p className="mx-4 text-sm text-gray-600">Choose a customization to view</p>
-                <div>
-                  <p>{customization.title}</p>
-                  <p>{customization.source}</p>
-                </div>
-              </div>
-            ))
-          ) : (
-            <p className="mx-4 text-sm text-gray-600">
-              You haven't saved any customization yet. Select the companies and datasources on the graph below and save
-              your selections.{' '}
-            </p>
-          )}
-        </div>
+        <UserCustomizationComponent />
         <div className="mb-6">
           <h1 className="mx-4 mb-2 text-2xl font-semibold text-gray-700">Compare data across companies</h1>
           <p className="mx-4 mb-4 text-sm text-gray-600">Choose companies and a metric to compare them</p>
-          <div className="flex space-x-4">
-            <div className="w-3/4">
-              <MultiSelect placeholder="Companies" onValueChange={() => {}}>
-                {subscribedCompanies.map((companyName, index) => (
-                  <MultiSelectItem key={index} value={companyName}>
-                    {companyName}
-                  </MultiSelectItem>
-                ))}
-              </MultiSelect>
-            </div>
-            <div className="w-3/4">
-              <MultiSelect placeholder="Datasources" onValueChange={() => {}}>
-                {data ? (
-                  data.map((datasource, index) => (
-                    <MultiSelectItem key={index} value={datasource.sourceName}>
-                      {datasource.sourceName}
+          <div className="flex justify-between">
+            <div className="ml-2 flex space-x-4">
+              <div className="w-1/2">
+                <MultiSelect placeholder="Companies" onValueChange={(selected) => setSelectedCompanies(selected)}>
+                  {subscribedCompanies.map((companyName, index) => (
+                    <MultiSelectItem key={index} value={companyName}>
+                      {companyName}
                     </MultiSelectItem>
-                  ))
-                ) : (
-                  <p>No items available</p>
-                )}
-              </MultiSelect>
+                  ))}
+                </MultiSelect>
+              </div>
+              <div className="w-1/2">
+                <SearchSelect placeholder="Datasources" onValueChange={(selected) => setSelectedDatasources(selected)}>
+                  {data ? (
+                    data.map((datasource, index) => (
+                      <SearchSelectItem key={index} value={datasource.sourceName}>
+                        {datasource.sourceName}
+                      </SearchSelectItem>
+                    ))
+                  ) : (
+                    <p>No items available</p>
+                  )}
+                </SearchSelect>
+              </div>
+              <Button className="mr-2" disabled={selectedCompanies.length === 0 || selectedDatasources.length === 0}>
+                Compare
+              </Button>
+            </div>
+            <div className="ml-4">
+              <Button className="mr-2">Save Customization</Button>
             </div>
           </div>
         </div>
-        <div className="mt-2 w-full">
-          <h1 className="ml-2 text-lg text-gray-700">Newsletter revenue over time (USD)</h1>
-          <AreaChart
-            className="mt-2 h-72 w-full"
-            data={chartdata}
-            index="date"
-            categories={['SemiAnalysis', 'The Pragmatic Engineer']}
-            colors={['indigo', 'cyan']}
-            valueFormatter={valueFormatter}
-          />
-        </div>
+        <RevenueChart />
       </div>
     </MainLayout>
   )

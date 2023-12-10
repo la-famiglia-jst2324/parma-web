@@ -41,10 +41,12 @@ export default function LoginPage() {
         // Handle specific login errors
         if (loginError instanceof Error) {
           const errorCode = (loginError as firebase.FirebaseError).code
-          if (errorCode === 'auth/user-not-found' || errorCode === 'auth/wrong-password') {
+          if (errorCode === 'auth/invalid-credential' || errorCode === 'auth/user-not-found') {
             setError('Email or password is incorrect. Please try again.')
           } else if (errorCode === 'auth/invalid-email') {
             setError('The email address is not valid. Please provide a valid email address.')
+          } else if (errorCode === 'auth/too-many-requests') {
+            setError('Too many requests. Please try again later.')
           } else {
             setError('Login failed. Please try again.')
           }

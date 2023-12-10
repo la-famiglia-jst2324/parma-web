@@ -7,6 +7,7 @@ import type firebase from 'firebase/app'
 import GoogleAuthButton from '@/components/GoogleAuthButton'
 import { authSignup } from '@/lib/firebase/auth'
 import ErrorInfo from '@/components/Authentication/ErrorInfo'
+import SuccessInfo from '@/components/Authentication/SuccessInfo'
 
 export default function SignupPage() {
   const [loading, setLoading] = useState<boolean>(false)
@@ -15,6 +16,7 @@ export default function SignupPage() {
   const [password, setPassword] = useState<string>('')
   const [confirm, setConfirm] = useState<string>('')
   const [error, setError] = useState<string>('')
+  const [success, setSuccess] = useState<string>('')
 
   const handleSubmit = async (): Promise<void> => {
     setLoading(true)
@@ -43,6 +45,7 @@ export default function SignupPage() {
         await authSignup(name, email, password)
         clearTimeout(timeoutId)
         // Handle successful signup, redirect to the login page
+        setSuccess('Your account has been created successfully. Please check your email to verify your account.')
       } catch (signupError) {
         clearTimeout(timeoutId)
         // Handle specific signup errors
@@ -76,6 +79,8 @@ export default function SignupPage() {
       <div>
         <h2 className="mb-3 text-5xl font-bold">Signup</h2>
         <p className="mb-3 text-base">Please enter your details to create an account</p>
+
+        {success ? <SuccessInfo msg={success} /> : null}
 
         {error ? <ErrorInfo msg={error} /> : null}
 

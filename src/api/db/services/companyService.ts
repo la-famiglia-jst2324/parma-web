@@ -37,7 +37,7 @@ const getCompanyByName = async (name: string) => {
       include: {
         companyAttachments: true,
         companyDataSource: true, // how to display the response
-        sourceMeasurements: true
+        companySourceMeasurements: true
       }
     })
     if (!company) {

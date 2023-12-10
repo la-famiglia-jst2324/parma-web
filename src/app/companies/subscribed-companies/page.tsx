@@ -1,16 +1,23 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import type { Company } from '@/types/companies'
 import CompanyCard from '@/components/Companies/CompanyCard'
 import GoBackButton from '@/components/Companies/GoBackButton'
+import { AuthContext } from '@/lib/firebase/auth'
 
-async function getSubscribedCompanies() {
+interface SubscribedCompaniesPageProps {}
+
+async function getSubscribedCompanies(idToken: string) {
   try {
-    const res = await fetch('/api/companies/subscribed-companies', {
+    const res = await fetch('/api/company/subscribed', {
       method: 'GET',
-      cache: 'no-cache'
+      cache: 'no-cache',
+      headers: {
+        Authorization: idToken
+      }
     })
+
     if (!res.ok) {
       console.log('Response status:', res.status)
       throw new Error('HTTP response was not OK')
@@ -19,26 +26,42 @@ async function getSubscribedCompanies() {
     return json
   } catch (error) {
     console.log('An error has occurred: ', error)
+    return []
   }
 }
 
-const SubscribedCompaniesPage: React.FC = () => {
+const SubscribedCompaniesPage: React.FC<SubscribedCompaniesPageProps> = () => {
   const [subscribedCompanies, setSubscribedCompanies] = useState<Company[]>([])
+  const [idToken, setIdToken] = useState<string>('')
+  const user = useContext(AuthContext)
+
+  useEffect(() => {
+    const setToken = async () => {
+      if (user) {
+        const token = await user.getIdToken()
+        setIdToken(token)
+      }
+    }
+
+    setToken()
+  }, [user])
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const data = await getSubscribedCompanies()
-        setSubscribedCompanies(data)
+        if (idToken) {
+          const data = await getSubscribedCompanies(idToken)
+          setSubscribedCompanies(data)
+        }
       } catch (error) {
         console.error('Failed to fetch subscribed companies:', error)
       }
     }
     fetchData()
-  }, [])
+  }, [idToken, setSubscribedCompanies])
 
   return (
-    <div className="m-3 flex flex-col items-start rounded-lg border-0 bg-white p-3 shadow-md">
+    <div className="m-3 flex min-h-[calc(100vh-90px)] flex-col items-start rounded-lg border-0 bg-white p-3 shadow-md">
       <div className="mb-3 flex items-center justify-start space-x-4">
         <div className="pl-2">
           <GoBackButton />

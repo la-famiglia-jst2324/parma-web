@@ -2,8 +2,6 @@ export interface Company {
   id: string
   name: string
   description: string
-  activeDatasources: number
-  inactiveDatasources: number
 }
 
 export interface CompanyData {

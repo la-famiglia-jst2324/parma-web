@@ -1,5 +1,5 @@
 'use client'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useContext } from 'react'
 import { MultiSelect, MultiSelectItem } from '@tremor/react'
 import Link from 'next/link'
 import NewsCard from '@/components/Dashboard/NewsCard'
@@ -7,6 +7,7 @@ import type NewsItem from '@/types/news'
 import TopBucketsCard from '@/components/Dashboard/TopBucketsCard'
 import type TopBucket from '@/types/topBuckets'
 import type { Company } from '@/types/companies'
+import { AuthContext } from '@/lib/firebase/auth'
 
 async function getDashboardData() {
   try {
@@ -25,12 +26,16 @@ async function getDashboardData() {
   }
 }
 
-async function getSubscribedCompanies() {
+async function getSubscribedCompanies(idToken: string) {
   try {
-    const res = await fetch('/api/companies/subscribed-companies', {
+    const res = await fetch('/api/company/subscribed', {
       method: 'GET',
-      cache: 'no-cache'
+      cache: 'no-cache',
+      headers: {
+        Authorization: idToken
+      }
     })
+
     if (!res.ok) {
       console.log('Response status:', res.status)
       throw new Error('HTTP response was not OK')
@@ -39,6 +44,7 @@ async function getSubscribedCompanies() {
     return json
   } catch (error) {
     console.log('An error has occurred: ', error)
+    return []
   }
 }
 
@@ -46,6 +52,9 @@ export default function Home() {
   const [data, setData] = useState({ topBuckets: [], news: [] })
   const [subscribedCompanies, setSubscribedCompanies] = useState<Company[]>([])
   const [selectedCompanies, setSelectedCompanies] = useState<string[]>([])
+  const [idToken, setIdToken] = useState<string>('')
+
+  const user = useContext(AuthContext)
 
   useEffect(() => {
     getDashboardData()
@@ -56,12 +65,29 @@ export default function Home() {
   }, [])
 
   useEffect(() => {
-    getSubscribedCompanies()
-      .then((res) => setSubscribedCompanies(res))
-      .catch((error) => {
+    const setToken = async () => {
+      if (user) {
+        const token = await user.getIdToken()
+        setIdToken(token)
+      }
+    }
+
+    setToken()
+  }, [user])
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        if (idToken) {
+          const data = await getSubscribedCompanies(idToken)
+          setSubscribedCompanies(data)
+        }
+      } catch (error) {
         console.error('Failed to fetch subscribed companies:', error)
-      })
-  }, [])
+      }
+    }
+    fetchData()
+  }, [idToken, setSubscribedCompanies])
 
   const news = data.news as NewsItem[]
   const topBuckets = data.topBuckets as TopBucket[]

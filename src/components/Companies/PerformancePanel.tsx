@@ -1,21 +1,15 @@
-'use client'
-
 import React from 'react'
-// import { CalculatorIcon } from '@heroicons/react/20/outline'
-// import { Card, LineChart, Title, Select, SelectItem, Button } from '@tremor/react'
-// import Link from 'next/link'
-// import { ArrowLeftIcon } from '@heroicons/react/20/solid'
 import { Card, LineChart, Title } from '@tremor/react'
 
-const PerformancePanel = () => {
-  // const [datasources, setDatasources] = useState<string[]>([])
-  // const [metrics, setMetrics] = useState<string[]>([])
-  // const [selectedDatasource, setSelectedDatasource] = useState('')
-  // const [selectedMetric, setSelectedMetric] = useState('')
+interface ChartData {
+  year: number
+  'Export Growth Rate': number
+}
 
+const PerformancePanel = () => {
   const valueFormatter = (value: number): string => `$ ${new Intl.NumberFormat('us').format(value).toString()}`
 
-  const chartdata = [
+  const chartdata: ChartData[] = [
     {
       year: 1970,
       'Export Growth Rate': 2.04
@@ -80,42 +74,11 @@ const PerformancePanel = () => {
       year: 1985,
       'Export Growth Rate': 1.32
     }
-    // Add more years and export growth rates as needed
   ]
 
   return (
     <div className="mt-4">
-      <div className="flex space-x-4">
-        {/* <Select value={''} onValueChange={() => {}}>
-          <SelectItem value="1" >
-            Kilometers
-          </SelectItem>
-          <SelectItem value="2" >
-            Meters
-          </SelectItem>
-          <SelectItem value="3" >
-            Miles
-          </SelectItem>
-          <SelectItem value="4" >
-            Nautical Miles
-          </SelectItem>
-        </Select>
-        <Select value={''} onValueChange={() => {}}>
-          <SelectItem value="1" >
-            Kilometers
-          </SelectItem>
-          <SelectItem value="2">
-            Meters
-          </SelectItem>
-          <SelectItem value="3" >
-            Miles
-          </SelectItem>
-          <SelectItem value="4" >
-            Nautical Miles
-          </SelectItem>
-        </Select>
-        <Button>Show Data</Button> */}
-      </div>
+      <div className="flex space-x-4"></div>
       <div className="mt-4">
         <Card>
           <Title>Wikipedia</Title>

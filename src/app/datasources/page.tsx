@@ -1,9 +1,11 @@
 'use client'
 import React, { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
 import Table from '../../components/Datasources/Table'
-import DatasourcesLayout from './layout'
-import CreateDatasource from '@/components/Datasources/CreateDatasource'
 import type Datasource from '@/types/datasource'
+import { MainLayout } from '@/components/MainLayout'
+import AuthCheck from '@/components/Authentication/AuthCheck'
+import CustomButton from '@/components/BlueButton'
 
 async function getDatasources() {
   try {
@@ -22,7 +24,7 @@ async function getDatasources() {
   }
 }
 
-export default function DatasourcesPage() {
+function DatasourcesPage() {
   const [data, setData] = useState<Datasource[]>([])
 
   useEffect(() => {
@@ -33,33 +35,40 @@ export default function DatasourcesPage() {
       })
   }, [])
 
+  const router = useRouter()
+  const navigateToCreate = () => {
+    router.push('/datasources/add-datasource')
+  }
+
   return (
     <>
-      <DatasourcesLayout>
-        <div className="relative m-6 flex min-h-screen w-auto flex-col justify-start rounded-lg bg-white shadow-lg">
+      <MainLayout>
+        <div className="relative m-5 flex min-h-screen w-auto flex-col justify-start rounded-md bg-white shadow-lg">
           <div className="flex items-center justify-between p-4">
             <div className="mb-4 flex items-center justify-start space-x-4">
-              <h1 className="m-4">Datasources</h1>
+              <h1 className="m-4 text-4xl text-black">Datasources</h1>
             </div>
             <div className="m-4">
-              <CreateDatasource />
+              <CustomButton text="Create Datasource" onClick={navigateToCreate} />
             </div>
           </div>
           <div className="p-8">
-            <div className="mx-4 rounded-lg border-0 bg-white shadow-md">
-              <div>
-                {data ? (
+            {data ? (
+              <div className="mx-4 rounded-lg border-0 bg-white shadow-md">
+                <div>
                   <Table data={data} />
-                ) : (
-                  <p className="text-lg font-bold text-gray-700">
-                    No datasources available yet. Start by creating one.
-                  </p>
-                )}
+                </div>
               </div>
-            </div>
+            ) : (
+              <p className="text-lg font-semibold text-gray-600">
+                No datasources available yet. Start by creating one.
+              </p>
+            )}
           </div>
         </div>
-      </DatasourcesLayout>
+      </MainLayout>
     </>
   )
 }
+
+export default AuthCheck(DatasourcesPage)

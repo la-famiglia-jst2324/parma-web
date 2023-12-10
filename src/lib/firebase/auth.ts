@@ -1,7 +1,15 @@
 'use client'
 
 import type { User } from 'firebase/auth'
-import { EmailAuthProvider, GoogleAuthProvider, getAuth, signInWithPopup } from 'firebase/auth'
+import {
+  GoogleAuthProvider,
+  createUserWithEmailAndPassword,
+  getAuth,
+  sendPasswordResetEmail,
+  signInWithEmailAndPassword,
+  signInWithPopup,
+  updateProfile
+} from 'firebase/auth'
 import React from 'react'
 require('@/lib/firebase/main')
 
@@ -9,33 +17,26 @@ export const AuthContext = React.createContext<User | null>(null)
 
 const auth = getAuth()
 const googleAuthProvider = new GoogleAuthProvider()
-const mailAuthProvider = new EmailAuthProvider()
 
-export const authLogin = async ({ provider }: { provider: 'google' | 'email' }) => {
-  let authProvider = null
-  switch (provider) {
-    case 'google':
-      authProvider = googleAuthProvider
-      break
-    case 'email':
-      authProvider = mailAuthProvider
-      break
-    default:
-      throw new Error('invalid provider')
-  }
+export const googleAuthLogin = async () => {
+  signInWithPopup(auth, googleAuthProvider).catch((error) => {
+    console.log(error)
+  })
+}
 
-  signInWithPopup(auth, authProvider)
-    .then((result) => {
-      // This gives you a Google Access Token. You can use it to access the Google API.
-      const credential = GoogleAuthProvider.credentialFromResult(result)
-      console.log(credential)
-      // TODO: we might need this in the future
-      // const token = credential.accessToken;
-      // const user = result.user;
-    })
-    .catch((error) => {
-      console.log(error)
-    })
+export const authLogin = async (email: string, password: string) => {
+  await signInWithEmailAndPassword(auth, email, password)
+}
+
+export const authSignup = async (name: string, email: string, password: string) => {
+  const user = await createUserWithEmailAndPassword(auth, email, password)
+  await updateProfile(user.user, {
+    displayName: name
+  })
+}
+
+export const authResetPassword = async (email: string) => {
+  await sendPasswordResetEmail(auth, email)
 }
 
 export const authLogout = async () => {

@@ -15,10 +15,12 @@ export default function ForgotPasswordPage() {
 
   const handleSubmit = async () => {
     setLoading(true)
-    try {
-      setError('')
-      setSuccess('')
+    setError('')
+    setSuccess('')
 
+    let timeoutId: NodeJS.Timeout | null = null
+
+    try {
       // further form validation
       if (!email) {
         setError('Please enter your email.')
@@ -26,19 +28,23 @@ export default function ForgotPasswordPage() {
       }
 
       // Add timeout
-      const timeoutId = setTimeout(() => {
+      timeoutId = setTimeout(() => {
         setError('Your request could not be processed. Please try again.')
         setLoading(false)
       }, 10000)
-      
+
       await authResetPassword(email)
       clearTimeout(timeoutId)
+      timeoutId = null
       setError('')
       setSuccess('We have sent instructions on your given email to reset your password.')
     } catch (error) {
       setError(error instanceof Error ? error.message : 'Something went wrong.')
     } finally {
       setLoading(false)
+      if (timeoutId) {
+        clearTimeout(timeoutId)
+      }
     }
   }
 

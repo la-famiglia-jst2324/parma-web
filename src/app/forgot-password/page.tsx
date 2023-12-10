@@ -1,11 +1,53 @@
 'use client'
 
-import React from 'react'
+import React, { useState } from 'react'
 import Link from 'next/link'
-import { TextInput, Callout, Button } from '@tremor/react'
-import { CheckCircleIcon } from '@heroicons/react/20/solid'
+import { TextInput, Button } from '@tremor/react'
+import ErrorInfo from '@/components/Authentication/ErrorInfo'
+import { authResetPassword } from '@/lib/firebase/auth'
+import SuccessInfo from '@/components/Authentication/SuccessInfo'
 
 export default function ForgotPasswordPage() {
+  const [loading, setLoading] = useState(false)
+  const [email, setEmail] = useState('')
+  const [error, setError] = useState('')
+  const [success, setSuccess] = useState('')
+
+  const handleSubmit = async () => {
+    setLoading(true)
+    setError('')
+    setSuccess('')
+
+    let timeoutId: NodeJS.Timeout | null = null
+
+    try {
+      // further form validation
+      if (!email) {
+        setError('Please enter your email.')
+        return
+      }
+
+      // Add timeout
+      timeoutId = setTimeout(() => {
+        setError('Your request could not be processed. Please try again.')
+        setLoading(false)
+      }, 10000)
+
+      await authResetPassword(email)
+      clearTimeout(timeoutId)
+      timeoutId = null
+      setError('')
+      setSuccess('We have sent instructions on your given email to reset your password.')
+    } catch (error) {
+      setError(error instanceof Error ? error.message : 'Something went wrong.')
+    } finally {
+      setLoading(false)
+      if (timeoutId) {
+        clearTimeout(timeoutId)
+      }
+    }
+  }
+
   return (
     <div className="flex h-screen items-center justify-center bg-white">
       <div>
@@ -13,20 +55,32 @@ export default function ForgotPasswordPage() {
         <p className="mb-4">
           Please enter your email address and we will send you <br /> instructions to reset your password
         </p>
-        <div className="max-w-md">
-          <Callout className="mt-4" title="Please check your email" icon={CheckCircleIcon} color="teal">
-            We have sent instructions on your given email to reset your password.
-          </Callout>
-        </div>
+
+        {error ? (
+          <div className="mt-5">
+            <ErrorInfo msg={error} />
+          </div>
+        ) : null}
+        {success ? (
+          <div className="mt-5">
+            <SuccessInfo msg={success} />
+          </div>
+        ) : null}
+
         <div className="py-6">
           <div className="mb-4">
             <label htmlFor="email" className="block text-sm font-bold text-gray-600">
               Email
             </label>
-            <TextInput onValueChange={() => {}} />
+            <TextInput
+              type="email"
+              onValueChange={(val) => {
+                setEmail(val)
+              }}
+            />
           </div>
         </div>
-        <Button size="xl" className="w-full" variant="primary">
+        <Button onClick={() => handleSubmit()} loading={loading} size="xl" className="w-full" variant="primary">
           Request reset link
         </Button>
         <p className="mt-4 text-center">

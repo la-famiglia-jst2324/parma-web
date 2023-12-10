@@ -21,7 +21,7 @@
     "incremental": true,
     "noImplicitAny": true,
     "strictNullChecks": true,
-    "noImplicitReturns": false,
+    "noImplicitReturns": true,
     "noImplicitOverride": true,
     "plugins": [
       {

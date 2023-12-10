@@ -129,8 +129,12 @@ const DataSourcesPanel: React.FC<Props> = ({ companyId, idToken, setPopupContent
 
   useEffect(() => {
     const fetchData = async () => {
-      const data = await getDataSourcesByCompanyId(companyId, idToken)
-      setCompanyDataSources(data)
+      try {
+        const data = await getDataSourcesByCompanyId(companyId, idToken)
+        setCompanyDataSources(data)
+      } catch (error) {
+        console.error('Failed to fetch data sources:', error)
+      }
     }
 
     fetchData()
@@ -138,12 +142,16 @@ const DataSourcesPanel: React.FC<Props> = ({ companyId, idToken, setPopupContent
 
   useEffect(() => {
     const fetchData = async () => {
-      const data = await getDataSources(idToken)
-      setAllDataSources(data)
+      try {
+        const data = await getDataSources(idToken)
+        setAllDataSources(data)
+      } catch (error) {
+        console.error('Error fetching data sources:', error)
+      }
     }
 
     fetchData()
-  }, [companyId, idToken])
+  }, [idToken])
 
   useEffect(() => {
     if (allDataSources && companyDataSources) {

@@ -37,9 +37,13 @@ const SubscribedCompaniesPage: React.FC<SubscribedCompaniesPageProps> = () => {
 
   useEffect(() => {
     const setToken = async () => {
-      if (user) {
-        const token = await user.getIdToken()
-        setIdToken(token)
+      try {
+        if (user) {
+          const token = await user.getIdToken()
+          setIdToken(token)
+        }
+      } catch (error) {
+        console.error('Error setting token:', error)
       }
     }
 

@@ -219,9 +219,13 @@ const CompanyPage = ({ params: { companyId } }: { params: { companyId: string } 
 
   useEffect(() => {
     const setToken = async () => {
-      if (user) {
-        const token = await user.getIdToken()
-        setIdToken(token)
+      try {
+        if (user) {
+          const token = await user.getIdToken()
+          setIdToken(token)
+        }
+      } catch (error) {
+        console.error('Error setting token:', error)
       }
     }
 
@@ -276,6 +280,7 @@ const CompanyPage = ({ params: { companyId } }: { params: { companyId: string } 
 
       return () => clearTimeout(timerId)
     }
+    return () => {}
   }, [showPopup])
 
   const handleExport = async (name: string) => {

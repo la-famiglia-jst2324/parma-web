@@ -90,8 +90,12 @@ const CompaniesPage: React.FC<CompaniesPageProps> = () => {
   useEffect(() => {
     const setToken = async () => {
       if (user) {
-        const token = await user.getIdToken()
-        setIdToken(token)
+        try {
+          const token = await user.getIdToken()
+          setIdToken(token)
+        } catch (error) {
+          console.error('Error fetching token:', error)
+        }
       }
     }
 

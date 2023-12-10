@@ -66,9 +66,13 @@ export default function Home() {
 
   useEffect(() => {
     const setToken = async () => {
-      if (user) {
-        const token = await user.getIdToken()
-        setIdToken(token)
+      try {
+        if (user) {
+          const token = await user.getIdToken()
+          setIdToken(token)
+        }
+      } catch (error) {
+        console.error('Error setting token:', error)
       }
     }
 

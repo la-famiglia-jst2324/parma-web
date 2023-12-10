@@ -200,7 +200,7 @@ const DataSourcesPanel: React.FC<Props> = ({ companyId, idToken, setPopupContent
 
   return (
     <div className="mt-4">
-      <h3 className="pb-2 font-bold">Link more data sources with this company</h3>
+      <h3 className="pb-2 font-bold">Link data sources with this company</h3>
       <div className="flex">
         <div className="w-64 pb-3">
           <MultiSelect onValueChange={handleMultiSelectChange}>

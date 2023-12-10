@@ -5,6 +5,8 @@ import type { Company } from '@/types/companies'
 import CompanyCard from '@/components/Companies/CompanyCard'
 import GoBackButton from '@/components/Companies/GoBackButton'
 import { AuthContext } from '@/lib/firebase/auth'
+import { MainLayout } from '@/components/MainLayout'
+import AuthCheck from '@/components/Authentication/AuthCheck'
 
 interface SubscribedCompaniesPageProps {}
 
@@ -65,22 +67,24 @@ const SubscribedCompaniesPage: React.FC<SubscribedCompaniesPageProps> = () => {
   }, [idToken, setSubscribedCompanies])
 
   return (
-    <div className="m-3 flex min-h-[calc(100vh-90px)] flex-col items-start rounded-lg border-0 bg-white p-3 shadow-md">
-      <div className="mb-3 flex items-center justify-start space-x-4">
-        <div className="pl-2">
-          <GoBackButton />
-        </div>
-        <h1 className="py-2 pl-2 text-2xl font-bold">Subscribed companies</h1>
-      </div>
-      <div className="flex w-full flex-wrap">
-        {subscribedCompanies?.map((company, index) => (
-          <div className="md:w-1/3">
-            <CompanyCard key={index} id={company.id} name={company.name} description={company.description} />
+    <MainLayout>
+      <div className="m-3 flex min-h-[calc(100vh-90px)] flex-col items-start rounded-lg border-0 bg-white p-3 shadow-md">
+        <div className="mb-3 flex items-center justify-start space-x-4">
+          <div className="pl-2">
+            <GoBackButton />
           </div>
-        ))}
+          <h1 className="py-2 pl-2 text-2xl font-bold">Subscribed companies</h1>
+        </div>
+        <div className="flex w-full flex-wrap">
+          {subscribedCompanies?.map((company, index) => (
+            <div className="md:w-1/3">
+              <CompanyCard key={index} id={company.id} name={company.name} description={company.description} />
+            </div>
+          ))}
+        </div>
       </div>
-    </div>
+    </MainLayout>
   )
 }
 
-export default SubscribedCompaniesPage
+export default AuthCheck(SubscribedCompaniesPage)

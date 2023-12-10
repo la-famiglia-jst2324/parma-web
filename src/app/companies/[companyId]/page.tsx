@@ -12,6 +12,8 @@ import CompanyAttachment from '@/components/Companies/CompanyAttachment'
 import DataSourcesPanel from '@/components/Companies/DataSourcesPanel'
 import PerformancePanel from '@/components/Companies/PerformancePanel'
 import { AuthContext } from '@/lib/firebase/auth'
+import { MainLayout } from '@/components/MainLayout'
+import AuthCheck from '@/components/Authentication/AuthCheck'
 
 interface PopupContents {
   title: string
@@ -384,91 +386,93 @@ const CompanyPage = ({ params: { companyId } }: { params: { companyId: string } 
   }
 
   return (
-    <div className="m-3 flex min-h-[calc(100vh-90px)] flex-col items-start rounded-lg border-0 bg-white p-3 shadow-md">
-      <div className="mb-3 flex w-full items-center justify-between space-x-4">
-        <div className="flex items-center">
-          <div className="pl-2">
-            <GoBackButton />
-          </div>
-          <h1 className="py-2 pl-4 text-4xl font-bold">{name}</h1>
-        </div>
-        <div className="flex">
-          <div className="flex items-center space-x-3">
-            {isSubscribed ? (
-              <Button icon={CheckCircleIcon} onClick={handleUnsubscribe}>
-                Subscribed
-              </Button>
-            ) : (
-              <Button onClick={handleSubscribe}>Subscribe</Button>
-            )}
-            <Button variant="secondary" onClick={() => handleExport(name)}>
-              Export Data
-            </Button>
-          </div>
-        </div>
-      </div>
-
-      <div className="pl-10 pr-2">
-        <p className="mb-4 overflow-hidden text-sm text-gray-700">{description}</p>
-        <div className="mt-4">
-          <h3 className="pb-2 font-bold">
-            You can also attach data to this company that will only be displayed to you
-          </h3>
+    <MainLayout>
+      <div className="m-3 flex min-h-[calc(100vh-90px)] flex-col items-start rounded-lg border-0 bg-white p-3 shadow-md">
+        <div className="mb-3 flex w-full items-center justify-between space-x-4">
           <div className="flex items-center">
-            <input type="file" className="text-sm text-stone-500" name="attachment" onChange={uploadToClient} />
+            <div className="pl-2">
+              <GoBackButton />
+            </div>
+            <h1 className="py-2 pl-4 text-4xl font-bold">{name}</h1>
           </div>
-          <div className="pt-2">
-            <Button icon={ArrowUpTrayIcon} onClick={handleUpload} disabled={!uploadAttachment}>
-              Upload File
-            </Button>
-          </div>
-          <div className="flex space-x-4 py-4">
-            {companyAttachments.length > 0 ? (
-              companyAttachments?.map((attachment) => (
-                <CompanyAttachment
-                  key={attachment?.id}
-                  fileId={String(attachment?.id)}
-                  fileType={attachment.fileType}
-                  title={attachment.title}
-                  onDelete={handleDelete}
-                  onDownload={handleDownload}
-                />
-              ))
-            ) : (
-              <p>No attachments for this company</p>
-            )}
+          <div className="flex">
+            <div className="flex items-center space-x-3">
+              {isSubscribed ? (
+                <Button icon={CheckCircleIcon} onClick={handleUnsubscribe}>
+                  Subscribed
+                </Button>
+              ) : (
+                <Button onClick={handleSubscribe}>Subscribe</Button>
+              )}
+              <Button variant="secondary" onClick={() => handleExport(name)}>
+                Export Data
+              </Button>
+            </div>
           </div>
         </div>
 
-        <TabGroup>
-          <TabList className="mt-8" variant="solid">
-            <Tab icon={UserGroupIcon}>Data Sources</Tab>
-            <Tab icon={UserIcon}>Performance</Tab>
-          </TabList>
-          <TabPanels>
-            <TabPanel>
-              <DataSourcesPanel
-                companyId={companyId}
-                idToken={idToken}
-                setShowPopup={setShowPopup}
-                setPopupContents={setPopupContents}
-              />
-            </TabPanel>
-            <TabPanel>
-              <PerformancePanel />
-            </TabPanel>
-          </TabPanels>
-        </TabGroup>
+        <div className="pl-10 pr-2">
+          <p className="mb-4 overflow-hidden text-sm text-gray-700">{description}</p>
+          <div className="mt-4">
+            <h3 className="pb-2 font-bold">
+              You can also attach data to this company that will only be displayed to you
+            </h3>
+            <div className="flex items-center">
+              <input type="file" className="text-sm text-stone-500" name="attachment" onChange={uploadToClient} />
+            </div>
+            <div className="pt-2">
+              <Button icon={ArrowUpTrayIcon} onClick={handleUpload} disabled={!uploadAttachment}>
+                Upload File
+              </Button>
+            </div>
+            <div className="flex space-x-4 py-4">
+              {companyAttachments.length > 0 ? (
+                companyAttachments?.map((attachment) => (
+                  <CompanyAttachment
+                    key={attachment?.id}
+                    fileId={String(attachment?.id)}
+                    fileType={attachment.fileType}
+                    title={attachment.title}
+                    onDelete={handleDelete}
+                    onDownload={handleDownload}
+                  />
+                ))
+              ) : (
+                <p>No attachments for this company</p>
+              )}
+            </div>
+          </div>
+
+          <TabGroup>
+            <TabList className="mt-8" variant="solid">
+              <Tab icon={UserGroupIcon}>Data Sources</Tab>
+              <Tab icon={UserIcon}>Performance</Tab>
+            </TabList>
+            <TabPanels>
+              <TabPanel>
+                <DataSourcesPanel
+                  companyId={companyId}
+                  idToken={idToken}
+                  setShowPopup={setShowPopup}
+                  setPopupContents={setPopupContents}
+                />
+              </TabPanel>
+              <TabPanel>
+                <PerformancePanel />
+              </TabPanel>
+            </TabPanels>
+          </TabGroup>
+        </div>
+        <CompanyPopup
+          title={popupContents.title}
+          icon={CheckCircleIcon}
+          color={popupContents.color}
+          description={popupContents.description}
+          showPopup={showPopup}
+        />
       </div>
-      <CompanyPopup
-        title={popupContents.title}
-        icon={CheckCircleIcon}
-        color={popupContents.color}
-        description={popupContents.description}
-        showPopup={showPopup}
-      />
-    </div>
+    </MainLayout>
   )
 }
 
-export default CompanyPage
+export default AuthCheck(CompanyPage)

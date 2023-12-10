@@ -6,6 +6,8 @@ import { Button, TextInput } from '@tremor/react'
 import type { Company } from '@/types/companies'
 import CompanyCard from '@/components/Companies/CompanyCard'
 import { AuthContext } from '@/lib/firebase/auth'
+import { MainLayout } from '@/components/MainLayout'
+import AuthCheck from '@/components/Authentication/AuthCheck'
 
 interface CompaniesPageProps {}
 
@@ -24,7 +26,7 @@ async function getCompanies(offset: number, idToken: string): Promise<Company[]>
       throw new Error('HTTP response was not OK')
     }
     const json = await res.json()
-    return json?.companies
+    return json
   } catch (error) {
     console.log('An error has occurred: ', error)
     return []
@@ -67,7 +69,8 @@ async function getCompaniesByName(companyName: string, idToken: string): Promise
       throw new Error('HTTP response was not OK')
     }
     const json = await res.json()
-    return json?.company
+    console.log({ json })
+    return json
   } catch (error) {
     console.log('An error has occurred: ', error)
     return []
@@ -159,8 +162,10 @@ const CompaniesPage: React.FC<CompaniesPageProps> = () => {
     }
   }
 
+  console.log({ companies })
+
   return (
-    <>
+    <MainLayout>
       <div className="m-3 flex min-h-[calc(100vh-90px)] flex-col items-start rounded-lg border-0 bg-white p-3 shadow-md">
         <div className="mb-3 flex items-center justify-start space-x-4">
           <h1 className="py-2 pl-2 text-2xl font-bold">Subscribed companies</h1>
@@ -237,8 +242,8 @@ const CompaniesPage: React.FC<CompaniesPageProps> = () => {
           )}
         </div>
       </div>
-    </>
+    </MainLayout>
   )
 }
 
-export default CompaniesPage
+export default AuthCheck(CompaniesPage)

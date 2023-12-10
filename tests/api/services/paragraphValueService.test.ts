@@ -1,5 +1,6 @@
 import { PrismaClient, Frequency, HealthStatus, Role } from '@prisma/client'
 import { genRandomDummyAuthId } from '../utils/random'
+import { createCompanySourceMeasurement } from '../models/utils/helperFunctions'
 import { createCompany } from '@/api/db/services/companyService'
 import { createDataSource } from '@/api/db/services/dataSourceService'
 import {
@@ -23,6 +24,7 @@ describe('text value Model Tests', () => {
 
   let paragraphValueId: number
   let sourceMeasurementId: number
+  let companyMeasurementId: number
   let companyId: number
   let dataSourceId: number
   let userId: number
@@ -44,7 +46,8 @@ describe('text value Model Tests', () => {
       sourceName: 'source1',
       isActive: true,
       defaultFrequency: Frequency.DAILY,
-      healthStatus: HealthStatus.UP
+      healthStatus: HealthStatus.UP,
+      invocationEndpoint: 'dummy endpoint'
     })
     dataSourceId = dataSource.id
     expect(dataSource).toHaveProperty('id')
@@ -54,26 +57,27 @@ describe('text value Model Tests', () => {
     expect(dataSource.healthStatus).toBe(HealthStatus.UP)
   })
 
-  test('Create a new sourceMeasurement with valid details', async () => {
+  test('Create a new sourceMeasurement and companyMeasurement with valid details', async () => {
     const sourceMeasurement = await createSourceMeasurement({
       sourceModuleId: dataSourceId,
       type: 'int',
-      companyId,
       measurementName: 'intMea'
     })
+
     sourceMeasurementId = sourceMeasurement.id
-    expect(sourceMeasurement).toHaveProperty('id')
-    expect(sourceMeasurement.sourceModuleId).toBe(dataSourceId)
-    expect(sourceMeasurement.type).toBe('int')
-    expect(sourceMeasurement.companyId).toBe(companyId)
-    expect(sourceMeasurement.measurementName).toBe('intMea')
+    const companyMeasurement = await createCompanySourceMeasurement(sourceMeasurementId, companyId)
+    companyMeasurementId = companyMeasurement.companyMeasurementId
+
+    expect(companyMeasurement).toHaveProperty('companyMeasurementId')
+    expect(companyMeasurement.sourceMeasurementId).toBe(sourceMeasurementId)
+    expect(companyMeasurement.companyId).toBe(companyId)
   })
 
   test('Create a new paragraph value with valid details', async () => {
-    const paragraphValue = await createParagraphValue({ sourceMeasurementId, value: 'paragraph' })
+    const paragraphValue = await createParagraphValue({ companyMeasurementId, value: 'paragraph' })
     paragraphValueId = paragraphValue.id
     expect(paragraphValue).toHaveProperty('id')
-    expect(paragraphValue.sourceMeasurementId).toBe(sourceMeasurementId)
+    expect(paragraphValue.companyMeasurementId).toBe(companyMeasurementId)
     expect(paragraphValue.value).toBe('paragraph')
   })
 
@@ -85,7 +89,7 @@ describe('text value Model Tests', () => {
 
   test('Update paragraph value', async () => {
     const updatedValue = await updateParagraphValue(paragraphValueId, {
-      sourceMeasurementId,
+      companyMeasurementId,
       value: 'updatedParaValue'
     })
     expect(updatedValue.value).toBe('updatedParaValue')

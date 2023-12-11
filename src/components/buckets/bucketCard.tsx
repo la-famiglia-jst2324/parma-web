@@ -7,8 +7,6 @@ export default function BucketCard({ bucket }: { bucket: Bucket }) {
   return (
     <div className="flex flex-col rounded-md border-2 border-solid p-4">
       <h2 className="text-xl font-medium">{bucket.title}</h2>
-      {/* TODO: Add number of companies */}
-      <p className="mb-2 text-sm">7 companies</p>
       <p className="mb-4 text-gray-400">{bucket.description}</p>
       <div className="flex justify-between">
         <div>

@@ -6,6 +6,7 @@ import useSubscribedCompanies from '@/components/hooks/useSubscribedCompanies'
 import useDatasources from '@/components/hooks/useDatasources'
 import UserCustomizationComponent from '@/components/Analytics/UserCustomization'
 import RevenueChart from '@/components/Analytics/Graph'
+import AuthCheck from '@/components/Authentication/AuthCheck'
 
 const AnalyticsPage: React.FC = () => {
   const subscribedCompanies = useSubscribedCompanies()
@@ -13,14 +14,18 @@ const AnalyticsPage: React.FC = () => {
 
   const [selectedCompanies, setSelectedCompanies] = useState<Array<string>>([])
   const [selectedDatasources, setSelectedDatasources] = useState<string>('')
+  const [selectedMetrics, setSelectedMetrics] = useState<string>('')
 
   return (
     <MainLayout>
-      <div className="m-6 flex flex-col items-start rounded-lg border-0 bg-white p-4 shadow-md">
+      <div
+        className="m-6 flex flex-col items-start rounded-lg border-0 bg-white p-4 shadow-md"
+        style={{ minHeight: 'calc(100vh - 2rem)' }}
+      >
         <UserCustomizationComponent />
         <div className="mb-6">
           <h1 className="mx-4 mb-2 text-2xl font-semibold text-gray-700">Compare data across companies</h1>
-          <p className="mx-4 mb-4 text-sm text-gray-600">Choose companies and a metric to compare them</p>
+          <p className="mx-4 mb-4 text-sm text-gray-600">Choose companies, a datasource and a metric to compare them</p>
           <div className="flex justify-between">
             <div className="ml-2 flex space-x-4">
               <div className="w-1/2">
@@ -45,7 +50,29 @@ const AnalyticsPage: React.FC = () => {
                   )}
                 </SearchSelect>
               </div>
-              <Button className="mr-2" disabled={selectedCompanies.length === 0 || selectedDatasources.length === 0}>
+              <div className="w-1/2">
+                <SearchSelect
+                  placeholder="Metrics"
+                  disabled={selectedDatasources.length === 0}
+                  onValueChange={(selected) => setSelectedMetrics(selected)}
+                >
+                  {data ? (
+                    data.map((datasource, index) => (
+                      <SearchSelectItem key={index} value={datasource.sourceName}>
+                        {datasource.sourceName}
+                      </SearchSelectItem>
+                    ))
+                  ) : (
+                    <p>No items available</p>
+                  )}
+                </SearchSelect>
+              </div>
+              <Button
+                className="mr-2"
+                disabled={
+                  selectedCompanies.length === 0 || selectedDatasources.length === 0 || selectedMetrics.length === 0
+                }
+              >
                 Compare
               </Button>
             </div>
@@ -60,4 +87,4 @@ const AnalyticsPage: React.FC = () => {
   )
 }
 
-export default AnalyticsPage
+export default AuthCheck(AnalyticsPage)

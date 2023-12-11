@@ -3,7 +3,7 @@ import { getMeasurementsOfCompaniesBySourceId } from '@/api/db/services/sourceMe
 import { getDataSourceByName } from '@/api/db/services/dataSourceService'
 
 const newsSources = await getDataSourceByName('News') // Change when available
-const newsSourceId = Number(newsSources[0])
+const newsSourceId = Number(newsSources[0].id)
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const { method } = req

@@ -72,7 +72,7 @@ export default function AddBucketPage() {
         setTimeout(() => {
           router.push('/buckets')
           setShowSuccess(false)
-        }, 3000) // Remove it from the screen
+        }, 1500) // Remove it from the screen
       })
       .catch((error) => {
         setShowError(true)

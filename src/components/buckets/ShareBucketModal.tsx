@@ -17,6 +17,14 @@ export interface ShareBucketProps {
   permission: string
 }
 
+interface Invitee {
+  bucketId: number
+  createdAt: Date
+  modifiedAt: Date
+  inviteeId: number
+  permission: string
+  user: User
+}
 const initialValue: User[] = [
   {
     id: 0,
@@ -33,7 +41,7 @@ const ShareBucketModal: React.FC<ShareBucketModalProps> = ({ handleClose, handle
   const [users, setUsers] = useState<User[]>(initialValue)
   const [usersToShare, setUsersToShare] = useState<User[]>([])
   const [listToPost, setListToPost] = useState<ShareBucketProps[]>([])
-  const [invitees, setInvitees] = useState<User[]>([])
+  const [invitees, setInvitees] = useState<Invitee[]>([])
 
   useEffect(() => {
     BucketFunctions.getUsersForBucketAccess()
@@ -124,12 +132,17 @@ const ShareBucketModal: React.FC<ShareBucketModalProps> = ({ handleClose, handle
                 </div>
               ))}
 
-              <h2 className="mb-3 text-lg font-semibold">Invitees</h2>
-              {invitees.map((user) => (
-                <div className="mb-4 flex flex-row items-center justify-between" key={user.id}>
-                  {user.name}
+              {invitees.length > 0 && (
+                <div>
+                  <h2 className="mb-3 text-lg font-semibold">Invitees</h2>
+                  {invitees.map((invitee) => (
+                    <div className="mb-4 flex flex-row items-center justify-between" key={invitee.user.id}>
+                      {invitee.user.name}
+                      <p>{invitee.permission}</p>
+                    </div>
+                  ))}
                 </div>
-              ))}
+              )}
             </div>
           </div>
         </div>

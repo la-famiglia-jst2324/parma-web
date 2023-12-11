@@ -1,48 +1,24 @@
 'use client'
-import { Button } from '@tremor/react'
+import { Button, TextInput } from '@tremor/react'
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import type { Bucket } from '@prisma/client'
 import { PlusCircleIcon } from '@heroicons/react/20/solid'
 import BucketCard from '@/components/buckets/bucketCard'
-import SearchInput from '@/components/buckets/searchInput'
+import BucketFunctions from '@/app/services/bucket.service'
 
-async function getAllBuckets(name?: string) {
-  try {
-    const url = name ? `/api/bucket?name=${name}` : '/api/bucket'
-    const res = await fetch(url, {
-      method: 'GET',
-      cache: 'no-cache'
-    })
-    if (!res.ok) {
-      console.log('Response status:', res.status)
-      throw new Error('HTTP response was not OK')
-    }
-    const json = await res.json()
-    return json
-  } catch (error) {
-    console.log('An error has occurred: ', error)
+interface BucketsPaginated {
+  buckets: Bucket[]
+  pagination: {
+    currentPage: number
+    pageSize: number
+    totalPages: number
+    totalCount: number
   }
 }
 
-// async function getMyBuckets() {
-//   try {
-//     const res = await fetch('/api/bucket/my', {
-//       method: 'GET',
-//       cache: 'no-cache'
-//     })
-//     if (!res.ok) {
-//       console.log('Response status:', res.status)
-//       throw new Error('HTTP response was not OK')
-//     }
-//     const json = await res.json()
-//     return json
-//   } catch (error) {
-//     console.log('An error has occurred: ', error)
-//   }
-// }
 export default function BucketsPage() {
-  // Need an api call to get myBucketsß
+  // Need an api call to get myBuckets
   const myBuckets: Bucket[] = [
     {
       id: 1,
@@ -77,26 +53,64 @@ export default function BucketsPage() {
   ]
 
   // Here we will manage the buckets that comes from backend
-  const [allBuckets, setAllBuckets] = useState<Bucket[]>([])
+  const [allBuckets, setAllBuckets] = useState<BucketsPaginated>()
+  const [clearSearchDisable, setClearSearchDisable] = useState(true)
+  const [searchTerm, setSearchTerm] = useState('')
+  const [page, setPage] = useState(1)
 
   useEffect(() => {
-    getAllBuckets()
-      .then((res) => {
-        setAllBuckets(res)
+    // This will change when the backend changes (after midterm review)
+    BucketFunctions.getAllBuckets(page)
+      .then((res: BucketsPaginated) => {
+        if (allBuckets) {
+          const moreBuckets = {
+            buckets: [...allBuckets.buckets, ...res.buckets],
+            pagination: allBuckets?.pagination
+          }
+          setAllBuckets(moreBuckets)
+        } else {
+          setAllBuckets(res)
+        }
       })
       .catch((e) => {
         console.log(e)
       })
-  }, [])
+  }, [page])
 
-  const filterBuckets = (data: string) => {
-    getAllBuckets(data)
+  useEffect(() => {
+    if (searchTerm === '') {
+      BucketFunctions.getAllBuckets(1)
+        .then((res: BucketsPaginated) => {
+          setAllBuckets(res)
+        })
+        .catch((e) => {
+          console.log(e)
+        })
+    }
+  }, [searchTerm])
+
+  const filterBuckets = (searchTerm: string) => {
+    if (searchTerm !== '') {
+      setClearSearchDisable(false)
+    }
+
+    BucketFunctions.getAllBuckets(page, searchTerm)
       .then((res) => {
         setAllBuckets(res)
       })
       .catch((e) => {
         console.log(e)
       })
+  }
+
+  const onClearResultClick = () => {
+    setPage(1)
+    setSearchTerm('')
+    setClearSearchDisable(true)
+  }
+
+  const getMoreBuckets = () => {
+    setPage(page + 1)
   }
 
   return (
@@ -117,11 +131,30 @@ export default function BucketsPage() {
       </div>
       <div>
         <h1 className="mb-4 text-2xl font-semibold">Search for trending buckets</h1>
-        <SearchInput inputValue={filterBuckets} />
+        <div className="mb-8 flex flex-row gap-4">
+          <TextInput
+            // icon={SearchIcon}
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            placeholder="Search..."
+            className="w-1/3"
+          />
+          <div className="flex flex-row  gap-4">
+            <Button onClick={() => filterBuckets(searchTerm)} size="xs" disabled={searchTerm === ''}>
+              Search
+            </Button>
+            <Button onClick={onClearResultClick} color="red" size="xs" disabled={clearSearchDisable}>
+              Clear Results
+            </Button>
+          </div>
+        </div>
         <div className="mb-8 grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
-          {allBuckets.map((bucket) => (
-            <BucketCard key={bucket.id} bucket={bucket} />
-          ))}
+          {allBuckets?.buckets.map((bucket) => <BucketCard key={bucket.id} bucket={bucket} />)}
+        </div>
+        <div className="flex flex-row items-center justify-center">
+          <Button onClick={() => getMoreBuckets()} size="xs" disabled={searchTerm !== ''}>
+            View more
+          </Button>
         </div>
       </div>
     </div>

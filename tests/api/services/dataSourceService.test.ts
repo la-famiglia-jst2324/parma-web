@@ -26,7 +26,8 @@ describe('Data Source Model Tests', () => {
       isActive: true,
       defaultFrequency: Frequency.DAILY,
       healthStatus: HealthStatus.UP,
-      description: 'a new data source'
+      description: 'a new data source',
+      invocationEndpoint: 'dummy endpoint'
     })
     dataSourceId = dataSource.id
     expect(dataSource).toHaveProperty('id')
@@ -62,10 +63,10 @@ describe('Data Source Model Tests', () => {
     const size = 10
     const name = ''
 
-    const dataSources = await getAllDataSources(page, size, name)
+    const dataSourcesPagination = await getAllDataSources(page, size, name)
 
     // Check that the correct number of data sources is returned
-    expect(dataSources.length).toBeLessThanOrEqual(size)
+    expect(dataSourcesPagination.datasources.length).toBeLessThanOrEqual(size)
   })
 
   test('Get second page of data sources', async () => {
@@ -73,12 +74,12 @@ describe('Data Source Model Tests', () => {
     const size = 1
     const name = 'source'
 
-    const dataSources = await getAllDataSources(page, size, name)
+    const dataSourcesPagination = await getAllDataSources(page, size, name)
 
     // Check that the correct number of data sources is returned
-    expect(dataSources.length).toBeLessThanOrEqual(size)
-    expect(dataSources.length).toBeGreaterThan(0)
-    expect(dataSources[0].sourceName).toContain(name)
+    expect(dataSourcesPagination.datasources.length).toBeLessThanOrEqual(size)
+    expect(dataSourcesPagination.datasources.length).toBeGreaterThan(0)
+    expect(dataSourcesPagination.datasources[0].sourceName).toContain(name)
   })
 
   test('Delete a data source', async () => {

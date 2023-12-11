@@ -12,8 +12,8 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         const page = parseInt(req.query.page as string, 10) || 1
         const size = parseInt(req.query.size as string, 10) || 10
 
-        const data = await getAllDataSources(page, size, name)
-        if (data.datasources.length > 0) res.status(200).json(data)
+        const dataSourcesPagination = await getAllDataSources(page, size, name)
+        if (dataSourcesPagination.datasources.length > 0) res.status(200).json(dataSourcesPagination)
         else res.status(400).json({ error: 'No Data Sources found' })
       } catch (error) {
         res.status(500).json({ error: 'Internal Server Error' })

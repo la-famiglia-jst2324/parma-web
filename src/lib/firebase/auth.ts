@@ -40,4 +40,5 @@ export const authLogin = async ({ provider }: { provider: 'google' | 'email' }) 
 
 export const authLogout = async () => {
   await auth.signOut()
+  localStorage.removeItem('token')
 }

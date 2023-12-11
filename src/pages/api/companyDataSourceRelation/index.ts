@@ -27,7 +27,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
           const buckets = await getDataSourcesByCompanyId(companyId)
           if (buckets.length > 0) res.status(200).json(buckets)
           else res.status(400).json({ error: 'No Buckets found' })
-        }
+        } else res.status(400).json({ error: 'Invalid Arguments' })
       } catch (error) {
         if (error instanceof ItemNotFoundError) res.status(404).json({ error: error.message })
         else res.status(500).json({ error: 'Internal Server Error' })
@@ -35,7 +35,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       break
     case 'POST':
       try {
-        const dataSource = await createCompanyDataSource(req.body)
+        const dataSource = await createCompanyDataSource(JSON.parse(req.body))
         if (dataSource) res.status(200).json(dataSource)
         else res.status(400).json({ error: 'Invalid request parameters' })
       } catch (error) {

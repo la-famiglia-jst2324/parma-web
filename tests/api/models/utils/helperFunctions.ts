@@ -68,13 +68,21 @@ export async function deleteDataSource(dataSourceId: number) {
   })
 }
 
-export async function createSourceMeasurement(dataSourceId: number, companyId: number) {
+export async function createSourceMeasurement(dataSourceId: number) {
   return await prisma.sourceMeasurement.create({
     data: {
       sourceModuleId: dataSourceId,
       type: 'Text',
-      companyId,
       measurementName: 'Test Measurement'
+    }
+  })
+}
+
+export async function createCompanySourceMeasurement(sourceMeasurementId: number, companyId: number) {
+  return await prisma.companySourceMeasurement.create({
+    data: {
+      sourceMeasurementId,
+      companyId
     }
   })
 }

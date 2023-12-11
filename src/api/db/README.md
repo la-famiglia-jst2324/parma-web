@@ -1,0 +1,187 @@
+# `parma` data model
+
+```mermaid
+erDiagram
+    bucket ||--o{ company_bucket_membership : ""
+    bucket ||--o{ bucket_access : ""
+    company ||--o{ company_bucket_membership : ""
+    company ||--o{ notification_subscription : "has"
+    company ||--o{ report_subscription : ""
+    company ||--o{ company_attachment : "has"
+    company ||--o{ notification : ""
+    company ||--o{ company_data_source : ""
+    company ||--|| news_subscription :""
+    data_source ||--o{ company_data_source : ""
+    data_source ||--o{ source_measurement : ""
+    data_source ||--o{ NOTIFICATION : ""
+    data_source ||--|| user_important_measurement_preference : ""
+    notification_subscription ||--o{ notification_channel : ""
+    report ||--o{ company : "contains"
+    report_subscription ||--o{ notification_channel : ""
+    user ||--o{ user_important_measurement_preference : "chooses"
+    user ||--o{ notification_subscription : ""
+    user ||--|| report_subscription : ""
+    user ||--o{ company : "subscribes"
+    user ||--o{ bucket_access : "has"
+    user ||--|| news_subscription :""
+    user ||--o{ company_attachment : "attaches"
+    source_measurement ||--o{ source_measurement : "child of"
+    source_measurement ||--o{ company_source_measurement : ""
+    company_source_measurement ||--o{ measurement_text_value : ""
+    company_source_measurement ||--o{ measurement_int_value : ""
+    bucket {
+        int id PK
+        string title
+        string description
+        boolean is_public
+        int owner_id FK
+        datetime created_at
+        datetime modified_at
+        int user_id FK
+    }
+    bucket_access{
+        int bucket_id PK,FK
+        int invitee_id PK,FK
+        string permission
+        datetime created_at
+        datetime modified_at
+
+    }
+    company {
+        int id PK
+        string name
+        string description
+        int added_by FK
+        datetime created_at
+        datetime modified_at
+    }
+    company_attachment {
+        int id PK
+        int company_id FK
+        string file_type
+        string file_url
+        int user_id FK
+        string title
+        datetime created_at
+        datetime modified_at
+    }
+    company_bucket_membership {
+        int bucket_id PK,FK
+        int company_id PK,FK
+        datetime created_at
+        datetime modified_at
+    }
+    company_data_source {
+        int data_source_id PK,FK
+        int company_id PK,FK
+        boolean is_data_source_active
+        string health_status
+        datetime created_at
+        datetime modified_at
+    }
+    data_source {
+        int id PK
+        string source_name
+        boolean is_active
+        string default_frequency
+        string frequency_pattern
+        string health_status
+        string description
+        datetime created_at
+        datetime modified_at
+        string version
+        int maximum_expected_run_time
+        string invocation_endpoint
+        json additional_params
+    }
+    news_subscription {
+        int user_id PK,FK
+        int company_id PK,FK
+        datetime created_at
+        datetime modified_at
+    }
+    notification {
+        int id PK
+        string message
+        int company_id FK
+        int data_source_id FK
+        datetime created_at
+        datetime modified_at
+    }
+    notification_channel {
+        int id PK
+        int entity_id FK
+        string entity_type
+        string channel_type
+        string destination
+        string encryptedApiKey
+        datetime created_at
+        datetime modified_at
+    }
+    notification_subscription {
+        int user_id FK, PK
+        int company_id FK, PK
+        int channel_id FK, PK
+        datetime created_at
+        datetime modified_at
+    }
+    report{
+        int id PK
+        int company_id FK
+        string name
+        string report_file_url
+        datetime created_at
+        datetime modified_at
+    }
+    report_subscription {
+        int user_id FK,PK
+        int company_id FK,PK
+        int channel_id FK,PK
+        datetime created_at
+        datetime modified_at
+    }
+    source_measurement {
+        int id PK
+        int source_module_id FK
+        string type
+        int parent_measurement_id FK
+        string measurement_name
+        datetime created_at
+        datetime modified_at
+    }
+    company_source_measurement {
+        int company_measurement_id PK
+        int source_measurement_id FK
+        int company_id FK
+    }
+    user {
+        int id PK
+        string auth_id
+        string name
+        profile_picture string
+        string role
+        datetime created_at
+        datetime modified_at
+    }
+    user_important_measurement_preference {
+        int data_source_id PK,FK
+        int user_id PK,FK
+        string important_field_name
+        datetime created_at
+        datetime modified_at
+    }
+    measurement_text_value {
+        id measurement_value_id PK
+        id company_measurement_id FK
+        string value
+        datetime created_at
+        datetime modified_at
+    }
+    measurement_int_value {
+        id measurement_value_id PK
+        id company_measurement_id FK
+        int value
+        datetime created_at
+        datetime modified_at
+    }
+```

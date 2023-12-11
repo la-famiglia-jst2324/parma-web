@@ -3,16 +3,16 @@ import { prisma } from '../prisma/prismaClient'
 const createSourceMeasurement = async (data: {
   sourceModuleId: number
   type: string
-  companyId: number
   measurementName: string
+  parentMeasurementId?: number | null
 }) => {
   try {
     return await prisma.sourceMeasurement.create({
       data: {
         sourceModuleId: data.sourceModuleId,
         type: data.type,
-        companyId: data.companyId,
-        measurementName: data.measurementName
+        measurementName: data.measurementName,
+        parentMeasurementId: data.parentMeasurementId
       }
     })
   } catch (error) {
@@ -51,6 +51,59 @@ const getMeasurementsBySourceId = async (sourceModuleId: number) => {
     throw error
   }
 }
+
+/**
+ * Returns a dictionary with company ids as keys and their corresponding source measurements with sourceModuleId
+ * @param sourceModuleId
+ * @param companyIds
+ * @returns
+ */
+const getMeasurementsOfCompaniesBySourceId = async (sourceModuleId: number, companyIds?: number[]) => {
+  try {
+    const measurements = await prisma.sourceMeasurement.findMany({
+      where: {
+        sourceModuleId
+      },
+      include: {
+        companySourceMeasurements: {
+          where: {
+            companyId: companyIds ? { in: companyIds } : undefined
+          },
+          select: {
+            companyMeasurementId: true,
+            companyId: true
+          }
+        }
+      }
+    })
+
+    // add the companyMeasurementId and companyId to the result.
+    const flattenedMeasurements = measurements.flatMap((measurement) =>
+      measurement.companySourceMeasurements.map((csm) => {
+        // here we want to filter out companySourceMeasurements from the output
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { companySourceMeasurements, ...rest } = { ...measurement, ...csm }
+        return rest
+      })
+    )
+
+    const measurementsByCompanyId = flattenedMeasurements.reduce(
+      (acc, measurement) => {
+        if (!acc[measurement.companyId]) {
+          acc[measurement.companyId] = []
+        }
+        acc[measurement.companyId].push(measurement)
+        return acc
+      },
+      {} as Record<number, typeof flattenedMeasurements>
+    )
+    return measurementsByCompanyId
+  } catch (error) {
+    console.error('Error getting the source measurements of data source :', error)
+    throw error
+  }
+}
+
 const getAllSourceMeasurements = async () => {
   try {
     const measurements = await prisma.sourceMeasurement.findMany()
@@ -68,6 +121,7 @@ const updateSourceMeasurement = async (
     type?: string
     companyId?: number
     measurementName?: string
+    parentMeasurementId?: number | null
   }
 ) => {
   try {
@@ -95,11 +149,38 @@ const deleteSourceMeasurement = async (id: number) => {
   }
 }
 
+const getChildMeasurementsByParentId = async (id: number) => {
+  const measurements = await prisma.sourceMeasurement.findMany({
+    where: { parentMeasurementId: id },
+    include: { childSourceMeasurements: true }
+  })
+
+  for (let i = 0; i < measurements.length; i++) {
+    const children = await getChildMeasurementsByParentId(measurements[i].id)
+    measurements[i].childSourceMeasurements = children
+  }
+  return measurements
+}
+
+const updateParentMeasurementId = async (childId: number, newParentId: number | null) => {
+  try {
+    return await prisma.sourceMeasurement.update({
+      where: { id: childId },
+      data: { parentMeasurementId: newParentId }
+    })
+  } catch (error) {
+    console.error('Error updating child source measurement parent:', error)
+    throw new Error('Unable to update child source measurement parent')
+  }
+}
 export {
   createSourceMeasurement,
   getSourceMeasurementByID,
   getAllSourceMeasurements,
   getMeasurementsBySourceId,
   updateSourceMeasurement,
-  deleteSourceMeasurement
+  getChildMeasurementsByParentId,
+  updateParentMeasurementId,
+  deleteSourceMeasurement,
+  getMeasurementsOfCompaniesBySourceId
 }

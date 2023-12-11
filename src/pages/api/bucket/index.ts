@@ -31,7 +31,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse, user: User) =>
         else res.status(500).json({ error: 'Internal Server Error' })
       }
       break
-
     case 'POST':
       try {
         // Create a new bucket
@@ -43,7 +42,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse, user: User) =>
         res.status(500).json({ error: 'Internal Server Error' })
       }
       break
-
     default:
       res.status(405).json({ error: 'Method Not Allowed' })
       break

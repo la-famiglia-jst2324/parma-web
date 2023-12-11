@@ -91,7 +91,6 @@ const getAllCompanies = async (page: number, pageSize: number) => {
     throw error
   }
 }
-
 const updateCompany = async (
   id: number,
   data: {

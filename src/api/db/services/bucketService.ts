@@ -23,6 +23,7 @@ const getBucketById = async (id: number) => {
       where: { id },
       include: {
         user: true,
+        companyBucketMember: true,
         permissions: true
       }
     })

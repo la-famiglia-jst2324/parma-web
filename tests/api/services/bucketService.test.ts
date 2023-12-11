@@ -1,4 +1,5 @@
 import type { Bucket } from '@prisma/client'
+
 import { PrismaClient, Role } from '@prisma/client'
 import { genRandomDummyAuthId } from '../utils/random'
 import {
@@ -11,14 +12,11 @@ import {
   getBucketByName
 } from '@/api/db/services/bucketService'
 import { createUser } from '@/api/db/services/userService'
-
 const prisma = new PrismaClient()
-
 describe('Bucket Model Tests', () => {
   let userId: number
   let bucketId: number
   let createdbucket: Bucket
-
   beforeAll(async () => {
     const user = await createUser({ name: 'John Doe', authId: genRandomDummyAuthId(), role: Role.USER })
     userId = user.id
@@ -29,12 +27,10 @@ describe('Bucket Model Tests', () => {
   afterAll(async () => {
     await prisma.$disconnect()
   })
-
   test('Create a new user with valid details', async () => {
     await createUser({ name: 'John Doe', authId: genRandomDummyAuthId(), role: Role.USER })
     await createBucket({ title: 'bucket', description: 'Test bucket', ownerId: userId, isPublic: true })
   })
-
   test('Create a new bucket with valid details', async () => {
     const bucket = await createBucket({ title: 'bucket', description: 'Test bucket', ownerId: userId, isPublic: true })
     bucketId = bucket.id
@@ -44,7 +40,6 @@ describe('Bucket Model Tests', () => {
     expect(bucket.ownerId).toBe(userId)
     expect(bucket.isPublic).toBe(true)
   })
-
   test('Retrieve a bucket by ID', async () => {
     const bucket = await getBucketById(bucketId)
     expect(bucket).toBeTruthy()
@@ -54,7 +49,7 @@ describe('Bucket Model Tests', () => {
   })
 
   test('Retrieve a bucket by name', async () => {
-    const bucket = await getBucketByName(createdbucket.title)
+    const bucket = await getBucketByName(createdbucket.title, 1, 10)
     expect(bucket).toBeTruthy()
   })
 
@@ -71,17 +66,16 @@ describe('Bucket Model Tests', () => {
   })
 
   test('Retrieve all buckets', async () => {
-    const bucket = await getAllBuckets()
-    expect(Array.isArray(bucket)).toBe(true)
-    expect(bucket.length).toBeGreaterThan(0)
-    if (bucket.length > 0) {
-      expect(bucket[0]).toHaveProperty('id')
-      expect(bucket[0]).toHaveProperty('ownerId')
-      expect(bucket[0]).toHaveProperty('title')
+    const bucket = await getAllBuckets(1, 10)
+    expect(Array.isArray(bucket.buckets)).toBe(true)
+    expect(bucket.buckets.length).toBeGreaterThan(0)
+    if (bucket.buckets.length > 0) {
+      expect(bucket.buckets[0]).toHaveProperty('id')
+      expect(bucket.buckets[0]).toHaveProperty('ownerId')
+      expect(bucket.buckets[0]).toHaveProperty('title')
     }
     expect(bucket).toBeTruthy()
   })
-
   test('Update a bucket', async () => {
     const updatedBucket = await updateBucket(bucketId, {
       title: 'updatedBucket',
@@ -93,7 +87,6 @@ describe('Bucket Model Tests', () => {
     expect(updatedBucket.ownerId).toBe(userId)
     expect(updatedBucket.isPublic).toBe(false)
   })
-
   test('Delete a bucket', async () => {
     await deleteBucket(bucketId)
     const deletedBucket = await prisma.bucket.findUnique({

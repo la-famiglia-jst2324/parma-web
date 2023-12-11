@@ -78,14 +78,15 @@ const getCompaniesByDataSourceId = async (dataSourceId: number) => {
 }
 
 const updateCompanyDataSource = async (
-  dataSourceId: number,
   companyId: number,
+  dataSourceId: number,
   updateData: {
     isDataSourceActive?: boolean
     healthStatus?: HealthStatus
   }
 ) => {
   try {
+    console.log(updateData)
     return await prisma.companyDataSource.update({
       where: {
         dataSourceId_companyId: {

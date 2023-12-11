@@ -26,7 +26,7 @@ async function getCompanies(offset: number, idToken: string): Promise<Company[]>
       throw new Error('HTTP response was not OK')
     }
     const json = await res.json()
-    return json
+    return json?.companies
   } catch (error) {
     console.log('An error has occurred: ', error)
     return []
@@ -57,7 +57,7 @@ async function getSubscribedCompanies(idToken: string) {
 
 async function getCompaniesByName(companyName: string, idToken: string): Promise<Company[]> {
   try {
-    const res = await fetch(`/api/company/?name=${companyName}`, {
+    const res = await fetch(`/api/company?name=${companyName}`, {
       method: 'GET',
       cache: 'no-cache',
       headers: {
@@ -69,8 +69,7 @@ async function getCompaniesByName(companyName: string, idToken: string): Promise
       throw new Error('HTTP response was not OK')
     }
     const json = await res.json()
-    console.log({ json })
-    return json
+    return json?.company
   } catch (error) {
     console.log('An error has occurred: ', error)
     return []
@@ -161,8 +160,6 @@ const CompaniesPage: React.FC<CompaniesPageProps> = () => {
       console.error('Failed to fetch more companies:', error)
     }
   }
-
-  console.log({ companies })
 
   return (
     <MainLayout>

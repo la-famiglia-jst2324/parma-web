@@ -8,16 +8,22 @@ const handler = async (req: NextApiRequest, res: NextApiResponse, user: User) =>
   const { method } = req
   const bucketName = req.query.name
   const userId = user.id
+  const { page = 1, pageSize = 10 } = req.query
+
   switch (method) {
     case 'GET':
       try {
         if (bucketName) {
-          const bucket = await getBucketByName(String(bucketName))
+          const bucket = await getBucketByName(
+            String(bucketName),
+            parseInt(page as string),
+            parseInt(pageSize as string)
+          )
           if (bucket) res.status(200).json(bucket)
           else res.status(400).json({ error: 'No Bucket found' })
         } else {
-          const buckets = await getAllBuckets()
-          if (buckets.length > 0) res.status(200).json(buckets)
+          const buckets = await getAllBuckets(parseInt(page as string), parseInt(pageSize as string))
+          if (buckets) res.status(200).json(buckets)
           else res.status(400).json({ error: 'No Buckets found' })
         }
       } catch (error) {
@@ -25,7 +31,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse, user: User) =>
         else res.status(500).json({ error: 'Internal Server Error' })
       }
       break
-
     case 'POST':
       try {
         // Create a new bucket
@@ -37,7 +42,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse, user: User) =>
         res.status(500).json({ error: 'Internal Server Error' })
       }
       break
-
     default:
       res.status(405).json({ error: 'Method Not Allowed' })
       break

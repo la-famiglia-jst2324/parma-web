@@ -27,10 +27,10 @@ const DeleteBucketModal: React.FC<DeleteBucketModalProps> = ({ handleClose, hand
           </svg>
         </Button>
         <div className="p-4 pb-5">
-          <h3 className="text-lg font-semibold leading-6 text-gray-900">Delete this Bucket</h3>
+          <h3 className="text-lg font-semibold leading-6 text-gray-900">Delete this bucket</h3>
           <div className="mt-2">
             <p className="text-sm text-red-500">
-              Are you sure you want to delete the bucket ? This will permanently remove it and this cannot be undone.
+              Are you sure you want to delete the bucket? This will permanently remove it and this cannot be undone.
             </p>
           </div>
         </div>

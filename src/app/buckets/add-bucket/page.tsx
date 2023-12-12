@@ -10,6 +10,7 @@ import { GoBackButton } from '@/components/GoBackButton'
 import { Popup } from '@/components/Popup'
 import { PopupENUM } from '@/types/popup'
 import BucketFunctions from '@/app/services/bucket.service'
+import { MainLayout } from '@/components/MainLayout'
 
 interface CompaniesPaginated {
   companies: Company[]
@@ -81,67 +82,73 @@ export default function AddBucketPage() {
       })
   }
   return (
-    <div className="mx-6 h-screen pt-12">
-      <div className="mx-auto max-w-screen-xl rounded-lg border-0 bg-white p-6 shadow-md">
-        <div className="mb-3 flex items-start justify-start space-x-4">
-          <div className="mt-1">
-            <GoBackButton url="/buckets"></GoBackButton>
+    <MainLayout>
+      <div className="mx-6 h-screen pt-12">
+        <div className="mx-auto max-w-screen-xl rounded-lg border-0 bg-white p-6 shadow-md">
+          <div className="mb-3 flex items-start justify-start space-x-4">
+            <div className="mt-1">
+              <GoBackButton url="/buckets"></GoBackButton>
+            </div>
+            <div className="flex flex-col">
+              <h1 className="mb-2 text-2xl font-bold">Create Bucket</h1>
+              <p className="mb-4 text-gray-400">
+                You can create a collection of companies here. Please choose companies from a list of available
+                companies.
+              </p>
+            </div>
           </div>
-          <div className="flex flex-col">
-            <h1 className="mb-2 text-2xl font-bold">Create Bucket</h1>
-            <p className="mb-4 text-gray-400">
-              You can create a collection of companies here. Please choose companies from a list of available companies
-            </p>
-          </div>
-        </div>
-        <form role="form" data-testid="create-bucket-form" className="px-8" onSubmit={createBucket}>
-          <div className="mb-8">
-            <FormContent
-              id="title"
-              name="title"
-              type="input"
-              value={title}
-              label="Bucket Title"
-              placeholder="Please enter bucket title"
-              onChange={(e) => setTitle(e.target.value)}
-            />
-          </div>
-          <div className="mb-8">
-            <FormContent
-              id="description"
-              name="description"
-              value={description}
-              label="Bucket description"
-              placeholder="Please enter bucket description"
-              onChange={(e) => setDescription(e.target.value)}
-            />
-          </div>
-          <div className="mb-8">
-            <MultiSelect onValueChange={(e) => setSelectedCompanies(e || [])}>
-              {allCompaniesPaginated?.companies.map((company) => (
-                <MultiSelectItem key={company.id} value={`${company.id}`}>
-                  {company.name}
-                </MultiSelectItem>
-              ))}
-            </MultiSelect>
-          </div>
+          <form role="form" data-testid="create-bucket-form" className="px-8" onSubmit={createBucket}>
+            <div className="mb-8">
+              <FormContent
+                id="title"
+                name="title"
+                type="input"
+                value={title}
+                label="Bucket title"
+                placeholder="bucket title"
+                onChange={(e) => setTitle(e.target.value)}
+              />
+            </div>
+            <div className="mb-8">
+              <FormContent
+                id="description"
+                name="description"
+                value={description}
+                label="Bucket description"
+                placeholder="bucket description"
+                onChange={(e) => setDescription(e.target.value)}
+              />
+            </div>
+            <div className="mb-8">
+              <label className="mb-2 block text-sm font-bold text-gray-700">Companies</label>
+              <MultiSelect onValueChange={(e) => setSelectedCompanies(e || [])}>
+                {allCompaniesPaginated?.companies.map((company) => (
+                  <MultiSelectItem key={company.id} value={`${company.id}`}>
+                    {company.name}
+                  </MultiSelectItem>
+                ))}
+              </MultiSelect>
+            </div>
 
-          <div className="mb-8 flex items-center gap-4">
-            <div className="font-semibold">Make this bucket public</div>
-            <Switch id="switch" name="isPublic" checked={isPublic} onChange={handleSwitchChange} />
-          </div>
-          <div>
-            <Button>
-              <div className="flex items-center gap-2">
-                {/* <BadgeCheckIcon className="h-5 w-5"></BadgeCheckIcon> */}
-                <div className="flex items-center gap-0.5 text-white">Create new Bucket</div>
-              </div>
-            </Button>
-          </div>
-        </form>
+            <div className="mb-8 flex items-center gap-4">
+              <div className="font-semibold">Make this bucket public</div>
+              <Switch id="switch" name="isPublic" checked={isPublic} onChange={handleSwitchChange} />
+            </div>
+            <div>
+              <Button>
+                <div className="flex items-center gap-2">
+                  {/* <BadgeCheckIcon className="h-5 w-5"></BadgeCheckIcon> */}
+                  <div className="flex items-center gap-0.5 text-white">Create new Bucket</div>
+                </div>
+              </Button>
+            </div>
+          </form>
+        </div>
+        {showSuccess && (
+          <Popup text="Bucket created successfully" title="Success" popupType={PopupENUM.SUCCESS}></Popup>
+        )}
+        {showError && <Popup text="Bucket creation failed" title="Error" popupType={PopupENUM.ERROR}></Popup>}
       </div>
-      {showSuccess && <Popup text="Bucket created successfully" title="Success" popupType={PopupENUM.SUCCESS}></Popup>}
-      {showError && <Popup text="Bucket creation failed" title="Error" popupType={PopupENUM.ERROR}></Popup>}
-    </div>
+    </MainLayout>
   )
 }

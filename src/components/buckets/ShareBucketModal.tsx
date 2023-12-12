@@ -56,7 +56,20 @@ const ShareBucketModal: React.FC<ShareBucketModalProps> = ({ handleClose, handle
   const addUserToShareList = (userId: string) => {
     const user = users.find((user) => user.id === +userId)
     if (user) {
-      setUsersToShare((prev) => [...prev, user])
+      const uniqueArray = [...usersToShare, user].filter(
+        (function () {
+          const seenIds = new Set()
+          return function (object) {
+            if (seenIds.has(object.id)) {
+              return false
+            } else {
+              seenIds.add(object.id)
+              return true
+            }
+          }
+        })()
+      )
+      setUsersToShare(uniqueArray)
     }
   }
 
@@ -92,8 +105,8 @@ const ShareBucketModal: React.FC<ShareBucketModalProps> = ({ handleClose, handle
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
           </svg>
         </Button>
-        <div className="px-4 py-5 sm:p-6 sm:pb-5">
-          <h3 className="text-lg font-semibold leading-6 text-gray-900">Share this Bucket</h3>
+        <div className="h-[500px] overflow-auto px-4 py-5 sm:p-6 sm:pb-5">
+          <h3 className="text-lg font-semibold leading-6 text-gray-900">Share this bucket</h3>
           <div className="mb-4 mt-2">
             <p className="text-sm text-gray-400">
               Only private buckets can be shared with others. Please make the bucket private if you want to share it

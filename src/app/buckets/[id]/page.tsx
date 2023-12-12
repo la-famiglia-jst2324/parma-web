@@ -13,6 +13,7 @@ import DeleteBucketModal from '@/components/buckets/DeleteBucketModal'
 import BucketFunctions from '@/app/services/bucket.service'
 import type { ShareBucketProps } from '@/components/buckets/ShareBucketModal'
 import ShareBucketModal from '@/components/buckets/ShareBucketModal'
+import { MainLayout } from '@/components/MainLayout'
 
 const initialBucketValue = {
   id: 0,
@@ -127,96 +128,98 @@ export default function BucketPage({ params: { id } }: { params: { id: string } 
     })
   }
   return (
-    <div className="mx-6 h-screen pt-12">
-      <div className="mx-auto  rounded-lg border-0 bg-white p-6 shadow-md">
-        <div className="mb-4 flex items-center justify-between">
-          <div className="mb-3 flex items-start justify-start space-x-4">
-            <div className="mt-1">
-              <GoBackButton url="/buckets"></GoBackButton>
+    <MainLayout>
+      <div className="mx-6 h-screen pt-12">
+        <div className="mx-auto  rounded-lg border-0 bg-white p-6 shadow-md">
+          <div className="mb-4 flex items-center justify-between">
+            <div className="mb-3 flex items-start justify-start space-x-4">
+              <div className="mt-1">
+                <GoBackButton url="/buckets"></GoBackButton>
+              </div>
+              <div className="flex flex-col">
+                <h1 className="text-2xl font-bold">{bucket.title}</h1>
+              </div>
             </div>
-            <div className="flex flex-col">
-              <h1 className="text-2xl font-bold">{bucket.title}</h1>
+            <div className="flex flex-row justify-evenly gap-2">
+              <Button
+                className="mr-2 flex items-center bg-transparent"
+                variant="secondary"
+                icon={ShareIcon}
+                onClick={toggleShareModal}
+              >
+                Share
+              </Button>
+              {isShareModalOpen && (
+                <ShareBucketModal
+                  id={id}
+                  handleShare={(shareUsersList: ShareBucketProps[]) => onHandleShare(shareUsersList)}
+                  handleClose={toggleShareModal}
+                ></ShareBucketModal>
+              )}
+              <Button
+                className="mr-2 flex items-center "
+                icon={PencilIcon}
+                variant="secondary"
+                color="gray"
+                onClick={toggleEditModal}
+              >
+                Edit Bucket
+              </Button>
+              {isEditModalOpen && (
+                <EditBucketModal
+                  title={bucket.title}
+                  description={bucket.description}
+                  isPublic={bucket.isPublic}
+                  handleClose={toggleEditModal}
+                  handleSave={(title: string, description: string | null, isPublic: boolean) =>
+                    saveBucket(title, description, isPublic)
+                  }
+                ></EditBucketModal>
+              )}
+              <Button
+                icon={TrashIcon}
+                variant="light"
+                color="red"
+                className="mr-2 flex items-center"
+                onClick={toggleDeleteModal}
+              >
+                Delete
+              </Button>
+              {isDeleteModalOpen && (
+                <DeleteBucketModal handleClose={toggleDeleteModal} handleDelete={onDeleteBucket}></DeleteBucketModal>
+              )}
             </div>
           </div>
-          <div className="flex flex-row justify-evenly gap-2">
-            <Button
-              className="mr-2 flex items-center bg-transparent"
-              variant="secondary"
-              icon={ShareIcon}
-              onClick={toggleShareModal}
-            >
-              Share
-            </Button>
-            {isShareModalOpen && (
-              <ShareBucketModal
-                id={id}
-                handleShare={(shareUsersList: ShareBucketProps[]) => onHandleShare(shareUsersList)}
-                handleClose={toggleShareModal}
-              ></ShareBucketModal>
-            )}
-            <Button
-              className="mr-2 flex items-center "
-              icon={PencilIcon}
-              variant="secondary"
-              color="gray"
-              onClick={toggleEditModal}
-            >
-              Edit Bucket
-            </Button>
-            {isEditModalOpen && (
-              <EditBucketModal
-                title={bucket.title}
-                description={bucket.description}
-                isPublic={bucket.isPublic}
-                handleClose={toggleEditModal}
-                handleSave={(title: string, description: string | null, isPublic: boolean) =>
-                  saveBucket(title, description, isPublic)
-                }
-              ></EditBucketModal>
-            )}
-            <Button
-              icon={TrashIcon}
-              variant="light"
-              color="red"
-              className="mr-2 flex items-center"
-              onClick={toggleDeleteModal}
-            >
-              Delete
-            </Button>
-            {isDeleteModalOpen && (
-              <DeleteBucketModal handleClose={toggleDeleteModal} handleDelete={onDeleteBucket}></DeleteBucketModal>
-            )}
+          <div className="mb-12 ml-8">
+            <p className="mb-4  text-gray-400">{bucket.description}</p>
           </div>
-        </div>
-        <div className="mb-12 ml-8">
-          <p className="mb-4  text-gray-400">{bucket.description}</p>
-        </div>
-        <div className="ml-8 flex items-center justify-between">
-          <h1 className="text-2xl font-bold">Companies in this bucket</h1>
-          <div className="flex flex-row items-center gap-4"></div>
-        </div>
+          <div className="ml-8 flex items-center justify-between">
+            <h1 className="text-2xl font-bold">Companies in this bucket</h1>
+            <div className="flex flex-row items-center gap-4"></div>
+          </div>
 
-        <Table className="ml-8 mt-5">
-          <TableHead>
-            <TableRow>
-              <TableHeaderCell>Company Name</TableHeaderCell>
-              <TableHeaderCell>Description</TableHeaderCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {bucketCompanies?.map((item) => (
-              <TableRow key={item.name}>
-                <TableCell>{item.name}</TableCell>
-                <TableCell>
-                  <Text className="whitespace-break-spaces">{item.description}</Text>
-                </TableCell>
+          <Table className="ml-8 mt-5">
+            <TableHead>
+              <TableRow>
+                <TableHeaderCell>Company Name</TableHeaderCell>
+                <TableHeaderCell>Description</TableHeaderCell>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+            </TableHead>
+            <TableBody>
+              {bucketCompanies?.map((item) => (
+                <TableRow key={item.name}>
+                  <TableCell>{item.name}</TableCell>
+                  <TableCell>
+                    <Text className="whitespace-break-spaces">{item.description}</Text>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
+        {showSuccess && <Popup text={popupText} title="Success" popupType={PopupENUM.SUCCESS}></Popup>}
+        {showError && <Popup text={popupText} title="Error" popupType={PopupENUM.ERROR}></Popup>}
       </div>
-      {showSuccess && <Popup text={popupText} title="Success" popupType={PopupENUM.SUCCESS}></Popup>}
-      {showError && <Popup text={popupText} title="Error" popupType={PopupENUM.ERROR}></Popup>}
-    </div>
+    </MainLayout>
   )
 }

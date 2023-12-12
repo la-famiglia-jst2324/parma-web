@@ -47,7 +47,7 @@ const EditBucketModal: React.FC<EditBucketModalProps> = ({
         </Button>
 
         <div className="px-4 py-5 sm:p-6 sm:pb-5">
-          <h3 className="text-center text-lg font-semibold leading-6 text-gray-900">Edit Bucket</h3>
+          <h3 className="text-center text-lg font-semibold leading-6 text-gray-900">Edit bucket</h3>
           <div className="mb-8">
             <FormContent
               id="title"

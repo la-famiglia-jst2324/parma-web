@@ -56,7 +56,7 @@ const getDataSourceByName = async (sourceName: string) => {
   }
 }
 
-const getAllDataSources = async (page: number, size: number, name: string) => {
+const getAllDataSources = async (page: number, pageSize: number, name: string) => {
   try {
     const datasources = await prisma.dataSource.findMany({
       where: {
@@ -65,10 +65,20 @@ const getAllDataSources = async (page: number, size: number, name: string) => {
           mode: 'insensitive' // case-insensitive
         }
       },
-      skip: (page - 1) * size,
-      take: size
+      skip: (page - 1) * pageSize,
+      take: pageSize
     })
-    return datasources
+    const totalCount = await prisma.dataSource.count()
+    const totalPages = Math.ceil(totalCount / pageSize)
+    return {
+      datasources,
+      pagination: {
+        currentPage: page,
+        pageSize,
+        totalPages,
+        totalCount
+      }
+    }
   } catch (error) {
     console.error('Error getting all data sources:', error)
     throw error

@@ -74,7 +74,6 @@ function DatasourcesPage() {
           <div className="mb-8">
             <div className="mx-auto max-w-6xl overflow-auto rounded-lg border-0 bg-white shadow-md">
               {' '}
-              {/* Added overflow-auto */}
               <div className="w-full">
                 {data ? (
                   <Table

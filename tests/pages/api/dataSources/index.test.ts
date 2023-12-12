@@ -4,28 +4,36 @@ import { getAllDataSources, createDataSource } from '@/api/db/services/dataSourc
 
 jest.mock('@/api/db/services/dataSourceService')
 
-const dataSources = [
-  {
-    id: 1,
-    sourceName: 'source',
-    isActive: true,
-    defaultFrequency: 'DAILY',
-    healthStatus: 'UP',
-    description: 'des',
-    createdAt: '2023-12-01T15:22:29.146Z',
-    modifiedAt: '2023-12-01T15:22:29.146Z'
-  },
-  {
-    id: 2,
-    sourceName: 'source1',
-    isActive: true,
-    defaultFrequency: 'DAILY',
-    healthStatus: 'UP',
-    description: 'a new data source',
-    createdAt: '2023-12-01T15:54:26.490Z',
-    modifiedAt: '2023-12-01T15:54:26.490Z'
+const dataSources = {
+  datasources: [
+    {
+      id: 1,
+      sourceName: 'source',
+      isActive: true,
+      defaultFrequency: 'DAILY',
+      healthStatus: 'UP',
+      description: 'des',
+      createdAt: '2023-12-01T15:22:29.146Z',
+      modifiedAt: '2023-12-01T15:22:29.146Z'
+    },
+    {
+      id: 2,
+      sourceName: 'source1',
+      isActive: true,
+      defaultFrequency: 'DAILY',
+      healthStatus: 'UP',
+      description: 'a new data source',
+      createdAt: '2023-12-01T15:54:26.490Z',
+      modifiedAt: '2023-12-01T15:54:26.490Z'
+    }
+  ],
+  pagination: {
+    currentPage: 1,
+    pageSize: 10,
+    totalPages: 11,
+    totalCount: 109
   }
-]
+}
 const newDataSource = {
   id: 1,
   sourceName: 'source1',

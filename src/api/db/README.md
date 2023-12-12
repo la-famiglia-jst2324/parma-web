@@ -12,7 +12,7 @@ erDiagram
     company ||--o{ company_data_source : ""
     company ||--|| news_subscription :""
     data_source ||--o{ company_data_source : ""
-    data_source ||--o{ SOURCE_MEASUREMENT : ""
+    data_source ||--o{ source_measurement : ""
     data_source ||--o{ NOTIFICATION : ""
     data_source ||--|| user_important_measurement_preference : ""
     notification_subscription ||--o{ notification_channel : ""
@@ -25,8 +25,10 @@ erDiagram
     user ||--o{ bucket_access : "has"
     user ||--|| news_subscription :""
     user ||--o{ company_attachment : "attaches"
-    source_measurement ||--o{ measurement_text_value : ""
-    source_measurement ||--o{ measurement_int_value : ""
+    source_measurement ||--o{ source_measurement : "child of"
+    source_measurement ||--o{ company_source_measurement : ""
+    company_source_measurement ||--o{ measurement_text_value : ""
+    company_source_measurement ||--o{ measurement_int_value : ""
     bucket {
         int id PK
         string title
@@ -142,10 +144,15 @@ erDiagram
         int id PK
         int source_module_id FK
         string type
-        int company_id FK
+        int parent_measurement_id FK
         string measurement_name
         datetime created_at
         datetime modified_at
+    }
+    company_source_measurement {
+        int company_measurement_id PK
+        int source_measurement_id FK
+        int company_id FK
     }
     user {
         int id PK
@@ -165,14 +172,14 @@ erDiagram
     }
     measurement_text_value {
         id measurement_value_id PK
-        id source_measurement_id FK
+        id company_measurement_id FK
         string value
         datetime created_at
         datetime modified_at
     }
     measurement_int_value {
         id measurement_value_id PK
-        id source_measurement_id FK
+        id company_measurement_id FK
         int value
         datetime created_at
         datetime modified_at

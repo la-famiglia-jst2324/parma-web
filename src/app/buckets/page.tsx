@@ -126,7 +126,7 @@ export default function BucketsPage() {
             </Link>
           </Button>
         </div>
-        <div className="mb-12 grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
+        <div className="pointer-events-none mb-12 grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
           {myBuckets.map((bucket) => (
             <BucketCard key={bucket.id} bucket={bucket} />
           ))}

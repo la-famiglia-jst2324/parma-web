@@ -77,15 +77,21 @@ const ProfilePage: React.FC = () => {
 
   return (
     <MainLayout>
-      <div className="profile-form m-3 flex flex-col items-start rounded-lg border-0 bg-white p-3 shadow-md">
+      <div className=" m-3 flex flex-col items-start overflow-auto rounded-lg border-0 bg-white p-3 shadow-md">
         <div className=" items-center justify-start ">
           <div className="mb-3 items-center justify-start space-x-7">
             <h1 className="title py-2 pl-2 text-3xl font-bold">Edit Profile</h1>
 
             <div className="flex">
-              <div className="profile-image-container pl-10 pt-12">
+              <div className=" pl-10 pt-12">
                 <div className="pl-10">
-                  <Image className="profile-image" src={profilePic} width={500} height={500} alt="Profile" />
+                  <Image
+                    className="mb-5 block h-[100px] w-[100px] rounded-full"
+                    src={profilePic}
+                    width={500}
+                    height={500}
+                    alt="Profile"
+                  />
                 </div>
 
                 <div>
@@ -96,15 +102,12 @@ const ProfilePage: React.FC = () => {
                     id="profile-pic-input"
                     style={{ display: 'none' }}
                   />
-                  <Button
-                    className="profile-pic-button"
-                    onClick={() => document.getElementById('profile-pic-input')?.click()}
-                  >
+                  <Button onClick={() => document.getElementById('profile-pic-input')?.click()}>
                     New Profile Picture
                   </Button>
                 </div>
               </div>
-              <div className="text-bold w-[800px] pl-72  pt-10">
+              <div className="text-bold w-[700px] pl-72  pt-10">
                 <form role="form" data-testid="create-profile-form" onSubmit={saveProfileData}>
                   <FormContent
                     id="Full Name"

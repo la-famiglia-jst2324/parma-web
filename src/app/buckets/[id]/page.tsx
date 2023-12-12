@@ -34,8 +34,6 @@ export default function BucketPage({ params: { id } }: { params: { id: string } 
   const [showSuccess, setShowSuccess] = useState(false)
   const [showError, setShowError] = useState(false)
   const [popupText, setPopupText] = useState('')
-  // const [isEditCompanies, setIsEditCompanies] = useState(false)
-  // const [selectedCompanies, setSelectedCompanies] = useState<number[]>([])
 
   useEffect(() => {
     BucketFunctions.getBucketById(+id)
@@ -63,15 +61,6 @@ export default function BucketPage({ params: { id } }: { params: { id: string } 
   const toggleShareModal = () => {
     setIsShareModalOpen((val) => !val)
   }
-
-  // const toggleEditCompanies = () => {
-  //   // setIsEditCompanies((val) => !val)
-  // }
-
-  // const onCancelEditCompanies = () => {
-  //   toggleEditCompanies()
-  //   // setSelectedCompanies([])
-  // }
 
   const saveBucket = (title: string, description: string | null, isPublic: boolean) => {
     BucketFunctions.updateBucket(title, description, +id, isPublic)
@@ -204,35 +193,12 @@ export default function BucketPage({ params: { id } }: { params: { id: string } 
         </div>
         <div className="ml-8 flex items-center justify-between">
           <h1 className="text-2xl font-bold">Companies in this bucket</h1>
-          <div className="flex flex-row items-center gap-4">
-            {/* {isEditCompanies && (
-              <Button
-                className="mr-2 flex items-center bg-transparent"
-                variant="secondary"
-                color="gray"
-                onClick={onCancelEditCompanies}
-              >
-                Cancel
-              </Button>
-            )} */}
-            {/* {!isEditCompanies && (
-              <Button
-                className="mr-2 flex items-center bg-transparent"
-                icon={PencilIcon}
-                variant="secondary"
-                color="gray"
-                onClick={toggleEditCompanies}
-              >
-                Edit Companies
-              </Button>
-            )} */}
-          </div>
+          <div className="flex flex-row items-center gap-4"></div>
         </div>
 
         <Table className="ml-8 mt-5">
           <TableHead>
             <TableRow>
-              {/* {isEditCompanies && <TableHeaderCell>Select</TableHeaderCell>} */}
               <TableHeaderCell>Company Name</TableHeaderCell>
               <TableHeaderCell>Description</TableHeaderCell>
             </TableRow>
@@ -240,11 +206,6 @@ export default function BucketPage({ params: { id } }: { params: { id: string } 
           <TableBody>
             {bucketCompanies?.map((item) => (
               <TableRow key={item.name}>
-                {/* {isEditCompanies && (
-                  <TableCell>
-                    <input type="checkbox" />
-                  </TableCell>
-                )} */}
                 <TableCell>{item.name}</TableCell>
                 <TableCell>
                   <Text className="whitespace-break-spaces">{item.description}</Text>

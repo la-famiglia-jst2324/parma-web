@@ -35,7 +35,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       break
     case 'POST':
       try {
-        const dataSource = await createCompanyDataSource(req.body)
+        const dataSource = await createCompanyDataSource(JSON.parse(req.body))
         if (dataSource) res.status(200).json(dataSource)
         else res.status(400).json({ error: 'Invalid request parameters' })
       } catch (error) {

@@ -3,7 +3,7 @@
 import React from 'react'
 import Link from 'next/link'
 import { TextInput, Callout, Button } from '@tremor/react'
-import { CheckCircleIcon } from '@heroicons/react/solid'
+import { CheckCircleIcon } from '@heroicons/react/20/solid'
 
 export default function ForgotPasswordPage() {
   return (

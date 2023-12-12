@@ -6,6 +6,7 @@ const createNotificationChannel = async (data: {
   entityType: EntityType
   channelType: ChannelType
   destination: string
+  apiKey?: string
 }) => {
   try {
     return await prisma.notificationChannel.create({
@@ -13,7 +14,8 @@ const createNotificationChannel = async (data: {
         entityId: data.entityId,
         entityType: data.entityType,
         channelType: data.channelType,
-        destination: data.destination
+        destination: data.destination,
+        apiKey: data.apiKey
       }
     })
   } catch (error) {
@@ -48,6 +50,7 @@ const updateNotificationChannel = async (
     entityType?: EntityType
     channelType?: ChannelType
     destination?: string
+    apiKey?: string
   }
 ) => {
   try {

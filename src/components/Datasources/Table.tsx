@@ -21,8 +21,6 @@ const DatasourceTable: React.FC<TableProps> = ({ initialData, pagination, onPage
   const router = useRouter()
   const [data, setData] = useState(initialData)
 
-  console.log('TableData: ', data)
-
   useEffect(() => {
     setData(initialData)
   }, [initialData])

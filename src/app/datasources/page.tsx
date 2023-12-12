@@ -43,9 +43,6 @@ function DatasourcesPage() {
       })
   }, [pagination.currentPage, pagination.pageSize])
 
-  console.log('data: ', data)
-  console.log('pagination: ', pagination)
-
   const handlePageChange = (newPage: number) => {
     setPagination((prevState) => ({ ...prevState, currentPage: newPage }))
   }
@@ -73,7 +70,6 @@ function DatasourcesPage() {
           </div>
           <div className="mb-8">
             <div className="mx-auto max-w-6xl overflow-auto rounded-lg border-0 bg-white shadow-md">
-              {' '}
               <div className="w-full">
                 {data ? (
                   <Table

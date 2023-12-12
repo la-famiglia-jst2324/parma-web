@@ -30,7 +30,6 @@ const Pagination: React.FC<PaginationProps> = ({
 
   return (
     <div className="flex items-center justify-between rounded-lg bg-transparent p-4">
-      {' '}
       <div className="flex-1 text-sm font-semibold text-gray-700">
         Page {currentPage} of {totalPages}
       </div>

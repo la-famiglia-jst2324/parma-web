@@ -90,9 +90,20 @@ erDiagram
         datetime created_at
         datetime modified_at
         string version
-        int maximum_expected_run_time
+        int max_run_seconds
         string invocation_endpoint
         json additional_params
+    }
+    scheduled_task {
+        int task_id PK
+        int data_source_id FK
+        string schedule_type
+        datetime scheduled_at
+        datetime started_at
+        datetime ended_at
+        string result_summary
+        string status
+        int attempts
     }
     news_subscription {
         int user_id PK,FK

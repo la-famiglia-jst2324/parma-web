@@ -1,16 +1,14 @@
 'use client'
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { MultiSelect, MultiSelectItem } from '@tremor/react'
 import Link from 'next/link'
-import { getSubscribedCompanies } from 'src/app/api/companies'
 import { MainLayout } from '../MainLayout'
 import AuthCheck from '../Authentication/AuthCheck'
+import useSubscribedCompanies from '../hooks/useSubscribedCompanies'
 import NewsCard from '@/components/Dashboard/NewsCard'
 import type NewsItem from '@/types/news'
 import TopBucketsCard from '@/components/Dashboard/TopBucketsCard'
 import type TopBucket from '@/types/topBuckets'
-import type { Company } from '@/types/companies'
-import { AuthContext } from '@/lib/firebase/auth'
 
 async function getDashboardData() {
   const res = await fetch('/api/dashboard', {
@@ -33,26 +31,9 @@ interface DashboardData {
 
 function Home() {
   const [data, setData] = useState<DashboardData>({ topBuckets: [], news: [] })
-  const [subscribedCompanies, setSubscribedCompanies] = useState<Company[]>([])
+  const subscribedCompanies = useSubscribedCompanies()
   const [selectedCompanies, setSelectedCompanies] = useState<string[]>([])
-  const [idToken, setIdToken] = useState<string | null>(null)
 
-  const user = useContext(AuthContext)
-
-  useEffect(() => {
-    const setToken = async () => {
-      if (user) {
-        try {
-          const token = await user.getIdToken()
-          setIdToken(token)
-        } catch (error) {
-          console.error('Error fetching token:', error)
-        }
-      }
-    }
-
-    setToken()
-  }, [user])
   useEffect(() => {
     ;(async () => {
       try {
@@ -62,25 +43,10 @@ function Home() {
         console.error('Failed to fetch data:', error)
       }
     })().catch((error) => console.error('Error in useEffect:', error))
-  }, [idToken])
-
-  useEffect(() => {
-    ;(async () => {
-      try {
-        if (idToken) {
-          const data = await getSubscribedCompanies(idToken)
-          console.log(data)
-          setSubscribedCompanies(data)
-        }
-      } catch (error) {
-        console.error('Failed to fetch subscribed companies:', error)
-      }
-    })().catch((error) => console.error('Error in useEffect:', error))
-  }, [idToken])
+  }, [])
 
   const news = data.news as NewsItem[]
   const topBuckets = data.topBuckets as TopBucket[]
-  const uniqueCompanies = Array.from(new Set(subscribedCompanies.map((company) => company.name)))
 
   return (
     <MainLayout>
@@ -92,7 +58,7 @@ function Home() {
                 <h1 className="text-3xl font-bold text-slate-700">Trending News</h1>
                 <div className="absolute right-0 top-0 mr-4 mt-4 w-1/3">
                   <MultiSelect placeholder="Filter companies" onValueChange={(values) => setSelectedCompanies(values)}>
-                    {uniqueCompanies.map((companyName, index) => (
+                    {subscribedCompanies.map((companyName, index) => (
                       <MultiSelectItem key={index} value={companyName}>
                         {companyName}
                       </MultiSelectItem>

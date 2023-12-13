@@ -8,7 +8,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse, user: User) =>
   const { method } = req
   const bucketName = req.query.name
   const userId = user.id
-  const { page = 1, pageSize = 10 } = req.query
+  const { page, pageSize } = req.query
 
   switch (method) {
     case 'GET':

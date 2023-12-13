@@ -48,11 +48,15 @@ const AnalyticsPage: React.FC = () => {
                   }}
                   value={selectedCompanies}
                 >
-                  {companies.map((company, index) => (
-                    <MultiSelectItem key={index} value={company.id.toString()}>
-                      {company.name}
-                    </MultiSelectItem>
-                  ))}
+                  {companies && companies.length > 0 ? (
+                    companies.map((company, index) => (
+                      <MultiSelectItem key={index} value={company.id.toString()}>
+                        {company.name}
+                      </MultiSelectItem>
+                    ))
+                  ) : (
+                    <div className="px-2 py-1 text-sm text-slate-600">No companies available</div>
+                  )}
                 </MultiSelect>
               </div>
               <div className="w-1/2">
@@ -71,7 +75,7 @@ const AnalyticsPage: React.FC = () => {
                       </SearchSelectItem>
                     ))
                   ) : (
-                    <p>No items available</p>
+                    <div className="px-2 py-1 text-sm text-slate-600">No metrics available</div>
                   )}
                 </SearchSelect>
               </div>

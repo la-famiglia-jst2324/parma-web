@@ -35,7 +35,7 @@ const SourceHealthComponent = ({ datasourceId }: SourceHealthComponentProps) => 
   const uptime = calculateUptime(healthData)
 
   return (
-    <div className="mx-auto max-w-md rounded-lg bg-white p-6 shadow-lg">
+    <div className="mx-auto rounded-lg bg-white p-6 shadow-lg">
       <h1 className="mb-4 text-3xl font-semibold text-gray-700">Overall Health</h1>
       <div className="space-y-4">
         <div>

@@ -22,7 +22,10 @@ function calculateUptime(scheduledTasks: ScheduledTasks[]) {
   if (totalDuration === 0) return 0
 
   // Convert milliseconds to a more understandable unit (like hours) if needed
-  return (successfulDuration / totalDuration) * 100
+  const uptime = (successfulDuration / totalDuration) * 100
+
+  // Limit the result to at most 2 decimal places
+  return parseFloat(uptime.toFixed(2))
 }
 
 export default calculateUptime

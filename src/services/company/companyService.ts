@@ -107,9 +107,9 @@ export async function editCompany(companyId: string, companyName: string, compan
   }
 }
 
-export async function getCompanies(offset: number) {
+export async function getCompanies(offset: number, pageSize: number) {
   try {
-    const response = await fetchClient.get(`/api/company?page=${offset}`)
+    const response = await fetchClient.get(`/api/company?page=${offset}&pageSize=${pageSize}`)
     return response.data?.companies || []
   } catch (error) {
     console.log('An error has occurred: ', error)
@@ -119,7 +119,8 @@ export async function getCompanies(offset: number) {
 
 export async function getCompaniesByName(companyName: string) {
   try {
-    const response = await fetchClient.get(`/api/company?name=${companyName}`)
+    const response = await fetchClient.get(`/api/company?page=1&pageSize=100&name=${companyName}`)
+    console.log(response)
     return response.data?.company || []
   } catch (error) {
     console.log('An error has occurred: ', error)

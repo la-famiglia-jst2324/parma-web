@@ -320,7 +320,7 @@ const CompanyPage = ({ params: { companyId } }: { params: { companyId: string } 
                 />
               </TabPanel>
               <TabPanel>
-                <PerformancePanel companyId={companyId} />
+                <PerformancePanel companyId={companyId} companyName={companyData?.name} />
               </TabPanel>
             </TabPanels>
           </TabGroup>

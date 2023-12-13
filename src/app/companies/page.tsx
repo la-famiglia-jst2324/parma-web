@@ -39,7 +39,7 @@ const CompaniesPage: React.FC<CompaniesPageProps> = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const data = await getCompanies(offset)
+        const data = await getCompanies(offset, 10)
         setCompanies(data)
         setOffset(2)
       } catch (error) {
@@ -53,7 +53,7 @@ const CompaniesPage: React.FC<CompaniesPageProps> = () => {
 
   const fetchMoreCompanies = async () => {
     try {
-      const moreCompanies = await getCompanies(offset)
+      const moreCompanies = await getCompanies(offset, 10)
 
       if (moreCompanies.length === 0) {
         setDisableSeeMore(true)

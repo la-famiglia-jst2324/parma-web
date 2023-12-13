@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useContext } from 'react'
 import { MagnifyingGlassIcon } from '@heroicons/react/20/solid'
 import { Button, TextInput } from '@tremor/react'
+import { useRouter } from 'next/navigation'
 import type { Company } from '@/types/companies'
 import CompanyCard from '@/components/Companies/CompanyCard'
 import { AuthContext } from '@/lib/firebase/auth'
@@ -86,6 +87,7 @@ const CompaniesPage: React.FC<CompaniesPageProps> = () => {
   const [offset, setOffset] = useState<number>(1)
   const [showSeeMoreSubscribedCompanies, setShowSeeMoreSubscribedCompanies] = useState<boolean>(false)
   const [idToken, setIdToken] = useState<string>('')
+  const router = useRouter()
 
   const user = useContext(AuthContext)
 
@@ -161,11 +163,16 @@ const CompaniesPage: React.FC<CompaniesPageProps> = () => {
     }
   }
 
+  const handleAddCompanyPressed = () => {
+    router.push('/companies/add-company')
+  }
+
   return (
     <MainLayout>
       <div className="m-3 flex min-h-[calc(100vh-90px)] flex-col items-start rounded-lg border-0 bg-white p-3 shadow-md">
-        <div className="mb-3 flex items-center justify-start space-x-4">
+        <div className="mb-3 flex w-full items-center justify-between space-x-4">
           <h1 className="py-2 pl-2 text-2xl font-bold">Subscribed companies</h1>
+          <Button onClick={handleAddCompanyPressed}>Create a new company</Button>
         </div>
         <div className="flex w-full flex-wrap">
           {subscribedCompanies?.length > 0 ? (

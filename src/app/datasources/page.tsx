@@ -18,7 +18,7 @@ async function getDatasources() {
       throw new Error('HTTP response was not OK')
     }
     const json = await res.json()
-    return json
+    return json.datasources
   } catch (error) {
     console.log('An error has occurred: ', error)
   }

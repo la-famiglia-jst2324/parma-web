@@ -77,22 +77,19 @@ const PerformancePanel = () => {
   ]
 
   return (
-    <div className="mt-4">
-      <div className="flex space-x-4"></div>
-      <div className="mt-4">
-        <Card>
-          <Title>Wikipedia</Title>
-          <LineChart
-            className="mt-6"
-            data={chartdata}
-            index="year"
-            categories={['Export Growth Rate']}
-            colors={['emerald']}
-            valueFormatter={valueFormatter}
-            yAxisWidth={40}
-          />
-        </Card>
-      </div>
+    <div className="mt-4 flex w-full">
+      <Card>
+        <Title>Wikipedia</Title>
+        <LineChart
+          className="mt-6"
+          data={chartdata}
+          index="year"
+          categories={['Export Growth Rate']}
+          colors={['emerald']}
+          valueFormatter={valueFormatter}
+          yAxisWidth={40}
+        />
+      </Card>
     </div>
   )
 }

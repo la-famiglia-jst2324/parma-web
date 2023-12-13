@@ -115,7 +115,7 @@ async function getDataSources(idToken: string) {
       throw new Error('HTTP response was not OK')
     }
     const json = await res.json()
-    return json
+    return json.datasources
   } catch (error) {
     console.log('An error has occurred: ', error)
   }
@@ -180,11 +180,13 @@ const DataSourcesPanel: React.FC<Props> = ({ companyId, idToken, setPopupContent
       description: 'You have successfully unlinked a datasource from this company'
     })
     setShowPopup(true)
-    setSelectedValues([])
   }
 
   const handleAddDataSourceToCompany = async () => {
-    await Promise.all(selectedValues.map((dataSourceId) => addDatasourceToCompany(companyId, dataSourceId, idToken)))
+    await Promise.allSettled(
+      selectedValues.map((dataSourceId: string) => addDatasourceToCompany(companyId, dataSourceId, idToken))
+    )
+    setSelectedValues([])
     const alldatasource = await getDataSources(idToken)
     setAllDataSources(alldatasource)
     const companydatasources = await getDataSourcesByCompanyId(companyId, idToken)
@@ -195,7 +197,6 @@ const DataSourcesPanel: React.FC<Props> = ({ companyId, idToken, setPopupContent
       description: 'You have successfully added a datasource to the company'
     })
     setShowPopup(true)
-    setSelectedValues([])
   }
 
   return (
@@ -203,7 +204,7 @@ const DataSourcesPanel: React.FC<Props> = ({ companyId, idToken, setPopupContent
       <h3 className="pb-2 font-bold">Link data sources with this company</h3>
       <div className="flex">
         <div className="w-64 pb-3">
-          <MultiSelect onValueChange={handleMultiSelectChange}>
+          <MultiSelect onValueChange={handleMultiSelectChange} value={selectedValues}>
             {filteredDataSources?.map((datasource: CompanyDataSource, index) => (
               <MultiSelectItem key={index} value={String(datasource.id)}>
                 {datasource.sourceName}

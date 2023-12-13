@@ -59,7 +59,7 @@ async function getSubscribedCompanies(idToken: string) {
     return json
   } catch (error) {
     console.log('An error has occurred: ', error)
-    return []
+    throw error
   }
 }
 
@@ -78,10 +78,10 @@ async function postCompanySubscription(companyId: string, subscribe: boolean, id
       throw new Error('HTTP response was not OK')
     }
     const json = await res.json()
-    console.log(json)
     return json
   } catch (error) {
     console.log('An error has occurred: ', error)
+    throw error
   }
 }
 
@@ -102,11 +102,11 @@ async function getCompanyData(companyId: string, idToken: string) {
     return json
   } catch (error) {
     console.log('An error has occurred: ', error)
+    throw error
   }
 }
 
 async function getCompanyAttachments(companyId: string, idToken: string) {
-  // Change to company here
   try {
     const res = await fetch(`/api/company/attachment?companyId=${companyId}`, {
       method: 'GET',
@@ -123,11 +123,11 @@ async function getCompanyAttachments(companyId: string, idToken: string) {
     return json
   } catch (error) {
     console.log('An error has occurred: ', error)
+    throw error
   }
 }
 
 async function deleteCompanyAttachment(companyId: string, attachmentId: string, idToken: string) {
-  // Change to company here
   try {
     const res = await fetch(`/api/company/${companyId}/attachment/${attachmentId}`, {
       method: 'DELETE',
@@ -144,11 +144,11 @@ async function deleteCompanyAttachment(companyId: string, attachmentId: string, 
     return json
   } catch (error) {
     console.log('An error has occurred: ', error)
+    throw error
   }
 }
 
 async function getCompanyAttachmentData(companyId: string, attachmentId: string, idToken: string) {
-  // Change to company here
   try {
     const res = await fetch(`/api/company/${companyId}/attachment/${attachmentId}`, {
       method: 'GET',
@@ -165,11 +165,11 @@ async function getCompanyAttachmentData(companyId: string, attachmentId: string,
     return json
   } catch (error) {
     console.log('An error has occurred: ', error)
+    throw error
   }
 }
 
 async function postCompanyAttachment(companyId: string, data: FormData, idToken: string) {
-  // Change to company here
   try {
     const res = await fetch(`/api/company/${companyId}/attachment`, {
       method: 'POST',
@@ -187,6 +187,7 @@ async function postCompanyAttachment(companyId: string, data: FormData, idToken:
     return json
   } catch (error) {
     console.log('An error has occurred: ', error)
+    throw error
   }
 }
 
@@ -208,8 +209,6 @@ const CompanyPage = ({ params: { companyId } }: { params: { companyId: string } 
   const user = useContext(AuthContext)
 
   const [uploadAttachment, setUploadAttachment] = useState<Blob | string>('')
-
-  console.log({ companyAttachments })
 
   let name: string = ''
   let description: string = ''
@@ -237,9 +236,11 @@ const CompanyPage = ({ params: { companyId } }: { params: { companyId: string } 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const data = await getCompanyAttachments(companyId, idToken)
-        const returnData = data || []
-        setCompanyAttachments(returnData)
+        if (idToken) {
+          const data = await getCompanyAttachments(companyId, idToken)
+          const returnData = data || []
+          setCompanyAttachments(returnData)
+        }
       } catch (error) {
         console.error('Failed to fetch company attachments', error)
       }
@@ -251,8 +252,10 @@ const CompanyPage = ({ params: { companyId } }: { params: { companyId: string } 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const data = await getCompanyData(companyId, idToken)
-        setCompanyData(data)
+        if (idToken) {
+          const data = await getCompanyData(companyId, idToken)
+          setCompanyData(data)
+        }
       } catch (error) {
         console.error('Failed to fetch company data:', error)
       }
@@ -264,13 +267,16 @@ const CompanyPage = ({ params: { companyId } }: { params: { companyId: string } 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const data = await getSubscribedCompanies(idToken)
-        const subscribed = data.some((item: SubscriptionResponse) => item.id === Number(companyId))
-        setIsSubscribed(subscribed)
+        if (idToken) {
+          const data = await getSubscribedCompanies(idToken)
+          const subscribed = data.some((item: SubscriptionResponse) => item.id === Number(companyId))
+          setIsSubscribed(subscribed)
+        }
       } catch (error) {
         console.error('Failed to fetch subscribed companies:', error)
       }
     }
+
     fetchData()
   }, [companyId, idToken])
 
@@ -313,6 +319,12 @@ const CompanyPage = ({ params: { companyId } }: { params: { companyId: string } 
       setShowPopup(true)
     } catch (error) {
       console.error('Error subscribing:', error)
+      setPopupContents({
+        title: `Unable to subscribe to ${name}`,
+        color: 'red',
+        description: 'An error occurred while subscribing to this company! Please try again'
+      })
+      setShowPopup(true)
     }
   }
 
@@ -411,7 +423,7 @@ const CompanyPage = ({ params: { companyId } }: { params: { companyId: string } 
           </div>
         </div>
 
-        <div className="pl-10 pr-2">
+        <div className="flex w-full flex-col pl-10 pr-2">
           <p className="mb-4 overflow-hidden text-sm text-gray-700">{description}</p>
           <div className="mt-4">
             <h3 className="pb-2 font-bold">

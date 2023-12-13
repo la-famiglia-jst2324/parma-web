@@ -36,7 +36,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse, user: User) =>
     case 'POST':
       try {
         // Create a new company
-        const newCompany = await createCompany({ ...req.body, addedBy: userId })
+        const newCompany = await createCompany({ ...JSON.parse(req.body), addedBy: userId })
         if (newCompany) {
           res.status(201).json(newCompany)
         } else res.status(400).json({ error: 'Invalid request parameters' })

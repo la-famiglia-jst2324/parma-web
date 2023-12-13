@@ -1,20 +1,33 @@
 'use client'
 import React, { useState } from 'react'
 import { MultiSelect, MultiSelectItem, Button, SearchSelectItem, SearchSelect } from '@tremor/react'
+import type { Company } from '@prisma/client'
 import { MainLayout } from '@/components/MainLayout'
-import useSubscribedCompanies from '@/components/hooks/useSubscribedCompanies'
-import useDatasources from '@/components/hooks/useDatasources'
 import UserCustomizationComponent from '@/components/Analytics/UserCustomization'
-import RevenueChart from '@/components/Analytics/Graph'
+import GraphChart from '@/components/Analytics/Graph'
 import AuthCheck from '@/components/Authentication/AuthCheck'
+import useMeasurements from '@/components/hooks/useMetrics'
+import useCompanies from '@/components/hooks/useCompanies'
 
 const AnalyticsPage: React.FC = () => {
-  const subscribedCompanies = useSubscribedCompanies()
-  const { data } = useDatasources(1, 10)
+  const companies = useCompanies()
+  const metrics = useMeasurements()
 
-  const [selectedCompanies, setSelectedCompanies] = useState<Array<string>>([])
-  const [selectedDatasources, setSelectedDatasources] = useState<string>('')
-  const [selectedMetrics, setSelectedMetrics] = useState<string>('')
+  const [selectedCompanies, setSelectedCompanies] = useState<Array<Company>>([])
+  const [selectedMetric, setSelectedMetric] = useState<(typeof metrics)[0] | null>(null)
+  const [graphData, setGraphData] = useState<{
+    companies: Array<(typeof companies)[0]>
+    metric: (typeof metrics)[0]
+  } | null>(null)
+
+  console.log('Companies: ', companies)
+  console.log('Metrics: ', metrics)
+
+  const handleCompareClick = () => {
+    if (selectedMetric) {
+      setGraphData({ companies: selectedCompanies, metric: selectedMetric })
+    }
+  }
 
   return (
     <MainLayout>
@@ -25,41 +38,36 @@ const AnalyticsPage: React.FC = () => {
         <UserCustomizationComponent />
         <div className="mb-6">
           <h1 className="mx-4 mb-2 text-2xl font-semibold text-gray-700">Compare data across companies</h1>
-          <p className="mx-4 mb-4 text-sm text-gray-600">Choose companies, a datasource and a metric to compare them</p>
+          <p className="mx-4 mb-4 text-sm text-gray-600">Choose companies and a metric to compare them</p>
           <div className="flex justify-between">
             <div className="ml-2 flex space-x-4">
               <div className="w-1/2">
-                <MultiSelect placeholder="Companies" onValueChange={(selected) => setSelectedCompanies(selected)}>
-                  {subscribedCompanies.map((companyName, index) => (
-                    <MultiSelectItem key={index} value={companyName}>
-                      {companyName}
+                <MultiSelect
+                  placeholder="Companies"
+                  onValueChange={(selectedNames) => {
+                    const selectedCompanyObjects = companies.filter((company) => selectedNames.includes(company.name))
+                    setSelectedCompanies(selectedCompanyObjects)
+                  }}
+                >
+                  {companies.map((company, index) => (
+                    <MultiSelectItem key={index} value={company.name}>
+                      {company.name}
                     </MultiSelectItem>
                   ))}
                 </MultiSelect>
               </div>
               <div className="w-1/2">
-                <SearchSelect placeholder="Datasources" onValueChange={(selected) => setSelectedDatasources(selected)}>
-                  {data ? (
-                    data.map((datasource, index) => (
-                      <SearchSelectItem key={index} value={datasource.sourceName}>
-                        {datasource.sourceName}
-                      </SearchSelectItem>
-                    ))
-                  ) : (
-                    <p>No items available</p>
-                  )}
-                </SearchSelect>
-              </div>
-              <div className="w-1/2">
                 <SearchSelect
                   placeholder="Metrics"
-                  disabled={selectedDatasources.length === 0}
-                  onValueChange={(selected) => setSelectedMetrics(selected)}
+                  onValueChange={(selectedName) => {
+                    const selectedMetricObject = metrics.find((metric) => metric.measurementName === selectedName)
+                    setSelectedMetric(selectedMetricObject || null)
+                  }}
                 >
-                  {data ? (
-                    data.map((datasource, index) => (
-                      <SearchSelectItem key={index} value={datasource.sourceName}>
-                        {datasource.sourceName}
+                  {metrics ? (
+                    metrics.map((metric, index) => (
+                      <SearchSelectItem key={index} value={metric.measurementName}>
+                        {metric.measurementName}
                       </SearchSelectItem>
                     ))
                   ) : (
@@ -67,12 +75,7 @@ const AnalyticsPage: React.FC = () => {
                   )}
                 </SearchSelect>
               </div>
-              <Button
-                className="mr-2"
-                disabled={
-                  selectedCompanies.length === 0 || selectedDatasources.length === 0 || selectedMetrics.length === 0
-                }
-              >
+              <Button onClick={handleCompareClick} disabled={selectedCompanies.length === 0 || !selectedMetric}>
                 Compare
               </Button>
             </div>
@@ -81,7 +84,19 @@ const AnalyticsPage: React.FC = () => {
             </div>
           </div>
         </div>
-        <RevenueChart />
+        <div></div>
+        {graphData ? (
+          <GraphChart
+            measurementId={graphData.metric.id}
+            companiesArray={graphData.companies.map((company) => ({
+              ...company,
+              id: company.id.toString(),
+              description: company.description || ''
+            }))}
+          />
+        ) : (
+          <p>Please select companies and a metric to compare.</p>
+        )}
       </div>
     </MainLayout>
   )

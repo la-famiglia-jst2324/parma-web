@@ -1,65 +1,60 @@
-import React from 'react'
-import { AreaChart } from '@tremor/react'
+import React, { useState, useEffect } from 'react'
+import { AreaChart, DateRangePicker } from '@tremor/react'
+import type { Company } from '@/types/companies'
 
-const chartdata = [
-  {
-    date: 'Jan 22',
-    SemiAnalysis: 2890,
-    'The Pragmatic Engineer': 2338,
-    'Third Company': 1234
-  },
-  {
-    date: 'Feb 22',
-    SemiAnalysis: 2756,
-    'The Pragmatic Engineer': 2103,
-    'Third Company': 2134
-  },
-  {
-    date: 'Mar 22',
-    SemiAnalysis: 3322,
-    'The Pragmatic Engineer': 2194,
-    'Third Company': 1534
-  },
-  {
-    date: 'Apr 22',
-    SemiAnalysis: 3470,
-    'The Pragmatic Engineer': 2108,
-    'Third Company': 2234
-  },
-  {
-    date: 'May 22',
-    SemiAnalysis: 3475,
-    'The Pragmatic Engineer': 1812,
-    'Third Company': 1234
-  },
-  {
-    date: 'Jun 22',
-    SemiAnalysis: 3129,
-    'The Pragmatic Engineer': 1726,
-    'Third Company': 1234
+async function getAnalyticsData(measurementId: string, companiesArray: Company[]) {
+  const response = await fetch(
+    `/api/path/to/endpoint?measurementId=${measurementId}&companiesArray=${companiesArray}`,
+    {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }
+  )
+
+  if (!response.ok) {
+    throw new Error('Network response was not ok')
   }
-]
 
-const valueFormatter = function (number: number) {
-  return '$ ' + new Intl.NumberFormat('us').format(number).toString()
+  const data = await response.json()
+  return data
 }
 
-const categories = Object.keys(chartdata[0]).filter((key) => key !== 'date')
+interface GraphChartProps {
+  measurementId: number
+  companiesArray: Company[]
+}
 
-const RevenueChart: React.FC = () => {
+const GraphChart: React.FC<GraphChartProps> = ({ measurementId, companiesArray }) => {
+  const [analyticsData, setAnalyticsData] = useState([])
+
+  useEffect(() => {
+    const fetchAnalyticsData = async () => {
+      const data = await getAnalyticsData(measurementId.toString(), companiesArray)
+      setAnalyticsData(data)
+    }
+
+    fetchAnalyticsData()
+  }, [])
+
+  const categories = analyticsData.length > 0 ? Object.keys(analyticsData[0]).filter((key) => key !== 'date') : []
+
   return (
     <div className="mt-2 w-full">
-      <h1 className="ml-2 text-lg text-gray-700">Newsletter revenue over time (USD)</h1>
+      <div className="flex items-center justify-between">
+        <h1 className="ml-2 text-lg text-gray-700">Newsletter revenue over time (USD)</h1>
+        <DateRangePicker />
+      </div>
       <AreaChart
         className="mt-2 h-72 w-full"
-        data={chartdata}
+        data={analyticsData}
         index="date"
         categories={categories}
         colors={['indigo', 'cyan', 'pink']}
-        valueFormatter={valueFormatter}
       />
     </div>
   )
 }
 
-export default RevenueChart
+export default GraphChart

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import type { Company } from '@prisma/client'
-import { getSubscribedCompanies } from 'src/app/api/companies/subscribed-companies'
+import { getSubscribedCompanies } from 'src/app/api/companies'
 
 const useSubscribedCompanies = () => {
   const [subscribedCompanies, setSubscribedCompanies] = useState<string[]>([])

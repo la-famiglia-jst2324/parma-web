@@ -1,29 +1,26 @@
 'use client'
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { Button } from '@tremor/react'
 import Image from 'next/image'
+import { useRouter } from 'next/navigation'
 import profilePic from '@/../../public/Default_pfp.jpg'
 import { FormContent } from '@/components/FormContent'
 import AuthCheck from '@/components/Authentication/AuthCheck'
 import { MainLayout } from '@/components/MainLayout'
+import { AuthContext } from '@/lib/firebase/auth'
+
+// TODO: @Analytics team need to implement the api end points for attaching profile picture to firebase similar to the one for company attachment
 
 const ProfilePage: React.FC = () => {
   const [fullName, setFullName] = useState('')
   const [email, setEmail] = useState('')
-  const [oldPassword, setOldPassword] = useState('')
-  const [newPassword, setNewPassword] = useState('')
-  const [repeatPassword, setRepeatPassword] = useState('')
 
   const saveProfileData = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
 
-    // Create an object with the form data
     const formData = {
       fullName,
-      email,
-      oldPassword,
-      newPassword,
-      repeatPassword
+      email
     }
 
     // Validate the form data here (if necessary)
@@ -74,7 +71,13 @@ const ProfilePage: React.FC = () => {
       uploadFile(file)
     }
   }
-
+  const router = useRouter()
+  const handleForgotPasswordClick = () => {
+    router.push('/forgot-password')
+  }
+  const user = useContext(AuthContext)
+  const userMail = user?.email
+  const userFullName = user?.displayName
   return (
     <MainLayout>
       <div className=" m-3 flex flex-col items-start overflow-auto rounded-lg border-0 bg-white p-3 shadow-md">
@@ -113,7 +116,7 @@ const ProfilePage: React.FC = () => {
                     id="Full Name"
                     name="Full Name"
                     label="Full Name"
-                    placeholder="your full name here"
+                    placeholder={userFullName || 'your full name here'}
                     type="input"
                     onChange={(e) => setFullName(e.target.value)}
                   />
@@ -121,43 +124,34 @@ const ProfilePage: React.FC = () => {
                     id="Email"
                     name="Email"
                     label="Email"
-                    placeholder="your email here"
+                    placeholder={userMail || 'please write your email here'}
                     type="input"
                     onChange={(e) => setEmail(e.target.value)}
+                    readonly={!!userMail}
                   />
-                  <FormContent
-                    id="password"
-                    name="Old Password"
-                    label="Old Password"
-                    placeholder="your old password here"
-                    type="input"
-                    onChange={(e) => setOldPassword(e.target.value)}
-                  />
-                  <FormContent
-                    id="Password"
-                    name="New Password"
-                    label="New Password"
-                    placeholder="your new password here"
-                    type="input"
-                    onChange={(e) => setNewPassword(e.target.value)}
-                  />
-                  <FormContent
-                    id="password"
-                    name="Repeat New Password"
-                    label="Repeat New Password"
-                    placeholder="your new password here"
-                    type="input"
-                    onChange={(e) => setRepeatPassword(e.target.value)}
-                  />
+
                   <div>
-                    <button
+                    <Button
                       className="rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700 focus:outline-none"
                       type="submit"
                     >
                       Save Changes
-                    </button>
+                    </Button>
                   </div>
                 </form>
+                <div className="mb-4 flex flex-col pt-4">
+                  <label className="mb-2 block text-sm font-bold text-gray-700">
+                    Do you want to change your password?
+                  </label>
+                  <div>
+                    <Button
+                      className="rounded bg-red-500 px-4 py-2 font-bold text-white hover:bg-red-700 focus:outline-none"
+                      onClick={handleForgotPasswordClick}
+                    >
+                      Change Password
+                    </Button>
+                  </div>
+                </div>
               </div>
             </div>
           </div>

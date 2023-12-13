@@ -15,14 +15,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((firebaseUser) => {
-      firebaseUser
-        ?.getIdToken()
-        .then((token) => {
-          localStorage.setItem('token', token)
-        })
-        .catch((e) => {
-          console.log(e)
-        })
       setUser(firebaseUser)
     })
 

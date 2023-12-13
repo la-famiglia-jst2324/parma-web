@@ -41,5 +41,4 @@ export const authResetPassword = async (email: string) => {
 
 export const authLogout = async () => {
   await auth.signOut()
-  localStorage.removeItem('token')
 }

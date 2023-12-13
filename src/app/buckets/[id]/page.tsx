@@ -193,29 +193,36 @@ export default function BucketPage({ params: { id } }: { params: { id: string } 
           <div className="mb-12 ml-8">
             <p className="mb-4  text-gray-400">{bucket.description}</p>
           </div>
+
           <div className="ml-8 flex items-center justify-between">
             <h1 className="text-2xl font-bold">Companies in this bucket</h1>
             <div className="flex flex-row items-center gap-4"></div>
           </div>
 
-          <Table className="ml-8 mt-5">
-            <TableHead>
-              <TableRow>
-                <TableHeaderCell>Company Name</TableHeaderCell>
-                <TableHeaderCell>Description</TableHeaderCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {bucketCompanies?.map((item) => (
-                <TableRow key={item.name}>
-                  <TableCell>{item.name}</TableCell>
-                  <TableCell>
-                    <Text className="whitespace-break-spaces">{item.description}</Text>
-                  </TableCell>
+          {bucketCompanies && bucketCompanies.length > 0 && (
+            <Table className="ml-8 mt-5">
+              <TableHead>
+                <TableRow>
+                  <TableHeaderCell>Company Name</TableHeaderCell>
+                  <TableHeaderCell>Description</TableHeaderCell>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+              </TableHead>
+              <TableBody>
+                {bucketCompanies?.map((item) => (
+                  <TableRow key={item.name}>
+                    <TableCell>{item.name}</TableCell>
+                    <TableCell>
+                      <Text className="whitespace-break-spaces">{item.description}</Text>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          )}
+
+          {bucketCompanies && !(bucketCompanies.length > 0) && (
+            <div className="ml-8 mt-4 text-gray-400">This bucket does not have any companies.</div>
+          )}
         </div>
         {showSuccess && <Popup text={popupText} title="Success" popupType={PopupType.SUCCESS}></Popup>}
         {showError && <Popup text={popupText} title="Error" popupType={PopupType.ERROR}></Popup>}

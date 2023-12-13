@@ -28,7 +28,8 @@ const useCompanies = () => {
       try {
         if (idToken) {
           const data = await getAllCompanies(idToken)
-          setCompanies(data)
+          const uniqueCompanies = Array.from(new Set(data.map((company: Company) => company)))
+          setCompanies(uniqueCompanies)
         }
       } catch (error) {
         console.error('Failed to fetch companies:', error)

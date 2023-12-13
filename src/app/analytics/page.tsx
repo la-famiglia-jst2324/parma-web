@@ -26,7 +26,6 @@ const AnalyticsPage: React.FC = () => {
   }
 
   const metricName = metrics.filter((metric) => metric.id.toString() === selectedMetric)[0]?.measurementName
-  const sourceModuleId = metrics.filter((metric) => metric.id.toString() === selectedMetric)[0]?.sourceModuleId
 
   return (
     <MainLayout>
@@ -94,7 +93,6 @@ const AnalyticsPage: React.FC = () => {
             measurementId={graphData.metric || ''}
             companiesArray={graphData.companies}
             measurementName={metricName}
-            sourceModuleId={sourceModuleId.toString()}
           />
         ) : (
           <p className="ml-4">Please select companies and a metric to compare.</p>

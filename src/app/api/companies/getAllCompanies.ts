@@ -15,7 +15,7 @@ async function getCompanies(idToken: string): Promise<Company[]> {
       throw new Error('HTTP response was not OK')
     }
     const json = await res.json()
-    return json?.companies
+    return json
   } catch (error) {
     console.log('An error has occurred: ', error)
     return []

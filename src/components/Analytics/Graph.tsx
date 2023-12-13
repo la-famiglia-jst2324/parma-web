@@ -2,7 +2,6 @@ import React, { useState, useEffect, useContext } from 'react'
 import { AreaChart, DateRangePicker } from '@tremor/react'
 import { AuthContext } from '@/lib/firebase/auth'
 import extractCategories from '@/utils/extractCategories'
-import { getDatasource } from '@/app/api/datasources'
 
 async function getAnalyticsData(measurementId: string, companiesArray: string[], idToken: string) {
   const companiesQuery = companiesArray.map((companyId) => `companies=${companyId}`).join('&')
@@ -24,14 +23,12 @@ async function getAnalyticsData(measurementId: string, companiesArray: string[],
 interface GraphChartProps {
   measurementId: string
   measurementName: string
-  sourceModuleId: string
   companiesArray: string[]
 }
 
-const GraphChart: React.FC<GraphChartProps> = ({ measurementId, measurementName, sourceModuleId, companiesArray }) => {
+const GraphChart: React.FC<GraphChartProps> = ({ measurementId, measurementName, companiesArray }) => {
   const [analyticsData, setAnalyticsData] = useState([])
   const [idToken, setIdToken] = useState<string | null>(null)
-  const [sourceName, setSourceName] = useState<string>('')
 
   const user = useContext(AuthContext)
 
@@ -61,19 +58,7 @@ const GraphChart: React.FC<GraphChartProps> = ({ measurementId, measurementName,
       }
     }
     fetchAnalyticsData()
-  }, [idToken, measurementId, companiesArray.length])
-
-  useEffect(() => {
-    const fetchDatasource = async () => {
-      try {
-        const data = await getDatasource(sourceModuleId.toString() || '')
-        setSourceName(data.name)
-      } catch (error) {
-        console.error('Error fetching token:', error)
-      }
-    }
-    fetchDatasource()
-  }, [])
+  }, [idToken, measurementId, companiesArray])
 
   const categories = extractCategories(analyticsData)
 
@@ -82,7 +67,6 @@ const GraphChart: React.FC<GraphChartProps> = ({ measurementId, measurementName,
       <div className="flex items-center justify-between">
         <div>
           <h1 className="ml-2 text-lg font-semibold text-gray-700">{measurementName}</h1>
-          {sourceName && <p className="ml-2 text-sm text-gray-600">Datasource: {sourceName}</p>}
         </div>
         <DateRangePicker />
       </div>

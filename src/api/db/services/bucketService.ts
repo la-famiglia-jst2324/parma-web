@@ -42,7 +42,10 @@ const getBucketByName = async (title: string, page: number, pageSize: number) =>
     const skip = (page - 1) * pageSize
     const buckets = await prisma.bucket.findMany({
       where: {
-        title
+        title: {
+          contains: title,
+          mode: 'insensitive'
+        }
       },
       skip,
       take: pageSize

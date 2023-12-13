@@ -1,15 +1,29 @@
 'use client'
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { Badge } from '@tremor/react'
 import { useRouter } from 'next/navigation'
-import type Datasource from '@/types/datasource'
+import type { DataSource } from '@prisma/client'
+import Pagination from './TablePagination'
 
 interface TableProps {
-  data: Datasource[]
+  initialData: DataSource[]
+  pagination: {
+    currentPage: number
+    pageSize: number
+    totalPages: number
+    totalCount: number
+  }
+  onPageChange: (page: number) => void
+  onItemsPerPageChange: (itemsPerPage: number) => void
 }
 
-const DatasourceTable: React.FC<TableProps> = ({ data }: TableProps) => {
+const DatasourceTable: React.FC<TableProps> = ({ initialData, pagination, onPageChange, onItemsPerPageChange }) => {
   const router = useRouter()
+  const [data, setData] = useState(initialData)
+
+  useEffect(() => {
+    setData(initialData)
+  }, [initialData])
 
   return (
     <>
@@ -37,6 +51,13 @@ const DatasourceTable: React.FC<TableProps> = ({ data }: TableProps) => {
           ))}
         </tbody>
       </table>
+      <Pagination
+        totalItems={pagination.totalCount}
+        currentPage={pagination.currentPage}
+        itemsPerPage={pagination.pageSize}
+        onPageChange={onPageChange}
+        onItemsPerPageChange={onItemsPerPageChange}
+      />
     </>
   )
 }

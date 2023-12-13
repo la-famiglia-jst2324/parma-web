@@ -35,7 +35,10 @@ const getCompanyByName = async (name: string, page: number, pageSize: number) =>
     const skip = (page - 1) * pageSize
     const company = await prisma.company.findMany({
       where: {
-        name
+        name: {
+          contains: name,
+          mode: 'insensitive'
+        }
       },
       skip,
       take: pageSize
@@ -91,6 +94,17 @@ const getAllCompanies = async (page: number, pageSize: number) => {
     throw error
   }
 }
+
+const getAllCompaniesWithoutPagi = async () => {
+  try {
+    const companies = await prisma.company.findMany()
+    return companies
+  } catch (error) {
+    console.error('Error fetching all companies:', error)
+    throw error
+  }
+}
+
 const updateCompany = async (
   id: number,
   data: {
@@ -128,4 +142,12 @@ const deleteCompany = async (id: number) => {
   }
 }
 
-export { createCompany, getCompanyByID, getCompanyByName, getAllCompanies, updateCompany, deleteCompany }
+export {
+  createCompany,
+  getCompanyByID,
+  getCompanyByName,
+  getAllCompanies,
+  getAllCompaniesWithoutPagi,
+  updateCompany,
+  deleteCompany
+}

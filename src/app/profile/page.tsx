@@ -76,6 +76,8 @@ const ProfilePage: React.FC = () => {
     router.push('/forgot-password')
   }
   const user = useContext(AuthContext)
+  console.log('user auth token: ', user?.getIdToken())
+
   const userMail = user?.email
   const userFullName = user?.displayName
   return (

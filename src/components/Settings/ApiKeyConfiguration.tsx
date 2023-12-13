@@ -15,7 +15,9 @@ const ApiKeyConfiguration: React.FC<ApiKeyConfigurationProps> = ({ serviceName, 
       <div>
         <div className="flex">
           <div>
-            <h4 className="text-align: left; flex">Configure API key for {serviceName.toLowerCase()}</h4>
+            <h4 className="flex" style={{ textAlign: 'left' }}>
+              Configure API key for {serviceName.toLowerCase()}
+            </h4>
           </div>
           <div className="absolute right-8 w-[180px] p-2">
             <Button onClick={onConfigure}>Configure</Button>

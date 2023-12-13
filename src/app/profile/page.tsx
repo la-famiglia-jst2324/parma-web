@@ -76,6 +76,8 @@ const ProfilePage: React.FC = () => {
     router.push('/forgot-password')
   }
   const user = useContext(AuthContext)
+  console.log('user auth token: ', user?.getIdToken())
+
   const userMail = user?.email
   const userFullName = user?.displayName
   return (
@@ -83,7 +85,7 @@ const ProfilePage: React.FC = () => {
       <div className=" m-3 flex flex-col items-start overflow-auto rounded-lg border-0 bg-white p-3 shadow-md">
         <div className=" items-center justify-start ">
           <div className="mb-3 items-center justify-start space-x-7">
-            <h1 className="title py-2 pl-2 text-3xl font-bold">Edit Profile</h1>
+            <h1 className="py-2 pl-2 text-3xl font-bold">Edit Profile</h1>
 
             <div className="flex">
               <div className=" pl-10 pt-12">
@@ -110,7 +112,7 @@ const ProfilePage: React.FC = () => {
                   </Button>
                 </div>
               </div>
-              <div className="text-bold w-[700px] pl-72  pt-10">
+              <div className="w-[700px] pl-72 pt-10 font-bold">
                 <form role="form" data-testid="create-profile-form" onSubmit={saveProfileData}>
                   <FormContent
                     id="Full Name"

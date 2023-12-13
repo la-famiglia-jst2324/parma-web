@@ -1,4 +1,4 @@
-export enum PopupENUM {
+export enum PopupType {
   SUCCESS = 'SUCCESS',
   ERROR = 'ERROR'
 }

@@ -8,7 +8,7 @@ import { PencilIcon, ShareIcon, TrashIcon } from '@heroicons/react/20/solid'
 import { GoBackButton } from '@/components/GoBackButton'
 import EditBucketModal from '@/components/buckets/EditBucketModal'
 import { Popup } from '@/components/Popup'
-import { PopupENUM } from '@/types/popup'
+import { PopupType } from '@/types/popup'
 import DeleteBucketModal from '@/components/buckets/DeleteBucketModal'
 import BucketFunctions from '@/app/services/bucket.service'
 import type { ShareBucketProps } from '@/components/buckets/ShareBucketModal'
@@ -217,8 +217,8 @@ export default function BucketPage({ params: { id } }: { params: { id: string } 
             </TableBody>
           </Table>
         </div>
-        {showSuccess && <Popup text={popupText} title="Success" popupType={PopupENUM.SUCCESS}></Popup>}
-        {showError && <Popup text={popupText} title="Error" popupType={PopupENUM.ERROR}></Popup>}
+        {showSuccess && <Popup text={popupText} title="Success" popupType={PopupType.SUCCESS}></Popup>}
+        {showError && <Popup text={popupText} title="Error" popupType={PopupType.ERROR}></Popup>}
       </div>
     </MainLayout>
   )

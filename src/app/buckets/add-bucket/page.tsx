@@ -9,7 +9,7 @@ import { CheckBadgeIcon } from '@heroicons/react/20/solid'
 import { FormContent } from '@/components/FormContent'
 import { GoBackButton } from '@/components/GoBackButton'
 import { Popup } from '@/components/Popup'
-import { PopupENUM } from '@/types/popup'
+import { PopupType } from '@/types/popup'
 import BucketFunctions from '@/app/services/bucket.service'
 import { MainLayout } from '@/components/MainLayout'
 
@@ -146,9 +146,9 @@ export default function AddBucketPage() {
           </form>
         </div>
         {showSuccess && (
-          <Popup text="Bucket created successfully" title="Success" popupType={PopupENUM.SUCCESS}></Popup>
+          <Popup text="Bucket created successfully" title="Success" popupType={PopupType.SUCCESS}></Popup>
         )}
-        {showError && <Popup text="Bucket creation failed" title="Error" popupType={PopupENUM.ERROR}></Popup>}
+        {showError && <Popup text="Bucket creation failed" title="Error" popupType={PopupType.ERROR}></Popup>}
       </div>
     </MainLayout>
   )

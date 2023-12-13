@@ -5,6 +5,7 @@ import type { FormEvent } from 'react'
 import { useEffect, useState } from 'react'
 import type { Bucket, Company } from '@prisma/client'
 import { useRouter } from 'next/navigation'
+import { CheckBadgeIcon } from '@heroicons/react/20/solid'
 import { FormContent } from '@/components/FormContent'
 import { GoBackButton } from '@/components/GoBackButton'
 import { Popup } from '@/components/Popup'
@@ -105,7 +106,7 @@ export default function AddBucketPage() {
                 type="input"
                 value={title}
                 label="Bucket title"
-                placeholder="bucket title"
+                placeholder="Please enter bucket title"
                 onChange={(e) => setTitle(e.target.value)}
               />
             </div>
@@ -115,7 +116,7 @@ export default function AddBucketPage() {
                 name="description"
                 value={description}
                 label="Bucket description"
-                placeholder="bucket description"
+                placeholder="Please enter bucket description"
                 onChange={(e) => setDescription(e.target.value)}
               />
             </div>
@@ -137,7 +138,7 @@ export default function AddBucketPage() {
             <div>
               <Button>
                 <div className="flex items-center gap-2">
-                  {/* <BadgeCheckIcon className="h-5 w-5"></BadgeCheckIcon> */}
+                  <CheckBadgeIcon className="h-5 w-5"></CheckBadgeIcon>
                   <div className="flex items-center gap-0.5 text-white">Create new Bucket</div>
                 </div>
               </Button>

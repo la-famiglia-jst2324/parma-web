@@ -3,7 +3,7 @@ import type { User } from '@prisma/client'
 import {
   createCompany,
   getAllCompanies,
-  getAllCompaniesWithoutPagi,
+  getAllCompaniesWithoutPagination,
   getCompanyByName
 } from '@/api/db/services/companyService'
 import { ItemNotFoundError } from '@/api/utils/errorUtils'
@@ -33,7 +33,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse, user: User) =>
           if (companies) res.status(200).json(companies)
           else res.status(400).json({ error: 'No Companies found' })
         } else {
-          const companies = await getAllCompaniesWithoutPagi()
+          const companies = await getAllCompaniesWithoutPagination()
           if (companies) res.status(200).json(companies)
           else res.status(400).json({ error: 'No Companies found' })
         }

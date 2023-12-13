@@ -95,7 +95,7 @@ const getAllCompanies = async (page: number, pageSize: number) => {
   }
 }
 
-const getAllCompaniesWithoutPagi = async () => {
+const getAllCompaniesWithoutPagination = async () => {
   try {
     const companies = await prisma.company.findMany()
     return companies
@@ -147,7 +147,7 @@ export {
   getCompanyByID,
   getCompanyByName,
   getAllCompanies,
-  getAllCompaniesWithoutPagi,
+  getAllCompaniesWithoutPagination,
   updateCompany,
   deleteCompany
 }

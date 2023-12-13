@@ -76,8 +76,7 @@ export default function BucketsPage() {
       .catch((e) => {
         console.log(e)
       })
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [page])
+  }, [page, allBuckets])
 
   useEffect(() => {
     if (searchTerm === '') {

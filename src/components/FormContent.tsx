@@ -8,9 +8,19 @@ interface FormContentProps {
   value?: string
   type?: 'input' | 'textarea'
   onChange?: (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void
+  readonly?: boolean
 }
 
-export const FormContent: React.FC<FormContentProps> = ({ id, name, label, placeholder, value, type, onChange }) => {
+export const FormContent: React.FC<FormContentProps> = ({
+  id,
+  name,
+  label,
+  placeholder,
+  value,
+  type,
+  onChange,
+  readonly
+}) => {
   return (
     <div className="mb-4 flex flex-col">
       <label className="mb-2 block text-sm font-bold text-gray-700" htmlFor={id}>
@@ -22,16 +32,17 @@ export const FormContent: React.FC<FormContentProps> = ({ id, name, label, place
           type="text"
           id={id}
           name={name}
-          placeholder={`Please enter ${placeholder.toLowerCase()}`}
+          placeholder={` ${placeholder.toLowerCase()}`}
           value={value}
           onChange={onChange}
+          readOnly={readonly}
         />
       ) : (
         <textarea
           className="w-full appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow focus:outline-none"
           id={id}
           name={name}
-          placeholder={`Please enter ${placeholder.toLowerCase()}`}
+          placeholder={`${placeholder.toLowerCase()}`}
           value={value}
           onChange={onChange}
         />

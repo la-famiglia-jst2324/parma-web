@@ -1,7 +1,7 @@
 'use client'
 
 import type { ChangeEvent } from 'react'
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useState, useEffect } from 'react'
 import type { CalloutProps } from '@tremor/react'
 import { Tab, TabGroup, TabList, TabPanel, TabPanels, Button } from '@tremor/react'
 import { UserGroupIcon, UserIcon, CheckCircleIcon, ArrowUpTrayIcon } from '@heroicons/react/20/solid'
@@ -11,9 +11,20 @@ import CompanyPopup from '@/components/Companies/CompanyPopup'
 import CompanyAttachment from '@/components/Companies/CompanyAttachment'
 import DataSourcesPanel from '@/components/Companies/DataSourcesPanel'
 import PerformancePanel from '@/components/Companies/PerformancePanel'
-import { AuthContext } from '@/lib/firebase/auth'
 import { MainLayout } from '@/components/MainLayout'
 import AuthCheck from '@/components/Authentication/AuthCheck'
+import {
+  getSubscribedCompanies,
+  postCompanySubscription,
+  getCompanyData,
+  getCompanyAttachments,
+  deleteCompanyAttachment,
+  getCompanyAttachmentData,
+  postCompanyAttachment,
+  getExportData,
+  editCompany
+} from '@/services/company/companyService'
+import EditInformationModal from '@/components/Companies/EditCompanyModal'
 
 interface PopupContents {
   title: string
@@ -41,244 +52,62 @@ interface Attachment {
   modifiedAt: string
 }
 
-async function getSubscribedCompanies(idToken: string) {
-  try {
-    const res = await fetch('/api/company/subscribed', {
-      method: 'GET',
-      cache: 'no-cache',
-      headers: {
-        Authorization: idToken
-      }
-    })
-
-    if (!res.ok) {
-      console.log('Response status:', res.status)
-      throw new Error('HTTP response was not OK')
-    }
-    const json = await res.json()
-    return json
-  } catch (error) {
-    console.log('An error has occurred: ', error)
-    throw error
-  }
-}
-
-async function postCompanySubscription(companyId: string, subscribe: boolean, idToken: string) {
-  try {
-    const res = await fetch(`/api/company/subscribed?subscribe=${subscribe}`, {
-      method: 'POST',
-      body: JSON.stringify({ companyId: Number(companyId) }),
-      cache: 'no-cache',
-      headers: {
-        Authorization: idToken
-      }
-    })
-    if (!res.ok) {
-      console.log('Response status:', res.status)
-      throw new Error('HTTP response was not OK')
-    }
-    const json = await res.json()
-    return json
-  } catch (error) {
-    console.log('An error has occurred: ', error)
-    throw error
-  }
-}
-
-async function getCompanyData(companyId: string, idToken: string) {
-  try {
-    const res = await fetch(`/api/company/${companyId}`, {
-      method: 'GET',
-      cache: 'no-cache',
-      headers: {
-        Authorization: idToken
-      }
-    })
-    if (!res.ok) {
-      console.log('Response status:', res.status)
-      throw new Error('HTTP response was not OK')
-    }
-    const json = await res.json()
-    return json
-  } catch (error) {
-    console.log('An error has occurred: ', error)
-    throw error
-  }
-}
-
-async function getCompanyAttachments(companyId: string, idToken: string) {
-  try {
-    const res = await fetch(`/api/company/attachment?companyId=${companyId}`, {
-      method: 'GET',
-      cache: 'no-cache',
-      headers: {
-        Authorization: idToken
-      }
-    })
-    if (!res.ok) {
-      console.log('Response status:', res.status)
-      throw new Error('HTTP response was not OK')
-    }
-    const json = await res.json()
-    return json
-  } catch (error) {
-    console.log('An error has occurred: ', error)
-    throw error
-  }
-}
-
-async function deleteCompanyAttachment(companyId: string, attachmentId: string, idToken: string) {
-  try {
-    const res = await fetch(`/api/company/${companyId}/attachment/${attachmentId}`, {
-      method: 'DELETE',
-      cache: 'no-cache',
-      headers: {
-        Authorization: idToken
-      }
-    })
-    if (!res.ok) {
-      console.log('Response status:', res.status)
-      throw new Error('HTTP response was not OK')
-    }
-    const json = await res.json()
-    return json
-  } catch (error) {
-    console.log('An error has occurred: ', error)
-    throw error
-  }
-}
-
-async function getCompanyAttachmentData(companyId: string, attachmentId: string, idToken: string) {
-  try {
-    const res = await fetch(`/api/company/${companyId}/attachment/${attachmentId}`, {
-      method: 'GET',
-      cache: 'no-cache',
-      headers: {
-        Authorization: idToken
-      }
-    })
-    if (!res.ok) {
-      console.log('Response status:', res.status)
-      throw new Error('HTTP response was not OK')
-    }
-    const json = await res.json()
-    return json
-  } catch (error) {
-    console.log('An error has occurred: ', error)
-    throw error
-  }
-}
-
-async function postCompanyAttachment(companyId: string, data: FormData, idToken: string) {
-  try {
-    const res = await fetch(`/api/company/${companyId}/attachment`, {
-      method: 'POST',
-      body: data,
-      cache: 'no-cache',
-      headers: {
-        Authorization: idToken
-      }
-    })
-    if (!res.ok) {
-      console.log('Response status:', res.status)
-      throw new Error('HTTP response was not OK')
-    }
-    const json = await res.json()
-    return json
-  } catch (error) {
-    console.log('An error has occurred: ', error)
-    throw error
-  }
-}
-
-async function getExportData(companyId: string) {
-  return `${companyId}`
-}
-
 const CompanyPage = ({ params: { companyId } }: { params: { companyId: string } }) => {
-  const [companyData, setCompanyData] = useState<CompanyData>()
+  const [companyData, setCompanyData] = useState<CompanyData>({
+    name: '',
+    description: ''
+  })
   const [companyAttachments, setCompanyAttachments] = useState<Attachment[]>([])
   const [isSubscribed, setIsSubscribed] = useState(false)
   const [showPopup, setShowPopup] = useState(false)
-  const [idToken, setIdToken] = useState<string>('')
+  const [editModal, setEditModal] = useState(false)
+  const [uploadAttachment, setUploadAttachment] = useState<Blob | string>('')
   const [popupContents, setPopupContents] = useState<PopupContents>({
     title: '',
     color: 'teal',
     description: ''
   })
-  const user = useContext(AuthContext)
-
-  const [uploadAttachment, setUploadAttachment] = useState<Blob | string>('')
-
-  let name: string = ''
-  let description: string = ''
-
-  if (companyData) {
-    name = companyData?.name
-    description = companyData?.description
-  }
-
-  useEffect(() => {
-    const setToken = async () => {
-      try {
-        if (user) {
-          const token = await user.getIdToken()
-          setIdToken(token)
-        }
-      } catch (error) {
-        console.error('Error setting token:', error)
-      }
-    }
-
-    setToken()
-  }, [user])
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        if (idToken) {
-          const data = await getCompanyAttachments(companyId, idToken)
-          const returnData = data || []
-          setCompanyAttachments(returnData)
-        }
+        const data = await getCompanyAttachments(companyId)
+        const returnData = data || []
+        setCompanyAttachments(returnData)
       } catch (error) {
         console.error('Failed to fetch company attachments', error)
       }
     }
 
     fetchData()
-  }, [companyId, idToken])
+  }, [companyId])
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        if (idToken) {
-          const data = await getCompanyData(companyId, idToken)
-          setCompanyData(data)
-        }
+        const data = await getCompanyData(companyId)
+        setCompanyData(data)
       } catch (error) {
         console.error('Failed to fetch company data:', error)
       }
     }
 
     fetchData()
-  }, [companyId, idToken])
+  }, [companyId])
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        if (idToken) {
-          const data = await getSubscribedCompanies(idToken)
-          const subscribed = data.some((item: SubscriptionResponse) => item.id === Number(companyId))
-          setIsSubscribed(subscribed)
-        }
+        const data = await getSubscribedCompanies()
+        const subscribed = data.some((item: SubscriptionResponse) => item.id === Number(companyId))
+        setIsSubscribed(subscribed)
       } catch (error) {
         console.error('Failed to fetch subscribed companies:', error)
       }
     }
 
     fetchData()
-  }, [companyId, idToken])
+  }, [companyId])
 
   useEffect(() => {
     if (showPopup) {
@@ -308,7 +137,7 @@ const CompanyPage = ({ params: { companyId } }: { params: { companyId: string } 
   const handleSubscribe = async () => {
     const subscribeValue = true
     try {
-      await postCompanySubscription(companyId, subscribeValue, idToken)
+      await postCompanySubscription(companyId, subscribeValue)
       setIsSubscribed(subscribeValue)
       setPopupContents({
         title: `Company ${name} subscribed successfully`,
@@ -331,7 +160,7 @@ const CompanyPage = ({ params: { companyId } }: { params: { companyId: string } 
   const handleUnsubscribe = async () => {
     const subscribeValue = false
     try {
-      await postCompanySubscription(companyId, subscribeValue, idToken)
+      await postCompanySubscription(companyId, subscribeValue)
       setIsSubscribed(subscribeValue)
       setPopupContents({
         title: `Company ${name} unsubscribed successfully`,
@@ -344,10 +173,32 @@ const CompanyPage = ({ params: { companyId } }: { params: { companyId: string } 
     }
   }
 
+  const handleEditCompany = async (name: string, description: string) => {
+    try {
+      await editCompany(companyId, name, description)
+      const data = await getCompanyData(companyId)
+      setCompanyData(data)
+      setPopupContents({
+        title: `Company ${name} edited successfully`,
+        color: 'teal',
+        description: 'You have successfully edited this company'
+      })
+      setShowPopup(true)
+    } catch (error) {
+      console.error('Error in editing the company:', error)
+      setPopupContents({
+        title: `Unable to edit ${name}`,
+        color: 'red',
+        description: 'An error occurred while editing this company! Please try again'
+      })
+      setShowPopup(true)
+    }
+  }
+
   const handleDelete = async (attachmentId: string) => {
     try {
-      await deleteCompanyAttachment(companyId, attachmentId, idToken)
-      const data = await getCompanyAttachments(companyId, idToken)
+      await deleteCompanyAttachment(companyId, attachmentId)
+      const data = await getCompanyAttachments(companyId)
       const returnData = data || []
       setCompanyAttachments(returnData)
       setPopupContents({
@@ -357,16 +208,16 @@ const CompanyPage = ({ params: { companyId } }: { params: { companyId: string } 
       })
       setShowPopup(true)
     } catch (error) {
-      console.error('Error unsubscribing:', error)
+      console.error('Error delete the attachment:', error)
     }
   }
 
   const handleDownload = async (attachmentId: string) => {
     try {
-      const data = await getCompanyAttachmentData(companyId, attachmentId, idToken)
+      const data = await getCompanyAttachmentData(companyId, attachmentId)
       window.open(data.fileUrl, '_blank')
     } catch (error) {
-      console.error('Error unsubscribing:', error)
+      console.error('Error downloading th file:', error)
     }
   }
 
@@ -374,9 +225,8 @@ const CompanyPage = ({ params: { companyId } }: { params: { companyId: string } 
     try {
       const data = new FormData()
       data.append('file', uploadAttachment)
-      setUploadAttachment('')
-      await postCompanyAttachment(companyId, data, idToken)
-      const data1 = await getCompanyAttachments(companyId, idToken)
+      await postCompanyAttachment(companyId, data)
+      const data1 = await getCompanyAttachments(companyId)
       const returnData = data1 || []
       setCompanyAttachments(returnData)
       setPopupContents({
@@ -386,8 +236,9 @@ const CompanyPage = ({ params: { companyId } }: { params: { companyId: string } 
       })
       setShowPopup(true)
     } catch (error) {
-      console.error('Error unsubscribing:', error)
+      console.error('Error uploading the file:', error)
     }
+    setUploadAttachment('')
   }
 
   const uploadToClient = (event: ChangeEvent<HTMLInputElement>) => {
@@ -405,7 +256,7 @@ const CompanyPage = ({ params: { companyId } }: { params: { companyId: string } 
             <div className="pl-2">
               <GoBackButton />
             </div>
-            <h1 className="py-2 pl-4 text-4xl font-bold">{name}</h1>
+            <h1 className="py-2 pl-4 text-4xl font-bold">{companyData?.name}</h1>
           </div>
           <div className="flex">
             <div className="flex items-center space-x-3">
@@ -416,24 +267,24 @@ const CompanyPage = ({ params: { companyId } }: { params: { companyId: string } 
               ) : (
                 <Button onClick={handleSubscribe}>Subscribe</Button>
               )}
-              <Button variant="secondary" onClick={() => handleExport(name)}>
+              <Button variant="secondary" onClick={() => handleExport(companyData?.name)}>
                 Export Data
+              </Button>
+              <Button variant="secondary" onClick={() => setEditModal(true)}>
+                Edit Company
               </Button>
             </div>
           </div>
         </div>
 
         <div className="flex w-full flex-col pl-10 pr-2">
-          <p className="mb-4 overflow-hidden text-sm text-gray-700">{description}</p>
+          <p className="mb-4 overflow-hidden text-sm text-gray-700">{companyData?.description}</p>
           <div className="mt-4">
-            <h3 className="pb-2 font-bold">
-              You can also attach data to this company that will only be displayed to you
-            </h3>
             <div className="flex items-center">
               <input type="file" className="text-sm text-stone-500" name="attachment" onChange={uploadToClient} />
             </div>
             <div className="pt-2">
-              <Button icon={ArrowUpTrayIcon} onClick={handleUpload} disabled={!uploadAttachment}>
+              <Button icon={ArrowUpTrayIcon} onClick={handleUpload} disabled={uploadAttachment === ''}>
                 Upload File
               </Button>
             </div>
@@ -464,13 +315,12 @@ const CompanyPage = ({ params: { companyId } }: { params: { companyId: string } 
               <TabPanel>
                 <DataSourcesPanel
                   companyId={companyId}
-                  idToken={idToken}
                   setShowPopup={setShowPopup}
                   setPopupContents={setPopupContents}
                 />
               </TabPanel>
               <TabPanel>
-                <PerformancePanel />
+                <PerformancePanel companyId={companyId} />
               </TabPanel>
             </TabPanels>
           </TabGroup>
@@ -481,6 +331,13 @@ const CompanyPage = ({ params: { companyId } }: { params: { companyId: string } 
           color={popupContents.color}
           description={popupContents.description}
           showPopup={showPopup}
+        />
+        <EditInformationModal
+          isOpen={editModal}
+          handleClose={() => setEditModal(false)}
+          companyName={companyData?.name}
+          companyDescription={companyData?.description}
+          handleSave={handleEditCompany}
         />
       </div>
     </MainLayout>

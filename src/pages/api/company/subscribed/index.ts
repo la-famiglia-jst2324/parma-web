@@ -22,7 +22,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse, user: User) =>
   switch (method) {
     case 'POST':
       try {
-        const { companyId } = companySubscriptionSchema.parse(JSON.parse(req.body))
+        const { companyId } = companySubscriptionSchema.parse(req.body)
         if (flag === 'true') {
           const newSubscription = await createCompanySubscription({ userId, companyId })
           if (newSubscription) {

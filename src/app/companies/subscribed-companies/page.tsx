@@ -1,70 +1,29 @@
 'use client'
 
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useState, useEffect } from 'react'
 import type { Company } from '@/types/companies'
 import CompanyCard from '@/components/Companies/CompanyCard'
 import GoBackButton from '@/components/Companies/GoBackButton'
-import { AuthContext } from '@/lib/firebase/auth'
 import { MainLayout } from '@/components/MainLayout'
 import AuthCheck from '@/components/Authentication/AuthCheck'
+import { getSubscribedCompanies } from '@/services/company/companyService'
 
 interface SubscribedCompaniesPageProps {}
 
-async function getSubscribedCompanies(idToken: string) {
-  try {
-    const res = await fetch('/api/company/subscribed', {
-      method: 'GET',
-      cache: 'no-cache',
-      headers: {
-        Authorization: idToken
-      }
-    })
-
-    if (!res.ok) {
-      console.log('Response status:', res.status)
-      throw new Error('HTTP response was not OK')
-    }
-    const json = await res.json()
-    return json
-  } catch (error) {
-    console.log('An error has occurred: ', error)
-    return []
-  }
-}
-
 const SubscribedCompaniesPage: React.FC<SubscribedCompaniesPageProps> = () => {
   const [subscribedCompanies, setSubscribedCompanies] = useState<Company[]>([])
-  const [idToken, setIdToken] = useState<string>('')
-  const user = useContext(AuthContext)
-
-  useEffect(() => {
-    const setToken = async () => {
-      try {
-        if (user) {
-          const token = await user.getIdToken()
-          setIdToken(token)
-        }
-      } catch (error) {
-        console.error('Error setting token:', error)
-      }
-    }
-
-    setToken()
-  }, [user])
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        if (idToken) {
-          const data = await getSubscribedCompanies(idToken)
-          setSubscribedCompanies(data)
-        }
+        const data = await getSubscribedCompanies()
+        setSubscribedCompanies(data)
       } catch (error) {
         console.error('Failed to fetch subscribed companies:', error)
       }
     }
     fetchData()
-  }, [idToken, setSubscribedCompanies])
+  }, [])
 
   return (
     <MainLayout>

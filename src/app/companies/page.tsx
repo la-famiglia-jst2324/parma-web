@@ -1,81 +1,16 @@
 'use client'
 
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useState, useEffect } from 'react'
 import { MagnifyingGlassIcon } from '@heroicons/react/20/solid'
 import { Button, TextInput } from '@tremor/react'
 import { useRouter } from 'next/navigation'
 import type { Company } from '@/types/companies'
 import CompanyCard from '@/components/Companies/CompanyCard'
-import { AuthContext } from '@/lib/firebase/auth'
 import { MainLayout } from '@/components/MainLayout'
 import AuthCheck from '@/components/Authentication/AuthCheck'
+import { getCompanies, getSubscribedCompanies, getCompaniesByName } from '@/services/company/companyService'
 
 interface CompaniesPageProps {}
-
-async function getCompanies(offset: number, idToken: string): Promise<Company[]> {
-  try {
-    const res = await fetch(`/api/company?page=${offset}`, {
-      method: 'GET',
-      cache: 'no-cache',
-      headers: {
-        Authorization: idToken
-      }
-    })
-
-    if (!res.ok) {
-      console.log('Response status:', res.status)
-      throw new Error('HTTP response was not OK')
-    }
-    const json = await res.json()
-    return json?.companies
-  } catch (error) {
-    console.log('An error has occurred: ', error)
-    return []
-  }
-}
-
-async function getSubscribedCompanies(idToken: string) {
-  try {
-    const res = await fetch('/api/company/subscribed', {
-      method: 'GET',
-      cache: 'no-cache',
-      headers: {
-        Authorization: idToken
-      }
-    })
-
-    if (!res.ok) {
-      console.log('Response status:', res.status)
-      throw new Error('HTTP response was not OK')
-    }
-    const json = await res.json()
-    return json
-  } catch (error) {
-    console.log('An error has occurred: ', error)
-    return []
-  }
-}
-
-async function getCompaniesByName(companyName: string, idToken: string): Promise<Company[]> {
-  try {
-    const res = await fetch(`/api/company?name=${companyName}`, {
-      method: 'GET',
-      cache: 'no-cache',
-      headers: {
-        Authorization: idToken
-      }
-    })
-    if (!res.ok) {
-      console.log('Response status:', res.status)
-      throw new Error('HTTP response was not OK')
-    }
-    const json = await res.json()
-    return json?.company
-  } catch (error) {
-    console.log('An error has occurred: ', error)
-    return []
-  }
-}
 
 const CompaniesPage: React.FC<CompaniesPageProps> = () => {
   const [subscribedCompanies, setSubscribedCompanies] = useState<Company[]>([])
@@ -86,49 +21,27 @@ const CompaniesPage: React.FC<CompaniesPageProps> = () => {
   const [searchQuery, setSearchQuery] = useState<string>('')
   const [offset, setOffset] = useState<number>(1)
   const [showSeeMoreSubscribedCompanies, setShowSeeMoreSubscribedCompanies] = useState<boolean>(false)
-  const [idToken, setIdToken] = useState<string>('')
   const router = useRouter()
-
-  const user = useContext(AuthContext)
-
-  useEffect(() => {
-    const setToken = async () => {
-      if (user) {
-        try {
-          const token = await user.getIdToken()
-          setIdToken(token)
-        } catch (error) {
-          console.error('Error fetching token:', error)
-        }
-      }
-    }
-
-    setToken()
-  }, [user])
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        if (idToken) {
-          const data = await getSubscribedCompanies(idToken)
-          setShowSeeMoreSubscribedCompanies(data.length > 3)
-          setSubscribedCompanies(data.slice(0, 3))
-        }
+        const data = await getSubscribedCompanies()
+        setShowSeeMoreSubscribedCompanies(data.length > 3)
+        setSubscribedCompanies(data.slice(0, 3))
       } catch (error) {
         console.error('Failed to fetch subscribed companies:', error)
       }
     }
     fetchData()
-  }, [idToken, setShowSeeMoreSubscribedCompanies, setSubscribedCompanies])
+  }, [setShowSeeMoreSubscribedCompanies, setSubscribedCompanies])
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        if (idToken) {
-          const data = await getCompanies(offset, idToken)
-          setCompanies(data)
-          setOffset((prevOffset) => prevOffset + 1)
-        }
+        const data = await getCompanies(offset)
+        setCompanies(data)
+        setOffset(2)
       } catch (error) {
         console.error('Failed to fetch companies:', error)
       }
@@ -136,11 +49,11 @@ const CompaniesPage: React.FC<CompaniesPageProps> = () => {
 
     fetchData()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [idToken, setCompanies, setOffset])
+  }, [])
 
   const fetchMoreCompanies = async () => {
     try {
-      const moreCompanies = await getCompanies(offset, idToken)
+      const moreCompanies = await getCompanies(offset)
 
       if (moreCompanies.length === 0) {
         setDisableSeeMore(true)
@@ -155,7 +68,7 @@ const CompaniesPage: React.FC<CompaniesPageProps> = () => {
 
   const fetchSearchedCompanies = async () => {
     try {
-      const searchCompanies = await getCompaniesByName(searchQuery, idToken)
+      const searchCompanies = await getCompaniesByName(searchQuery)
       setSearchedCompanies(searchCompanies)
       setDisplaySearchCompanies(true)
     } catch (error) {

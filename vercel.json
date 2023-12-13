@@ -1,6 +1,6 @@
 {
-    "buildCommand": "next build",
     "installCommand": "pnpm install",
+    "buildCommand": "prisma generate && next build",
     "git": {
         "deploymentEnabled": {
             "main": false,

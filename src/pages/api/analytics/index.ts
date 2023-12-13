@@ -12,14 +12,13 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     case 'GET':
       try {
         const relation = await getValueByMeasurementIdCompanyId(Number(measurementId), companiesArray)
-        const dateCompanyMap: Record<string, Record<string, number | string>> = {}
+        const dateCompanyMap: Record<string, Record<string, number>> = {}
         const valueType = relation[0].sourceMeasurement.type
-        console.log(valueType)
         relation.forEach((data) => {
           switch (valueType) {
             case 'int':
               data.measurementIntValues.forEach((measurement) => {
-                const date = new Date(measurement.modifiedAt).toLocaleDateString('en-US') // 格式化日期
+                const date = new Date(measurement.modifiedAt).toLocaleDateString('en-US')
                 if (!dateCompanyMap[date]) {
                   dateCompanyMap[date] = {}
                 }
@@ -29,37 +28,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
             case 'float':
               data.measurementFloatValues.forEach((measurement) => {
-                const date = new Date(measurement.modifiedAt).toLocaleDateString('en-US') // 格式化日期
-                if (!dateCompanyMap[date]) {
-                  dateCompanyMap[date] = {}
-                }
-                dateCompanyMap[date][data.company.name] = measurement.value
-              })
-              break
-
-            case 'text':
-              data.measurementTextValues.forEach((measurement) => {
-                const date = new Date(measurement.modifiedAt).toLocaleDateString('en-US') // 格式化日期
-                if (!dateCompanyMap[date]) {
-                  dateCompanyMap[date] = {}
-                }
-                dateCompanyMap[date][data.company.name] = measurement.value
-              })
-              break
-
-            case 'paragraph':
-              data.measurementParagraphValues.forEach((measurement) => {
-                const date = new Date(measurement.modifiedAt).toLocaleDateString('en-US') // 格式化日期
-                if (!dateCompanyMap[date]) {
-                  dateCompanyMap[date] = {}
-                }
-                dateCompanyMap[date][data.company.name] = measurement.value
-              })
-              break
-
-            case 'comment':
-              data.measurementCommentValues.forEach((measurement) => {
-                const date = new Date(measurement.modifiedAt).toLocaleDateString('en-US') // 格式化日期
+                const date = new Date(measurement.modifiedAt).toLocaleDateString('en-US')
                 if (!dateCompanyMap[date]) {
                   dateCompanyMap[date] = {}
                 }

@@ -5,8 +5,8 @@
 [![Deploy](https://github.com/la-famiglia-jst2324/parma-web/actions/workflows/release.yml/badge.svg?event=release)](https://parma.software)
 [![Deploy](https://github.com/la-famiglia-jst2324/parma-web/actions/workflows/release.yml/badge.svg?event=push)](https://staging.parma.software)
 [![Major Tag](https://github.com/la-famiglia-jst2324/parma-web/actions/workflows/tag-major.yml/badge.svg)](https://github.com/la-famiglia-jst2324/parma-web/actions/workflows/tag-major.yml)
-![Functions](https://img.shields.io/badge/functions-23.87%25-red.svg?style=flat)
-![Lines](https://img.shields.io/badge/lines-19.35%25-red.svg?style=flat)
+![Functions](https://img.shields.io/badge/functions-22.99%25-red.svg?style=flat)
+![Lines](https://img.shields.io/badge/lines-18.83%25-red.svg?style=flat)
 
 ParmaAI webstack including frontend and REST API backend.
 

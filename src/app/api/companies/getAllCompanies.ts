@@ -2,7 +2,7 @@ import type { Company } from '@prisma/client'
 
 async function getCompanies(idToken: string): Promise<Company[]> {
   try {
-    const res = await fetch(`/api/company?page=${1}`, {
+    const res = await fetch(`/api/company/`, {
       method: 'GET',
       cache: 'no-cache',
       headers: {

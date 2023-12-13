@@ -9,7 +9,6 @@ const useMeasurements = () => {
     ;(async () => {
       try {
         const res: SourceMeasurement[] = await getMeasurements()
-        console.log('Measurements:', res)
         setMeasurements(res)
       } catch (error) {
         console.error('Failed to fetch measurements:', error)

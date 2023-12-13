@@ -20,7 +20,6 @@ const useCompanies = () => {
         }
       }
     }
-
     setToken()
   }, [user])
 
@@ -35,7 +34,7 @@ const useCompanies = () => {
         console.error('Failed to fetch companies:', error)
       }
     })().catch((error) => console.error('Error in useEffect:', error))
-  }, [])
+  }, [idToken])
 
   return companies
 }

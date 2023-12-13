@@ -1,7 +1,6 @@
 'use client'
 import React, { useState } from 'react'
 import { MultiSelect, MultiSelectItem, Button, SearchSelectItem, SearchSelect } from '@tremor/react'
-import type { Company } from '@prisma/client'
 import { MainLayout } from '@/components/MainLayout'
 import UserCustomizationComponent from '@/components/Analytics/UserCustomization'
 import GraphChart from '@/components/Analytics/Graph'
@@ -13,21 +12,21 @@ const AnalyticsPage: React.FC = () => {
   const companies = useCompanies()
   const metrics = useMeasurements()
 
-  const [selectedCompanies, setSelectedCompanies] = useState<Array<Company>>([])
-  const [selectedMetric, setSelectedMetric] = useState<(typeof metrics)[0] | null>(null)
+  const [selectedCompanies, setSelectedCompanies] = useState<string[]>([])
+  const [selectedMetric, setSelectedMetric] = useState<string>('')
   const [graphData, setGraphData] = useState<{
-    companies: Array<(typeof companies)[0]>
-    metric: (typeof metrics)[0]
-  } | null>(null)
-
-  console.log('Companies: ', companies)
-  console.log('Metrics: ', metrics)
+    companies: string[]
+    metric: string
+  }>()
 
   const handleCompareClick = () => {
     if (selectedMetric) {
       setGraphData({ companies: selectedCompanies, metric: selectedMetric })
     }
   }
+
+  const metricName = metrics.filter((metric) => metric.id.toString() === selectedMetric)[0]?.measurementName
+  const sourceModuleId = metrics.filter((metric) => metric.id.toString() === selectedMetric)[0]?.sourceModuleId
 
   return (
     <MainLayout>
@@ -45,12 +44,12 @@ const AnalyticsPage: React.FC = () => {
                 <MultiSelect
                   placeholder="Companies"
                   onValueChange={(selectedNames) => {
-                    const selectedCompanyObjects = companies.filter((company) => selectedNames.includes(company.name))
-                    setSelectedCompanies(selectedCompanyObjects)
+                    setSelectedCompanies(selectedNames)
                   }}
+                  value={selectedCompanies}
                 >
                   {companies.map((company, index) => (
-                    <MultiSelectItem key={index} value={company.name}>
+                    <MultiSelectItem key={index} value={company.id.toString()}>
                       {company.name}
                     </MultiSelectItem>
                   ))}
@@ -60,13 +59,14 @@ const AnalyticsPage: React.FC = () => {
                 <SearchSelect
                   placeholder="Metrics"
                   onValueChange={(selectedName) => {
-                    const selectedMetricObject = metrics.find((metric) => metric.measurementName === selectedName)
-                    setSelectedMetric(selectedMetricObject || null)
+                    setSelectedMetric(selectedName)
                   }}
+                  value={selectedMetric}
+                  disabled={selectedCompanies.length === 0}
                 >
                   {metrics ? (
                     metrics.map((metric, index) => (
-                      <SearchSelectItem key={index} value={metric.measurementName}>
+                      <SearchSelectItem key={index} value={metric.id.toString()}>
                         {metric.measurementName}
                       </SearchSelectItem>
                     ))
@@ -87,15 +87,13 @@ const AnalyticsPage: React.FC = () => {
         <div></div>
         {graphData ? (
           <GraphChart
-            measurementId={graphData.metric.id}
-            companiesArray={graphData.companies.map((company) => ({
-              ...company,
-              id: company.id.toString(),
-              description: company.description || ''
-            }))}
+            measurementId={graphData.metric || ''}
+            companiesArray={graphData.companies}
+            measurementName={metricName}
+            sourceModuleId={sourceModuleId.toString()}
           />
         ) : (
-          <p>Please select companies and a metric to compare.</p>
+          <p className="ml-4">Please select companies and a metric to compare.</p>
         )}
       </div>
     </MainLayout>

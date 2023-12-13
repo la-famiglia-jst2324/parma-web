@@ -1,49 +1,89 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { AreaChart, DateRangePicker } from '@tremor/react'
-import type { Company } from '@/types/companies'
+import { AuthContext } from '@/lib/firebase/auth'
+import extractCategories from '@/utils/extractCategories'
+import { getDatasource } from '@/app/api/datasources'
 
-async function getAnalyticsData(measurementId: string, companiesArray: Company[]) {
-  const response = await fetch(
-    `/api/path/to/endpoint?measurementId=${measurementId}&companiesArray=${companiesArray}`,
-    {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json'
-      }
+async function getAnalyticsData(measurementId: string, companiesArray: string[], idToken: string) {
+  const companiesQuery = companiesArray.map((companyId) => `companies=${companyId}`).join('&')
+  const response = await fetch(`/api/analytics?measurementId=${measurementId}&${companiesQuery}`, {
+    method: 'GET',
+    headers: {
+      Authorization: idToken
     }
-  )
+  })
 
   if (!response.ok) {
-    throw new Error('Network response was not ok')
+    console.error('Response status:', response.status)
+    throw new Error('HTTP response was not OK')
   }
 
-  const data = await response.json()
-  return data
+  return await response.json()
 }
 
 interface GraphChartProps {
-  measurementId: number
-  companiesArray: Company[]
+  measurementId: string
+  measurementName: string
+  sourceModuleId: string
+  companiesArray: string[]
 }
 
-const GraphChart: React.FC<GraphChartProps> = ({ measurementId, companiesArray }) => {
+const GraphChart: React.FC<GraphChartProps> = ({ measurementId, measurementName, sourceModuleId, companiesArray }) => {
   const [analyticsData, setAnalyticsData] = useState([])
+  const [idToken, setIdToken] = useState<string | null>(null)
+  const [sourceName, setSourceName] = useState<string>('')
+
+  const user = useContext(AuthContext)
+
+  useEffect(() => {
+    const setToken = async () => {
+      if (user) {
+        try {
+          const token = await user.getIdToken()
+          setIdToken(token)
+        } catch (error) {
+          console.error('Error fetching token:', error)
+        }
+      }
+    }
+    setToken()
+  }, [user])
 
   useEffect(() => {
     const fetchAnalyticsData = async () => {
-      const data = await getAnalyticsData(measurementId.toString(), companiesArray)
-      setAnalyticsData(data)
+      try {
+        if (idToken) {
+          const data = await getAnalyticsData(measurementId, companiesArray, idToken)
+          setAnalyticsData(data)
+        }
+      } catch (error) {
+        console.error('Error fetching token:', error)
+      }
     }
-
     fetchAnalyticsData()
+  }, [idToken, measurementId, companiesArray.length])
+
+  useEffect(() => {
+    const fetchDatasource = async () => {
+      try {
+        const data = await getDatasource(sourceModuleId.toString() || '')
+        setSourceName(data.name)
+      } catch (error) {
+        console.error('Error fetching token:', error)
+      }
+    }
+    fetchDatasource()
   }, [])
 
-  const categories = analyticsData.length > 0 ? Object.keys(analyticsData[0]).filter((key) => key !== 'date') : []
+  const categories = extractCategories(analyticsData)
 
   return (
     <div className="mt-2 w-full">
       <div className="flex items-center justify-between">
-        <h1 className="ml-2 text-lg text-gray-700">Newsletter revenue over time (USD)</h1>
+        <div>
+          <h1 className="ml-2 text-lg font-semibold text-gray-700">{measurementName}</h1>
+          {sourceName && <p className="ml-2 text-sm text-gray-600">Datasource: {sourceName}</p>}
+        </div>
         <DateRangePicker />
       </div>
       <AreaChart

@@ -36,7 +36,7 @@ export async function createDataSource() {
     data: {
       sourceName: 'Test Source',
       isActive: true,
-      defaultFrequency: 'DAILY',
+      frequency: 'DAILY',
       healthStatus: 'UP',
       description: 'Test Description'
     }

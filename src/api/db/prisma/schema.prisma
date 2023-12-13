@@ -156,8 +156,7 @@ model DataSource {
   id                     Int          @id @default(autoincrement())
   sourceName             String       @map("source_name")
   isActive               Boolean      @map("is_active")
-  defaultFrequency       Frequency    @map("default_frequency")
-  frequencyPattern       String?      @map("frequency_pattern")
+  frequency              Frequency    @map("frequency")
   healthStatus           HealthStatus @map("health_status")
   description            String?
   createdAt              DateTime     @default(now()) @map("created_at")
@@ -185,8 +184,9 @@ model ScheduledTask {
   scheduledAt   DateTime     @default(now()) @map("scheduled_at")
   startedAt     DateTime?    @map("started_at")
   endedAt       DateTime?    @map("ended_at")
+  maxRunSeconds          Int @default(300) @map("max_run_seconds")
   resultSummary String?      @map("result_summary")
-  status        TaskStatus
+  status        TaskStatus   @default(PENDING)
   attempts      Int          @default(0)
 
   // Relations
@@ -332,7 +332,7 @@ model MeasurementCommentValue {
 
 model MeasurementParagraphValue {
   id                  Int      @id @default(autoincrement())
-  companyMeasurementId Int      @map("company_measurement_id")
+  companyMeasurementId Int     @map("company_measurement_id")
   value               String
   createdAt           DateTime @default(now()) @map("created_at")
   modifiedAt          DateTime @updatedAt @map("modified_at")
@@ -482,9 +482,10 @@ enum HealthStatus {
 }
 
 enum Frequency {
+  HOURLY
   DAILY
   WEEKLY
-  CRON
+  MONTHLY
 
   @@map("frequency")
 }

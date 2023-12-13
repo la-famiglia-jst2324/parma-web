@@ -4,7 +4,7 @@ import { prisma } from '../prisma/prismaClient'
 const createDataSource = async (data: {
   sourceName: string
   isActive: boolean
-  defaultFrequency: Frequency
+  frequency: Frequency
   healthStatus: HealthStatus
   description?: string
   invocationEndpoint: string
@@ -14,7 +14,7 @@ const createDataSource = async (data: {
       data: {
         sourceName: data.sourceName,
         isActive: data.isActive,
-        defaultFrequency: data.defaultFrequency,
+        frequency: data.frequency,
         healthStatus: data.healthStatus,
         description: data.description,
         invocationEndpoint: data.invocationEndpoint
@@ -91,7 +91,7 @@ const updateDataSource = async (
     sourceName?: string
     isActive?: boolean
     healthStatus?: HealthStatus
-    defaultFrequency?: Frequency
+    frequency?: Frequency
     description?: string
     invocationEndpoint?: string
   }

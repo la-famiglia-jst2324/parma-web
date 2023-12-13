@@ -10,7 +10,7 @@ const dataSources = {
       id: 1,
       sourceName: 'source',
       isActive: true,
-      defaultFrequency: 'DAILY',
+      frequency: 'DAILY',
       healthStatus: 'UP',
       description: 'des',
       createdAt: '2023-12-01T15:22:29.146Z',
@@ -20,7 +20,7 @@ const dataSources = {
       id: 2,
       sourceName: 'source1',
       isActive: true,
-      defaultFrequency: 'DAILY',
+      frequency: 'DAILY',
       healthStatus: 'UP',
       description: 'a new data source',
       createdAt: '2023-12-01T15:54:26.490Z',
@@ -38,7 +38,7 @@ const newDataSource = {
   id: 1,
   sourceName: 'source1',
   isActive: false,
-  defaultFrequency: 'DAILY',
+  frequency: 'DAILY',
   healthStatus: 'UP',
   description: null,
   createdAt: '2023-12-02T21:23:57.281Z',
@@ -70,7 +70,7 @@ describe('Data Source API', () => {
       body: {
         sourceName: 'source1',
         isActive: false,
-        defaultFrequency: 'DAILY',
+        frequency: 'DAILY',
         healthStatus: 'UP'
       }
     })

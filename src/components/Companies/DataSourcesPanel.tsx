@@ -7,7 +7,7 @@ interface CompanyDataSource {
   id: number
   sourceName: string
   isActive: boolean
-  defaultFrequency: string
+  frequency: string
   frequencyPattern: null | string
   healthStatus: string
   description: null | string

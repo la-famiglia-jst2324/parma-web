@@ -101,6 +101,7 @@ erDiagram
         datetime scheduled_at
         datetime started_at
         datetime ended_at
+        int max_run_seconds
         string result_summary
         string status
         int attempts

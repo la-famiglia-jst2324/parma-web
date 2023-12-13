@@ -14,7 +14,7 @@ function CreateDatasourcePage() {
   const [name, setName] = useState<string>('')
   const [url, setUrl] = useState<string>('')
   const [description, setDescription] = useState<string>('')
-  const [defaultFrequency, setDefaultFrequency] = useState<string>('')
+  const [frequency, setFrequency] = useState<string>('')
   const [showSuccess, setShowSuccess] = useState<boolean>(false)
   const [showError, setShowError] = useState<boolean>(false)
   const [errorMessage, setErrorMessage] = useState<string>('')
@@ -24,18 +24,18 @@ function CreateDatasourcePage() {
 
     const formData = new FormData(event.currentTarget)
 
-    if (defaultFrequency === undefined || defaultFrequency === '') {
+    if (frequency === undefined || frequency === '') {
       setErrorMessage('You need to select a frequency for the datasource!')
       setShowError(true)
       return
     }
 
-    const frequencyEnum = Frequency[defaultFrequency as keyof typeof Frequency]
+    const frequencyEnum = Frequency[frequency as keyof typeof Frequency]
 
     const dataSource = {
       sourceName: formData.get('name') as string,
       isActive: true,
-      defaultFrequency: frequencyEnum,
+      frequency: frequencyEnum,
       healthStatus: 'UP',
       modifiedAt: new Date().toISOString(),
       invocationEndpoint: formData.get('url') as string,
@@ -98,7 +98,7 @@ function CreateDatasourcePage() {
               />
               <div className="mb-4 flex flex-col">
                 <label className="mb-2 block text-sm font-bold text-gray-700">Frequency</label>
-                <Select value={defaultFrequency} onValueChange={setDefaultFrequency}>
+                <Select value={frequency} onValueChange={setFrequency}>
                   <SelectItem value="DAILY">Daily</SelectItem>
                   <SelectItem value="WEEKLY">Weekly</SelectItem>
                 </Select>

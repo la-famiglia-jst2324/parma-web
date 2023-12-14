@@ -1,6 +1,8 @@
 import { Tab, TabGroup, TabList, TabPanel, TabPanels } from '@tremor/react'
 import { BuildingOffice2Icon, PresentationChartLineIcon, ShieldCheckIcon } from '@heroicons/react/20/solid'
 import { CompaniesTable } from './CompaniesTable'
+import ScheduledTasksTable from './ScheduledTasks'
+import SourceHealthComponent from './SourceHealthComponent'
 
 export const NoData: React.FC = () => (
   <div className="flex flex-col items-center justify-center">
@@ -19,17 +21,20 @@ export const TabComponent: React.FC<TabComponentProps> = ({ sourceId }) => {
       <TabList className="mt-8" variant="solid">
         <Tab icon={BuildingOffice2Icon}>Companies Monitored</Tab>
         <Tab icon={ShieldCheckIcon}>Datasource Health</Tab>
-        <Tab icon={PresentationChartLineIcon}>Scheduling Tasks</Tab>
+        <Tab icon={PresentationChartLineIcon}>Scheduled Tasks</Tab>
       </TabList>
       <TabPanels>
+        {/* Companies Monitored */}
         <TabPanel>
           <CompaniesTable datasourceId={sourceId} />
         </TabPanel>
+        {/* Source Health */}
         <TabPanel>
-          <NoData />
+          <SourceHealthComponent datasourceId={sourceId} />
         </TabPanel>
+        {/* Scheduled Tasks */}
         <TabPanel>
-          <NoData />
+          <ScheduledTasksTable datasourceId={sourceId} />
         </TabPanel>
       </TabPanels>
     </TabGroup>

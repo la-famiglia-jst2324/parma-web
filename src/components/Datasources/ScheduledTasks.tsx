@@ -61,10 +61,10 @@ const ScheduledTasksTable = ({ datasourceId }: ScheduledTasksProps) => {
                       task.status === 'PENDING'
                         ? 'gray'
                         : task.status === 'SUCCESS'
-                        ? 'green'
-                        : task.status === 'FAILED'
-                        ? 'red'
-                        : 'yellow'
+                          ? 'green'
+                          : task.status === 'FAILED'
+                            ? 'red'
+                            : 'yellow'
                     }
                   >
                     {task.status}

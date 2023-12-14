@@ -5,7 +5,7 @@ const UserCustomizationComponent = () => {
 
   return (
     <div className="mb-6">
-      <h1 className="mx-4 mb-2 text-2xl font-semibold text-gray-700">Your saved Customizations</h1>
+      <h1 className="mx-4 mb-2 text-2xl font-semibold text-gray-700">Your Saved Customizations</h1>
       {userCustomizations && userCustomizations.length > 0 ? (
         userCustomizations.map((customization, index) => (
           <div key={index}>

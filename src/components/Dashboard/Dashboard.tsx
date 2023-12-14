@@ -4,11 +4,11 @@ import { MultiSelect, MultiSelectItem } from '@tremor/react'
 import Link from 'next/link'
 import { MainLayout } from '../MainLayout'
 import AuthCheck from '../Authentication/AuthCheck'
+import useSubscribedCompanies from '../hooks/useSubscribedCompanies'
 import NewsCard from '@/components/Dashboard/NewsCard'
 import type NewsItem from '@/types/news'
 import TopBucketsCard from '@/components/Dashboard/TopBucketsCard'
 import type TopBucket from '@/types/topBuckets'
-import type { Company } from '@/types/companies'
 
 async function getDashboardData() {
   const res = await fetch('/api/dashboard', {
@@ -24,19 +24,6 @@ async function getDashboardData() {
   return await res.json()
 }
 
-async function getSubscribedCompanies() {
-  const res = await fetch('/api/companies/subscribed-companies', {
-    method: 'GET',
-    cache: 'no-cache'
-  })
-  if (!res.ok) {
-    console.error('Response status:', res.status)
-    throw new Error('HTTP response was not OK')
-  }
-
-  return await res.json()
-}
-
 interface DashboardData {
   topBuckets: TopBucket[]
   news: NewsItem[]
@@ -44,7 +31,7 @@ interface DashboardData {
 
 function Home() {
   const [data, setData] = useState<DashboardData>({ topBuckets: [], news: [] })
-  const [subscribedCompanies, setSubscribedCompanies] = useState<Company[]>([])
+  const subscribedCompanies = useSubscribedCompanies()
   const [selectedCompanies, setSelectedCompanies] = useState<string[]>([])
 
   useEffect(() => {
@@ -58,20 +45,8 @@ function Home() {
     })().catch((error) => console.error('Error in useEffect:', error))
   }, [])
 
-  useEffect(() => {
-    ;(async () => {
-      try {
-        const res = await getSubscribedCompanies()
-        setSubscribedCompanies(res)
-      } catch (error) {
-        console.error('Failed to fetch subscribed companies:', error)
-      }
-    })().catch((error) => console.error('Error in useEffect:', error))
-  }, [])
-
   const news = data.news as NewsItem[]
   const topBuckets = data.topBuckets as TopBucket[]
-  const uniqueCompanies = Array.from(new Set(subscribedCompanies.map((company) => company.name)))
 
   return (
     <MainLayout>
@@ -83,7 +58,7 @@ function Home() {
                 <h1 className="text-3xl font-bold text-slate-700">Trending News</h1>
                 <div className="absolute right-0 top-0 mr-4 mt-4 w-1/3">
                   <MultiSelect placeholder="Filter companies" onValueChange={(values) => setSelectedCompanies(values)}>
-                    {uniqueCompanies.map((companyName, index) => (
+                    {subscribedCompanies.map((companyName, index) => (
                       <MultiSelectItem key={index} value={companyName}>
                         {companyName}
                       </MultiSelectItem>

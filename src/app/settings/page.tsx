@@ -2,57 +2,19 @@
 
 import React, { useEffect, useState } from 'react'
 import { Button } from '@tremor/react'
-import type { Company } from '@/types/companies'
-import type { Bucket } from '@/types/bucket'
 import SelectSection from '@/components/Settings/SelectSection'
 import ApiKeyConfiguration from '@/components/Settings/ApiKeyConfiguration'
 import { MainLayout } from '@/components/MainLayout'
 import AuthCheck from '@/components/Authentication/AuthCheck'
-
-async function getSubscribedCompanies() {
-  try {
-    const res = await fetch('/api/company', {
-      method: 'GET',
-      cache: 'no-cache'
-    })
-    if (!res.ok) {
-      console.log('Response status:', res.status)
-      throw new Error('HTTP response was not OK')
-    }
-    const json = await res.json()
-    return json
-  } catch (error) {
-    console.log('An error has occurred: ', error)
-  }
-}
-
-async function getBuckets() {
-  try {
-    const res = await fetch('/api/bucket', {
-      method: 'GET',
-      cache: 'no-cache'
-    })
-    if (!res.ok) {
-      console.log('Response status:', res.status)
-      throw new Error('HTTP response was not OK')
-    }
-    const json = await res.json()
-    console.log(json)
-    return json
-  } catch (error) {
-    console.log('An error has occurred: ', error)
-  }
-}
+import BucketFunctions from '@/app/services/bucket.service'
+import useSubscribedCompanies from '@/components/hooks/useSubscribedCompanies'
 
 function SettingsPage() {
   const [selectedCompanies, setSelectedCompanies] = useState<string[]>([])
-  const [subscribedCompanies, setSubscribedCompanies] = useState<Company[]>([])
-  const [subscribedBuckets, setSubscribedBuckets] = useState<Bucket[]>([])
+  const [subscribedBuckets, setSubscribedBuckets] = useState<string[]>([])
   const [selectedBuckets, setSelectedBuckets] = useState<string[]>([])
   const [selectedChannels, setSelectedChannels] = useState<string[]>([])
-
-  const uniqueCompanies = Array.from(new Set(subscribedCompanies?.map((company) => company.name)))
-  const uniqueBuckets = Array.from(new Set(subscribedBuckets?.map((company) => company.title)))
+  const subscribedCompanies = useSubscribedCompanies()
   const channels = ['Email', 'Slack']
 
   // tbd
@@ -62,28 +24,30 @@ function SettingsPage() {
   selectedCompanies.map((company) => console.log(company))
   selectedBuckets.map((bucket) => console.log(bucket))
   selectedChannels.map((channel) => console.log(channel))
+
   useEffect(() => {
-    getSubscribedCompanies()
-      .then((res) => setSubscribedCompanies(res))
-      .catch((error) => {
-        console.error('Failed to fetch subscribed companies:', error)
+    BucketFunctions.getAllBuckets(1)
+      .then((res) => {
+        if (Array.isArray(res.buckets)) {
+          const uniqueTitles = Array.from(
+            new Set(res.buckets.map((bucket: { title: string }) => bucket.title))
+          ) as string[]
+          setSubscribedBuckets(uniqueTitles)
+        } else {
+          console.error('Expected an array but received', res)
+        }
       })
-  }, [])
-  useEffect(() => {
-    getBuckets()
-      .then((res) => setSubscribedBuckets(res))
       .catch((error) => {
         console.error('Failed to fetch buckets', error)
       })
   }, [])
-
   function saveChanges(): React.MouseEventHandler<HTMLDivElement> | undefined {
     throw new Error('Function not implemented.')
   }
 
   return (
     <MainLayout>
-      <div className="m-3 flex flex-col items-start rounded-lg border-0 bg-white p-3 shadow-md">
+      <div className="m-6 flex flex-col items-start rounded-xl border-0 bg-white p-3 shadow-md">
         <div className="mb-3 items-center justify-start space-x-6">
           <div className="mb-3  items-center justify-start space-x-3 ">
             <h1 className="py-2 pl-2 text-3xl font-bold text-slate-700">Preferences</h1>
@@ -95,14 +59,14 @@ function SettingsPage() {
                 title="Select Companies"
                 description="Select companies to receive weekly reports on"
                 placeholder="companies"
-                options={uniqueCompanies}
+                options={subscribedCompanies}
                 onValueChange={setSelectedCompanies}
               />
               <SelectSection
                 title="Select Buckets"
                 description="Select buckets to receive weekly reports on"
                 placeholder="buckets"
-                options={uniqueBuckets}
+                options={subscribedBuckets}
                 onValueChange={setSelectedBuckets}
               />
               <SelectSection

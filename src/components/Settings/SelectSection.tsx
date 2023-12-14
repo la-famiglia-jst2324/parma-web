@@ -32,16 +32,18 @@ const SelectSection: React.FC<SelectSectionProps> = ({
         <div className="absolute right-8 w-56 pb-3">
           {isMultiSelect ? (
             <MultiSelect placeholder={placeholder} onValueChange={onValueChange}>
-              {options.map((option, index) => (
-                <MultiSelectItem key={index} value={option}>
+              {options.map((option) => (
+                <MultiSelectItem key={option} value={option}>
                   {option}
                 </MultiSelectItem>
               ))}
             </MultiSelect>
           ) : (
             <Select value={value} onValueChange={setValue}>
-              {options.map((option, index) => (
-                <SelectItem value={index.toString()}>{option}</SelectItem>
+              {options.map((option) => (
+                <SelectItem key={option} value={option}>
+                  {option}
+                </SelectItem>
               ))}
             </Select>
           )}

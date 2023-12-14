@@ -1,5 +1,28 @@
+import type { Bucket } from '@prisma/client'
 import type { ShareBucketProps } from '@/components/buckets/ShareBucketModal'
 import fetchWithAuth from '@/utils/fetchWithAuth'
+
+async function getAllBucketsNoPagination(idToken: string): Promise<Bucket[]> {
+  try {
+    const res = await fetch(`/api/bucket`, {
+      method: 'GET',
+      cache: 'no-cache',
+      headers: {
+        Authorization: idToken
+      }
+    })
+
+    if (!res.ok) {
+      console.log('Response status:', res.status)
+      throw new Error('HTTP response was not OK')
+    }
+    const json = await res.json()
+    return json
+  } catch (error) {
+    console.log('An error has occurred: ', error)
+    return []
+  }
+}
 
 const getAllBuckets = async (page: number, name?: string) => {
   try {
@@ -212,5 +235,6 @@ export default {
   getUsersForBucketAccess,
   shareBucket,
   getInvitees,
-  getAllBuckets
+  getAllBuckets,
+  getAllBucketsNoPagination
 }

@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react'
 import type { DataSource } from '@prisma/client'
 import Link from 'next/link'
-import { editDatasource, getDatasource } from '../../api/datasources'
+import { editDatasource, getDatasourceById } from '@/services/datasource/datasourceService'
 import { MainLayout } from '@/components/MainLayout'
 import AuthCheck from '@/components/Authentication/AuthCheck'
 import { HeaderComponent } from '@/components/Datasources/DatasourcePageHeader'
@@ -22,7 +22,7 @@ function DatasourcePage({ params: { id } }: { params: { id: string } }) {
   const [isLoading, setIsLoading] = useState<boolean>(true)
 
   useEffect(() => {
-    getDatasource(id)
+    getDatasourceById(id)
       .then((datasource) => {
         setData(datasource)
         setName(datasource.sourceName)

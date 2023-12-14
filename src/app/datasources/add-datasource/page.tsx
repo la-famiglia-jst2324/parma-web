@@ -42,8 +42,6 @@ function CreateDatasourcePage() {
       description: formData.get('description') as string
     }
 
-    console.log('dataSource: ', dataSource)
-
     fetch('/api/dataSources', {
       method: 'POST',
       headers: {

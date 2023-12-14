@@ -17,7 +17,7 @@ const ProfileImageModal: React.FC<ProfileImageModalProps> = ({ src, alt, onClose
       <div className="relative bg-white p-4">
         {/* Close Button */}
         <Button
-          className="bg-red absolute right-0 top-0 m-2 text-xl font-semibold text-white"
+          className="absolute right-0 top-0 m-2 text-xl font-semibold text-white"
           onClick={onClose}
           color="red"
           tooltip="Close"

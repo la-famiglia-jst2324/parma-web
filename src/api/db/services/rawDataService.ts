@@ -1,7 +1,7 @@
 const getRawDataForCompany = async (companyId: number) => {
   try {
     const response = await fetch(
-      `https://github.com/la-famiglia-jst2324/parma-analytics/raw-data?companyId=${companyId}`
+      `https://analytics.staging.parma.software/raw-data?companyId=${companyId}` // TODO: update this to use URL from env
     )
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`)

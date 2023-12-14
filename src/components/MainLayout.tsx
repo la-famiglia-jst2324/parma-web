@@ -1,15 +1,11 @@
 'use client'
 
 import Link from 'next/link'
-import { useContext } from 'react'
-import { CogIcon } from '@heroicons/react/20/solid'
+import { CogIcon, UserIcon } from '@heroicons/react/20/solid'
 import Breadcrumbs from './Breadcrumbs'
 import Sidebar from './Sidebar'
-import { AuthContext } from '@/lib/firebase/auth'
 
 export function MainLayout({ children }: { children: React.ReactNode }) {
-  const user = useContext(AuthContext)
-
   return (
     <div className="flex flex-col md:flex-row">
       {/* Sidebar */}
@@ -30,7 +26,23 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
                 Settings
               </Link>
             </div>
-            <h1 className="text-base text-gray-900">{user?.displayName}</h1>
+            <div className="mx-4 inline-flex h-9 w-10 items-center justify-center rounded-full bg-gray-200 px-6">
+              <Link
+                href="/profile"
+                className="
+                  flex
+                  cursor-pointer
+                  flex-row
+                  items-center
+                  justify-center
+                  gap-3
+                  text-lg
+                  text-[#374151]
+                "
+              >
+                <UserIcon className="w-6 text-[#374151]"></UserIcon>
+              </Link>
+            </div>
           </div>
         </div>
         <div>{children}</div>

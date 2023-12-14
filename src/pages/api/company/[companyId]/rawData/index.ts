@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import { z, ZodError } from 'zod'
 import formatZodErrors from '@/pages/api/lib/utils/zodCustomMessage'
 import { getRawDataForCompany } from '@/api/db/services/rawDataService'
+import { withAuthValidation } from '@/api/middleware/auth'
 
 const companyAttachmentQuerySchema = z.object({
   companyId: z
@@ -18,7 +19,7 @@ export const config = {
   }
 }
 
-export default async (req: NextApiRequest, res: NextApiResponse) => {
+const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const query = companyAttachmentQuerySchema.parse(req.query)
 
   const { method } = req
@@ -42,3 +43,5 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       break
   }
 }
+
+export default withAuthValidation(handler)

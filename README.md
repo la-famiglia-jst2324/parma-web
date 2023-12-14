@@ -9,7 +9,6 @@
 ![Functions](https://img.shields.io/badge/functions-16.9%25-red.svg?style=flat)
 ![Lines](https://img.shields.io/badge/lines-15.83%25-red.svg?style=flat)
 
-
 ParmaAI webstack including frontend and REST API backend.
 
 [![Screenshot](./docs/images/landing_page.png)](https://parma.software)

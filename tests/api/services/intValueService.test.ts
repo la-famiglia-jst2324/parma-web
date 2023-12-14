@@ -69,7 +69,7 @@ describe('int value Model Tests', () => {
   })
 
   test('Create a new int value with valid details', async () => {
-    const intValue = await createIntValue({ companyMeasurementId, value: 1 })
+    const intValue = await createIntValue({ companyMeasurementId, value: 1, timestamp: new Date() })
     intValueId = intValue.id
     expect(intValue).toHaveProperty('id')
     expect(intValue.companyMeasurementId).toBe(companyMeasurementId)

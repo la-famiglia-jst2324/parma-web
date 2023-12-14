@@ -52,32 +52,33 @@ export const CompaniesTable = ({ datasourceId }: CompaniesTableProps) => {
   }
 
   return (
-    <div className="flex max-w-full flex-col">
+    <div className="flex max-w-full flex-col rounded-lg bg-transparent p-6 shadow">
       <div className="-my-2 sm:-mx-6 lg:-mx-8">
         <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
-          <div className="overflow-hidden border-b border-gray-200 shadow sm:rounded-lg">
-            <table className="min-w-full divide-y divide-gray-200">
+          <div className="overflow-hidden rounded-lg border-b border-gray-300 bg-white shadow-md">
+            <h1 className="mb-4 text-3xl font-semibold text-gray-700">Companies Monitored</h1>
+            <table className="min-w-full divide-y divide-gray-300">
               <thead className="bg-gray-50">
                 <tr>
                   <th
                     scope="col"
-                    className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
+                    className="px-6 py-3 text-left text-sm font-bold uppercase tracking-wider text-gray-600"
                   >
                     Name
                   </th>
                   <th
                     scope="col"
-                    className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
+                    className="px-6 py-3 text-left text-sm font-bold uppercase tracking-wider text-gray-600"
                   >
                     Description
                   </th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-200 bg-white">
+              <tbody className="divide-y divide-gray-200">
                 {data.map((company) => (
-                  <tr key={company.name}>
-                    <td className="whitespace-nowrap px-6 py-4 text-sm font-medium text-gray-900">{company.name}</td>
-                    <td className="break-words px-6 py-4 text-sm text-gray-500">{company.description}</td>
+                  <tr key={company.name} className="hover:bg-gray-50">
+                    <td className="whitespace-nowrap px-6 py-4 text-sm font-medium text-gray-700">{company.name}</td>
+                    <td className="break-words px-6 py-4 text-sm text-gray-700">{company.description}</td>
                   </tr>
                 ))}
               </tbody>

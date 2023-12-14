@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import type { ScheduledTasks } from '@prisma/client'
 import { Badge } from '@tremor/react'
-import { getScheduledTasks } from '@/app/api/datasources'
+import { getScheduledTasks } from '@/services/datasource/datasourceService'
 
 interface ScheduledTasksProps {
   datasourceId: string

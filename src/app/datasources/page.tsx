@@ -48,8 +48,8 @@ function DatasourcesPage() {
               <CustomButton text="Create Datasource" onClick={navigateToCreate} />
             </div>
           </div>
-          <div className="mb-8">
-            <div className="mx-auto max-w-6xl overflow-auto rounded-lg border-0 bg-white shadow-md">
+          <div className="mb-8 px-6">
+            <div className="mx-auto overflow-auto rounded-lg border-0 bg-white shadow-md">
               <div className="w-full">
                 {data ? (
                   <Table

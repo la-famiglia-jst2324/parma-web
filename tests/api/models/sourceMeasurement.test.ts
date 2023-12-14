@@ -190,7 +190,8 @@ describe('MeasurementTextValue Model Tests', () => {
     const textValue = await prisma.measurementTextValue.create({
       data: {
         companyMeasurementId: companySourceMeasurementId,
-        value: 'Sample Text'
+        value: 'Sample Text',
+        timestamp: new Date()
       }
     })
 
@@ -267,7 +268,8 @@ describe('MeasurementIntValue Model Tests', () => {
     const intValue = await prisma.measurementIntValue.create({
       data: {
         companyMeasurementId: companySourceMeasurementId,
-        value: 68
+        value: 68,
+        timestamp: new Date()
       }
     })
 
@@ -341,7 +343,8 @@ describe('MeasurementFloatValue Model Tests', () => {
     const floatValue = await prisma.measurementFloatValue.create({
       data: {
         companyMeasurementId: companySourceMeasurementId,
-        value: 68.99
+        value: 68.99,
+        timestamp: new Date()
       }
     })
 
@@ -415,7 +418,8 @@ describe('MeasurementCommentValue Model Tests', () => {
     const commentValue = await prisma.measurementCommentValue.create({
       data: {
         companyMeasurementId: companySourceMeasurementId,
-        value: 'This is splendid'
+        value: 'This is splendid',
+        timestamp: new Date()
       }
     })
 
@@ -491,7 +495,8 @@ describe('MeasurementParagraphValue Model Tests', () => {
     const paragraphValue = await prisma.measurementParagraphValue.create({
       data: {
         companyMeasurementId: companySourceMeasurementId,
-        value: paragraph
+        value: paragraph,
+        timestamp: new Date()
       }
     })
 

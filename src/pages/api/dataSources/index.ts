@@ -24,6 +24,8 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       try {
         // Create a new data source
         const newDataSource = await createDataSource(req.body)
+        // send a request to the analytics backend for the handshake to be completed
+
         if (newDataSource) {
           res.status(201).json(newDataSource)
         } else res.status(400).json({ error: 'Invalid request parameters' })

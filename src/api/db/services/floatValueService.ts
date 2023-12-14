@@ -1,11 +1,12 @@
 import { prisma } from '../prisma/prismaClient'
 
-const createFloatValue = async (data: { companyMeasurementId: number; value: number }) => {
+const createFloatValue = async (data: { companyMeasurementId: number; value: number; timestamp: Date }) => {
   try {
     return await prisma.measurementFloatValue.create({
       data: {
         companyMeasurementId: data.companyMeasurementId,
-        value: data.value
+        value: data.value,
+        timestamp: data.timestamp
       }
     })
   } catch (error) {
@@ -44,6 +45,7 @@ const updateFloatValue = async (
   data: {
     companyMeasurementId: number
     value: number
+    timestamp?: Date
   }
 ) => {
   try {

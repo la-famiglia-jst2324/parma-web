@@ -1,6 +1,6 @@
 import { useEffect, useState, useContext } from 'react'
 import type { Company } from '@prisma/client'
-import { getSubscribedCompanies } from 'src/app/api/companies'
+import { getSubscribedCompanies } from '@/services/company/companyService'
 import { AuthContext } from '@/lib/firebase/auth'
 
 const useSubscribedCompanies = () => {
@@ -27,7 +27,7 @@ const useSubscribedCompanies = () => {
     ;(async () => {
       try {
         if (idToken) {
-          const res: Company[] = await getSubscribedCompanies(idToken)
+          const res: Company[] = await getSubscribedCompanies()
           const uniqueCompanies = Array.from(new Set(res.map((company: Company) => company.name)))
           setSubscribedCompanies(uniqueCompanies)
         }

@@ -1,7 +1,7 @@
 // useDatasources.ts
 import { useEffect, useState } from 'react'
 import type { DataSource } from '@prisma/client'
-import { getDatasources } from 'src/app/api/datasources'
+import { getDataSourcesPagination as getDatasources } from '@/services/datasource/datasourceService'
 
 const useDatasources = (currentPage: number, pageSize: number) => {
   const [data, setData] = useState<DataSource[] | null>(null)

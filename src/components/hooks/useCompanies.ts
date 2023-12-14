@@ -1,6 +1,6 @@
 import { useEffect, useState, useContext } from 'react'
 import type { Company } from '@prisma/client'
-import { getAllCompanies } from 'src/app/api/companies'
+import { getAllCompanies } from '@/services/company/companyService'
 import { AuthContext } from '@/lib/firebase/auth'
 
 const useCompanies = () => {

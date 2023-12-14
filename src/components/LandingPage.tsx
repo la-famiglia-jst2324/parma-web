@@ -5,23 +5,9 @@ import Link from 'next/link'
 const LandingPage: React.FC = () => {
   return (
     <>
-      <style jsx global>{`
-        @keyframes pulse {
-          0% {
-            transform: scale(1);
-          }
-          50% {
-            transform: scale(1.1);
-          }
-          100% {
-            transform: scale(1);
-          }
-        }
-      `}</style>
-
-      <div className="fixed z-10 flex h-14 w-full items-center justify-between bg-gray-950 p-6">
+      <div className="fixed z-10 flex h-14 w-full items-center justify-between bg-gray-900 p-6">
         <div className="flex items-center">
-          <Image src="/parmalogo2.png" width={40} height={40} alt="" className="rounded-full" />
+          <Image src="/logo_version_2.png" width={60} height={60} alt="" className="rounded-full" />
           <h1 className="ml-4 text-2xl font-bold text-white">Parma AI</h1>
         </div>
         <div className="flex items-center gap-4">
@@ -37,12 +23,20 @@ const LandingPage: React.FC = () => {
         </div>
       </div>
       <div className="flex min-h-screen flex-col items-center justify-center bg-zinc-900 bg-[url('/bg3.png')] bg-cover">
-        <div className="relative mb-2 animate-pulse">
-          <Image src="/parmalogo2.png" width={160} height={160} alt="Logo" className="rounded-full" />
+        <div className="relative mb-2">
+          <Image src="/logo_version_2.png" width={200} height={200} alt="Logo" className="rounded-full" />
         </div>
         <div className="max-w-lg rounded p-8">
-          <h1 className="mb-2 text-center text-6xl font-bold text-white">Parma AI</h1>
-          <p className="mb-6 text-center text-xl font-medium text-slate-100">
+          <h1
+            className="mb-2 text-center text-6xl font-bold text-white"
+            style={{ textShadow: '2px 2px 4px rgba(0, 0, 0, 0.5)' }}
+          >
+            Parma AI
+          </h1>
+          <p
+            className="mb-6 text-center text-xl font-medium text-slate-100"
+            style={{ textShadow: '2px 2px 4px rgba(0, 0, 0, 0.5)' }}
+          >
             Empower Your Investments with AI: Streamline, Monitor, and Thrive with All Your Portfolio Data Unified!
           </p>
           <button

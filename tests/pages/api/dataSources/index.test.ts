@@ -71,7 +71,8 @@ describe('Data Source API', () => {
         sourceName: 'source1',
         isActive: false,
         defaultFrequency: 'DAILY',
-        healthStatus: 'UP'
+        healthStatus: 'UP',
+        modifiedAt: '2023-12-02T21:23:57.281Z'
       }
     })
 

@@ -61,10 +61,10 @@ const ScheduledTasksTable = ({ datasourceId }: ScheduledTasksProps) => {
                       task.status === 'PENDING'
                         ? 'gray'
                         : task.status === 'SUCCESS'
-                          ? 'green'
-                          : task.status === 'FAILED'
-                            ? 'red'
-                            : 'yellow'
+                        ? 'green'
+                        : task.status === 'FAILED'
+                        ? 'red'
+                        : 'yellow'
                     }
                   >
                     {task.status}
@@ -83,13 +83,13 @@ const ScheduledTasksTable = ({ datasourceId }: ScheduledTasksProps) => {
                 <td className="whitespace-nowrap px-6 py-4 text-gray-700">
                   {task.endedAt
                     ? new Date(task.endedAt).toLocaleDateString('en-US', {
-                      year: 'numeric',
-                      month: 'long',
-                      day: 'numeric',
-                      hour: '2-digit',
-                      minute: '2-digit',
-                      hour12: false
-                    })
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        hour12: false
+                      })
                     : 'No end date'}
                 </td>
               </tr>

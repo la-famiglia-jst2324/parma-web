@@ -8,6 +8,7 @@ import { FormContent } from '@/components/FormContent'
 import AuthCheck from '@/components/Authentication/AuthCheck'
 import { MainLayout } from '@/components/MainLayout'
 import { AuthContext } from '@/lib/firebase/auth'
+import ProfileImageModal from '@/components/Profile/ProfileImageModal'
 
 // TODO: @Analytics team need to implement the api end points for attaching profile picture to firebase similar to the one for company attachment
 
@@ -80,23 +81,42 @@ const ProfilePage: React.FC = () => {
 
   const userMail = user?.email
   const userFullName = user?.displayName
+  const userPhotoURL = user?.photoURL
+
+  const [isModalOpen, setIsModalOpen] = useState(false)
+
+  const handleImageClick = () => {
+    setIsModalOpen(true)
+  }
+
+  const closeModal = () => {
+    setIsModalOpen(false)
+  }
   return (
     <MainLayout>
-      <div className=" m-3 flex flex-col items-start overflow-auto rounded-lg border-0 bg-white p-3 shadow-md">
+      <div className=" m-6 flex min-h-[calc(100vh-90px)] flex-col items-start overflow-auto rounded-lg border-0 bg-white p-3 shadow-md">
         <div className=" items-center justify-start ">
           <div className="mb-3 items-center justify-start space-x-7">
             <h1 className="py-2 pl-2 text-3xl font-bold">Edit Profile</h1>
 
             <div className="flex">
               <div className=" pl-10 pt-12">
-                <div className="pl-10">
+                <div className="pl-5">
                   <Image
-                    className="mb-5 block h-[100px] w-[100px] rounded-full"
-                    src={profilePic}
+                    className="mb-5 block h-[140px] w-[140px] rounded-full"
+                    src={userPhotoURL || profilePic}
                     width={500}
                     height={500}
                     alt="Profile"
+                    onClick={handleImageClick}
                   />
+                  {isModalOpen && (
+                    <ProfileImageModal
+                      src={userPhotoURL?.toString() || profilePic}
+                      alt="Profile"
+                      onClose={closeModal}
+                    />
+                  )}
                 </div>
 
                 <div>

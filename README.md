@@ -117,7 +117,11 @@ The following steps will get you started with the project.
    make test  # runs jest and typescript-coverage-report
    ```
 
-8. Optional: Run a production build (used in the CI pipeline)
+8. Environment Variables Other Than Database
+   ```bash
+   export PARMA_ANALYTICS_BASE_URL=http://127.0.0.1:8000
+   ```
+9. Optional: Run a production build (used in the CI pipeline)
 
    ```bash
    make start

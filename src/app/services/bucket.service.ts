@@ -114,6 +114,7 @@ const getAllCompanies = async () => {
       throw new Error('HTTP response was not OK')
     }
     const json = await res.json()
+    console.log(json)
     return json
   } catch (error) {
     console.log('An error has occurred: ', error)

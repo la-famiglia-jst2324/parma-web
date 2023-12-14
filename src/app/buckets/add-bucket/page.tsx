@@ -13,25 +13,9 @@ import { PopupType } from '@/types/popup'
 import BucketFunctions from '@/app/services/bucket.service'
 import { MainLayout } from '@/components/MainLayout'
 
-interface CompaniesPaginated {
-  companies: Company[]
-  pagination: {
-    currentPage: number
-    pageSize: number
-    totalPages: number
-    totalCount: number
-  }
-}
 export default function AddBucketPage() {
-  const [allCompaniesPaginated, setCompaniesPaginated] = useState<CompaniesPaginated>({
-    companies: [],
-    pagination: {
-      currentPage: 1,
-      pageSize: 10,
-      totalPages: 0,
-      totalCount: 0
-    }
-  })
+  const [allCompaniesPaginated, setCompaniesPaginated] = useState([])
+
   // Bucket props
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
@@ -123,7 +107,7 @@ export default function AddBucketPage() {
             <div className="mb-8">
               <label className="mb-2 block text-sm font-bold text-gray-700">Companies</label>
               <MultiSelect onValueChange={(e) => setSelectedCompanies(e || [])}>
-                {allCompaniesPaginated?.companies.map((company) => (
+                {allCompaniesPaginated?.map((company: Company) => (
                   <MultiSelectItem key={company.id} value={`${company.id}`}>
                     {company.name}
                   </MultiSelectItem>

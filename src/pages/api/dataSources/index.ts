@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 
 import { getAllDataSources, createDataSource } from '@/api/db/services/dataSourceService'
+import { addCompanyDataSourceRelationshipForDatasource } from '@/api/db/services/companyDataSourceService'
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const { method } = req
@@ -22,8 +23,10 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
     case 'POST':
       try {
-        // Create a new data source
+        // Create a new data source.
         const newDataSource = await createDataSource(req.body)
+        // Register the new data source in the companyDataSource relationship.
+        await addCompanyDataSourceRelationshipForDatasource(newDataSource.id)
         // send a request to the analytics backend for the handshake to be completed
 
         if (newDataSource) {

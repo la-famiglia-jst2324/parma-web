@@ -55,6 +55,22 @@ const getDataSourcesByCompanyId = async (companyId: number) => {
   }
 }
 
+const getCompanyDataSourceByIds = async (dataSourceId: number, companyId: number) => {
+  try {
+    const companyDataSource = await prisma.companyDataSource.findMany({
+      where: {
+        dataSourceId,
+        companyId
+      }
+    })
+    // list data sources
+    return companyDataSource
+  } catch (error) {
+    console.error('Error getting the company data source entry:', error)
+    throw error
+  }
+}
+
 // maybe dont need
 const getCompaniesByDataSourceId = async (dataSourceId: number) => {
   try {
@@ -133,6 +149,11 @@ const addCompanyDataSourceRelationshipForCompany = async (companyId: number) => 
 
     // For each data source, add a new entry in companyDataSource
     for (const dataSource of dataSources) {
+      const existingRelation = await getCompanyDataSourceByIds(dataSource.id, companyId)
+      if (existingRelation.length > 0) {
+        continue
+      }
+
       await prisma.companyDataSource.create({
         data: {
           companyId,
@@ -159,6 +180,11 @@ const addCompanyDataSourceRelationshipForDatasource = async (datasourceId: numbe
 
     // For each company, add a new entry in companyDataSource
     for (const company of companies) {
+      const existingRelation = await getCompanyDataSourceByIds(datasourceId, company.id)
+      if (existingRelation.length > 0) {
+        continue
+      }
+
       await prisma.companyDataSource.create({
         data: {
           companyId: company.id,
@@ -180,6 +206,7 @@ export {
   getCompaniesByDataSourceId,
   updateCompanyDataSource,
   deleteCompanyDataSource,
+  getCompanyDataSourceByIds,
   addCompanyDataSourceRelationshipForCompany,
   addCompanyDataSourceRelationshipForDatasource
 }

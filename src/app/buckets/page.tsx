@@ -76,7 +76,7 @@ export default function BucketsPage() {
       .catch((e) => {
         console.log(e)
       })
-  }, [page])
+  }, [page, allBuckets])
 
   useEffect(() => {
     if (searchTerm === '') {

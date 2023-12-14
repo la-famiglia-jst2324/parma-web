@@ -174,6 +174,7 @@ erDiagram
         id measurement_value_id PK
         id company_measurement_id FK
         string value
+        datetime timestamp
         datetime created_at
         datetime modified_at
     }
@@ -181,6 +182,7 @@ erDiagram
         id measurement_value_id PK
         id company_measurement_id FK
         int value
+        datetime timestamp
         datetime created_at
         datetime modified_at
     }

@@ -22,7 +22,7 @@ describe('UserMetricCustomization Model Tests', () => {
     const dataSource = await createDataSource({
       sourceName: 'name',
       isActive: true,
-      defaultFrequency: Frequency.DAILY,
+      frequency: Frequency.DAILY,
       healthStatus: HealthStatus.UP
     })
     const company = await createCompany({ name: 'test', addedBy: user.id })

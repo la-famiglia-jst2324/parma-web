@@ -6,7 +6,7 @@ import {
   getAllScheduledTasks,
   updateScheduledTask,
   deleteScheduledTask
-} from '@/api/db/services/scheduledTasksService'
+} from '@/api/db/services/scheduledTaskService'
 
 const prisma = new PrismaClient()
 
@@ -65,7 +65,7 @@ describe('ScheduledTasks Service Tests', () => {
 
   test('Delete a scheduled task', async () => {
     await deleteScheduledTask(taskId)
-    const deletedTask = await prisma.scheduledTasks.findUnique({
+    const deletedTask = await prisma.scheduledTask.findUnique({
       where: { taskId }
     })
     expect(deletedTask).toBeNull()

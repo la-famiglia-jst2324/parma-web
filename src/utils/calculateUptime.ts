@@ -1,11 +1,12 @@
-import type { ScheduledTasks } from '@prisma/client'
+import type { ScheduledTask } from '@prisma/client'
 import { TaskStatus } from '@prisma/client'
 
-function calculateUptime(scheduledTasks: ScheduledTasks[]) {
+function calculateUptime(scheduledTasks: ScheduledTask[]) {
   let totalDuration = 0
   let successfulDuration = 0
 
   scheduledTasks.forEach((task) => {
+    if (!task.startedAt) return
     const start = new Date(task.startedAt)
     const end = task.endedAt ? new Date(task.endedAt) : new Date()
 

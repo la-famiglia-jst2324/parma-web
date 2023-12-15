@@ -1,5 +1,5 @@
 import { TaskStatus } from '@prisma/client'
-import type { ScheduledTasks } from '@prisma/client'
+import type { ScheduledTask } from '@prisma/client'
 
 enum Color {
   Gray = 'gray',
@@ -13,7 +13,7 @@ interface Tracker {
   tooltip: string
 }
 
-const mapTasksToTracker = (tasks: ScheduledTasks[]): Tracker[] => {
+const mapTasksToTracker = (tasks: ScheduledTask[]): Tracker[] => {
   return tasks.map((task) => {
     let color: Color
     let tooltip: string

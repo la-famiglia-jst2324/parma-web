@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Tracker, ProgressBar } from '@tremor/react'
-import type { ScheduledTasks } from '@prisma/client'
+import type { ScheduledTask } from '@prisma/client'
 import { getScheduledTasks } from '@/services/datasource/datasourceService'
 import mapTasksToTracker from '@/utils/mapTasksToTracker'
 import calculateUptime from '@/utils/calculateUptime'
@@ -10,7 +10,7 @@ interface SourceHealthComponentProps {
 }
 
 const SourceHealthComponent = ({ datasourceId }: SourceHealthComponentProps) => {
-  const [healthData, setHealthData] = useState<ScheduledTasks[]>([])
+  const [healthData, setHealthData] = useState<ScheduledTask[]>([])
 
   useEffect(() => {
     getScheduledTasks(datasourceId)

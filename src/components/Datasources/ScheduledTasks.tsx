@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import type { ScheduledTasks } from '@prisma/client'
+import type { ScheduledTask } from '@prisma/client'
 import { Badge } from '@tremor/react'
 import { getScheduledTasks } from '@/services/datasource/datasourceService'
 
@@ -8,7 +8,7 @@ interface ScheduledTasksProps {
 }
 
 const ScheduledTasksTable = ({ datasourceId }: ScheduledTasksProps) => {
-  const [data, setData] = useState<ScheduledTasks[] | undefined>()
+  const [data, setData] = useState<ScheduledTask[] | undefined>()
 
   useEffect(() => {
     getScheduledTasks(datasourceId)
@@ -71,14 +71,16 @@ const ScheduledTasksTable = ({ datasourceId }: ScheduledTasksProps) => {
                   </Badge>
                 </td>
                 <td className="whitespace-nowrap px-6 py-4 text-gray-700">
-                  {new Date(task.startedAt).toLocaleDateString('en-US', {
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric',
-                    hour: '2-digit',
-                    minute: '2-digit',
-                    hour12: false
-                  })}
+                  {task.startedAt
+                    ? new Date(task.startedAt).toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        hour12: false
+                      })
+                    : 'No start date'}
                 </td>
                 <td className="whitespace-nowrap px-6 py-4 text-gray-700">
                   {task.endedAt

@@ -5,7 +5,7 @@ type Datasource = {
   sourceName: string
   description: string
   isActive: boolean
-  defaultFrequency: Frequency
+  frequency: Frequency
   healthStatus: 'UP' | 'DOWN'
 }
 

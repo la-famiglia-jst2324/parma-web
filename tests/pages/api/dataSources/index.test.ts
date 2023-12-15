@@ -70,7 +70,7 @@ describe('Data Source API', () => {
       body: {
         sourceName: 'source1',
         isActive: false,
-        defaultFrequency: 'DAILY',
+        frequency: 'DAILY',
         healthStatus: 'UP',
         modifiedAt: '2023-12-02T21:23:57.281Z'
       }

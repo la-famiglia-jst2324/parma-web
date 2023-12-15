@@ -163,7 +163,6 @@ model DataSource {
   modifiedAt             DateTime     @updatedAt @map("modified_at")
   maxRunSeconds          Int          @default(300) @map("max_run_seconds")
   version                String       @default("1.0")
-  maximumExpectedRunTime Int          @default(60) @map("maximum_expected_run_time") // Assuming time is in minutes
   invocationEndpoint     String       @default("") @map("invocation_endpoint")
   additionalParams       Json?        @map("additional_params")
 

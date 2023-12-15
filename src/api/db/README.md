@@ -83,14 +83,13 @@ erDiagram
         int id PK
         string source_name
         boolean is_active
-        string default_frequency
-        string frequency_pattern
+        string frequency
         string health_status
         string description
         datetime created_at
         datetime modified_at
-        string version
         int max_run_seconds
+        string version
         string invocation_endpoint
         json additional_params
     }

@@ -3,6 +3,7 @@ import * as admin from 'firebase-admin'
 
 if (admin.apps.length === 0) {
   const certFilePath = '../../.secrets/la-famiglia-parma-ai-firebase-adminsdk.json'
+
   let certString = null
   if (existsSync(certFilePath)) {
     certString = readFileSync(certFilePath, 'utf8')

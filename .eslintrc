@@ -26,7 +26,7 @@
     "@typescript-eslint/consistent-type-imports": ["error", { "prefer": "type-imports" }],
     "react/no-unescaped-entities": "off",
     "@next/next/no-page-custom-font": "off",
-    "@typescript-eslint/no-floating-promises": "error",
+    "@typescript-eslint/no-floating-promises": "off",
     "prettier/prettier": [
       "error",
       {

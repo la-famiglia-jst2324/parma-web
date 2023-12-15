@@ -1,33 +1,39 @@
 import React from 'react'
-import { BadgeDelta } from '@tremor/react'
-
-interface Metric {
-  name: string
-  status: 'Active' | 'Inactive'
-}
+import { BadgeDelta, Button } from '@tremor/react'
 
 interface DatasourceHealthProps {
-  name: string
-  metrics: Metric[]
+  dataSourceId: string
+  dataSourceName: string
+  isDataSourceActive: boolean
+  handleUnlinkDataSource: (dataSourceId: string) => void
 }
 
-const DatasourceHealth: React.FC<DatasourceHealthProps> = ({ name, metrics }) => {
+const DatasourceHealth: React.FC<DatasourceHealthProps> = ({
+  dataSourceId,
+  dataSourceName,
+  isDataSourceActive,
+  handleUnlinkDataSource
+}) => {
+  const unlinkDataSourcePressed = () => {
+    handleUnlinkDataSource(dataSourceId)
+  }
+
   return (
     <div className="p-2">
       <div className="rounded-md border p-3 shadow-md">
-        <h3 className="text-lg font-semibold">{name}</h3>
-        <div className="mt-2">
-          {metrics.map((metric, index) => (
-            <div key={index} className="mb-2 flex items-center justify-between">
-              <p className="mr-2">{metric.name}</p>
-              {metric.status === 'Active' ? (
-                <BadgeDelta deltaType="moderateIncrease">Active</BadgeDelta>
-              ) : (
-                <BadgeDelta deltaType="moderateDecrease">Inactive</BadgeDelta>
-              )}
-            </div>
-          ))}
+        <div className="mb-3 flex justify-between">
+          <div className="flex justify-between">
+            <h3 className="pr-2 text-lg font-semibold">{dataSourceName}</h3>
+            {isDataSourceActive ? (
+              <BadgeDelta deltaType="moderateIncrease">Active</BadgeDelta>
+            ) : (
+              <BadgeDelta deltaType="moderateDecrease">Inactive</BadgeDelta>
+            )}
+          </div>
         </div>
+        <Button color="red" onClick={unlinkDataSourcePressed}>
+          Unlink
+        </Button>
       </div>
     </div>
   )

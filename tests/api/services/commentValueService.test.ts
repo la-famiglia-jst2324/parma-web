@@ -1,5 +1,6 @@
 import { PrismaClient, Frequency, HealthStatus, Role } from '@prisma/client'
 import { genRandomDummyAuthId } from '../utils/random'
+import { createCompanySourceMeasurement } from '../models/utils/helperFunctions'
 import {
   createCommentValue,
   deleteCommentValue,
@@ -23,6 +24,7 @@ describe('comment value Model Tests', () => {
 
   let commentValueId: number
   let sourceMeasurementId: number
+  let companyMeasurementId: number
   let companyId: number
   let dataSourceId: number
   let userId: number
@@ -44,7 +46,8 @@ describe('comment value Model Tests', () => {
       sourceName: 'source1',
       isActive: true,
       defaultFrequency: Frequency.DAILY,
-      healthStatus: HealthStatus.UP
+      healthStatus: HealthStatus.UP,
+      invocationEndpoint: 'dummy endpoint'
     })
     dataSourceId = dataSource.id
     expect(dataSource).toHaveProperty('id')
@@ -54,26 +57,27 @@ describe('comment value Model Tests', () => {
     expect(dataSource.healthStatus).toBe(HealthStatus.UP)
   })
 
-  test('Create a new sourceMeasurement with valid details', async () => {
+  test('Create a new sourceMeasurement and companyMeasurement with valid details', async () => {
     const sourceMeasurement = await createSourceMeasurement({
       sourceModuleId: dataSourceId,
       type: 'int',
-      companyId,
       measurementName: 'intMea'
     })
+
     sourceMeasurementId = sourceMeasurement.id
-    expect(sourceMeasurement).toHaveProperty('id')
-    expect(sourceMeasurement.sourceModuleId).toBe(dataSourceId)
-    expect(sourceMeasurement.type).toBe('int')
-    expect(sourceMeasurement.companyId).toBe(companyId)
-    expect(sourceMeasurement.measurementName).toBe('intMea')
+    const companyMeasurement = await createCompanySourceMeasurement(sourceMeasurementId, companyId)
+    companyMeasurementId = companyMeasurement.companyMeasurementId
+
+    expect(companyMeasurement).toHaveProperty('companyMeasurementId')
+    expect(companyMeasurement.sourceMeasurementId).toBe(sourceMeasurementId)
+    expect(companyMeasurement.companyId).toBe(companyId)
   })
 
   test('Create a new comment value with valid details', async () => {
-    const commentValue = await createCommentValue({ sourceMeasurementId, value: 'comment' })
+    const commentValue = await createCommentValue({ companyMeasurementId, value: 'comment', timestamp: new Date() })
     commentValueId = commentValue.id
     expect(commentValue).toHaveProperty('id')
-    expect(commentValue.sourceMeasurementId).toBe(sourceMeasurementId)
+    expect(commentValue.companyMeasurementId).toBe(companyMeasurementId)
     expect(commentValue.value).toBe('comment')
   })
 
@@ -85,7 +89,7 @@ describe('comment value Model Tests', () => {
 
   test('Update a comment value name', async () => {
     const updatedValue = await updateCommentValue(commentValueId, {
-      sourceMeasurementId,
+      companyMeasurementId,
       value: 'updatedComment'
     })
     expect(updatedValue.value).toBe('updatedComment')

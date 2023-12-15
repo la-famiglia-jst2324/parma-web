@@ -1,11 +1,12 @@
 import { prisma } from '../prisma/prismaClient'
 
-const createTextValue = async (data: { sourceMeasurementId: number; value: string }) => {
+const createTextValue = async (data: { companyMeasurementId: number; value: string; timestamp: Date }) => {
   try {
     return await prisma.measurementTextValue.create({
       data: {
-        sourceMeasurementId: data.sourceMeasurementId,
-        value: data.value
+        companyMeasurementId: data.companyMeasurementId,
+        value: data.value,
+        timestamp: data.timestamp
       }
     })
   } catch (error) {
@@ -42,8 +43,9 @@ const getAllTextValues = async () => {
 const updateTextValue = async (
   id: number,
   data: {
-    sourceMeasurementId: number
+    companyMeasurementId: number
     value: string
+    timestamp?: Date
   }
 ) => {
   try {

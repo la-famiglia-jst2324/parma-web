@@ -1,11 +1,12 @@
 import { prisma } from '../prisma/prismaClient'
 
-const createIntValue = async (data: { sourceMeasurementId: number; value: number }) => {
+const createIntValue = async (data: { companyMeasurementId: number; value: number; timestamp: Date }) => {
   try {
     return await prisma.measurementIntValue.create({
       data: {
-        sourceMeasurementId: data.sourceMeasurementId,
-        value: data.value
+        companyMeasurementId: data.companyMeasurementId,
+        value: data.value,
+        timestamp: data.timestamp
       }
     })
   } catch (error) {
@@ -42,8 +43,9 @@ const getAllIntValues = async () => {
 const updateIntValue = async (
   id: number,
   data: {
-    sourceMeasurementId: number
+    companyMeasurementId: number
     value: number
+    timestamp?: Date
   }
 ) => {
   try {

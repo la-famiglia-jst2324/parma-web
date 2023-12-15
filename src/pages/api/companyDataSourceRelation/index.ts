@@ -18,6 +18,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   switch (method) {
     case 'GET':
       try {
+        if (dataSourceId && companyId) res.status(400).json({ error: 'Invalid Arguments' })
         if (dataSourceId) {
           const companies = await getCompaniesByDataSourceId(dataSourceId)
           if (companies.length > 0) res.status(200).json(companies)

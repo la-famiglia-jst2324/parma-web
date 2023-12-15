@@ -1,11 +1,11 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-
 import type { User } from '@prisma/client'
 import {
   createNotificationSubscription,
   deleteNotificationSubscription
 } from '@/api/db/services/notificationSubscriptionService'
-export default async (req: NextApiRequest, res: NextApiResponse, user: User) => {
+import { withAuthValidation } from '@/api/middleware/auth'
+const handler = async (req: NextApiRequest, res: NextApiResponse, user: User) => {
   const { method } = req
   const userId = user.id
   const { companyId, channelId } = req.body
@@ -34,3 +34,4 @@ export default async (req: NextApiRequest, res: NextApiResponse, user: User) => 
       break
   }
 }
+export default withAuthValidation(handler)

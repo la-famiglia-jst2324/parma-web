@@ -1,5 +1,6 @@
 import { PrismaClient, Frequency, HealthStatus, Role } from '@prisma/client'
 import { genRandomDummyAuthId } from '../utils/random'
+import { createCompanySourceMeasurement } from '../models/utils/helperFunctions'
 import { createCompany } from '@/api/db/services/companyService'
 import { createDataSource } from '@/api/db/services/dataSourceService'
 import {
@@ -23,6 +24,7 @@ describe('float value Model Tests', () => {
   })
 
   let floatValueId: number
+  let companyMeasurementId: number
   let sourceMeasurementId: number
   let companyId: number
   let dataSourceId: number
@@ -33,11 +35,11 @@ describe('float value Model Tests', () => {
   })
   test('Create a new company with valid details', async () => {
     const company = await createCompany({ name: 'google', description: 'Test Company', addedBy: userId })
-    companyId = company.id
     expect(company).toHaveProperty('id')
     expect(company.name).toBe('google')
     expect(company.description).toBe('Test Company')
     expect(company.addedBy).toBe(userId)
+    companyId = company.id
   })
 
   test('Create a new data source with valid details', async () => {
@@ -45,7 +47,8 @@ describe('float value Model Tests', () => {
       sourceName: 'source1',
       isActive: true,
       defaultFrequency: Frequency.DAILY,
-      healthStatus: HealthStatus.UP
+      healthStatus: HealthStatus.UP,
+      invocationEndpoint: 'dummy endpoint'
     })
     dataSourceId = dataSource.id
     expect(dataSource).toHaveProperty('id')
@@ -58,23 +61,22 @@ describe('float value Model Tests', () => {
   test('Create a new sourceMeasurement with valid details', async () => {
     const sourceMeasurement = await createSourceMeasurement({
       sourceModuleId: dataSourceId,
-      type: 'float',
-      companyId,
-      measurementName: 'floatMea'
+      type: 'int',
+      measurementName: 'intMea'
     })
+
     sourceMeasurementId = sourceMeasurement.id
-    expect(sourceMeasurement).toHaveProperty('id')
-    expect(sourceMeasurement.sourceModuleId).toBe(dataSourceId)
-    expect(sourceMeasurement.type).toBe('float')
-    expect(sourceMeasurement.companyId).toBe(companyId)
-    expect(sourceMeasurement.measurementName).toBe('floatMea')
+    const companyMeasurement = await createCompanySourceMeasurement(sourceMeasurementId, companyId)
+    companyMeasurementId = companyMeasurement.companyMeasurementId
+    expect(companyMeasurement).toHaveProperty('companyMeasurementId')
+    expect(companyMeasurement.companyId).toBe(companyId)
   })
 
   test('Create a new float value with valid details', async () => {
-    const floatValue = await createFloatValue({ sourceMeasurementId, value: 1.1 })
+    const floatValue = await createFloatValue({ companyMeasurementId, value: 1.1, timestamp: new Date() })
     floatValueId = floatValue.id
     expect(floatValue).toHaveProperty('id')
-    expect(floatValue.sourceMeasurementId).toBe(sourceMeasurementId)
+    expect(floatValue.companyMeasurementId).toBe(companyMeasurementId)
     expect(floatValue.value).toBe(1.1)
   })
 
@@ -86,7 +88,7 @@ describe('float value Model Tests', () => {
 
   test('Update a float value name', async () => {
     const updatedValue = await updateFloatValue(floatValueId, {
-      sourceMeasurementId,
+      companyMeasurementId,
       value: 2.0
     })
     expect(updatedValue.value).toBe(2.0)

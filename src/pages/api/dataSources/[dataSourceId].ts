@@ -23,6 +23,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       try {
         const existingDatSource = await getDataSourceByID(Number(dataSourceId))
         if (existingDatSource) {
+          // Update Bucket
           const updatedBucket = await updateDataSource(Number(dataSourceId), req.body)
           res.status(200).json(updatedBucket)
         } else res.status(400).json({ error: 'No Data Source found' })

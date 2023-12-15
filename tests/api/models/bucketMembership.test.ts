@@ -56,8 +56,8 @@ describe('Company Bucket Membership Model Tests', () => {
     })
 
     expect(foundMembership).toBeTruthy()
-    expect(foundMembership.companyId).toBe(companyId)
-    expect(foundMembership.bucketId).toBe(bucketId)
+    expect(foundMembership?.companyId).toBe(companyId)
+    expect(foundMembership?.bucketId).toBe(bucketId)
   })
 
   test('Update a CompanyBucketMembership', async () => {

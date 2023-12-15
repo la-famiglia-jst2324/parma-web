@@ -12,14 +12,13 @@ interface CompanyDataSource {
   id: number
   sourceName: string
   isActive: boolean
-  defaultFrequency: string
-  frequencyPattern: null | string
+  frequency: string
   healthStatus: string
   description: null | string
   createdAt: string
   modifiedAt: string
   version: string
-  maximumExpectedRunTime: number
+  maxRunSeconds: number
   invocationEndpoint: string
   additionalParams: null | string
 }

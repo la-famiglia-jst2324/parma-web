@@ -20,7 +20,7 @@ interface CompanyDataSource {
   createdAt: string
   modifiedAt: string
   version: string
-  maximumExpectedRunTime: number
+  maxRunSeconds: number
   invocationEndpoint: string
   additionalParams: null | string
 }

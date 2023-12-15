@@ -62,7 +62,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         }
 
         const updatedDataSource = await updateDataSource(id, {
-          defaultFrequency: frequency,
+          frequency,
           isActive: true,
           healthStatus: 'UP'
         })

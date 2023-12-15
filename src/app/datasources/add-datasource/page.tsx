@@ -97,6 +97,7 @@ function CreateDatasourcePage() {
               <div className="mb-4 flex flex-col">
                 <label className="mb-2 block text-sm font-bold text-gray-700">Frequency</label>
                 <Select value={frequency} onValueChange={setFrequency}>
+                  <SelectItem value="HOURLY">Hourly</SelectItem>
                   <SelectItem value="DAILY">Daily</SelectItem>
                   <SelectItem value="WEEKLY">Weekly</SelectItem>
                 </Select>

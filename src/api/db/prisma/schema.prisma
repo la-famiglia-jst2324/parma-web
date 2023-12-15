@@ -29,6 +29,7 @@ model User {
   newsSubscription                   NewsSubscription[]
   UserCustomization                  UserCustomization[]
   companySubscription                CompanySubscription[]
+
   @@map("user")
 }
 
@@ -53,6 +54,7 @@ model Company {
   newsSubscription          NewsSubscription[]
   userCompanyCustomizations UserCompanyCustomization[]
   companySubscription       CompanySubscription[]
+
   @@map("company")
 }
 
@@ -93,7 +95,7 @@ model NotificationChannel {
   entityType  EntityType  @map("entity_type")
   channelType ChannelType @map("channel_type")
   destination String
-  apiKey      String?
+  apiKey      String?     @map("api_key")
   createdAt   DateTime    @default(now()) @map("created_at")
   modifiedAt  DateTime    @updatedAt @map("modified_at")
 
@@ -241,32 +243,32 @@ model Notification {
 }
 
 model SourceMeasurement {
-  id              Int      @id @default(autoincrement())
-  sourceModuleId  Int      @map("source_module_id")
-  type            String
-  measurementName String   @map("measurement_name")
+  id                  Int      @id @default(autoincrement())
+  sourceModuleId      Int      @map("source_module_id")
+  type                String
+  measurementName     String   @map("measurement_name")
   parentMeasurementId Int?     @map("parent_measurement_id")
-  createdAt       DateTime @default(now()) @map("created_at")
-  modifiedAt      DateTime @updatedAt @map("modified_at")
+  createdAt           DateTime @default(now()) @map("created_at")
+  modifiedAt          DateTime @updatedAt @map("modified_at")
 
   // Relations
-  dataSource                 DataSource                  @relation(fields: [sourceModuleId], references: [id], onDelete: Cascade)
-  companySourceMeasurements  CompanySourceMeasurement[]
-  userMetricCustomization    UserMetricCustomization[]
-  parentSourceMeasurement    SourceMeasurement?          @relation(name: "ParentChild", fields: [parentMeasurementId], references: [id], onDelete: Cascade)
-  childSourceMeasurements    SourceMeasurement[]         @relation("ParentChild")
+  dataSource                DataSource                 @relation(fields: [sourceModuleId], references: [id], onDelete: Cascade)
+  companySourceMeasurements CompanySourceMeasurement[]
+  userMetricCustomization   UserMetricCustomization[]
+  parentSourceMeasurement   SourceMeasurement?         @relation(name: "ParentChild", fields: [parentMeasurementId], references: [id], onDelete: Cascade)
+  childSourceMeasurements   SourceMeasurement[]        @relation("ParentChild")
 
   @@map("source_measurement")
 }
 
 model CompanySourceMeasurement {
-  companyMeasurementId Int   @id @default(autoincrement()) @map("company_measurement_id")
-  sourceMeasurementId  Int   @map("source_measurement_id")
-  companyId            Int   @map("company_id")
+  companyMeasurementId Int @id @default(autoincrement()) @map("company_measurement_id")
+  sourceMeasurementId  Int @map("source_measurement_id")
+  companyId            Int @map("company_id")
 
   // relations
-  sourceMeasurement    SourceMeasurement    @relation(fields: [sourceMeasurementId], references: [id], onDelete: Cascade)
-  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  sourceMeasurement SourceMeasurement @relation(fields: [sourceMeasurementId], references: [id], onDelete: Cascade)
+  company           Company           @relation(fields: [companyId], references: [id], onDelete: Cascade)
 
   measurementTextValues      MeasurementTextValue[]
   measurementIntValues       MeasurementIntValue[]
@@ -278,11 +280,12 @@ model CompanySourceMeasurement {
 }
 
 model MeasurementTextValue {
-  id                  Int      @id @default(autoincrement())
+  id                   Int      @id @default(autoincrement())
   companyMeasurementId Int      @map("company_measurement_id")
-  value               String
-  createdAt           DateTime @default(now()) @map("created_at")
-  modifiedAt          DateTime @updatedAt @map("modified_at")
+  value                String
+  timestamp            DateTime
+  createdAt            DateTime @default(now()) @map("created_at")
+  modifiedAt           DateTime @updatedAt @map("modified_at")
 
   // Relations
   companySourceMeasurement CompanySourceMeasurement @relation(fields: [companyMeasurementId], references: [companyMeasurementId], onDelete: Cascade)
@@ -291,11 +294,12 @@ model MeasurementTextValue {
 }
 
 model MeasurementIntValue {
-  id                  Int      @id @default(autoincrement())
+  id                   Int      @id @default(autoincrement())
   companyMeasurementId Int      @map("company_measurement_id")
-  value               Int
-  createdAt           DateTime @default(now()) @map("created_at")
-  modifiedAt          DateTime @updatedAt @map("modified_at")
+  value                Int
+  timestamp            DateTime
+  createdAt            DateTime @default(now()) @map("created_at")
+  modifiedAt           DateTime @updatedAt @map("modified_at")
 
   // Relations
   companySourceMeasurement CompanySourceMeasurement @relation(fields: [companyMeasurementId], references: [companyMeasurementId], onDelete: Cascade)
@@ -304,40 +308,43 @@ model MeasurementIntValue {
 }
 
 model MeasurementFloatValue {
-  id                  Int      @id @default(autoincrement())
+  id                   Int      @id @default(autoincrement())
   companyMeasurementId Int      @map("company_measurement_id")
-  value               Float
-  createdAt           DateTime @default(now()) @map("created_at")
-  modifiedAt          DateTime @updatedAt @map("modified_at")
+  value                Float
+  timestamp            DateTime
+  createdAt            DateTime @default(now()) @map("created_at")
+  modifiedAt           DateTime @updatedAt @map("modified_at")
 
   // Relations
-   companySourceMeasurement CompanySourceMeasurement @relation(fields: [companyMeasurementId], references: [companyMeasurementId], onDelete: Cascade)
+  companySourceMeasurement CompanySourceMeasurement @relation(fields: [companyMeasurementId], references: [companyMeasurementId], onDelete: Cascade)
 
   @@map("measurement_float_value")
 }
 
 model MeasurementCommentValue {
-  id                  Int      @id @default(autoincrement())
+  id                   Int      @id @default(autoincrement())
   companyMeasurementId Int      @map("company_measurement_id")
-  value               String
-  createdAt           DateTime @default(now()) @map("created_at")
-  modifiedAt          DateTime @updatedAt @map("modified_at")
+  value                String
+  timestamp            DateTime
+  createdAt            DateTime @default(now()) @map("created_at")
+  modifiedAt           DateTime @updatedAt @map("modified_at")
 
   // Relations
-   companySourceMeasurement CompanySourceMeasurement @relation(fields: [companyMeasurementId], references: [companyMeasurementId], onDelete: Cascade)
+  companySourceMeasurement CompanySourceMeasurement @relation(fields: [companyMeasurementId], references: [companyMeasurementId], onDelete: Cascade)
 
   @@map("measurement_comment_value")
 }
 
 model MeasurementParagraphValue {
-  id                  Int      @id @default(autoincrement())
-  companyMeasurementId Int     @map("company_measurement_id")
-  value               String
-  createdAt           DateTime @default(now()) @map("created_at")
-  modifiedAt          DateTime @updatedAt @map("modified_at")
+  id                   Int      @id @default(autoincrement())
+  companyMeasurementId Int      @map("company_measurement_id")
+  value                String
+  timestamp            DateTime
+  createdAt            DateTime @default(now()) @map("created_at")
+  modifiedAt           DateTime @updatedAt @map("modified_at")
 
   // Relations
-   companySourceMeasurement CompanySourceMeasurement @relation(fields: [companyMeasurementId], references: [companyMeasurementId], onDelete: Cascade)
+  companySourceMeasurement CompanySourceMeasurement @relation(fields: [companyMeasurementId], references: [companyMeasurementId], onDelete: Cascade)
 
   @@map("measurement_paragraph_value")
 }

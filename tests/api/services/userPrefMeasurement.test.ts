@@ -18,7 +18,8 @@ describe('User Preference Measurement Model Tests', () => {
       isActive: true,
       frequency: Frequency.DAILY,
       healthStatus: HealthStatus.UP,
-      description: 'a data source'
+      description: 'a data source',
+      invocationEndpoint: 'dummy endpoint'
     })
     userId = user.id
     dataSourceId = dataSource.id

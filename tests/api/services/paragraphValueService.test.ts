@@ -74,7 +74,11 @@ describe('text value Model Tests', () => {
   })
 
   test('Create a new paragraph value with valid details', async () => {
-    const paragraphValue = await createParagraphValue({ companyMeasurementId, value: 'paragraph' })
+    const paragraphValue = await createParagraphValue({
+      companyMeasurementId,
+      value: 'paragraph',
+      timestamp: new Date()
+    })
     paragraphValueId = paragraphValue.id
     expect(paragraphValue).toHaveProperty('id')
     expect(paragraphValue.companyMeasurementId).toBe(companyMeasurementId)

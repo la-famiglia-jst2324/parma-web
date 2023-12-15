@@ -73,7 +73,7 @@ describe('float value Model Tests', () => {
   })
 
   test('Create a new float value with valid details', async () => {
-    const floatValue = await createFloatValue({ companyMeasurementId, value: 1.1 })
+    const floatValue = await createFloatValue({ companyMeasurementId, value: 1.1, timestamp: new Date() })
     floatValueId = floatValue.id
     expect(floatValue).toHaveProperty('id')
     expect(floatValue.companyMeasurementId).toBe(companyMeasurementId)

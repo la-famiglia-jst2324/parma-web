@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 
 import type { Frequency } from '@prisma/client'
 import { getAllDataSources, createDataSource, updateDataSource } from '@/api/db/services/dataSourceService'
+import { addCompanyDataSourceRelationshipForDatasource } from '@/api/db/services/companyDataSourceService'
 
 const frequencyMapping: { [key: string]: Frequency | undefined } = {
   weekly: 'WEEKLY',
@@ -28,8 +29,10 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
     case 'POST':
       try {
-        // Create a new data source
+        // Create a new data source.
         const newDataSource = await createDataSource(req.body)
+        // Register the new data source in the companyDataSource relationship.
+        await addCompanyDataSourceRelationshipForDatasource(newDataSource.id)
 
         let analyticsUrl = process.env.PARMA_ANALYTICS_BASE_URL
         if (process.env.NEXT_PUBLIC_ENV === 'production') analyticsUrl = 'https://analytics.parma.software/'

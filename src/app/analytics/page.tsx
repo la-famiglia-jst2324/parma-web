@@ -5,12 +5,11 @@ import { MainLayout } from '@/components/MainLayout'
 import UserCustomizationComponent from '@/components/Analytics/UserCustomization'
 import GraphChart from '@/components/Analytics/Graph'
 import AuthCheck from '@/components/Authentication/AuthCheck'
-import useMeasurements from '@/components/hooks/useMetrics'
 import useCompanies from '@/components/hooks/useCompanies'
+import { useMeasurementsCompanies } from '@/components/hooks/useMetrics'
 
 const AnalyticsPage: React.FC = () => {
   const companies = useCompanies()
-  const metrics = useMeasurements()
 
   const [selectedCompanies, setSelectedCompanies] = useState<string[]>([])
   const [selectedMetric, setSelectedMetric] = useState<string>('')
@@ -25,7 +24,9 @@ const AnalyticsPage: React.FC = () => {
     }
   }
 
-  const metricName = metrics.filter((metric) => metric.id.toString() === selectedMetric)[0]?.measurementName
+  const metrics = useMeasurementsCompanies(selectedCompanies)
+
+  const metricName = metrics.find((metric) => metric.id.toString() === selectedMetric)?.measurementName
 
   return (
     <MainLayout>
@@ -92,7 +93,7 @@ const AnalyticsPage: React.FC = () => {
           <GraphChart
             measurementId={graphData.metric || ''}
             companiesArray={graphData.companies}
-            measurementName={metricName}
+            measurementName={metricName || ''}
           />
         ) : (
           <p className="ml-4">Please select companies and a metric to compare.</p>

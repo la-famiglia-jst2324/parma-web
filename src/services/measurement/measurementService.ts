@@ -29,3 +29,14 @@ export async function getAnalyticsDataForCompany(measurementId: string, companyI
     return []
   }
 }
+
+export async function getMeasurementsForCompanies(companiesArray: string[]) {
+  const companiesQuery = companiesArray.map((companyId) => `companyIds=${companyId}`).join('&')
+  try {
+    const response = await fetchClient.get(`/api/measurements?${companiesQuery}`)
+    return response.data
+  } catch (error) {
+    console.log('An error has occurred: ', error)
+    return []
+  }
+}

@@ -55,6 +55,22 @@ const getDataSourcesByCompanyId = async (companyId: number) => {
   }
 }
 
+const getCompanyDataSourceByIds = async (dataSourceId: number, companyId: number) => {
+  try {
+    const companyDataSource = await prisma.companyDataSource.findMany({
+      where: {
+        dataSourceId,
+        companyId
+      }
+    })
+    // list data sources
+    return companyDataSource
+  } catch (error) {
+    console.error('Error getting the company data source entry:', error)
+    throw error
+  }
+}
+
 // maybe dont need
 const getCompaniesByDataSourceId = async (dataSourceId: number) => {
   try {
@@ -122,10 +138,75 @@ const deleteCompanyDataSource = async (companyId: number, dataSourceId: number) 
   }
 }
 
+/**
+ * Adds new companyDataSource relationship entries for the given company id with all the existing data sources.
+ * @param companyId
+ */
+const addCompanyDataSourceRelationshipForCompany = async (companyId: number) => {
+  try {
+    // Get all data sources
+    const dataSources = await prisma.dataSource.findMany()
+
+    // For each data source, add a new entry in companyDataSource
+    for (const dataSource of dataSources) {
+      const existingRelation = await getCompanyDataSourceByIds(dataSource.id, companyId)
+      if (existingRelation.length > 0) {
+        continue
+      }
+
+      await prisma.companyDataSource.create({
+        data: {
+          companyId,
+          dataSourceId: dataSource.id,
+          isDataSourceActive: true,
+          healthStatus: 'UP'
+        }
+      })
+    }
+  } catch (error) {
+    console.error('Error getting all data sources:', error)
+    throw error
+  }
+}
+
+/**
+ * Adds new companyDataSource relationship entries for the given datasource id with all the existing companies.
+ * @param datasourceId
+ */
+const addCompanyDataSourceRelationshipForDatasource = async (datasourceId: number) => {
+  try {
+    // Get all companies
+    const companies = await prisma.company.findMany()
+
+    // For each company, add a new entry in companyDataSource
+    for (const company of companies) {
+      const existingRelation = await getCompanyDataSourceByIds(datasourceId, company.id)
+      if (existingRelation.length > 0) {
+        continue
+      }
+
+      await prisma.companyDataSource.create({
+        data: {
+          companyId: company.id,
+          dataSourceId: datasourceId,
+          isDataSourceActive: true,
+          healthStatus: 'UP'
+        }
+      })
+    }
+  } catch (error) {
+    console.error('Error getting all the companies:', error)
+    throw error
+  }
+}
+
 export {
   createCompanyDataSource,
   getDataSourcesByCompanyId,
   getCompaniesByDataSourceId,
   updateCompanyDataSource,
-  deleteCompanyDataSource
+  deleteCompanyDataSource,
+  getCompanyDataSourceByIds,
+  addCompanyDataSourceRelationshipForCompany,
+  addCompanyDataSourceRelationshipForDatasource
 }

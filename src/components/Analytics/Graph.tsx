@@ -31,10 +31,6 @@ const GraphChart: React.FC<GraphChartProps> = ({ measurementId, measurementName,
   const [idToken, setIdToken] = useState<string | null>(null)
   const user = useContext(AuthContext)
 
-  console.log('Companies array:', companiesArray)
-  console.log('Measurement ID:', measurementId)
-  console.log('Measurement name:', measurementName)
-
   useEffect(() => {
     const setToken = async () => {
       if (user) {

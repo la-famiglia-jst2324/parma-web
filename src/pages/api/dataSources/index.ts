@@ -35,11 +35,10 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         await addCompanyDataSourceRelationshipForDatasource(newDataSource.id)
 
         let analyticsUrl = process.env.PARMA_ANALYTICS_BASE_URL
-        if (process.env.NEXT_PUBLIC_ENV === 'production') analyticsUrl = 'https://analytics.parma.software/'
-        else if (process.env.NEXT_PUBLIC_ENV === 'staging') analyticsUrl = 'https://analytics.staging.parma.software/'
         if (!analyticsUrl) {
           throw new Error('PARMA_ANALYTICS_URL is not defined in the environment.')
         }
+        analyticsUrl = analyticsUrl.endsWith('/') ? analyticsUrl.substring(0, analyticsUrl.length - 1) : analyticsUrl
         const { id, invocationEndpoint } = newDataSource
         // send a request to parma-analytics to perform handshake
         const handshakeUrl = new URL('/handshake', analyticsUrl)

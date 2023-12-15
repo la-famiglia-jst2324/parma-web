@@ -93,7 +93,7 @@ function Home() {
               <div className="flex items-center justify-between">
                 <h1 className="text-3xl font-bold text-slate-700">Top Buckets</h1>
                 {topBuckets.length > 5 && (
-                  <Link href="/top-buckets" className="text-lg text-gray-500 underline">
+                  <Link href="/buckets" className="text-lg text-gray-500 underline">
                     See more
                   </Link>
                 )}

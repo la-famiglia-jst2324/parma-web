@@ -13,7 +13,7 @@ interface ProfileImageModalProps {
 
 const ProfileImageModal: React.FC<ProfileImageModalProps> = ({ src, alt, onClose }) => {
   return (
-    <div className="bg-opacity/50 fixed inset-0 z-50 flex items-center justify-center bg-black" onClick={onClose}>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50" onClick={onClose}>
       <div className="relative bg-white p-4">
         {/* Close Button */}
         <Button

@@ -29,7 +29,6 @@ interface GraphChartProps {
 const GraphChart: React.FC<GraphChartProps> = ({ measurementId, measurementName, companiesArray }) => {
   const [analyticsData, setAnalyticsData] = useState([])
   const [idToken, setIdToken] = useState<string | null>(null)
-
   const user = useContext(AuthContext)
 
   useEffect(() => {
@@ -60,6 +59,7 @@ const GraphChart: React.FC<GraphChartProps> = ({ measurementId, measurementName,
     fetchAnalyticsData()
   }, [idToken, measurementId, companiesArray])
 
+  console.log('Analytics data:', analyticsData)
   const categories = extractCategories(analyticsData)
 
   return (

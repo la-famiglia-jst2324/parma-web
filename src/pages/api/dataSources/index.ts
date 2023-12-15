@@ -31,8 +31,9 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         // Create a new data source
         const newDataSource = await createDataSource(req.body)
 
-        const analyticsUrl = process.env.PARMA_ANALYTICS_BASE_URL
-        console.log('analytics url: ' + analyticsUrl)
+        let analyticsUrl = process.env.PARMA_ANALYTICS_BASE_URL
+        if (process.env.NEXT_PUBLIC_ENV === 'production') analyticsUrl = 'https://analytics.parma.software/'
+        else if (process.env.NEXT_PUBLIC_ENV === 'staging') analyticsUrl = 'https://analytics.staging.parma.software/'
         if (!analyticsUrl) {
           throw new Error('PARMA_ANALYTICS_URL is not defined in the environment.')
         }

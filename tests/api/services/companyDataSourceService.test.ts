@@ -24,7 +24,7 @@ describe('Company Datasource Model Tests', () => {
     const dataSource = await createDataSource({
       sourceName: 'source1',
       isActive: true,
-      defaultFrequency: Frequency.DAILY,
+      frequency: Frequency.DAILY,
       healthStatus: HealthStatus.UP,
       description: 'a new data source',
       invocationEndpoint: 'dummy endpoint'

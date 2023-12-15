@@ -46,7 +46,7 @@ describe('float value Model Tests', () => {
     const dataSource = await await createDataSource({
       sourceName: 'source1',
       isActive: true,
-      defaultFrequency: Frequency.DAILY,
+      frequency: Frequency.DAILY,
       healthStatus: HealthStatus.UP,
       invocationEndpoint: 'dummy endpoint'
     })
@@ -54,7 +54,7 @@ describe('float value Model Tests', () => {
     expect(dataSource).toHaveProperty('id')
     expect(dataSource.sourceName).toBe('source1')
     expect(dataSource.isActive).toBe(true)
-    expect(dataSource.defaultFrequency).toBe(Frequency.DAILY)
+    expect(dataSource.frequency).toBe(Frequency.DAILY)
     expect(dataSource.healthStatus).toBe(HealthStatus.UP)
   })
 

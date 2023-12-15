@@ -24,7 +24,7 @@ describe('Data Source Model Tests', () => {
     const dataSource = await createDataSource({
       sourceName: 'source1',
       isActive: true,
-      defaultFrequency: Frequency.DAILY,
+      frequency: Frequency.DAILY,
       healthStatus: HealthStatus.UP,
       description: 'a new data source',
       invocationEndpoint: 'dummy endpoint'
@@ -33,7 +33,7 @@ describe('Data Source Model Tests', () => {
     expect(dataSource).toHaveProperty('id')
     expect(dataSource.sourceName).toBe('source1')
     expect(dataSource.isActive).toBe(true)
-    expect(dataSource.defaultFrequency).toBe(Frequency.DAILY)
+    expect(dataSource.frequency).toBe(Frequency.DAILY)
     expect(dataSource.healthStatus).toBe(HealthStatus.UP)
     expect(dataSource.description).toBe('a new data source')
   })
@@ -48,12 +48,12 @@ describe('Data Source Model Tests', () => {
     const updatedDataSource = await updateDataSource(dataSourceId, {
       sourceName: 'source2',
       isActive: false,
-      defaultFrequency: Frequency.WEEKLY,
+      frequency: Frequency.WEEKLY,
       description: 'update data source'
     })
     expect(updatedDataSource.sourceName).toBe('source2')
     expect(updatedDataSource.isActive).toBe(false)
-    expect(updatedDataSource.defaultFrequency).toBe(Frequency.WEEKLY)
+    expect(updatedDataSource.frequency).toBe(Frequency.WEEKLY)
     expect(updatedDataSource.healthStatus).toBe(HealthStatus.UP)
     expect(updatedDataSource.description).toBe('update data source')
   })

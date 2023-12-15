@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { createScheduledTask, getAllScheduledTasks } from '@/api/db/services/scheduledTasksService'
+import { createScheduledTask, getAllScheduledTasks } from '@/api/db/services/scheduledTaskService'
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const { method } = req

@@ -158,14 +158,13 @@ model DataSource {
   id                     Int          @id @default(autoincrement())
   sourceName             String       @map("source_name")
   isActive               Boolean      @map("is_active")
-  defaultFrequency       Frequency    @map("default_frequency")
-  frequencyPattern       String?      @map("frequency_pattern")
+  frequency              Frequency    @map("frequency")
   healthStatus           HealthStatus @map("health_status")
   description            String?
   createdAt              DateTime     @default(now()) @map("created_at")
   modifiedAt             DateTime     @updatedAt @map("modified_at")
+  maxRunSeconds          Int          @default(300) @map("max_run_seconds")
   version                String       @default("1.0")
-  maximumExpectedRunTime Int          @default(60) @map("maximum_expected_run_time") // Assuming time is in minutes
   invocationEndpoint     String       @default("") @map("invocation_endpoint")
   additionalParams       Json?        @map("additional_params")
 
@@ -174,26 +173,27 @@ model DataSource {
   notifications                      Notification[]
   sourceMeasurements                 SourceMeasurement[]
   userImportantMeasurementPreference UserImportantMeasurementPreference[]
-  scheduledTasks                     ScheduledTasks[]
+  scheduledTasks                     ScheduledTask[]
 
   @@map("data_source")
 }
 
-model ScheduledTasks {
+model ScheduledTask {
   taskId        Int          @id @default(autoincrement()) @map("task_id")
   dataSourceId  Int          @map("data_source_id")
   scheduleType  ScheduleType @map("schedule_type")
-  startedAt     DateTime     @default(now()) @map("started_at")
-  lockedAt      DateTime?    @map("locked_at")
+  scheduledAt   DateTime     @default(now()) @map("scheduled_at")
+  startedAt     DateTime?    @map("started_at")
   endedAt       DateTime?    @map("ended_at")
+  maxRunSeconds          Int @default(300) @map("max_run_seconds")
   resultSummary String?      @map("result_summary")
-  status        TaskStatus
+  status        TaskStatus   @default(PENDING)
   attempts      Int          @default(0)
 
   // Relations
   dataSource DataSource @relation(fields: [dataSourceId], references: [id])
 
-  @@map("scheduled_tasks")
+  @@map("scheduled_task")
 }
 
 model CompanyDataSource {
@@ -488,9 +488,10 @@ enum HealthStatus {
 }
 
 enum Frequency {
+  HOURLY
   DAILY
   WEEKLY
-  CRON
+  MONTHLY
 
   @@map("frequency")
 }

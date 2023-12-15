@@ -83,16 +83,27 @@ erDiagram
         int id PK
         string source_name
         boolean is_active
-        string default_frequency
-        string frequency_pattern
+        string frequency
         string health_status
         string description
         datetime created_at
         datetime modified_at
+        int max_run_seconds
         string version
-        int maximum_expected_run_time
         string invocation_endpoint
         json additional_params
+    }
+    scheduled_task {
+        int task_id PK
+        int data_source_id FK
+        string schedule_type
+        datetime scheduled_at
+        datetime started_at
+        datetime ended_at
+        int max_run_seconds
+        string result_summary
+        string status
+        int attempts
     }
     news_subscription {
         int user_id PK,FK

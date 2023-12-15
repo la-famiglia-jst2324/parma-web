@@ -9,7 +9,7 @@ const createScheduledTask = async (data: {
   attempts?: number
 }) => {
   try {
-    return await prisma.scheduledTasks.create({
+    return await prisma.scheduledTask.create({
       data: {
         dataSourceId: data.dataSourceId,
         scheduleType: data.scheduleType,
@@ -26,7 +26,7 @@ const createScheduledTask = async (data: {
 
 const getScheduledTaskByID = async (taskId: number) => {
   try {
-    const scheduledTask = await prisma.scheduledTasks.findUnique({
+    const scheduledTask = await prisma.scheduledTask.findUnique({
       where: { taskId }
     })
     if (!scheduledTask) {
@@ -41,7 +41,7 @@ const getScheduledTaskByID = async (taskId: number) => {
 
 const getScheduledTaskByDatasourceID = async (dataSourceId: number) => {
   try {
-    const scheduledTasks = await prisma.scheduledTasks.findMany({
+    const scheduledTasks = await prisma.scheduledTask.findMany({
       where: { dataSourceId }
     })
     if (!scheduledTasks) {
@@ -57,11 +57,11 @@ const getScheduledTaskByDatasourceID = async (dataSourceId: number) => {
 const getAllScheduledTasks = async (page: number, pageSize: number) => {
   try {
     const skip = (page - 1) * pageSize
-    const scheduledTasks = await prisma.scheduledTasks.findMany({
+    const scheduledTasks = await prisma.scheduledTask.findMany({
       skip,
       take: pageSize
     })
-    const totalCount = await prisma.scheduledTasks.count()
+    const totalCount = await prisma.scheduledTask.count()
     const totalPages = Math.ceil(totalCount / pageSize)
     return {
       scheduledTasks,
@@ -88,7 +88,7 @@ const updateScheduledTask = async (
     attempts?: number
   }
 ) => {
-  return await prisma.scheduledTasks.update({
+  return await prisma.scheduledTask.update({
     where: { taskId },
     data: {
       ...data
@@ -98,7 +98,7 @@ const updateScheduledTask = async (
 
 const deleteScheduledTask = async (taskId: number) => {
   try {
-    return await prisma.scheduledTasks.delete({
+    return await prisma.scheduledTask.delete({
       where: { taskId }
     })
   } catch (error) {

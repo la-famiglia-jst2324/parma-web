@@ -1,4 +1,4 @@
-import { PrismaClient, Role, Frequency, HealthStatus } from '@prisma/client'
+import { PrismaClient, Role, Frequency, HealthStatus, DataSourceType } from '@prisma/client'
 import { genRandomDummyAuthId } from '../utils/random'
 import { createDataSource, deleteDataSource } from '@/api/db/services/dataSourceService'
 import { createUserPref, deleteUserPref, getUserPrefByID } from '@/api/db/services/userMeasurementPrefService'
@@ -15,6 +15,7 @@ describe('User Preference Measurement Model Tests', () => {
     const user = await createUser({ name: 'John Doe', authId: genRandomDummyAuthId(), role: Role.ADMIN })
     const dataSource = await createDataSource({
       sourceName: 'source1',
+      sourceType: DataSourceType.GITHUB,
       isActive: true,
       frequency: Frequency.DAILY,
       healthStatus: HealthStatus.UP,

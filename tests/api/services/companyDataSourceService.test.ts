@@ -1,4 +1,4 @@
-import { Frequency, HealthStatus, PrismaClient, Role } from '@prisma/client'
+import { DataSourceType, Frequency, HealthStatus, PrismaClient, Role } from '@prisma/client'
 import { genRandomDummyAuthId } from '../utils/random'
 import {
   createCompanyDataSource,
@@ -23,6 +23,7 @@ describe('Company Datasource Model Tests', () => {
     const company = await createCompany({ name: 'Google', addedBy: user.id })
     const dataSource = await createDataSource({
       sourceName: 'source1',
+      sourceType: DataSourceType.GITHUB,
       isActive: true,
       frequency: Frequency.DAILY,
       healthStatus: HealthStatus.UP,

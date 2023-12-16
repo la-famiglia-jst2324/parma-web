@@ -1,4 +1,4 @@
-import { PrismaClient, Role, HealthStatus, Frequency } from '@prisma/client'
+import { PrismaClient, Role, HealthStatus, Frequency, DataSourceType } from '@prisma/client'
 import { genRandomDummyAuthId } from '../utils/random'
 import {
   createUserMetricCustomization,
@@ -21,6 +21,7 @@ describe('UserMetricCustomization Model Tests', () => {
     const userCustomization = await createUserCustomization({ name: 'Customization Test', userId: user.id })
     const dataSource = await createDataSource({
       sourceName: 'name',
+      sourceType: DataSourceType.GITHUB,
       isActive: true,
       frequency: Frequency.DAILY,
       healthStatus: HealthStatus.UP

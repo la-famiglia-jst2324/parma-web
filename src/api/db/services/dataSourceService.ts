@@ -1,8 +1,9 @@
-import type { Frequency, HealthStatus } from '@prisma/client'
+import type { Frequency, HealthStatus, DataSourceType } from '@prisma/client'
 import { prisma } from '../prisma/prismaClient'
 
 const createDataSource = async (data: {
   sourceName: string
+  sourceType: DataSourceType
   isActive: boolean
   frequency: Frequency
   healthStatus: HealthStatus
@@ -13,6 +14,7 @@ const createDataSource = async (data: {
     return await prisma.dataSource.create({
       data: {
         sourceName: data.sourceName,
+        sourceType: data.sourceType,
         isActive: data.isActive,
         frequency: data.frequency,
         healthStatus: data.healthStatus,

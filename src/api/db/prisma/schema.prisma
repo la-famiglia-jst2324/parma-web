@@ -155,18 +155,19 @@ model CompanyAttachment {
 }
 
 model DataSource {
-  id                     Int          @id @default(autoincrement())
-  sourceName             String       @map("source_name")
-  isActive               Boolean      @map("is_active")
-  frequency              Frequency    @map("frequency")
-  healthStatus           HealthStatus @map("health_status")
-  description            String?
-  createdAt              DateTime     @default(now()) @map("created_at")
-  modifiedAt             DateTime     @updatedAt @map("modified_at")
-  maxRunSeconds          Int          @default(300) @map("max_run_seconds")
-  version                String       @default("1.0")
-  invocationEndpoint     String       @default("") @map("invocation_endpoint")
-  additionalParams       Json?        @map("additional_params")
+  id                 Int            @id @default(autoincrement())
+  sourceName         String         @map("source_name")
+  sourceType         DataSourceType @map("source_type")
+  isActive           Boolean        @map("is_active")
+  frequency          Frequency      @map("frequency")
+  healthStatus       HealthStatus   @map("health_status")
+  description        String?
+  createdAt          DateTime       @default(now()) @map("created_at")
+  modifiedAt         DateTime       @updatedAt @map("modified_at")
+  maxRunSeconds      Int            @default(300) @map("max_run_seconds")
+  version            String         @default("1.0")
+  invocationEndpoint String         @default("") @map("invocation_endpoint")
+  additionalParams   Json?          @map("additional_params")
 
   // Relations
   companyDataSource                  CompanyDataSource[]
@@ -185,7 +186,7 @@ model ScheduledTask {
   scheduledAt   DateTime     @default(now()) @map("scheduled_at")
   startedAt     DateTime?    @map("started_at")
   endedAt       DateTime?    @map("ended_at")
-  maxRunSeconds          Int @default(300) @map("max_run_seconds")
+  maxRunSeconds Int          @default(300) @map("max_run_seconds")
   resultSummary String?      @map("result_summary")
   status        TaskStatus   @default(PENDING)
   attempts      Int          @default(0)
@@ -517,4 +518,16 @@ enum ScheduleType {
   REGULAR
 
   @@map("schedule_type")
+}
+
+enum DataSourceType {
+  REDDIT
+  GITHUB
+  LINKEDIN
+  PEOPLEDATALABS
+  CLEARBIT
+  DISCORD
+  AFFINITY
+
+  @@map("data_source_type")
 }

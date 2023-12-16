@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client'
+import { DataSourceType, PrismaClient } from '@prisma/client'
 import { genRandomDummyAuthId } from '@tests/api/utils/random'
 
 const prisma = new PrismaClient()
@@ -35,6 +35,7 @@ export async function createDataSource() {
   return await prisma.dataSource.create({
     data: {
       sourceName: 'Test Source',
+      sourceType: DataSourceType.GITHUB,
       isActive: true,
       frequency: 'DAILY',
       healthStatus: 'UP',

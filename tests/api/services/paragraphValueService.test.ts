@@ -1,4 +1,4 @@
-import { PrismaClient, Frequency, HealthStatus, Role } from '@prisma/client'
+import { PrismaClient, Frequency, HealthStatus, Role, DataSourceType } from '@prisma/client'
 import { genRandomDummyAuthId } from '../utils/random'
 import { createCompanySourceMeasurement } from '../models/utils/helperFunctions'
 import { createCompany } from '@/api/db/services/companyService'
@@ -44,6 +44,7 @@ describe('text value Model Tests', () => {
   test('Create a new data source with valid details', async () => {
     const dataSource = await await createDataSource({
       sourceName: 'source1',
+      sourceType: DataSourceType.GITHUB,
       isActive: true,
       frequency: Frequency.DAILY,
       healthStatus: HealthStatus.UP,

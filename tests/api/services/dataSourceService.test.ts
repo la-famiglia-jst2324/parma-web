@@ -1,4 +1,4 @@
-import { Frequency, HealthStatus, PrismaClient } from '@prisma/client'
+import { DataSourceType, Frequency, HealthStatus, PrismaClient } from '@prisma/client'
 import {
   createDataSource,
   deleteDataSource,
@@ -23,6 +23,7 @@ describe('Data Source Model Tests', () => {
   test('Create a new data source with valid details', async () => {
     const dataSource = await createDataSource({
       sourceName: 'source1',
+      sourceType: DataSourceType.GITHUB,
       isActive: true,
       frequency: Frequency.DAILY,
       healthStatus: HealthStatus.UP,

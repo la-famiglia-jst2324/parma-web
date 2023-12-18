@@ -30,6 +30,18 @@ function CreateDatasourcePage() {
       return
     }
 
+    if (formData.get('name') === null || formData.get('name') === '') {
+      setErrorMessage('You need to provide a name for the datasource!')
+      setShowError(true)
+      return
+    }
+
+    if (formData.get('url') === null || formData.get('url') === '') {
+      setErrorMessage('You need to provide a URL for the datasource!')
+      setShowError(true)
+      return
+    }
+
     const frequencyEnum = Frequency[frequency as keyof typeof Frequency]
 
     const dataSource = {
@@ -51,17 +63,17 @@ function CreateDatasourcePage() {
     })
       .then((response) => {
         if (!response.ok) {
-          throw new Error('Network response was not ok')
+          console.error(response)
         }
         setShowSuccess(true)
         setTimeout(() => setShowSuccess(false), 5000)
       })
       .then((data) => console.log(data))
       .catch((error) => {
-        setErrorMessage('Any error happened while creating datasource! Please Try again.')
+        setErrorMessage('Any error happened while creating the datasource. Please Try again.')
         setShowError(true)
         setTimeout(() => setShowSuccess(false), 5000)
-        console.error('Error:', error)
+        console.error(error)
       })
   }
 
@@ -100,6 +112,7 @@ function CreateDatasourcePage() {
                   <SelectItem value="HOURLY">Hourly</SelectItem>
                   <SelectItem value="DAILY">Daily</SelectItem>
                   <SelectItem value="WEEKLY">Weekly</SelectItem>
+                  <SelectItem value="MONTHLY">Monthly</SelectItem>
                 </Select>
               </div>
               <FormContent

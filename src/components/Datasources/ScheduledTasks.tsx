@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import type { ScheduledTask } from '@prisma/client'
 import { Badge } from '@tremor/react'
 import { getScheduledTasks } from '@/services/datasource/datasourceService'
+import formatDate from '@/utils/formatDate'
 
 interface ScheduledTasksProps {
   datasourceId: string
@@ -44,6 +45,9 @@ const ScheduledTasksTable = ({ datasourceId }: ScheduledTasksProps) => {
               </th>
               <th className="px-6 py-3 text-left text-sm font-bold uppercase tracking-wider text-gray-600">Status</th>
               <th className="px-6 py-3 text-left text-sm font-bold uppercase tracking-wider text-gray-600">
+                Scheduled At
+              </th>
+              <th className="px-6 py-3 text-left text-sm font-bold uppercase tracking-wider text-gray-600">
                 Started At
               </th>
               <th className="px-6 py-3 text-left text-sm font-bold uppercase tracking-wider text-gray-600">Ended At</th>
@@ -55,7 +59,6 @@ const ScheduledTasksTable = ({ datasourceId }: ScheduledTasksProps) => {
                 <td className="whitespace-nowrap px-6 py-4 text-gray-700">{task.taskId}</td>
                 <td className="whitespace-nowrap px-6 py-4 text-gray-700">{task.scheduleType.toLocaleLowerCase()}</td>
                 <td className="whitespace-nowrap px-6 py-4 text-gray-700">
-                  {/* Badge component styling assumed to be consistent */}
                   <Badge
                     color={
                       task.status === 'PENDING'
@@ -70,30 +73,9 @@ const ScheduledTasksTable = ({ datasourceId }: ScheduledTasksProps) => {
                     {task.status}
                   </Badge>
                 </td>
-                <td className="whitespace-nowrap px-6 py-4 text-gray-700">
-                  {task.startedAt
-                    ? new Date(task.startedAt).toLocaleDateString('en-US', {
-                        year: 'numeric',
-                        month: 'long',
-                        day: 'numeric',
-                        hour: '2-digit',
-                        minute: '2-digit',
-                        hour12: false
-                      })
-                    : 'No start date'}
-                </td>
-                <td className="whitespace-nowrap px-6 py-4 text-gray-700">
-                  {task.endedAt
-                    ? new Date(task.endedAt).toLocaleDateString('en-US', {
-                        year: 'numeric',
-                        month: 'long',
-                        day: 'numeric',
-                        hour: '2-digit',
-                        minute: '2-digit',
-                        hour12: false
-                      })
-                    : 'No end date'}
-                </td>
+                <td className="whitespace-nowrap px-6 py-4 text-gray-700">{formatDate(task.scheduledAt)}</td>
+                <td className="whitespace-nowrap px-6 py-4 text-gray-700">{formatDate(task.startedAt)}</td>
+                <td className="whitespace-nowrap px-6 py-4 text-gray-700">{formatDate(task.endedAt)}</td>
               </tr>
             ))}
           </tbody>

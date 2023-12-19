@@ -1,4 +1,5 @@
 import { prisma } from '../prisma/prismaClient'
+import { AlreadyExistsError } from '@/api/utils/errorUtils'
 
 const addCompanyToBucket = async (companyId: number, bucketId: number) => {
   try {
@@ -13,7 +14,7 @@ const addCompanyToBucket = async (companyId: number, bucketId: number) => {
       }
     })
     if (existingMembership) {
-      throw new Error(`The company is already added to this bucket.`)
+      throw new AlreadyExistsError(`The company is already added to this bucket.`)
     }
     // not exists
     const membership = await prisma.companyBucketMembership.create({
@@ -112,10 +113,28 @@ const removeCompanyFromBucket = async (companyId: number, bucketId: number) => {
   }
 }
 
+const checkCompanyBucketMembershipExistence = async (bucketId: number, companyId: number) => {
+  try {
+    const companyBucket = await prisma.companyBucketMembership.findUnique({
+      where: {
+        companyId_bucketId: {
+          bucketId,
+          companyId
+        }
+      }
+    })
+    return companyBucket || null
+  } catch (error) {
+    console.error('Error checking company bucket membership existence:', error)
+    throw new Error('Error during existence check')
+  }
+}
+
 export {
   addCompanyToBucket,
   getCompaniesByBucketId,
   getBucketsByCompanyId,
   getCompanyBucketByID,
-  removeCompanyFromBucket
+  removeCompanyFromBucket,
+  checkCompanyBucketMembershipExistence
 }

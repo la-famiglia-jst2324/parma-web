@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import type { User } from '@prisma/client'
 import { z, ZodError } from 'zod'
-import formatZodErrors from '../../lib/utils/zodCustomMessage'
+import formatZodErrors from '@/pages/api/lib/utils/zodCustomMessage'
 import { createUserCustomization, getUserCustomizations } from '@/api/db/services/userCustomizationService'
 import {
   createUserCompanyCustomization,

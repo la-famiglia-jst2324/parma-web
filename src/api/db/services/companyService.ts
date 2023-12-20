@@ -1,4 +1,5 @@
 import { prisma } from '../prisma/prismaClient'
+import { ItemNotFoundError } from '@/api/utils/errorUtils'
 
 const createCompany = async (data: { name: string; description?: string; addedBy: number }) => {
   try {
@@ -21,7 +22,7 @@ const getCompanyByID = async (id: number) => {
       where: { id }
     })
     if (!company) {
-      throw new Error(`Company with ID ${id} not found.`)
+      throw new ItemNotFoundError(`Company with ID ${id} not found.`)
     }
     return company
   } catch (error) {

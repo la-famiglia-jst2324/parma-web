@@ -32,13 +32,13 @@ describe('ReportSubscription Model Tests', () => {
       data: {
         userId,
         channelId,
-        channelPurpose: "REPORT"
+        channelPurpose: 'REPORT'
       }
     })
 
     subscriptionId = {
       userId: subscription.userId,
-      channelId: subscription.channelId,
+      channelId: subscription.channelId
     }
 
     expect(subscription).toHaveProperty('userId')
@@ -62,7 +62,7 @@ describe('ReportSubscription Model Tests', () => {
     expect(subscription).toHaveProperty('userId')
     expect(subscription?.channelId).toBe(channelId)
     expect(subscription?.userId).toBe(userId)
-    expect(subscription?.channelPurpose).toBe("REPORT")
+    expect(subscription?.channelPurpose).toBe('REPORT')
   })
 
   test('Delete a new ReportSubscription', async () => {

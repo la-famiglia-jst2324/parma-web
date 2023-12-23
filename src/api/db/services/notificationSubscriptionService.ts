@@ -20,7 +20,7 @@ const createNotificationSubscription = async (data: {
   }
 }
 
-const getNotificationSubscription = async (userId: number, companyId: number, channelId: number) => {
+const getNotificationSubscription = async (userId: number, channelId: number) => {
   try {
     const subscription = await prisma.notificationSubscription.findUnique({
       where: {

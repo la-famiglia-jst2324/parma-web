@@ -11,7 +11,7 @@ import { createUser, deleteUser } from '@/api/db/services/userService'
 const prisma = new PrismaClient()
 
 describe('Notification Subscription Model Tests', () => {
-  let subscriptionId: { userId: number; companyId: number; channelId: number }
+  let subscriptionId: { userId: number; channelId: number }
   let userId: number
   let companyId: number
   let channelId: number
@@ -23,7 +23,6 @@ describe('Notification Subscription Model Tests', () => {
     companyId = company.id
     const channel = await createNotificationChannel({
       entityId: 'entity1',
-      entityType: EntityType.NOTIFICATION,
       channelType: ChannelType.EMAIL,
       destination: 'email channel'
     })
@@ -38,31 +37,26 @@ describe('Notification Subscription Model Tests', () => {
   })
 
   test('Create a new notification Subscription', async () => {
-    const subscription = await createNotificationSubscription({ userId, companyId, channelId })
+    const subscription = await createNotificationSubscription({ userId, channelId })
     subscriptionId = {
       userId: subscription.userId,
-      companyId: subscription.companyId,
       channelId: subscription.channelId
     }
     expect(subscription).toHaveProperty('userId')
     expect(subscription.userId).toBe(userId)
-    expect(subscription.companyId).toBe(companyId)
     expect(subscription.channelId).toBe(channelId)
   })
 
   test('Retrieve a notification Subscription', async () => {
     const subscription = await getNotificationSubscription(
       subscriptionId.userId,
-      subscriptionId.companyId,
       subscriptionId.channelId
     )
     subscriptionId = {
       userId: subscription.userId,
-      companyId: subscription.companyId,
       channelId: subscription.channelId
     }
     expect(subscription).toHaveProperty('userId')
-    expect(subscription.companyId).toBe(companyId)
     expect(subscription.channelId).toBe(channelId)
     expect(subscription.userId).toBe(userId)
   })
@@ -72,9 +66,8 @@ describe('Notification Subscription Model Tests', () => {
 
     const deletedSubscription = await prisma.notificationSubscription.findUnique({
       where: {
-        userId_companyId_channelId: {
+        userId_channelId: {
           userId: subscriptionId.userId,
-          companyId: subscriptionId.companyId,
           channelId: subscriptionId.channelId
         }
       }

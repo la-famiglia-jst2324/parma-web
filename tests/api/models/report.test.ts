@@ -32,13 +32,13 @@ describe('ReportSubscription Model Tests', () => {
       data: {
         userId,
         channelId,
-        channelPurpose: 'REPORT'
+        channelPurpose: "REPORT"
       }
     })
 
     subscriptionId = {
       userId: subscription.userId,
-      channelId: subscription.channelId
+      channelId: subscription.channelId,
     }
 
     expect(subscription).toHaveProperty('userId')
@@ -56,32 +56,29 @@ describe('ReportSubscription Model Tests', () => {
 
     subscriptionId = {
       userId: subscription!.userId,
-      companyId: subscription!.companyId,
       channelId: subscription!.channelId
     }
 
     expect(subscription).toHaveProperty('userId')
-    expect(subscription?.companyId).toBe(companyId)
     expect(subscription?.channelId).toBe(channelId)
     expect(subscription?.userId).toBe(userId)
+    expect(subscription?.channelPurpose).toBe("REPORT")
   })
 
   test('Delete a new ReportSubscription', async () => {
-    await prisma.reportSubscription.delete({
+    await prisma.notificationSubscription.delete({
       where: {
-        userId_companyId_channelId: {
+        userId_channelId: {
           userId: subscriptionId.userId,
-          companyId: subscriptionId.companyId,
           channelId: subscriptionId.channelId
         }
       }
     })
 
-    const deletedSubscription = await prisma.reportSubscription.findUnique({
+    const deletedSubscription = await prisma.notificationSubscription.findUnique({
       where: {
-        userId_companyId_channelId: {
+        userId_channelId: {
           userId: subscriptionId.userId,
-          companyId: subscriptionId.companyId,
           channelId: subscriptionId.channelId
         }
       }

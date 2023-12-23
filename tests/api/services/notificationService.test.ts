@@ -44,7 +44,7 @@ describe('Notification Model Tests', () => {
       frequency: Frequency.DAILY,
       healthStatus: HealthStatus.UP,
       description: 'des',
-      invocationEndpoint: "dummy endpoint"
+      invocationEndpoint: 'dummy endpoint'
     })
     dataSourceId = dataSource.id
     expect(dataSource).toHaveProperty('id')

@@ -33,7 +33,8 @@ describe('Notification Subscription Model Tests', () => {
 
   test('Create a new notification Subscription', async () => {
     const subscription = await createNotificationSubscription({
-      userId, channelId,
+      userId,
+      channelId,
       channelPurpose: 'NOTIFICATION'
     })
     subscriptionId = {

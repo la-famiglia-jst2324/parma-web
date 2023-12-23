@@ -48,10 +48,7 @@ describe('Notification Subscription Model Tests', () => {
   })
 
   test('Retrieve a notification Subscription', async () => {
-    const subscription = await getNotificationSubscription(
-      subscriptionId.userId,
-      subscriptionId.channelId
-    )
+    const subscription = await getNotificationSubscription(subscriptionId.userId, subscriptionId.channelId)
     subscriptionId = {
       userId: subscription.userId,
       channelId: subscription.channelId

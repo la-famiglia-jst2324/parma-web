@@ -1,25 +1,25 @@
-import type { NextApiRequest, NextApiResponse } from 'next';
+import type { NextApiRequest, NextApiResponse } from 'next'
 
-import { getDateValueByID } from '@/api/db/services/dateValueService';
+import { getDateValueByID } from '@/api/db/services/dateValueService'
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
-  const { method } = req;
-  const { valueId } = req.query;
+  const { method } = req
+  const { valueId } = req.query
 
   switch (method) {
     case 'GET':
       try {
-        const value = await getDateValueByID(Number(valueId));
-        if (value) res.status(200).json(value);
-        else res.status(400).json({ error: 'No Measurement Value found' });
+        const value = await getDateValueByID(Number(valueId))
+        if (value) res.status(200).json(value)
+        else res.status(400).json({ error: 'No Measurement Value found' })
       } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: 'Internal Server Error' });
+        console.error(error)
+        res.status(500).json({ error: 'Internal Server Error' })
       }
-      break;
+      break
 
     default:
-      res.status(405).json({ error: 'Method Not Allowed' });
-      break;
+      res.status(405).json({ error: 'Method Not Allowed' })
+      break
   }
-};
+}

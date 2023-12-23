@@ -1,6 +1,5 @@
-import { ChannelType, Role, EntityType, PrismaClient } from '@prisma/client'
+import { ChannelType, Role, PrismaClient, ChannelPurpose } from '@prisma/client'
 import { genRandomDummyAuthId } from '../utils/random'
-import { createCompany, deleteCompany } from '@/api/db/services/companyService'
 import { createNotificationChannel } from '@/api/db/services/notificationChannelService'
 import {
   createNotificationSubscription,
@@ -13,14 +12,11 @@ const prisma = new PrismaClient()
 describe('Notification Subscription Model Tests', () => {
   let subscriptionId: { userId: number; channelId: number }
   let userId: number
-  let companyId: number
   let channelId: number
 
   beforeAll(async () => {
     const user = await createUser({ name: 'John Doe', authId: genRandomDummyAuthId(), role: Role.ADMIN })
-    const company = await createCompany({ name: 'Google', addedBy: user.id })
     userId = user.id
-    companyId = company.id
     const channel = await createNotificationChannel({
       entityId: 'entity1',
       channelType: ChannelType.EMAIL,
@@ -31,13 +27,15 @@ describe('Notification Subscription Model Tests', () => {
   })
 
   afterAll(async () => {
-    await deleteCompany(companyId)
     await deleteUser(userId)
     await prisma.$disconnect()
   })
 
   test('Create a new notification Subscription', async () => {
-    const subscription = await createNotificationSubscription({ userId, channelId })
+    const subscription = await createNotificationSubscription({
+      userId, channelId,
+      channelPurpose: 'NOTIFICATION'
+    })
     subscriptionId = {
       userId: subscription.userId,
       channelId: subscription.channelId
@@ -59,7 +57,7 @@ describe('Notification Subscription Model Tests', () => {
   })
 
   test('Delete a notification Subscription', async () => {
-    await deleteNotificationSubscription(subscriptionId.userId, subscriptionId.companyId, subscriptionId.channelId)
+    await deleteNotificationSubscription(subscriptionId.userId, subscriptionId.channelId)
 
     const deletedSubscription = await prisma.notificationSubscription.findUnique({
       where: {

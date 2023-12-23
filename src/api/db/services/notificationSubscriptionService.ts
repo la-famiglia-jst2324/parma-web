@@ -40,7 +40,7 @@ const getNotificationSubscription = async (userId: number, channelId: number) =>
   }
 }
 
-const deleteNotificationSubscription = async (userId: number, companyId: number, channelId: number) => {
+const deleteNotificationSubscription = async (userId: number, channelId: number) => {
   try {
     return await prisma.notificationSubscription.delete({
       where: {

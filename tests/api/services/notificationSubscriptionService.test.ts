@@ -1,4 +1,4 @@
-import { ChannelType, Role, PrismaClient, ChannelPurpose } from '@prisma/client'
+import { ChannelType, Role, PrismaClient } from '@prisma/client'
 import { genRandomDummyAuthId } from '../utils/random'
 import { createNotificationChannel } from '@/api/db/services/notificationChannelService'
 import {

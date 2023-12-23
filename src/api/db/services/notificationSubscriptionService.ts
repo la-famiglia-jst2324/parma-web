@@ -1,7 +1,11 @@
-import { prisma } from '../prisma/prismaClient'
 import type { ChannelPurpose } from '@prisma/client'
+import { prisma } from '../prisma/prismaClient'
 
-const createNotificationSubscription = async (data: { userId: number; channelId: number; channelPurpose: ChannelPurpose }) => {
+const createNotificationSubscription = async (data: {
+  userId: number
+  channelId: number
+  channelPurpose: ChannelPurpose
+}) => {
   try {
     return await prisma.notificationSubscription.create({
       data: {

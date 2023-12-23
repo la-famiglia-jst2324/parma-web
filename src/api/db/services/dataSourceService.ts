@@ -1,5 +1,6 @@
 import type { Frequency, HealthStatus } from '@prisma/client'
 import { prisma } from '../prisma/prismaClient'
+import { ItemNotFoundError } from '@/api/utils/errorUtils'
 
 const createDataSource = async (data: {
   sourceName: string
@@ -32,7 +33,7 @@ const getDataSourceByID = async (id: number) => {
       where: { id }
     })
     if (!datasource) {
-      throw new Error(`Data source with ID ${id} not found.`)
+      throw new ItemNotFoundError(`Data source with ID ${id} not found.`)
     }
     return datasource
   } catch (error) {

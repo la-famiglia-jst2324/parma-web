@@ -22,7 +22,6 @@ model User {
   addedCompanies                     Company[]                            @relation("UserAddsCompany")
   ownedBuckets                       Bucket[]                             @relation("UserOwnsBucket")
   notificationSubscriptions          NotificationSubscription[]           @relation("UserToNotificationSubscription")
-  reportSubscriptions                ReportSubscription[]                 @relation("UserToReportSubscription")
   companyAttachments                 CompanyAttachment[]                  @relation("UserAttachesToCompany")
   permissions                        BucketAccess[]
   userImportantMeasurementPreference UserImportantMeasurementPreference[]
@@ -44,8 +43,6 @@ model Company {
   // Relation fields
   user                      User                       @relation("UserAddsCompany", fields: [addedBy], references: [id])
   companyBucketMember       CompanyBucketMembership[]
-  notificationSubscriptions NotificationSubscription[] @relation("CompanyToNotificationSubscription")
-  reportSubscriptions       ReportSubscription[]       @relation("CompanyToReportSubscription")
   companyAttachments        CompanyAttachment[]        @relation("CompanyAttachment")
   companyDataSource         CompanyDataSource[]
   notifications             Notification[]
@@ -92,7 +89,6 @@ model CompanyBucketMembership {
 model NotificationChannel {
   id          Int         @id @default(autoincrement())
   entityId    String      @map("entity_id")
-  entityType  EntityType  @map("entity_type")
   channelType ChannelType @map("channel_type")
   destination String
   apiKey      String?     @map("api_key")
@@ -101,40 +97,23 @@ model NotificationChannel {
 
   // Relations
   notificationSubscriptions NotificationSubscription[]
-  reportSubscriptions       ReportSubscription[]
 
   @@map("notification_channel")
 }
 
 model NotificationSubscription {
   userId     Int      @map("user_id")
-  companyId  Int      @map("company_id")
   channelId  Int      @map("channel_id")
+  channelPurpose ChannelPurpose @map("channel_purpose")      
   createdAt  DateTime @default(now()) @map("created_at")
   modifiedAt DateTime @updatedAt @map("modified_at")
 
   // Relation fields
   user    User                @relation("UserToNotificationSubscription", fields: [userId], references: [id], onDelete: Cascade)
-  company Company             @relation("CompanyToNotificationSubscription", fields: [companyId], references: [id], onDelete: Cascade)
   channel NotificationChannel @relation(fields: [channelId], references: [id], onDelete: Cascade)
 
-  @@id([userId, companyId, channelId])
+  @@id([userId, channelId])
   @@map("notification_subscription")
-}
-
-model ReportSubscription {
-  userId     Int                 @map("user_id")
-  companyId  Int                 @map("company_id")
-  channelId  Int                 @map("channel_id")
-  createdAt  DateTime            @default(now()) @map("created_at")
-  modifiedAt DateTime            @updatedAt @map("modified_at")
-  // Relation fields
-  user       User                @relation("UserToReportSubscription", fields: [userId], references: [id], onDelete: Cascade)
-  company    Company             @relation("CompanyToReportSubscription", fields: [companyId], references: [id], onDelete: Cascade)
-  channel    NotificationChannel @relation(fields: [channelId], references: [id], onDelete: Cascade)
-
-  @@id([userId, companyId, channelId])
-  @@map("report_subscription")
 }
 
 model CompanyAttachment {
@@ -384,7 +363,7 @@ model MeasurementImageValue {
 model MeasurementDateValue {
   id                   Int      @id @default(autoincrement())
   companyMeasurementId Int      @map("company_measurement_id")
-  value                String
+  value                DateTime
   timestamp            DateTime
   createdAt            DateTime @default(now()) @map("created_at")
   modifiedAt           DateTime @updatedAt @map("modified_at")
@@ -518,11 +497,11 @@ enum Role {
   @@map("role")
 }
 
-enum EntityType {
+enum ChannelPurpose {
   NOTIFICATION
   REPORT
 
-  @@map("entity_type")
+  @@map("channel_purpose")
 }
 
 enum ChannelType {

@@ -275,6 +275,10 @@ model CompanySourceMeasurement {
   measurementFloatValues     MeasurementFloatValue[]
   measurementCommentValues   MeasurementCommentValue[]
   measurementParagraphValues MeasurementParagraphValue[]
+  measurementLinkValues      MeasurementLinkValue[]
+  measurementImageValues      MeasurementImageValue[]
+  measurementDateValues      MeasurementDateValue[]
+  measurementNestedValues      MeasurementNestedValue[]
 
   @@map("company_source_measurement")
 }
@@ -347,6 +351,62 @@ model MeasurementParagraphValue {
   companySourceMeasurement CompanySourceMeasurement @relation(fields: [companyMeasurementId], references: [companyMeasurementId], onDelete: Cascade)
 
   @@map("measurement_paragraph_value")
+}
+
+model MeasurementLinkValue {
+  id                   Int      @id @default(autoincrement())
+  companyMeasurementId Int      @map("company_measurement_id")
+  value                String
+  timestamp            DateTime
+  createdAt            DateTime @default(now()) @map("created_at")
+  modifiedAt           DateTime @updatedAt @map("modified_at")
+
+  // Relations
+  companySourceMeasurement CompanySourceMeasurement @relation(fields: [companyMeasurementId], references: [companyMeasurementId], onDelete: Cascade)
+
+  @@map("measurement_link_value")
+}
+
+model MeasurementImageValue {
+  id                   Int      @id @default(autoincrement())
+  companyMeasurementId Int      @map("company_measurement_id")
+  value                String
+  timestamp            DateTime
+  createdAt            DateTime @default(now()) @map("created_at")
+  modifiedAt           DateTime @updatedAt @map("modified_at")
+
+  // Relations
+  companySourceMeasurement CompanySourceMeasurement @relation(fields: [companyMeasurementId], references: [companyMeasurementId], onDelete: Cascade)
+
+  @@map("measurement_image_value")
+}
+
+model MeasurementDateValue {
+  id                   Int      @id @default(autoincrement())
+  companyMeasurementId Int      @map("company_measurement_id")
+  value                String
+  timestamp            DateTime
+  createdAt            DateTime @default(now()) @map("created_at")
+  modifiedAt           DateTime @updatedAt @map("modified_at")
+
+  // Relations
+  companySourceMeasurement CompanySourceMeasurement @relation(fields: [companyMeasurementId], references: [companyMeasurementId], onDelete: Cascade)
+
+  @@map("measurement_date_value")
+}
+
+model MeasurementNestedValue {
+  id                   Int      @id @default(autoincrement())
+  companyMeasurementId Int      @map("company_measurement_id")
+  value                String
+  timestamp            DateTime
+  createdAt            DateTime @default(now()) @map("created_at")
+  modifiedAt           DateTime @updatedAt @map("modified_at")
+
+  // Relations
+  companySourceMeasurement CompanySourceMeasurement @relation(fields: [companyMeasurementId], references: [companyMeasurementId], onDelete: Cascade)
+
+  @@map("measurement_nested_value")
 }
 
 model Report {

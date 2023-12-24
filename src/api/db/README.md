@@ -120,7 +120,6 @@ erDiagram
     }
     notification_channel {
         int id PK
-        int entity_id FK
         string channel_type
         string destination
         string encryptedApiKey

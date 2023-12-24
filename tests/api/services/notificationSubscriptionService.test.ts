@@ -18,7 +18,6 @@ describe('Notification Subscription Model Tests', () => {
     const user = await createUser({ name: 'John Doe', authId: genRandomDummyAuthId(), role: Role.ADMIN })
     userId = user.id
     const channel = await createNotificationChannel({
-      entityId: 'entity1',
       channelType: ChannelType.EMAIL,
       destination: 'email channel'
     })

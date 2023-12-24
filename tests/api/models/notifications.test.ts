@@ -17,7 +17,6 @@ describe('NotificationChannel Model Tests', () => {
   test('Create a new NotificationChannel', async () => {
     const channel = await prisma.notificationChannel.create({
       data: {
-        entityId: 'entity1',
         channelType: 'SLACK',
         destination: 'slack channel'
       }
@@ -26,7 +25,7 @@ describe('NotificationChannel Model Tests', () => {
     channelId = channel.id
 
     expect(channel).toHaveProperty('id')
-    expect(channel.entityId).toBe('entity1')
+    expect(channel.destination).toBe('slack channel')
   })
 
   test('Retrieve a NotificationChannel', async () => {
@@ -73,7 +72,6 @@ describe('NotificationSubscription Model Tests', () => {
     companyId = company.id
     const channel = await prisma.notificationChannel.create({
       data: {
-        entityId: 'entity1',
         channelType: 'SLACK',
         destination: 'slack channel'
       }

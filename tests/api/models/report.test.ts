@@ -13,7 +13,6 @@ describe('ReportSubscription Model Tests', () => {
     userId = user.id
     const channel = await prisma.notificationChannel.create({
       data: {
-        entityId: 'entity1',
         channelType: 'SLACK',
         destination: 'slack channel'
       }

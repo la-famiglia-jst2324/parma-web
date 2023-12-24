@@ -88,7 +88,6 @@ model CompanyBucketMembership {
 
 model NotificationChannel {
   id          Int         @id @default(autoincrement())
-  entityId    String      @map("entity_id")
   channelType ChannelType @map("channel_type")
   destination String
   apiKey      String?     @map("api_key")

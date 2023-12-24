@@ -2,7 +2,6 @@ import type { ChannelType } from '@prisma/client'
 import { prisma } from '../prisma/prismaClient'
 
 const createNotificationChannel = async (data: {
-  entityId: string
   channelType: ChannelType
   destination: string
   apiKey?: string
@@ -10,7 +9,6 @@ const createNotificationChannel = async (data: {
   try {
     return await prisma.notificationChannel.create({
       data: {
-        entityId: data.entityId,
         channelType: data.channelType,
         destination: data.destination,
         apiKey: data.apiKey

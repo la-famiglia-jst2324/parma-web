@@ -20,7 +20,6 @@ describe('Notification Channel Model Tests', () => {
 
   test('Create a new slack channel with valid details', async () => {
     const channel = await createNotificationChannel({
-      entityId: 'entity1',
       channelType: ChannelType.SLACK,
       destination: 'la-famiglia-data-analytics',
       apiKey: 'my beloved key'
@@ -34,7 +33,6 @@ describe('Notification Channel Model Tests', () => {
 
   test('Create a new channel without api key', async () => {
     const channel = await createNotificationChannel({
-      entityId: 'entity2',
       channelType: ChannelType.EMAIL,
       destination: 'emailaddress'
     })

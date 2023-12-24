@@ -3,10 +3,9 @@ import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import type { DataSource } from '@prisma/client'
 import Table from '../../components/Datasources/Table'
-import { MainLayout } from '@/components/MainLayout'
-import AuthCheck from '@/components/Authentication/AuthCheck'
 import CustomButton from '@/components/BlueButton'
 import { getDataSourcesPagination as getDatasources } from '@/services/datasource/datasourceService'
+import { MainLayoutWrapper } from '@/components/Layout/MainLayout'
 
 function DatasourcesPage() {
   const [data, setData] = useState<DataSource[] | null>(null)
@@ -38,7 +37,7 @@ function DatasourcesPage() {
 
   return (
     <>
-      <MainLayout>
+      <main className="m-4 flex h-[68em] flex-row items-start justify-start space-x-4" role="main">
         <div className="relative m-5 flex min-h-screen w-auto flex-col justify-start rounded-md bg-white shadow-lg">
           <div className="flex items-center justify-between p-6">
             <div className="mb-4 flex items-center justify-start space-x-4">
@@ -67,9 +66,9 @@ function DatasourcesPage() {
             </div>
           </div>
         </div>
-      </MainLayout>
+      </main>
     </>
   )
 }
 
-export default AuthCheck(DatasourcesPage)
+export default MainLayoutWrapper(DatasourcesPage)

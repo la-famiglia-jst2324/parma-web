@@ -11,8 +11,7 @@ import CompanyPopup from '@/components/Companies/CompanyPopup'
 import CompanyAttachment from '@/components/Companies/CompanyAttachment'
 import DataSourcesPanel from '@/components/Companies/DataSourcesPanel'
 import PerformancePanel from '@/components/Companies/PerformancePanel'
-import { MainLayout } from '@/components/MainLayout'
-import AuthCheck from '@/components/Authentication/AuthCheck'
+import { MainLayoutWrapper } from '@/components/Layout/MainLayout'
 import {
   getSubscribedCompanies,
   postCompanySubscription,
@@ -249,99 +248,95 @@ const CompanyPage = ({ params: { companyId } }: { params: { companyId: string } 
   }
 
   return (
-    <MainLayout>
-      <div className="m-3 flex min-h-[calc(100vh-90px)] flex-col items-start rounded-lg border-0 bg-white p-3 shadow-md">
-        <div className="mb-3 flex w-full items-center justify-between space-x-4">
-          <div className="flex items-center">
-            <div className="pl-2">
-              <GoBackButton />
-            </div>
-            <h1 className="py-2 pl-4 text-4xl font-bold">{companyData?.name}</h1>
+    <main
+      className="m-4 flex h-[68em] min-h-[calc(100vh-90px)] flex-row items-start justify-start space-x-4"
+      role="main"
+    >
+      <div className="mb-3 flex w-full items-center justify-between space-x-4">
+        <div className="flex items-center">
+          <div className="pl-2">
+            <GoBackButton />
           </div>
-          <div className="flex">
-            <div className="flex items-center space-x-3">
-              {isSubscribed ? (
-                <Button icon={CheckCircleIcon} onClick={handleUnsubscribe}>
-                  Subscribed
-                </Button>
-              ) : (
-                <Button onClick={handleSubscribe}>Subscribe</Button>
-              )}
-              <Button variant="secondary" onClick={() => handleExport(companyData?.name)}>
-                Export Data
+          <h1 className="py-2 pl-4 text-4xl font-bold">{companyData?.name}</h1>
+        </div>
+        <div className="flex">
+          <div className="flex items-center space-x-3">
+            {isSubscribed ? (
+              <Button icon={CheckCircleIcon} onClick={handleUnsubscribe}>
+                Subscribed
               </Button>
-              <Button variant="secondary" onClick={() => setEditModal(true)}>
-                Edit Company
-              </Button>
-            </div>
+            ) : (
+              <Button onClick={handleSubscribe}>Subscribe</Button>
+            )}
+            <Button variant="secondary" onClick={() => handleExport(companyData?.name)}>
+              Export Data
+            </Button>
+            <Button variant="secondary" onClick={() => setEditModal(true)}>
+              Edit Company
+            </Button>
           </div>
         </div>
-
-        <div className="flex w-full flex-col pl-10 pr-2">
-          <p className="mb-4 overflow-hidden text-sm text-gray-700">{companyData?.description}</p>
-          <div className="mt-4">
-            <div className="flex items-center">
-              <input type="file" className="text-sm text-stone-500" name="attachment" onChange={uploadToClient} />
-            </div>
-            <div className="pt-2">
-              <Button icon={ArrowUpTrayIcon} onClick={handleUpload} disabled={uploadAttachment === ''}>
-                Upload File
-              </Button>
-            </div>
-            <div className="flex space-x-4 py-4">
-              {companyAttachments.length > 0 ? (
-                companyAttachments?.map((attachment) => (
-                  <CompanyAttachment
-                    key={attachment?.id}
-                    fileId={String(attachment?.id)}
-                    fileType={attachment.fileType}
-                    title={attachment.title}
-                    onDelete={handleDelete}
-                    onDownload={handleDownload}
-                  />
-                ))
-              ) : (
-                <p>No attachments for this company</p>
-              )}
-            </div>
-          </div>
-
-          <TabGroup>
-            <TabList className="mt-8" variant="solid">
-              <Tab icon={UserGroupIcon}>Data Sources</Tab>
-              <Tab icon={UserIcon}>Performance</Tab>
-            </TabList>
-            <TabPanels>
-              <TabPanel>
-                <DataSourcesPanel
-                  companyId={companyId}
-                  setShowPopup={setShowPopup}
-                  setPopupContents={setPopupContents}
-                />
-              </TabPanel>
-              <TabPanel>
-                <PerformancePanel companyId={companyId} companyName={companyData?.name} />
-              </TabPanel>
-            </TabPanels>
-          </TabGroup>
-        </div>
-        <CompanyPopup
-          title={popupContents.title}
-          icon={CheckCircleIcon}
-          color={popupContents.color}
-          description={popupContents.description}
-          showPopup={showPopup}
-        />
-        <EditInformationModal
-          isOpen={editModal}
-          handleClose={() => setEditModal(false)}
-          companyName={companyData?.name}
-          companyDescription={companyData?.description}
-          handleSave={handleEditCompany}
-        />
       </div>
-    </MainLayout>
+      <div className="flex w-full flex-col pl-10 pr-2">
+        <p className="mb-4 overflow-hidden text-sm text-gray-700">{companyData?.description}</p>
+        <div className="mt-4">
+          <div className="flex items-center">
+            <input type="file" className="text-sm text-stone-500" name="attachment" onChange={uploadToClient} />
+          </div>
+          <div className="pt-2">
+            <Button icon={ArrowUpTrayIcon} onClick={handleUpload} disabled={uploadAttachment === ''}>
+              Upload File
+            </Button>
+          </div>
+          <div className="flex space-x-4 py-4">
+            {companyAttachments.length > 0 ? (
+              companyAttachments?.map((attachment) => (
+                <CompanyAttachment
+                  key={attachment?.id}
+                  fileId={String(attachment?.id)}
+                  fileType={attachment.fileType}
+                  title={attachment.title}
+                  onDelete={handleDelete}
+                  onDownload={handleDownload}
+                />
+              ))
+            ) : (
+              <p>No attachments for this company</p>
+            )}
+          </div>
+        </div>
+
+        <TabGroup>
+          <TabList className="mt-8" variant="solid">
+            <Tab icon={UserGroupIcon}>Data Sources</Tab>
+            <Tab icon={UserIcon}>Performance</Tab>
+          </TabList>
+          <TabPanels>
+            <TabPanel>
+              <DataSourcesPanel companyId={companyId} setShowPopup={setShowPopup} setPopupContents={setPopupContents} />
+            </TabPanel>
+            <TabPanel>
+              <PerformancePanel companyId={companyId} companyName={companyData?.name} />
+            </TabPanel>
+          </TabPanels>
+        </TabGroup>
+      </div>
+      <CompanyPopup
+        title={popupContents.title}
+        icon={CheckCircleIcon}
+        color={popupContents.color}
+        description={popupContents.description}
+        showPopup={showPopup}
+      />
+      <EditInformationModal
+        isOpen={editModal}
+        handleClose={() => setEditModal(false)}
+        companyName={companyData?.name}
+        companyDescription={companyData?.description}
+        handleSave={handleEditCompany}
+      />
+    </main>
   )
 }
 
-export default AuthCheck(CompanyPage)
+export default MainLayoutWrapper(CompanyPage)

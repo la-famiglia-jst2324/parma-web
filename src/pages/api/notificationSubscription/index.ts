@@ -8,7 +8,7 @@ import { withAuthValidation } from '@/api/middleware/auth'
 const handler = async (req: NextApiRequest, res: NextApiResponse, user: User) => {
   const { method } = req
   const userId = user.id
-  const { companyId, channelId } = req.body
+  const { channelId } = req.body
   switch (method) {
     case 'POST':
       try {
@@ -23,7 +23,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse, user: User) =>
 
     case 'DELETE':
       try {
-        await deleteNotificationSubscription(userId, companyId, channelId)
+        await deleteNotificationSubscription(userId, channelId)
         res.status(200).json({ message: 'Notification Subscription successfully Deleted' })
       } catch (error) {
         res.status(500).json({ error })

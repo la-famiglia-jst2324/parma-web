@@ -7,7 +7,7 @@ interface LayoutProps {
   title?: string
 }
 
-const Layout: React.FC<LayoutProps> = ({ children, title = 'Parma UI' }) => {
+const StartLayout: React.FC<LayoutProps> = ({ children, title = 'Parma UI' }) => {
   return (
     <div>
       <Head>
@@ -19,4 +19,4 @@ const Layout: React.FC<LayoutProps> = ({ children, title = 'Parma UI' }) => {
   )
 }
 
-export default Layout
+export default StartLayout

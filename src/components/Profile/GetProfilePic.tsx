@@ -1,7 +1,6 @@
 import { useContext, useEffect, useState } from 'react'
 import 'firebase/auth'
 import Image from 'next/image'
-// import defaultProfilePic from './Default_pfp.jpg'
 import { AuthContext } from '@/lib/firebase/auth'
 
 // TODO: Add a default profile pic
@@ -11,6 +10,7 @@ export default function UserProfile() {
     'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTtKCjQ0e2wwW4YzS1C9NYprZG21crS04Kmj-wPkHUmom_v-6T2WkZshUuAZw&s'
   )
   useEffect(() => {
+    if (user === 'loading') return
     if (user?.photoURL) {
       setPhotoUrl(user.photoURL)
     }

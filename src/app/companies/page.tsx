@@ -6,9 +6,8 @@ import { Button, TextInput } from '@tremor/react'
 import { useRouter } from 'next/navigation'
 import type { Company } from '@/types/companies'
 import CompanyCard from '@/components/Companies/CompanyCard'
-import { MainLayout } from '@/components/MainLayout'
-import AuthCheck from '@/components/Authentication/AuthCheck'
 import { getCompanies, getSubscribedCompanies, getCompaniesByName } from '@/services/company/companyService'
+import { MainLayoutWrapper } from '@/components/Layout/MainLayout'
 
 interface CompaniesPageProps {}
 
@@ -81,7 +80,7 @@ const CompaniesPage: React.FC<CompaniesPageProps> = () => {
   }
 
   return (
-    <MainLayout>
+    <main className="m-4 flex h-[68em] flex-row items-start justify-start space-x-4" role="main">
       <div className="m-3 flex min-h-[calc(100vh-90px)] flex-col items-start rounded-lg border-0 bg-white p-3 shadow-md">
         <div className="mb-3 flex w-full items-center justify-between space-x-4">
           <h1 className="py-2 pl-2 text-2xl font-bold">Subscribed companies</h1>
@@ -159,8 +158,8 @@ const CompaniesPage: React.FC<CompaniesPageProps> = () => {
           )}
         </div>
       </div>
-    </MainLayout>
+    </main>
   )
 }
 
-export default AuthCheck(CompaniesPage)
+export default MainLayoutWrapper(CompaniesPage)

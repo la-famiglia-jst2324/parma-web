@@ -29,6 +29,6 @@
       "@tests/*": ["./tests/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/types/types.d.ts", "src/database/schema.prisma"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/types/types.d.ts", "src/database/schema.prisma", "src/app/not-found.tsx"],
   "exclude": ["node_modules", "src/api/db/populate.ts", "src/api/db/prisma/prismaClient.ts"]
 }

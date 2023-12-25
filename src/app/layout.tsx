@@ -2,7 +2,7 @@ import './globals.css'
 import { Inter } from 'next/font/google'
 import type { Metadata } from 'next'
 import Head from 'next/head'
-import { UserCheckComponent } from '@/components/Authentication/UserCheck'
+import { AuthProvider } from '@/context/auth'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -18,7 +18,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <body className={inter.className}>
-        <UserCheckComponent children={children} />
+        <AuthProvider>{children}</AuthProvider>
       </body>
     </html>
   )

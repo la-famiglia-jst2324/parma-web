@@ -4,7 +4,7 @@ import Link from 'next/link'
 
 const LandingPage: React.FC = () => {
   return (
-    <>
+    <main role="main">
       <div className="fixed z-10 flex h-14 w-full items-center justify-between bg-gray-900 p-6">
         <div className="flex items-center">
           <Image src="/logo_version_2.png" width={60} height={60} alt="" className="rounded-full" />
@@ -47,7 +47,7 @@ const LandingPage: React.FC = () => {
           </button>
         </div>
       </div>
-    </>
+    </main>
   )
 }
 export default LandingPage

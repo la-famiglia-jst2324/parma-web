@@ -4,8 +4,7 @@ import React, { useState, useEffect } from 'react'
 import type { Company } from '@/types/companies'
 import CompanyCard from '@/components/Companies/CompanyCard'
 import GoBackButton from '@/components/Companies/GoBackButton'
-import { MainLayout } from '@/components/MainLayout'
-import AuthCheck from '@/components/Authentication/AuthCheck'
+import { MainLayoutWrapper } from '@/components/Layout/MainLayout'
 import { getSubscribedCompanies } from '@/services/company/companyService'
 
 interface SubscribedCompaniesPageProps {}
@@ -26,7 +25,7 @@ const SubscribedCompaniesPage: React.FC<SubscribedCompaniesPageProps> = () => {
   }, [])
 
   return (
-    <MainLayout>
+    <main className="m-4 flex h-[68em] flex-row items-start justify-start space-x-4" role="main">
       <div className="m-3 flex min-h-[calc(100vh-90px)] flex-col items-start rounded-lg border-0 bg-white p-3 shadow-md">
         <div className="mb-3 flex items-center justify-start space-x-4">
           <div className="pl-2">
@@ -42,8 +41,8 @@ const SubscribedCompaniesPage: React.FC<SubscribedCompaniesPageProps> = () => {
           ))}
         </div>
       </div>
-    </MainLayout>
+    </main>
   )
 }
 
-export default AuthCheck(SubscribedCompaniesPage)
+export default MainLayoutWrapper(SubscribedCompaniesPage)

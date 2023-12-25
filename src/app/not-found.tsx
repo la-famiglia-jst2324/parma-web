@@ -1,11 +1,9 @@
 import Link from 'next/link'
 import React from 'react'
-import { MainLayout } from '@/components/MainLayout'
-import AuthCheck from '@/components/Authentication/AuthCheck'
 
-const Custom404: React.FC = () => {
+const Custom404 = () => {
   return (
-    <MainLayout>
+    <>
       <div className="flex h-screen flex-col items-center justify-center text-center">
         <h1 className="text-6xl font-bold">404 - Page Not Found</h1>
         <p className="mt-3 text-xl">
@@ -18,8 +16,8 @@ const Custom404: React.FC = () => {
           Go back home
         </Link>
       </div>
-    </MainLayout>
+    </>
   )
 }
 
-export default AuthCheck(Custom404)
+export default Custom404

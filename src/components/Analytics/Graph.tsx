@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react'
 import { AreaChart, DateRangePicker } from '@tremor/react'
-import { AuthContext } from '@/lib/firebase/auth'
+import { AuthContext, getAuthToken } from '@/lib/firebase/auth'
 import extractCategories from '@/utils/extractCategories'
 
 async function getAnalyticsData(measurementId: string, companiesArray: string[], idToken: string) {
@@ -28,36 +28,17 @@ interface GraphChartProps {
 
 const GraphChart: React.FC<GraphChartProps> = ({ measurementId, measurementName, companiesArray }) => {
   const [analyticsData, setAnalyticsData] = useState([])
-  const [idToken, setIdToken] = useState<string | null>(null)
   const user = useContext(AuthContext)
 
   useEffect(() => {
-    const setToken = async () => {
-      if (user) {
-        try {
-          const token = await user.getIdToken()
-          setIdToken(token)
-        } catch (error) {
-          console.error('Error fetching token:', error)
-        }
-      }
-    }
-    setToken()
-  }, [user])
-
-  useEffect(() => {
     const fetchAnalyticsData = async () => {
-      try {
-        if (idToken) {
-          const data = await getAnalyticsData(measurementId, companiesArray, idToken)
-          setAnalyticsData(data)
-        }
-      } catch (error) {
-        console.error('Error fetching token:', error)
-      }
+      const token = await getAuthToken(user)
+      if (!token) return
+      const data = await getAnalyticsData(measurementId, companiesArray, token)
+      setAnalyticsData(data)
     }
     fetchAnalyticsData()
-  }, [idToken, measurementId, companiesArray])
+  }, [user, measurementId, companiesArray])
 
   console.log('Analytics data:', analyticsData)
   const categories = extractCategories(analyticsData)

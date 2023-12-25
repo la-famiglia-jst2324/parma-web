@@ -5,8 +5,7 @@ import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import profilePic from '@/../../public/Default_pfp.jpg'
 import { FormContent } from '@/components/FormContent'
-import AuthCheck from '@/components/Authentication/AuthCheck'
-import { MainLayout } from '@/components/MainLayout'
+import { MainLayoutWrapper } from '@/components/Layout/MainLayout'
 import { AuthContext } from '@/lib/firebase/auth'
 import ProfileImageModal from '@/components/Profile/ProfileImageModal'
 
@@ -24,9 +23,6 @@ const ProfilePage: React.FC = () => {
       email
     }
 
-    // Validate the form data here (if necessary)
-
-    // Call the REST API endpoint
     try {
       const response = await fetch('/api/profile', {
         method: 'PUT',
@@ -38,13 +34,10 @@ const ProfilePage: React.FC = () => {
         throw new Error('Network response was not ok')
       }
 
-      // Handle the response here
       const data = await response.json()
       console.log('Profile updated successfully:', data)
-      // Additional actions based on the response (e.g., redirect, show a message)
     } catch (error) {
       console.error('Error updating profile:', error)
-      // Handle errors here (e.g., show error message to the user)
     }
   }
   const uploadFile = async (file: File) => {
@@ -58,17 +51,11 @@ const ProfilePage: React.FC = () => {
       console.error('Error uploading file:', error)
     }
   }
-  // Rest api still needs to be implemented
+
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files.length > 0) {
-      // Get the first file if multiple files are selected (assuming single file upload)
       const file = event.target.files[0]
-      // setSelectedFile(file); // Save the file to the component's state
 
-      // Here you might want to update the UI to show the file name or preview the image
-      // ...
-
-      // If you want to automatically upload after file selection:
       uploadFile(file)
     }
   }
@@ -77,11 +64,10 @@ const ProfilePage: React.FC = () => {
     router.push('/forgot-password')
   }
   const user = useContext(AuthContext)
-  console.log('user auth token: ', user?.getIdToken())
 
-  const userMail = user?.email
-  const userFullName = user?.displayName
-  const userPhotoURL = user?.photoURL
+  const userMail = user === 'loading' ? null : user?.email
+  const userFullName = user === 'loading' ? null : user?.displayName
+  const userPhotoURL = user === 'loading' ? null : user?.photoURL
 
   const [isModalOpen, setIsModalOpen] = useState(false)
 
@@ -93,7 +79,7 @@ const ProfilePage: React.FC = () => {
     setIsModalOpen(false)
   }
   return (
-    <MainLayout>
+    <main className="m-4 flex h-[68em] flex-row items-start justify-start space-x-4" role="main">
       <div className=" m-6 flex min-h-[calc(100vh-90px)] flex-col items-start overflow-auto rounded-lg border-0 bg-white p-3 shadow-md">
         <div className=" items-center justify-start ">
           <div className="mb-3 items-center justify-start space-x-7">
@@ -179,12 +165,8 @@ const ProfilePage: React.FC = () => {
           </div>
         </div>
       </div>
-    </MainLayout>
+    </main>
   )
 }
 
-export default AuthCheck(ProfilePage)
-
-// function setSelectedFile(file: File) {
-//   throw new Error('Function not implemented.')
-// }
+export default MainLayoutWrapper(ProfilePage)

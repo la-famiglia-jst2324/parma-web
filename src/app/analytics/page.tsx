@@ -1,12 +1,11 @@
 'use client'
 import React, { useState } from 'react'
 import { MultiSelect, MultiSelectItem, Button, SearchSelectItem, SearchSelect } from '@tremor/react'
-import { MainLayout } from '@/components/MainLayout'
 import UserCustomizationComponent from '@/components/Analytics/UserCustomization'
 import GraphChart from '@/components/Analytics/Graph'
-import AuthCheck from '@/components/Authentication/AuthCheck'
 import useCompanies from '@/components/hooks/useCompanies'
 import { useMeasurementsCompanies } from '@/components/hooks/useMetrics'
+import { MainLayoutWrapper } from '@/components/Layout/MainLayout'
 
 const AnalyticsPage: React.FC = () => {
   const companies = useCompanies()
@@ -29,7 +28,7 @@ const AnalyticsPage: React.FC = () => {
   const metricName = metrics.find((metric) => metric.id.toString() === selectedMetric)?.measurementName
 
   return (
-    <MainLayout>
+    <main className="m-4 flex h-[68em] flex-row items-start justify-start space-x-4" role="main">
       <div
         className="m-6 flex flex-col items-start rounded-lg border-0 bg-white p-4 shadow-md"
         style={{ minHeight: 'calc(100vh - 2rem)' }}
@@ -99,8 +98,8 @@ const AnalyticsPage: React.FC = () => {
           <p className="ml-4">Please select companies and a metric to compare.</p>
         )}
       </div>
-    </MainLayout>
+    </main>
   )
 }
 
-export default AuthCheck(AnalyticsPage)
+export default MainLayoutWrapper(AnalyticsPage)

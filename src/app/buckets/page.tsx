@@ -23,14 +23,20 @@ const Buckets = () => {
   const myBuckets: Bucket[] = Object.assign([], dummyBuckets)
   // TODO call API
 
-  // Here we will manage the buckets that comes from backend
-  const [allBuckets, setAllBuckets] = useState<BucketsPaginated>()
+  const [allBuckets, setAllBuckets] = useState<BucketsPaginated>({
+    buckets: [],
+    pagination: {
+      currentPage: 1,
+      pageSize: 0,
+      totalPages: 0,
+      totalCount: 0
+    }
+  })
   const [clearSearchDisable, setClearSearchDisable] = useState(true)
   const [searchTerm, setSearchTerm] = useState('')
   const [page, setPage] = useState(1)
 
   useEffect(() => {
-    // This will change when the backend changes (after midterm review)
     BucketFunctions.getAllBuckets(page)
       .then((res: BucketsPaginated) => {
         if (allBuckets) {
@@ -46,7 +52,7 @@ const Buckets = () => {
       .catch((e) => {
         console.log(e)
       })
-  }, [allBuckets, page])
+  }, [page])
 
   useEffect(() => {
     if (searchTerm === '') {

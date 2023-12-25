@@ -1,12 +1,17 @@
+import type { ChannelPurpose } from '@prisma/client'
 import { prisma } from '../prisma/prismaClient'
 
-const createNotificationSubscription = async (data: { userId: number; companyId: number; channelId: number }) => {
+const createNotificationSubscription = async (data: {
+  userId: number
+  channelId: number
+  channelPurpose: ChannelPurpose
+}) => {
   try {
     return await prisma.notificationSubscription.create({
       data: {
         userId: data.userId,
-        companyId: data.companyId,
-        channelId: data.channelId
+        channelId: data.channelId,
+        channelPurpose: data.channelPurpose
       }
     })
   } catch (error) {
@@ -15,13 +20,12 @@ const createNotificationSubscription = async (data: { userId: number; companyId:
   }
 }
 
-const getNotificationSubscription = async (userId: number, companyId: number, channelId: number) => {
+const getNotificationSubscription = async (userId: number, channelId: number) => {
   try {
     const subscription = await prisma.notificationSubscription.findUnique({
       where: {
-        userId_companyId_channelId: {
+        userId_channelId: {
           userId,
-          companyId,
           channelId
         }
       }
@@ -36,13 +40,12 @@ const getNotificationSubscription = async (userId: number, companyId: number, ch
   }
 }
 
-const deleteNotificationSubscription = async (userId: number, companyId: number, channelId: number) => {
+const deleteNotificationSubscription = async (userId: number, channelId: number) => {
   try {
     return await prisma.notificationSubscription.delete({
       where: {
-        userId_companyId_channelId: {
+        userId_channelId: {
           userId,
-          companyId,
           channelId
         }
       }

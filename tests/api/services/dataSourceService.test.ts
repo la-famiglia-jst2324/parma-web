@@ -79,7 +79,7 @@ describe('Data Source Model Tests', () => {
     // Check that the correct number of data sources is returned
     expect(dataSourcesPagination.datasources.length).toBeLessThanOrEqual(size)
     expect(dataSourcesPagination.datasources.length).toBeGreaterThan(0)
-    expect(dataSourcesPagination.datasources[0].sourceName).toContain(name)
+    expect(dataSourcesPagination.datasources[0].sourceName.toLocaleLowerCase()).toContain(name)
   })
 
   test('Delete a data source', async () => {

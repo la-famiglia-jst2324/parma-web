@@ -72,10 +72,12 @@ The following steps will get you started with the project.
    make install
    ```
 
-4. **Setup Firebase Admin SDK**:
+4. **Setup Firebase Admin SDK & GCP Credentials**:
 
    The Firebase Admin SDK is used to verify user tokens in the backend (Next API routes).
    Please download [this secrets json file](https://www.notion.so/firebase-admin-sdk-certificate-4279aa3b4e904e1b927619ed69537045) from Notion and place it in `/src/api/.secrets/la-famiglia-parma-ai-firebase-adminsdk.json`.
+
+   Also make sure to have `/src/api/.secrets/la-famiglia-parma-ai-secret-manager.json` file with [this certificate](https://www.notion.so/GCP-Service-Account-Certificate-Secret-Manager-4252786a29e64cdcb2d8d359164a1731) to be able to access the secret manager.
 
 5. **Start the development server**
 

@@ -5,7 +5,7 @@ export const PROJECT_ID = '447443547509'
 const certFilePath = '../../../src/api/.secrets/la-famiglia-parma-ai-secret-manager.json'
 
 export const getGcpCertificate = () => {
-  let certString = null
+  let certString: string | undefined | null = null
   if (existsSync(certFilePath)) {
     certString = readFileSync(certFilePath, 'utf8')
   } else {
@@ -14,5 +14,5 @@ export const getGcpCertificate = () => {
   if (!certString) {
     throw new Error('GCP_SECRET_MANAGER_CERTIFICATE not found')
   }
-  return certString
+  return JSON.parse(certString)
 }

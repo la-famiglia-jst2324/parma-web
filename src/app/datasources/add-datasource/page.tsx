@@ -1,11 +1,11 @@
 'use client'
+
 import type { FormEvent } from 'react'
 import React, { useState } from 'react'
 import { Select, SelectItem, Callout } from '@tremor/react'
 import { Frequency } from '@prisma/client'
 import { CheckCircleIcon, ExclamationCircleIcon } from '@heroicons/react/20/solid'
-import { MainLayout } from '@/components/MainLayout'
-import AuthCheck from '@/components/Authentication/AuthCheck'
+import { MainLayoutWrapper } from '@/components/Layout/MainLayout'
 import { FormContent } from '@/components/FormContent'
 import CustomButton from '@/components/BlueButton'
 import GoBackButton from '@/components/Datasources/GoBackButton'
@@ -78,73 +78,71 @@ function CreateDatasourcePage() {
   }
 
   return (
-    <>
-      <MainLayout>
-        <div className="mx-6 h-screen pt-12">
-          <div className="mx-auto max-w-screen-xl rounded-lg border-0 bg-white p-6 shadow-md">
-            <div className="mb-3 flex items-center justify-start space-x-4">
-              <GoBackButton />
-              <h1 className="mb-2 text-2xl font-bold">Create Datasource</h1>
+    <main className="m-4 flex h-[68em] flex-row items-start justify-start space-x-4" role="main">
+      <div className="mx-6 h-screen pt-12">
+        <div className="mx-auto max-w-screen-xl rounded-lg border-0 bg-white p-6 shadow-md">
+          <div className="mb-3 flex items-center justify-start space-x-4">
+            <GoBackButton />
+            <h1 className="mb-2 text-2xl font-bold">Create Datasource</h1>
+          </div>
+          <p className="mb-4">Create a datasource by providing the name, URL and description.</p>
+          <form role="form" data-testid="create-datasource-form" onSubmit={createDatasource}>
+            <FormContent
+              id="name"
+              name="name"
+              label="Datasource Name"
+              placeholder="Please enter datasource name"
+              value={name}
+              type="input"
+              onChange={(e) => setName(e.target.value)}
+            />
+            <FormContent
+              id="description"
+              name="description"
+              label="Datasource Description"
+              placeholder="Please enter datasource description"
+              value={description}
+              type="textarea"
+              onChange={(e) => setDescription(e.target.value)}
+            />
+            <div className="mb-4 flex flex-col">
+              <label className="mb-2 block text-sm font-bold text-gray-700">Frequency</label>
+              <Select value={frequency} onValueChange={setFrequency}>
+                <SelectItem value="HOURLY">Hourly</SelectItem>
+                <SelectItem value="DAILY">Daily</SelectItem>
+                <SelectItem value="WEEKLY">Weekly</SelectItem>
+                <SelectItem value="MONTHLY">Monthly</SelectItem>
+              </Select>
             </div>
-            <p className="mb-4">Create a datasource by providing the name, URL and description.</p>
-            <form role="form" data-testid="create-datasource-form" onSubmit={createDatasource}>
-              <FormContent
-                id="name"
-                name="name"
-                label="Datasource Name"
-                placeholder="Please enter datasource name"
-                value={name}
-                type="input"
-                onChange={(e) => setName(e.target.value)}
-              />
-              <FormContent
-                id="description"
-                name="description"
-                label="Datasource Description"
-                placeholder="Please enter datasource description"
-                value={description}
-                type="textarea"
-                onChange={(e) => setDescription(e.target.value)}
-              />
-              <div className="mb-4 flex flex-col">
-                <label className="mb-2 block text-sm font-bold text-gray-700">Frequency</label>
-                <Select value={frequency} onValueChange={setFrequency}>
-                  <SelectItem value="HOURLY">Hourly</SelectItem>
-                  <SelectItem value="DAILY">Daily</SelectItem>
-                  <SelectItem value="WEEKLY">Weekly</SelectItem>
-                  <SelectItem value="MONTHLY">Monthly</SelectItem>
-                </Select>
-              </div>
-              <FormContent
-                id="url"
-                name="url"
-                label="Datasource URL"
-                placeholder="Please enter datasource URL"
-                value={url}
-                type="input"
-                onChange={(e) => setUrl(e.target.value)}
-              />
-              <div>
-                <CustomButton text="Create Datasource" type="submit" />
-              </div>
-            </form>
-          </div>
-          <div className="fixed bottom-0 right-0 m-6 w-96">
-            {showSuccess && (
-              <Callout title="Datasource created successfully" icon={CheckCircleIcon} color="teal">
-                You have successfully created a datasource. This datasource will be added to the list of datasources.
-              </Callout>
-            )}
-            {showError && (
-              <Callout title="Error while creating Datasource" icon={ExclamationCircleIcon} color="red">
-                {errorMessage}
-              </Callout>
-            )}
-          </div>
+            <FormContent
+              id="url"
+              name="url"
+              label="Datasource URL"
+              placeholder="Please enter datasource URL"
+              value={url}
+              type="input"
+              onChange={(e) => setUrl(e.target.value)}
+            />
+            <div>
+              <CustomButton text="Create Datasource" type="submit" />
+            </div>
+          </form>
         </div>
-      </MainLayout>
-    </>
+        <div className="fixed bottom-0 right-0 m-6 w-96">
+          {showSuccess && (
+            <Callout title="Datasource created successfully" icon={CheckCircleIcon} color="teal">
+              You have successfully created a datasource. This datasource will be added to the list of datasources.
+            </Callout>
+          )}
+          {showError && (
+            <Callout title="Error while creating Datasource" icon={ExclamationCircleIcon} color="red">
+              {errorMessage}
+            </Callout>
+          )}
+        </div>
+      </div>
+    </main>
   )
 }
 
-export default AuthCheck(CreateDatasourcePage)
+export default MainLayoutWrapper(CreateDatasourcePage)

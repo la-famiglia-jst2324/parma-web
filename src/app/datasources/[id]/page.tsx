@@ -3,8 +3,7 @@ import React, { useEffect, useState } from 'react'
 import type { DataSource } from '@prisma/client'
 import Link from 'next/link'
 import { editDatasource, getDatasourceById } from '@/services/datasource/datasourceService'
-import { MainLayout } from '@/components/MainLayout'
-import AuthCheck from '@/components/Authentication/AuthCheck'
+import { MainLayoutWrapper } from '@/components/Layout/MainLayout'
 import { HeaderComponent } from '@/components/Datasources/DatasourcePageHeader'
 import { ButtonGroup } from '@/components/Datasources/ButtonGroup'
 import { TabComponent } from '@/components/Datasources/DatasourceTabComponent'
@@ -99,41 +98,39 @@ function DatasourcePage({ params: { id } }: { params: { id: string } }) {
   }
 
   return (
-    <MainLayout>
-      <div className="m-6 flex flex-col items-start rounded-lg border-0 bg-white p-5 shadow-md">
-        <div className="mb-3 flex w-full items-center justify-between space-x-4">
-          {/* Name, description and status */}
-          <HeaderComponent data={data} />
-          {/* Buttons */}
-          <ButtonGroup
-            handleSave={(updates) =>
-              handleSave(updates.newName, updates.newDescription, updates.newUrl, updates.newStatus)
-            }
-            data={data}
-            handleDisableButtonClick={handleDisableButtonClick}
-            handleDeleteButtonClick={handleDeleteButtonClick}
-            handleEnableButtonClick={handleEnableButtonClick}
-            handleEditButtonClick={handleEditButtonClick}
-            disableModal={disableModal}
-            deleteModal={deleteModal}
-            editModal={editModal}
-          />
-        </div>
-        {/* Datasource Information */}
-        <p className="mb-1 ml-9 mr-10 text-base text-gray-700">{data.description}</p>
-        <Link
-          href={data.invocationEndpoint}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="mb-1 ml-9 text-base text-gray-900 hover:text-blue-600"
-        >
-          Source: {data.invocationEndpoint}
-        </Link>
-        {/* Tabs */}
-        <TabComponent sourceId={data.id.toString()} />
+    <main className="m-4 flex h-[68em] flex-row items-start justify-start space-x-4" role="main">
+      <div className="mb-3 flex w-full items-center justify-between space-x-4">
+        {/* Name, description and status */}
+        <HeaderComponent data={data} />
+        {/* Buttons */}
+        <ButtonGroup
+          handleSave={(updates) =>
+            handleSave(updates.newName, updates.newDescription, updates.newUrl, updates.newStatus)
+          }
+          data={data}
+          handleDisableButtonClick={handleDisableButtonClick}
+          handleDeleteButtonClick={handleDeleteButtonClick}
+          handleEnableButtonClick={handleEnableButtonClick}
+          handleEditButtonClick={handleEditButtonClick}
+          disableModal={disableModal}
+          deleteModal={deleteModal}
+          editModal={editModal}
+        />
       </div>
-    </MainLayout>
+      {/* Datasource Information */}
+      <p className="mb-1 ml-9 mr-10 text-base text-gray-700">{data.description}</p>
+      <Link
+        href={data.invocationEndpoint}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="mb-1 ml-9 text-base text-gray-900 hover:text-blue-600"
+      >
+        Source: {data.invocationEndpoint}
+      </Link>
+      {/* Tabs */}
+      <TabComponent sourceId={data.id.toString()} />
+    </main>
   )
 }
 
-export default AuthCheck(DatasourcePage)
+export default MainLayoutWrapper(DatasourcePage)

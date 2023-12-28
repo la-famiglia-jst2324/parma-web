@@ -20,7 +20,6 @@ erDiagram
     report_subscription ||--o{ notification_channel : ""
     user ||--o{ user_important_measurement_preference : "chooses"
     user ||--o{ notification_subscription : ""
-    user ||--|| report_subscription : ""
     user ||--o{ company : "subscribes"
     user ||--o{ bucket_access : "has"
     user ||--|| news_subscription :""
@@ -121,8 +120,6 @@ erDiagram
     }
     notification_channel {
         int id PK
-        int entity_id FK
-        string entity_type
         string channel_type
         string destination
         string encryptedApiKey
@@ -131,8 +128,8 @@ erDiagram
     }
     notification_subscription {
         int user_id FK, PK
-        int company_id FK, PK
         int channel_id FK, PK
+        ChannelPurpose channel_purpose
         datetime created_at
         datetime modified_at
     }
@@ -141,13 +138,6 @@ erDiagram
         int company_id FK
         string name
         string report_file_url
-        datetime created_at
-        datetime modified_at
-    }
-    report_subscription {
-        int user_id FK,PK
-        int company_id FK,PK
-        int channel_id FK,PK
         datetime created_at
         datetime modified_at
     }

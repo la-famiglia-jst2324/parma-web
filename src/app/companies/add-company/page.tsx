@@ -7,8 +7,7 @@ import { CheckCircleIcon } from '@heroicons/react/20/solid'
 import { useRouter } from 'next/navigation'
 import { FormContent } from '@/components/FormContent'
 import GoBackButton from '@/components/Companies/GoBackButton'
-import { MainLayout } from '@/components/MainLayout'
-import AuthCheck from '@/components/Authentication/AuthCheck'
+import { MainLayoutWrapper } from '@/components/Layout/MainLayout'
 import CustomButton from '@/components/BlueButton'
 import CompanyPopup from '@/components/Companies/CompanyPopup'
 import { postCompany } from '@/services/company/companyService'
@@ -62,8 +61,8 @@ const AddCompanyPage: React.FC<AddCompanyPageProps> = () => {
   }
 
   return (
-    <MainLayout>
-      <div className="m-3 flex min-h-[calc(100vh-90px)] flex-col items-start rounded-lg border-0 bg-white p-3 shadow-md">
+    <main className="m-4 flex h-[68em] flex-row items-start justify-start space-x-4" role="main">
+      <div className="min-h-[calc(100vh-90px)] flex-col items-start rounded-lg border-0 bg-white p-3 shadow-md">
         <div className="mb-3 flex items-center justify-start space-x-4">
           <div className="pl-2">
             <GoBackButton />
@@ -95,8 +94,8 @@ const AddCompanyPage: React.FC<AddCompanyPageProps> = () => {
           showPopup={showPopup}
         />
       </div>
-    </MainLayout>
+    </main>
   )
 }
 
-export default AuthCheck(AddCompanyPage)
+export default MainLayoutWrapper(AddCompanyPage)

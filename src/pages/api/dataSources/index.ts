@@ -1,12 +1,14 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 
-import type { Frequency } from '@prisma/client'
+import { Frequency } from '@prisma/client'
 import { getAllDataSources, createDataSource, updateDataSource } from '@/api/db/services/dataSourceService'
 import { addCompanyDataSourceRelationshipForDatasource } from '@/api/db/services/companyDataSourceService'
 
 const frequencyMapping: { [key: string]: Frequency | undefined } = {
-  weekly: 'WEEKLY',
-  daily: 'DAILY'
+  weekly: Frequency.WEEKLY,
+  daily: Frequency.DAILY,
+  hourly: Frequency.HOURLY,
+  monthly: Frequency.MONTHLY
 }
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
@@ -54,7 +56,8 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         const handshakeData = await handshakeResponse.json()
         const frequency = handshakeData.frequency
         // convert frequency to the format used in the database
-        const frequencyInDB: Frequency | undefined = frequencyMapping[frequency]
+
+        const frequencyInDB: Frequency | undefined = frequencyMapping[frequency.toLowerCase()]
 
         if (!frequencyInDB) {
           await updateDataSource(id, { isActive: false, healthStatus: 'DOWN' })
@@ -62,11 +65,10 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         }
 
         const updatedDataSource = await updateDataSource(id, {
-          frequency,
+          frequency: frequencyInDB,
           isActive: true,
           healthStatus: 'UP'
         })
-
         if (updatedDataSource) {
           res.status(201).json(updatedDataSource)
         } else res.status(400).json({ error: 'Invalid request parameters' })

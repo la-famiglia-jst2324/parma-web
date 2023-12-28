@@ -4,10 +4,9 @@ import React, { useEffect, useState } from 'react'
 import { Button } from '@tremor/react'
 import SelectSection from '@/components/Settings/SelectSection'
 import ApiKeyConfiguration from '@/components/Settings/ApiKeyConfiguration'
-import { MainLayout } from '@/components/MainLayout'
-import AuthCheck from '@/components/Authentication/AuthCheck'
 import BucketFunctions from '@/app/services/bucket.service'
 import useSubscribedCompanies from '@/components/hooks/useSubscribedCompanies'
+import { MainLayoutWrapper } from '@/components/Layout/MainLayout'
 
 function SettingsPage() {
   const [selectedCompanies, setSelectedCompanies] = useState<string[]>([])
@@ -46,10 +45,10 @@ function SettingsPage() {
   }
 
   return (
-    <MainLayout>
+    <main className="m-4 flex h-[68em] flex-row items-start justify-start space-x-4" role="main">
       <div className="m-6 flex flex-col items-start rounded-xl border-0 bg-white p-3 shadow-md">
         <div className="mb-3 items-center justify-start space-x-6">
-          <div className="mb-3  items-center justify-start space-x-3 ">
+          <div className="mb-3 items-center justify-start space-x-3 ">
             <h1 className="py-2 pl-2 text-3xl font-bold text-slate-700">Preferences</h1>
 
             <div className="p-8">
@@ -94,8 +93,8 @@ function SettingsPage() {
           </div>
         </div>
       </div>
-    </MainLayout>
+    </main>
   )
 }
 
-export default AuthCheck(SettingsPage)
+export default MainLayoutWrapper(SettingsPage)

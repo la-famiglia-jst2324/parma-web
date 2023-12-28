@@ -13,7 +13,7 @@ import {
 import React from 'react'
 require('@/lib/firebase/main')
 
-export const AuthContext = React.createContext<User | null>(null)
+export const AuthContext = React.createContext<User | 'loading' | null>(null)
 
 const auth = getAuth()
 const googleAuthProvider = new GoogleAuthProvider()
@@ -41,4 +41,9 @@ export const authResetPassword = async (email: string) => {
 
 export const authLogout = async () => {
   await auth.signOut()
+}
+
+export const getAuthToken = async (user: User | 'loading' | null) => {
+  if (user === null || user === 'loading') return null
+  return await user.getIdToken()
 }

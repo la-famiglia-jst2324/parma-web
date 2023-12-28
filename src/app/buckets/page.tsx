@@ -6,7 +6,8 @@ import type { Bucket } from '@prisma/client'
 import { PlusCircleIcon } from '@heroicons/react/20/solid'
 import BucketCard from '@/components/buckets/bucketCard'
 import BucketFunctions from '@/app/services/bucket.service'
-import { MainLayout } from '@/components/MainLayout'
+import { dummyBuckets } from '@/utils/stub/dummy_data/buckets'
+import { MainLayoutWrapper } from '@/components/Layout/MainLayout'
 
 interface BucketsPaginated {
   buckets: Bucket[]
@@ -18,49 +19,24 @@ interface BucketsPaginated {
   }
 }
 
-export default function BucketsPage() {
-  // Need an api call to get myBuckets
-  const myBuckets: Bucket[] = [
-    {
-      id: 1,
-      title: 'Bucket 1',
-      description:
-        'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Iusto maiores ipsum eum quae ad architecto voluptatem illum name facere et!',
-      isPublic: true,
-      ownerId: 1,
-      createdAt: new Date(),
-      modifiedAt: new Date()
-    },
-    {
-      id: 2,
-      title: 'Bucket 2',
-      description:
-        'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Iusto maiores ipsum eum quae ad architecto voluptatem illum name facere et!',
-      isPublic: false,
-      ownerId: 2,
-      createdAt: new Date(),
-      modifiedAt: new Date()
-    },
-    {
-      id: 3,
-      title: 'Bucket 3',
-      description:
-        'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Iusto maiores ipsum eum quae ad architecto voluptatem illum name facere et!',
-      isPublic: true,
-      ownerId: 3,
-      createdAt: new Date(),
-      modifiedAt: new Date()
-    }
-  ]
+const Buckets = () => {
+  const myBuckets: Bucket[] = Object.assign([], dummyBuckets)
+  // TODO call API
 
-  // Here we will manage the buckets that comes from backend
-  const [allBuckets, setAllBuckets] = useState<BucketsPaginated>()
+  const [allBuckets, setAllBuckets] = useState<BucketsPaginated>({
+    buckets: [],
+    pagination: {
+      currentPage: 1,
+      pageSize: 0,
+      totalPages: 0,
+      totalCount: 0
+    }
+  })
   const [clearSearchDisable, setClearSearchDisable] = useState(true)
   const [searchTerm, setSearchTerm] = useState('')
   const [page, setPage] = useState(1)
 
   useEffect(() => {
-    // This will change when the backend changes (after midterm review)
     BucketFunctions.getAllBuckets(page)
       .then((res: BucketsPaginated) => {
         if (allBuckets) {
@@ -115,8 +91,8 @@ export default function BucketsPage() {
   }
 
   return (
-    <MainLayout>
-      <div className="m-8 rounded-md bg-white p-8">
+    <main className="m-4 flex h-[68em] flex-row items-start justify-start space-x-4" role="main">
+      <div className="m-4 rounded-md bg-white p-8">
         <div className="flex items-center justify-between pb-8">
           <h1 className="text-3xl font-semibold">My Buckets</h1>
           <Button>
@@ -160,6 +136,8 @@ export default function BucketsPage() {
           </div>
         </div>
       </div>
-    </MainLayout>
+    </main>
   )
 }
+
+export default MainLayoutWrapper(Buckets)

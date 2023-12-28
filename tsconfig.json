@@ -44,7 +44,7 @@
     ".next/types/**/*.ts",
     "src/types/types.d.ts",
     "src/database/schema.prisma"
-],
+, "src/app/not-found.tsx"],
   "exclude": [
     "node_modules"
   ]

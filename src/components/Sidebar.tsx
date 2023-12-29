@@ -20,7 +20,7 @@ const SidebarLink: React.FC<SidebarLinkProps> = ({
   text,
   hoverClass = 'hover:bg-gray-800 hover:text-gray-300'
 }) => (
-  <Link className={`flex cursor-pointer items-center rounded text-base ${hoverClass}`} href={href}>
+  <Link className={`ml-2 flex cursor-pointer items-center rounded text-base ${hoverClass}`} href={href}>
     {Icon && <Icon className={`mr-2 h-4 w-4 text-gray-500`} />}
     <p className="text-base font-medium text-gray-300">{text}</p>
   </Link>

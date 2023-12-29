@@ -1,4 +1,5 @@
 import { ChannelType, PrismaClient } from '@prisma/client'
+import { v4 as uuid } from 'uuid'
 import {
   createNotificationChannel,
   deleteNotificationChannel,
@@ -22,7 +23,7 @@ describe('Notification Channel Model Tests', () => {
     const channel = await createNotificationChannel({
       channelType: ChannelType.SLACK,
       destination: 'la-famiglia-data-analytics',
-      apiKey: 'my_api_key'
+      apiKey: `parma-analytics-ci-test-${uuid()}`
     })
     // sleep 1 second
     await new Promise((resolve) => setTimeout(resolve, 1000))

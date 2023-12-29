@@ -1,5 +1,5 @@
 import type { ChannelType } from '@prisma/client'
-import { v4 as uuidv4 } from 'uuid'
+import { v4 as uuid } from 'uuid'
 import { prisma } from '../prisma/prismaClient'
 import { getSecretManagerClient, storeSecret } from '@/api/gcp/secret_manager'
 
@@ -14,7 +14,7 @@ const createNotificationChannel = async (data: { channelType: ChannelType; desti
     let secretId = null
     // create a secret if the request contains a key.
     if (data.apiKey) {
-      secretId = uuidv4()
+      secretId = `parma-analytics-notification-channel-key-${uuid()}`
       const smClient = getSecretManagerClient()
       await storeSecret(smClient, secretId, data.apiKey)
     }
@@ -72,7 +72,7 @@ const updateNotificationChannel = async (
     if (data.apiKey) {
       const notificationChannel = await getNotificationChannelById(id)
       // check if a secretId already exists or not.
-      secretId = notificationChannel?.secretId || uuidv4()
+      secretId = notificationChannel?.secretId || `parma-analytics-notification-channel-key-${uuid()}`
       const smClient = getSecretManagerClient()
       await storeSecret(smClient, secretId, data.apiKey)
     }

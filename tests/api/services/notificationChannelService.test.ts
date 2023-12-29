@@ -22,13 +22,13 @@ describe('Notification Channel Model Tests', () => {
     const channel = await createNotificationChannel({
       channelType: ChannelType.SLACK,
       destination: 'la-famiglia-data-analytics',
-      secretName: 'my_key_name'
+      secretId: 'my_key_id'
     })
     channelId = channel.id
     expect(channel).toHaveProperty('id')
     expect(channel.channelType).toBe(ChannelType.SLACK)
     expect(channel.destination).toBe('la-famiglia-data-analytics')
-    expect(channel.secretName).toBe('my_key_name')
+    expect(channel.secretId).toBe('my_key_id')
   })
 
   test('Create a new channel without api key', async () => {

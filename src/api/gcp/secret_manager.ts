@@ -1,6 +1,9 @@
 import { SecretManagerServiceClient } from '@google-cloud/secret-manager'
 import { PROJECT_ID, getGcpCertificate } from './main'
 
+/**
+ * @returns A new Secret Manager client that can be used to retrieve or store secrets.
+ */
 export const getSecretManagerClient = () => {
   const client = new SecretManagerServiceClient({
     credentials: getGcpCertificate()
@@ -8,6 +11,14 @@ export const getSecretManagerClient = () => {
   return client
 }
 
+/**
+ * Retrieves a secret from the GCP Secret Manager service.
+ *
+ * @param client The Secret Manager client (see getSecretManagerClient)
+ * @param secretId The ID of the secret to retrieve
+ * @returns The secret value
+ * @throws Error if the secret does not exist
+ */
 export const retrieveSecret = async (client: SecretManagerServiceClient, secretId: string) => {
   const [version] = await client.accessSecretVersion({
     name: client.secretVersionPath(PROJECT_ID, secretId, 'latest')
@@ -16,6 +27,13 @@ export const retrieveSecret = async (client: SecretManagerServiceClient, secretI
   return payload
 }
 
+/**
+ * Creates a new or updates an existing secret in the GCP Secret Manager service.
+ *
+ * @param client The Secret Manager client (see getSecretManagerClient)
+ * @param secretId The ID of the secret to create or update
+ * @param secretValue The value of the secret
+ */
 export const storeSecret = async (client: SecretManagerServiceClient, secretId: string, secretValue: string) => {
   let needsCreation = false
   try {

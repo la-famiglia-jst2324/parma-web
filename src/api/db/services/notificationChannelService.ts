@@ -4,14 +4,14 @@ import { prisma } from '../prisma/prismaClient'
 const createNotificationChannel = async (data: {
   channelType: ChannelType
   destination: string
-  secretName?: string
+  secretId?: string
 }) => {
   try {
     return await prisma.notificationChannel.create({
       data: {
         channelType: data.channelType,
         destination: data.destination,
-        secretName: data.secretName
+        secretId: data.secretId
       }
     })
   } catch (error) {
@@ -44,7 +44,7 @@ const updateNotificationChannel = async (
     entityId?: string
     channelType?: ChannelType
     destination?: string
-    secretName?: string
+    secretId?: string
   }
 ) => {
   try {

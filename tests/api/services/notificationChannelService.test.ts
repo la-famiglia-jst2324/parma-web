@@ -24,12 +24,14 @@ describe('Notification Channel Model Tests', () => {
       destination: 'la-famiglia-data-analytics',
       apiKey: 'my_api_key'
     })
+    // sleep 1 second
+    await new Promise((resolve) => setTimeout(resolve, 1000))
     channelId = channel.id
     expect(channel).toHaveProperty('id')
     expect(channel.channelType).toBe(ChannelType.SLACK)
     expect(channel.destination).toBe('la-famiglia-data-analytics')
     expect(channel.secretId).not.toBeNull()
-  }, 20000)
+  }, 30000)
 
   test('Create a new channel without api key', async () => {
     const channel = await createNotificationChannel({

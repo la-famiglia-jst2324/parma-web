@@ -24,6 +24,8 @@ describe('Notification Channel Model Tests', () => {
       destination: 'la-famiglia-data-analytics',
       apiKey: 'my_plain_api_key'
     })
+    // sleep 10 seconds
+    await new Promise((resolve) => setTimeout(resolve, 10000))
     channelId = channel.id
     expect(channel).toHaveProperty('id')
     expect(channel.channelType).toBe(ChannelType.SLACK)

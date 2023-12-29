@@ -6,12 +6,12 @@ import type { CalloutProps } from '@tremor/react'
 import { Tab, TabGroup, TabList, TabPanel, TabPanels, Button } from '@tremor/react'
 import { UserGroupIcon, UserIcon, CheckCircleIcon, ArrowUpTrayIcon } from '@heroicons/react/20/solid'
 import type { CompanyData } from '@/types/companies'
-import GoBackButton from '@/components/Companies/GoBackButton'
-import CompanyPopup from '@/components/Companies/CompanyPopup'
-import CompanyAttachment from '@/components/Companies/CompanyAttachment'
-import DataSourcesPanel from '@/components/Companies/DataSourcesPanel'
-import PerformancePanel from '@/components/Companies/PerformancePanel'
-import { MainLayoutWrapper } from '@/components/Layout/MainLayout'
+import GoBackButton from '@/components/companies/GoBackButton'
+import CompanyPopup from '@/components/companies/CompanyPopup'
+import CompanyAttachment from '@/components/companies/CompanyAttachment'
+import DataSourcesPanel from '@/components/companies/DataSourcesPanel'
+import PerformancePanel from '@/components/companies/PerformancePanel'
+import { MainLayoutWrapper } from '@/components/layout/MainLayout'
 import {
   getSubscribedCompanies,
   postCompanySubscription,
@@ -23,7 +23,7 @@ import {
   getExportData,
   editCompany
 } from '@/services/company/companyService'
-import EditInformationModal from '@/components/Companies/EditCompanyModal'
+import EditInformationModal from '@/components/companies/EditCompanyModal'
 
 interface PopupContents {
   title: string

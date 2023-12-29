@@ -1,11 +1,11 @@
 'use client'
 import React, { useState } from 'react'
 import { MultiSelect, MultiSelectItem, Button, SearchSelectItem, SearchSelect } from '@tremor/react'
-import UserCustomizationComponent from '@/components/Analytics/UserCustomization'
-import GraphChart from '@/components/Analytics/Graph'
+import UserCustomizationComponent from '@/components/analytics/UserCustomization'
+import GraphChart from '@/components/analytics/Graph'
 import useCompanies from '@/components/hooks/useCompanies'
 import { useMeasurementsCompanies } from '@/components/hooks/useMetrics'
-import { MainLayoutWrapper } from '@/components/Layout/MainLayout'
+import { MainLayoutWrapper } from '@/components/layout/MainLayout'
 
 const AnalyticsPage: React.FC = () => {
   const companies = useCompanies()

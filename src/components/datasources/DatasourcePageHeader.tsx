@@ -1,5 +1,5 @@
 import { WifiIcon } from '@heroicons/react/20/solid'
-import GoBackButton from '@/components/Datasources/GoBackButton'
+import GoBackButton from '@/components/datasources/GoBackButton'
 
 interface HeaderProps {
   data: {

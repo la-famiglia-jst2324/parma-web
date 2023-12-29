@@ -7,7 +7,7 @@ import { PlusCircleIcon } from '@heroicons/react/20/solid'
 import BucketCard from '@/components/buckets/bucketCard'
 import BucketFunctions from '@/app/services/bucket.service'
 import { dummyBuckets } from '@/utils/stub/dummy_data/buckets'
-import { MainLayoutWrapper } from '@/components/Layout/MainLayout'
+import { MainLayoutWrapper } from '@/components/layout/MainLayout'
 
 interface BucketsPaginated {
   buckets: Bucket[]

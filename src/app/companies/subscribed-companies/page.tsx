@@ -2,9 +2,9 @@
 
 import React, { useState, useEffect } from 'react'
 import type { Company } from '@/types/companies'
-import CompanyCard from '@/components/Companies/CompanyCard'
-import GoBackButton from '@/components/Companies/GoBackButton'
-import { MainLayoutWrapper } from '@/components/Layout/MainLayout'
+import CompanyCard from '@/components/companies/CompanyCard'
+import GoBackButton from '@/components/companies/GoBackButton'
+import { MainLayoutWrapper } from '@/components/layout/MainLayout'
 import { getSubscribedCompanies } from '@/services/company/companyService'
 
 interface SubscribedCompaniesPageProps {}

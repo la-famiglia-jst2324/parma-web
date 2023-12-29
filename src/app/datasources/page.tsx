@@ -2,10 +2,10 @@
 import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import type { DataSource } from '@prisma/client'
-import Table from '../../components/Datasources/Table'
+import Table from '../../components/datasources/Table'
 import CustomButton from '@/components/BlueButton'
 import { getDataSourcesPagination as getDatasources } from '@/services/datasource/datasourceService'
-import { MainLayoutWrapper } from '@/components/Layout/MainLayout'
+import { MainLayoutWrapper } from '@/components/layout/MainLayout'
 
 function DatasourcesPage() {
   const [data, setData] = useState<DataSource[] | null>(null)

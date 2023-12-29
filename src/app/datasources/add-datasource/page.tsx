@@ -5,10 +5,10 @@ import React, { useState } from 'react'
 import { Select, SelectItem, Callout } from '@tremor/react'
 import { Frequency } from '@prisma/client'
 import { CheckCircleIcon, ExclamationCircleIcon } from '@heroicons/react/20/solid'
-import { MainLayoutWrapper } from '@/components/Layout/MainLayout'
+import { MainLayoutWrapper } from '@/components/layout/MainLayout'
 import { FormContent } from '@/components/FormContent'
 import CustomButton from '@/components/BlueButton'
-import GoBackButton from '@/components/Datasources/GoBackButton'
+import GoBackButton from '@/components/datasources/GoBackButton'
 
 function CreateDatasourcePage() {
   const [name, setName] = useState<string>('')

@@ -11,7 +11,7 @@ import { GoBackButton } from '@/components/GoBackButton'
 import { Popup } from '@/components/Popup'
 import { PopupType } from '@/types/popup'
 import BucketFunctions from '@/app/services/bucket.service'
-import { MainLayoutWrapper } from '@/components/Layout/MainLayout'
+import { MainLayoutWrapper } from '@/components/layout/MainLayout'
 
 const AddBucketPage = () => {
   const [allCompaniesPaginated, setCompaniesPaginated] = useState([])

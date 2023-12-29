@@ -3,11 +3,11 @@ import React, { useEffect, useState } from 'react'
 import type { DataSource } from '@prisma/client'
 import Link from 'next/link'
 import { editDatasource, getDatasourceById } from '@/services/datasource/datasourceService'
-import { MainLayoutWrapper } from '@/components/Layout/MainLayout'
-import { HeaderComponent } from '@/components/Datasources/DatasourcePageHeader'
-import { ButtonGroup } from '@/components/Datasources/ButtonGroup'
-import { TabComponent } from '@/components/Datasources/DatasourceTabComponent'
-import { useModal } from '@/components/Datasources/hooks/useModal'
+import { MainLayoutWrapper } from '@/components/layout/MainLayout'
+import { HeaderComponent } from '@/components/datasources/DatasourcePageHeader'
+import { ButtonGroup } from '@/components/datasources/ButtonGroup'
+import { TabComponent } from '@/components/datasources/DatasourceTabComponent'
+import { useModal } from '@/components/datasources/hooks/useModal'
 
 function DatasourcePage({ params: { id } }: { params: { id: string } }) {
   const [data, setData] = useState<DataSource>()

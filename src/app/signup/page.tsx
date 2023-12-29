@@ -6,8 +6,8 @@ import { TextInput, Button } from '@tremor/react'
 import type firebase from 'firebase/app'
 import GoogleAuthButton from '@/components/GoogleAuthButton'
 import { authSignup } from '@/lib/firebase/auth'
-import ErrorInfo from '@/components/Authentication/ErrorInfo'
-import SuccessInfo from '@/components/Authentication/SuccessInfo'
+import ErrorInfo from '@/components/authentication/ErrorInfo'
+import SuccessInfo from '@/components/authentication/SuccessInfo'
 
 export default function SignupPage() {
   const [loading, setLoading] = useState<boolean>(false)

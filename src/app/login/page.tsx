@@ -6,7 +6,7 @@ import { useState } from 'react'
 import type firebase from 'firebase/app'
 import GoogleAuthButton from '@/components/GoogleAuthButton'
 import { authLogin } from '@/lib/firebase/auth'
-import ErrorInfo from '@/components/Authentication/ErrorInfo'
+import ErrorInfo from '@/components/authentication/ErrorInfo'
 
 export default function LoginPage() {
   const [loading, setLoading] = useState<boolean>(false)

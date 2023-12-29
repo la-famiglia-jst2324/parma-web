@@ -1,78 +1,54 @@
 'use client'
 import Link from 'next/link'
-import { useContext } from 'react'
-import { useRouter } from 'next/navigation'
 import {
   BuildingLibraryIcon,
   CircleStackIcon,
   PresentationChartLineIcon,
   ServerIcon,
-  TruckIcon,
-  ArrowRightIcon
+  TruckIcon
 } from '@heroicons/react/20/solid'
-import { Button } from '@tremor/react'
-import { AuthContext, authLogout } from '@/lib/firebase/auth'
+import UserNav from './UserNav'
 
-const Sidebar = () => {
-  const user = useContext(AuthContext)
-  const router = useRouter()
+interface SidebarLinkProps {
+  href: string
+  icon?: React.ElementType
+  text: string
+  hoverClass?: string
+}
+
+const SidebarLink: React.FC<SidebarLinkProps> = ({ href, icon: Icon, text, hoverClass = 'hover:font-semibold' }) => (
+  <Link
+    href={href}
+    passHref
+    className={`mb-6 flex cursor-pointer flex-row gap-3 text-lg font-extralight ${hoverClass}`}
+  >
+    {Icon && <Icon className="h-6 w-6" />}
+    {text}
+  </Link>
+)
+
+const Sidebar: React.FC = () => {
   return (
-    <div className="fixed z-10 flex min-h-screen w-64 flex-col bg-primary">
+    <div className="w-72 flex-col border-r-2 border-gray-800">
       <div className="flex grow flex-col justify-between overflow-y-auto">
-        <div className="ml-4">
-          <div className="mb-14 mt-4">
-            <Link href="/" className="cursor-pointer pt-6 text-3xl font-extrabold text-white">
-              ParmaAI
+        <div className="mx-4">
+          <div className="my-4 flex items-center justify-between">
+            <Link href="/" passHref>
+              <p className="cursor-pointer text-xl font-bold text-white">ParmaAI</p>
             </Link>
+            <UserNav />
           </div>
           <div className="flex flex-col text-white">
-            <Link
-              href="/"
-              className="mb-6 flex cursor-pointer flex-row gap-3 text-lg font-extralight  hover:font-semibold"
-            >
-              <BuildingLibraryIcon className="h-6 w-6"></BuildingLibraryIcon>Dashboard
-            </Link>
-            <Link
-              href="/buckets"
-              className="mb-6 flex cursor-pointer flex-row gap-3 text-lg font-extralight hover:font-semibold"
-            >
-              <CircleStackIcon className="h-6 w-6"></CircleStackIcon> Buckets
-            </Link>
-            <Link
-              href="/companies"
-              className="mb-6 flex cursor-pointer flex-row gap-3 text-lg font-extralight hover:font-semibold"
-            >
-              <TruckIcon className="h-6 w-6"></TruckIcon>Companies
-            </Link>
-            <Link
-              href="/analytics"
-              className="mb-6 flex cursor-pointer flex-row gap-3 text-lg font-extralight hover:font-semibold"
-            >
-              <PresentationChartLineIcon className="h-6 w-6"></PresentationChartLineIcon>Analytics
-            </Link>
-            <Link
-              href="/datasources"
-              className="mb-6 flex cursor-pointer flex-row gap-3 text-lg font-extralight hover:font-semibold"
-            >
-              <ServerIcon className="h-6 w-6"></ServerIcon> Datasources
-            </Link>
+            <SidebarLink href="/" icon={BuildingLibraryIcon} text="Dashboard" />
+            <SidebarLink href="/buckets" icon={CircleStackIcon} text="Buckets" />
+            <SidebarLink href="/companies" icon={TruckIcon} text="Companies" />
+            <SidebarLink href="/analytics" icon={PresentationChartLineIcon} text="Analytics" />
+            <SidebarLink href="/datasources" icon={ServerIcon} text="Datasources" />
           </div>
         </div>
-        <Button
-          className={'m-4'}
-          color="indigo"
-          icon={ArrowRightIcon}
-          onClick={async () => {
-            if (user) {
-              await authLogout()
-              router.push('/')
-            }
-          }}
-        >
-          Logout
-        </Button>
       </div>
     </div>
   )
 }
+
 export default Sidebar

@@ -5,9 +5,9 @@ import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import profilePic from '@/../../public/Default_pfp.jpg'
 import { FormContent } from '@/components/FormContent'
-import { MainLayoutWrapper } from '@/components/Layout/MainLayout'
+import { MainLayoutWrapper } from '@/components/layout/MainLayout'
 import { AuthContext } from '@/lib/firebase/auth'
-import ProfileImageModal from '@/components/Profile/ProfileImageModal'
+import ProfileImageModal from '@/components/profile/ProfileImageModal'
 
 // TODO: @Analytics team need to implement the api end points for attaching profile picture to firebase similar to the one for company attachment
 

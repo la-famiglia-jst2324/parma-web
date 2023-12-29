@@ -2,11 +2,11 @@
 
 import React, { useEffect, useState } from 'react'
 import { Button } from '@tremor/react'
-import SelectSection from '@/components/Settings/SelectSection'
-import ApiKeyConfiguration from '@/components/Settings/ApiKeyConfiguration'
+import SelectSection from '@/components/settings/SelectSection'
+import ApiKeyConfiguration from '@/components/settings/ApiKeyConfiguration'
 import BucketFunctions from '@/app/services/bucket.service'
 import useSubscribedCompanies from '@/components/hooks/useSubscribedCompanies'
-import { MainLayoutWrapper } from '@/components/Layout/MainLayout'
+import { MainLayoutWrapper } from '@/components/layout/MainLayout'
 
 function SettingsPage() {
   const [selectedCompanies, setSelectedCompanies] = useState<string[]>([])
@@ -45,52 +45,48 @@ function SettingsPage() {
   }
 
   return (
-    <main className="m-4 flex h-[68em] flex-row items-start justify-start space-x-4" role="main">
-      <div className="m-6 flex flex-col items-start rounded-xl border-0 bg-white p-3 shadow-md">
-        <div className="mb-3 items-center justify-start space-x-6">
-          <div className="mb-3 items-center justify-start space-x-3 ">
-            <h1 className="py-2 pl-2 text-3xl font-bold text-slate-700">Preferences</h1>
+    <main>
+      <div className="space-x-3 text-white">
+        <h1 className="p-2 text-3xl font-bold">Preferences</h1>
 
-            <div className="p-8">
-              <h2 className="text-xl font-bold ">Report Configuration</h2>
+        <div>
+          <h2 className="text-xl font-bold ">Report Configuration</h2>
 
-              <SelectSection
-                title="Select Companies"
-                description="Select companies to receive weekly reports on"
-                placeholder="companies"
-                options={subscribedCompanies}
-                onValueChange={setSelectedCompanies}
-              />
-              <SelectSection
-                title="Select Buckets"
-                description="Select buckets to receive weekly reports on"
-                placeholder="buckets"
-                options={subscribedBuckets}
-                onValueChange={setSelectedBuckets}
-              />
-              <SelectSection
-                title="Select Channels"
-                description="Select channels for receiving reports"
-                placeholder="channels"
-                options={channels}
-                onValueChange={setSelectedChannels}
-                isMultiSelect={false}
-              />
-            </div>
+          <SelectSection
+            title="Select Companies"
+            description="Select companies to receive weekly reports on"
+            placeholder="companies"
+            options={subscribedCompanies}
+            onValueChange={setSelectedCompanies}
+          />
+          <SelectSection
+            title="Select Buckets"
+            description="Select buckets to receive weekly reports on"
+            placeholder="buckets"
+            options={subscribedBuckets}
+            onValueChange={setSelectedBuckets}
+          />
+          <SelectSection
+            title="Select Channels"
+            description="Select channels for receiving reports"
+            placeholder="channels"
+            options={channels}
+            onValueChange={setSelectedChannels}
+            isMultiSelect={false}
+          />
+        </div>
 
-            <div className="pl-8" onClick={saveChanges}>
-              <Button>Save changes</Button>
-            </div>
-            <div className="w-full rounded-b border-b border-gray-200 p-2"></div>
+        <div className="pl-8" onClick={saveChanges}>
+          <Button>Save changes</Button>
+        </div>
+        <div className="w-full rounded-b border-b border-gray-200 p-2"></div>
 
-            <div className="p-8">
-              <h2 className="text-xl font-bold ">API Keys</h2>
+        <div className="p-8">
+          <h2 className="text-xl font-bold ">API Keys</h2>
 
-              <ApiKeyConfiguration serviceName="Slack" onConfigure={handleConfigureSlack} />
+          <ApiKeyConfiguration serviceName="Slack" onConfigure={handleConfigureSlack} />
 
-              <ApiKeyConfiguration serviceName="Affinity" onConfigure={handleConfigureAffinity} />
-            </div>
-          </div>
+          <ApiKeyConfiguration serviceName="Affinity" onConfigure={handleConfigureAffinity} />
         </div>
       </div>
     </main>

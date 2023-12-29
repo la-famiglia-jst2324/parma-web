@@ -5,9 +5,9 @@ import { MagnifyingGlassIcon } from '@heroicons/react/20/solid'
 import { Button, TextInput } from '@tremor/react'
 import { useRouter } from 'next/navigation'
 import type { Company } from '@/types/companies'
-import CompanyCard from '@/components/Companies/CompanyCard'
+import CompanyCard from '@/components/companies/CompanyCard'
 import { getCompanies, getSubscribedCompanies, getCompaniesByName } from '@/services/company/companyService'
-import { MainLayoutWrapper } from '@/components/Layout/MainLayout'
+import { MainLayoutWrapper } from '@/components/layout/MainLayout'
 
 interface CompaniesPageProps {}
 

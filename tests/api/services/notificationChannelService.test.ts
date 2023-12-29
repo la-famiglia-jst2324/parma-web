@@ -21,10 +21,9 @@ describe('Notification Channel Model Tests', () => {
   test('Create a new slack channel with valid details', async () => {
     const channel = await createNotificationChannel({
       channelType: ChannelType.SLACK,
-      destination: 'la-famiglia-data-analytics'
+      destination: 'la-famiglia-data-analytics',
+      apiKey: 'my_plain_api_key'
     })
-    // sleep 1 second
-    await new Promise((resolve) => setTimeout(resolve, 5000))
     channelId = channel.id
     expect(channel).toHaveProperty('id')
     expect(channel.channelType).toBe(ChannelType.SLACK)

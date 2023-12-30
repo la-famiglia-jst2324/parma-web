@@ -78,6 +78,7 @@ jobs:
           POSTGRES_PASSWORD: parma-prod-db
           POSTGRES_DB: parma-prod-db
           FIREBASE_ADMINSDK_CERTIFICATE: ${{ secrets.STAGING_FIREBASE_ADMINSDK_CERTIFICATE}}
+          GCP_SECRET_MANAGER_CERTIFICATE: ${{ secrets.GCP_SECRET_MANAGER_KEY }}
           PARMA_ANALYTICS_BASE_URL: http://127.0.0.1:8000
       - name: Update badges
         run: pnpm run make-badges

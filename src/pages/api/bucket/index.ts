@@ -3,7 +3,97 @@ import type { User } from '@prisma/client'
 import { createBucket, getBucketByName, getAllBuckets } from '@/api/db/services/bucketService'
 import { ItemNotFoundError } from '@/api/utils/errorUtils'
 import { withAuthValidation } from '@/api/middleware/auth'
-
+/**
+ * @swagger
+ * /api/bucket:
+ *   get:
+ *     summary: Retrieve a list of buckets or a specific bucket
+ *     description: Fetches a list of all buckets or a specific bucket by name. Requires authentication.
+ *     parameters:
+ *       - in: query
+ *         name: name
+ *         schema:
+ *           type: string
+ *         required: false
+ *         description: The name of the bucket to fetch
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *         required: false
+ *         description: Page number for pagination
+ *       - in: query
+ *         name: pageSize
+ *         schema:
+ *           type: integer
+ *         required: false
+ *         description: Number of items per page
+ *     responses:
+ *       200:
+ *         description: A list of buckets or a single bucket details
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Bucket'
+ *       400:
+ *         description: Bad request
+ *       404:
+ *         description: Bucket not found
+ *       500:
+ *         description: Internal server error
+ *
+ *   post:
+ *     summary: Create a new bucket
+ *     description: Creates a new bucket with the given details. Requires authentication.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/BucketCreateRequest'
+ *     responses:
+ *       201:
+ *         description: The created bucket
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Bucket'
+ *       400:
+ *         description: Invalid request parameters
+ *       500:
+ *         description: Internal server error
+ *
+ * components:
+ *   schemas:
+ *     Bucket:
+ *       type: object
+ *       required:
+ *         - id
+ *         - title
+ *         - ownerId
+ *         - isPublic
+ *       properties:
+ *         id:
+ *           type: string
+ *           description: The unique identifier of the bucket
+ *         title:
+ *           type: string
+ *           description: The name of the bucket
+ *         ownerId:
+ *           type: string
+ *           description: The owner identifier of the bucket
+ *         isPublic:
+ *           type: boolean
+ *           description: Whether the bucket is publicly accessible
+ *     BucketCreateRequest:
+ *       type: object
+ *       required:
+ *         - name
+ *       properties:
+ *         name:
+ *           type: string
+ *           description: The name of the bucket to be created
+ */
 const handler = async (req: NextApiRequest, res: NextApiResponse, user: User) => {
   const { method } = req
   const bucketName = req.query.name

@@ -33,8 +33,8 @@ dependencies:
     specifier: ^14.0.1
     version: 14.0.1(@babel/core@7.23.2)(react-dom@18.2.0)(react@18.2.0)
   node-mocks-http:
-    specifier: ^1.13.0
-    version: 1.13.0
+    specifier: ^1.14.0
+    version: 1.14.0
   pino:
     specifier: ^8.16.2
     version: 8.16.2
@@ -6309,8 +6309,8 @@ packages:
     resolution: {integrity: sha512-O5lz91xSOeoXP6DulyHfllpq+Eg00MWitZIbtPfoSEvqIHdl5gfcY6hYzDWnj0qD5tz52PI08u9qUvSVeUBeHw==}
     dev: true
 
-  /node-mocks-http@1.13.0:
-    resolution: {integrity: sha512-lArD6sJMPJ53WF50GX0nJ89B1nkV1TdMvNwq8WXXFrUXF80ujSyye1T30mgiHh4h2It0/svpF3C4kZ2OAONVlg==}
+  /node-mocks-http@1.14.0:
+    resolution: {integrity: sha512-yOb3zNr9/5N27TAWxxMlrvWp4nNfRcrC0dAiqyj5NLyk6Jm80T95AhNj/YjThelkTkmTutS6RAB8pkmpkMofdA==}
     engines: {node: '>=14'}
     dependencies:
       accepts: 1.3.8

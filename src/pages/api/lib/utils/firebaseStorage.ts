@@ -64,10 +64,10 @@ async function deleteFileFromFirebaseStorage(filePath: string) {
  */
 async function readRawDataByAllDatasources(companyId: string): Promise<Record<string, admin.firestore.DocumentData[]>> {
   const db = admin.firestore();
-  const datasourcesSnapshot = await db.collection('parma/mining/datasource').get();
+  const datasourcesSnapshot = await db.collection('parma/mining/datasource').listDocuments();
 
   const response: Record<string, admin.firestore.DocumentData[]> = {};
-  for (const doc of datasourcesSnapshot.docs) {
+  for (const doc of datasourcesSnapshot) {
     const datasource = doc.id;
     const collectionPath = `parma/mining/datasource/${datasource}/raw_data`;
     const snapshot = await db.collection(collectionPath).where('company_id', '==', companyId).get();

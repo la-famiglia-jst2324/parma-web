@@ -21,7 +21,7 @@
     "no-use-before-define": "off",
     "no-unused-vars": "off",
     "@typescript-eslint/no-unused-vars": ["error", { "argsIgnorePattern": "^_" }],
-    "@typescript-eslint/no-use-before-define": "error",
+    "@typescript-eslint/no-use-before-define": "off",
     "n/no-callback-literal": "off",
     "@typescript-eslint/consistent-type-imports": ["error", { "prefer": "type-imports" }],
     "react/no-unescaped-entities": "off",

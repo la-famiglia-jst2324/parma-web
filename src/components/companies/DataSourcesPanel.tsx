@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
-import type { CalloutProps } from '@tremor/react'
-import { MultiSelect, MultiSelectItem, Button } from '@tremor/react'
+import { MultiSelect, MultiSelectItem } from '@tremor/react'
+import { Link2Icon } from 'lucide-react'
 import DatasourceHealth from './DatasourceHealth'
 import {
   getDataSourcesByCompanyId,
@@ -8,6 +8,9 @@ import {
   deleteCompanyDataSource,
   getDataSources
 } from '@/services/datasource/datasourceService'
+import { useToast } from '@/components/ui/use-toast'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
 
 interface CompanyDataSource {
   id: number
@@ -25,23 +28,16 @@ interface CompanyDataSource {
   additionalParams: null | string
 }
 
-interface PopupContent {
-  title: string
-  color: CalloutProps['color']
-  description: string
-}
-
 interface Props {
   companyId: string
-  setPopupContents: React.Dispatch<React.SetStateAction<PopupContent>>
-  setShowPopup: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-const DataSourcesPanel: React.FC<Props> = ({ companyId, setPopupContents, setShowPopup }) => {
+const DataSourcesPanel: React.FC<Props> = ({ companyId }) => {
   const [companyDataSources, setCompanyDataSources] = useState<CompanyDataSource[]>([])
   const [allDataSources, setAllDataSources] = useState<CompanyDataSource[]>([])
   const [filteredDataSources, setFilteredDataSources] = useState<CompanyDataSource[]>([])
   const [selectedValues, setSelectedValues] = useState<string[]>([])
+  const { toast } = useToast()
 
   useEffect(() => {
     const fetchData = async () => {
@@ -90,12 +86,10 @@ const DataSourcesPanel: React.FC<Props> = ({ companyId, setPopupContents, setSho
     setAllDataSources(alldatasource)
     const companydatasources = await getDataSourcesByCompanyId(companyId)
     setCompanyDataSources(companydatasources)
-    setPopupContents({
+    toast({
       title: `Datasource unlinked successfully`,
-      color: 'teal',
       description: 'You have successfully unlinked a datasource from this company'
     })
-    setShowPopup(true)
   }
 
   const handleAddDataSourceToCompany = async () => {
@@ -107,46 +101,50 @@ const DataSourcesPanel: React.FC<Props> = ({ companyId, setPopupContents, setSho
     setAllDataSources(alldatasource)
     const companydatasources = await getDataSourcesByCompanyId(companyId)
     setCompanyDataSources(companydatasources)
-    setPopupContents({
+    toast({
       title: `Datasource/s linked successfully`,
-      color: 'teal',
       description: 'You have successfully added a datasource to the company'
     })
-    setShowPopup(true)
   }
 
   return (
-    <div className="mt-4">
-      <h3 className="pb-2 font-bold">Link data sources with this company</h3>
-      <div className="flex">
-        <div className="w-64 pb-3">
-          <MultiSelect onValueChange={handleMultiSelectChange} value={selectedValues}>
-            {filteredDataSources?.map((datasource: CompanyDataSource, index) => (
-              <MultiSelectItem key={index} value={String(datasource.id)}>
-                {datasource.sourceName}
-              </MultiSelectItem>
-            ))}
-          </MultiSelect>
-        </div>
-        <div className="pl-3">
-          <Button onClick={handleAddDataSourceToCompany} disabled={selectedValues.length === 0}>
-            Link Data Sources
-          </Button>
-        </div>
-      </div>
-      <div className="flex flex-wrap">
-        {companyDataSources?.map((datasource: CompanyDataSource, index) => (
-          <div key={index} className="md:w-1/3">
-            <DatasourceHealth
-              dataSourceId={String(datasource.id)}
-              dataSourceName={datasource.sourceName}
-              isDataSourceActive={datasource.isActive}
-              handleUnlinkDataSource={handleUnlinkDataSource}
-            />
+    <Card>
+      <CardHeader>
+        <CardTitle className="text-lg">Link data sources with this company</CardTitle>
+        <CardDescription>Select data sources to link with the company and manage linked data sources.</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <div className="flex">
+          <div className="w-64 pb-3">
+            <MultiSelect onValueChange={handleMultiSelectChange} value={selectedValues}>
+              {filteredDataSources?.map((datasource: CompanyDataSource, index) => (
+                <MultiSelectItem key={index} value={String(datasource.id)}>
+                  {datasource.sourceName}
+                </MultiSelectItem>
+              ))}
+            </MultiSelect>
           </div>
-        ))}
-      </div>
-    </div>
+          <div className="pl-3">
+            <Button onClick={handleAddDataSourceToCompany} disabled={selectedValues.length === 0}>
+              <Link2Icon className="mr-2 h-4 w-4" />
+              Link
+            </Button>
+          </div>
+        </div>
+        <div className="flex flex-wrap">
+          {companyDataSources?.map((datasource: CompanyDataSource, index) => (
+            <div key={index} className="p-1">
+              <DatasourceHealth
+                dataSourceId={String(datasource.id)}
+                dataSourceName={datasource.sourceName}
+                isDataSourceActive={datasource.isActive}
+                handleUnlinkDataSource={handleUnlinkDataSource}
+              />
+            </div>
+          ))}
+        </div>
+      </CardContent>
+    </Card>
   )
 }
 

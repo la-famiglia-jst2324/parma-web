@@ -1,7 +1,9 @@
-import { Button, Card, LineChart, SearchSelect, SearchSelectItem } from '@tremor/react'
+import { Card, LineChart, SearchSelect, SearchSelectItem } from '@tremor/react'
 import React, { useEffect, useState } from 'react'
+import { RefreshCcw } from 'lucide-react'
 import { getDataSourcesByCompanyId } from '@/services/datasource/datasourceService'
 import { getAnalyticsDataForCompany, getMeasurements } from '@/services/measurement/measurementService'
+import { Button } from '@/components/ui/button'
 
 interface Props {
   companyId: string
@@ -116,7 +118,7 @@ const PerformancePanel: React.FC<Props> = ({ companyId, companyName }) => {
         </SearchSelect>
         <Button onClick={handleGetMeasurementData}>Show Data</Button>
         <Button variant="secondary" onClick={handleRefetchDatasources}>
-          Refetch Datasources
+          <RefreshCcw className="h-4 w-4" />
         </Button>
       </div>
       <Card>

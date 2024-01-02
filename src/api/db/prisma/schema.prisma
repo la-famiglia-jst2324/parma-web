@@ -90,7 +90,7 @@ model NotificationChannel {
   id          Int         @id @default(autoincrement())
   channelType ChannelType @map("channel_type")
   destination String
-  apiKey      String?     @map("api_key")
+  secretId      String? @map("secret_id")
   createdAt   DateTime    @default(now()) @map("created_at")
   modifiedAt  DateTime    @updatedAt @map("modified_at")
 

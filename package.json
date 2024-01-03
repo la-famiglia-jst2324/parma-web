@@ -18,15 +18,16 @@
     "make-badges": "istanbul-badges-readme"
   },
   "dependencies": {
+    "@google-cloud/secret-manager": "^5.0.1",
     "@heroicons/react": "2.0.18",
     "@prisma/client": "5.7.0",
-    "@tremor/react": "^3.10.1",
+    "@tremor/react": "^3.12.1",
     "axios": "^1.6.2",
     "firebase": "^10.7.0",
     "firebase-admin": "^11.11.1",
     "formidable": "^3.5.1",
     "next": "^14.0.1",
-    "node-mocks-http": "^1.13.0",
+    "node-mocks-http": "^1.14.0",
     "pino": "^8.16.2",
     "react": "^18",
     "react-dom": "^18",
@@ -40,7 +41,7 @@
     "@types/formidable": "^3.4.5",
     "@types/jest": "^29.5.7",
     "@types/node": "^20.8.10",
-    "@types/react": "^18.2.34",
+    "@types/react": "^18.2.46",
     "@types/react-dom": "^18.2.17",
     "@types/uuid": "^9.0.7",
     "@typescript-eslint/eslint-plugin": "^6.9.1",
@@ -53,7 +54,7 @@
     "eslint-config-standard": "^17.1.0",
     "eslint-plugin-import": "^2.29.0",
     "eslint-plugin-n": "^16.2.0",
-    "eslint-plugin-prettier": "^5.0.1",
+    "eslint-plugin-prettier": "^5.1.2",
     "eslint-plugin-promise": "^6.1.1",
     "eslint-plugin-react": "^7.33.2",
     "eslint-plugin-react-hooks": "^4.6.0",
@@ -72,7 +73,7 @@
     "ts-node": "^10.9.1",
     "ts-postgres": "^1.4.0",
     "tsx": "^3.14.0",
-    "typescript": "^5.2.2",
+    "typescript": "^5.3.3",
     "uuid": "^9.0.1"
   }
 }

@@ -132,7 +132,7 @@ async function main() {
       data: {
         channelType: ChannelType.SLACK,
         destination: `slack_destination_${i}`,
-        apiKey: `api_key_${i}`
+        secretId: `secret_id_${i}`
         // created and modified dates will be set automatically
       }
     })

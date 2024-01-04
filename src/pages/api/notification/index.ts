@@ -1,6 +1,41 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 
 import { createNotification } from '@/api/db/services/notificationService'
+/**
+ * @swagger
+ * /api/notification:
+ *   post:
+ *     summary: Create a new notification
+ *     description: Creates a new notification with the given details in the request body.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - title
+ *               - message
+ *               # Include other required fields here
+ *             properties:
+ *               title:
+ *                 type: string
+ *               message:
+ *                 type: string
+ *               # Define other properties of the notification here
+ *     responses:
+ *       201:
+ *         description: Successfully created a new notification.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               # Define the schema for the created notification object here
+ *       400:
+ *         description: Invalid request parameters.
+ *       500:
+ *         description: Internal Server Error.
+ */
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const { method } = req

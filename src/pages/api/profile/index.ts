@@ -3,6 +3,36 @@ import type { User } from '@prisma/client'
 import { updateUser, getUserById } from '@/api/db/services/userService'
 import { ItemNotFoundError } from '@/api/utils/errorUtils'
 import { withAuthValidation } from '@/api/middleware/auth'
+
+/**
+ * @swagger
+ * /api/profile:
+ *   put:
+ *     summary: Update user information
+ *     description: Updates the information of an existing user based on their user ID.
+ *     parameters:
+ *       - in: query
+ *         name: userId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: The ID of the user to update.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             # Define the schema for the user update here
+ *     responses:
+ *       200:
+ *         description: Successfully updated the user's information.
+ *       404:
+ *         description: User not found.
+ *       500:
+ *         description: Internal Server Error.
+ */
+
 const handler = async (req: NextApiRequest, res: NextApiResponse, user: User) => {
   const { method } = req
   const userId = user.id

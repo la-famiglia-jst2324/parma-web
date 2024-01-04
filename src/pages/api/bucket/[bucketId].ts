@@ -3,6 +3,79 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import { deleteBucket, getBucketById, updateBucket } from '@/api/db/services/bucketService'
 import { ItemNotFoundError } from '@/api/utils/errorUtils'
 
+/**
+ * @swagger
+ * /api/bucket/id:
+ *   get:
+ *     tags:
+ *       - bucket
+ *     summary: Retrieve a bucket by ID
+ *     description: Fetches a bucket's details based on the provided bucket ID.
+ *     parameters:
+ *       - in: query
+ *         name: bucketId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: The ID of the bucket to retrieve.
+ *     responses:
+ *       200:
+ *         description: Successfully retrieved the bucket details.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Bucket'
+ *       400:
+ *         description: No Bucket found for the provided ID.
+ *       404:
+ *         description: Bucket not found.
+ *       500:
+ *         description: Internal Server Error.
+ *
+ *   put:
+ *     summary: Update a bucket
+ *     description: Updates the details of an existing bucket based on the provided bucket ID.
+ *     parameters:
+ *       - in: query
+ *         name: bucketId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: The ID of the bucket to update.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Bucket'
+ *     responses:
+ *       200:
+ *         description: Successfully updated the bucket.
+ *       404:
+ *         description: Bucket not found.
+ *       500:
+ *         description: Failed to update bucket.
+ *
+ *   delete:
+ *     summary: Delete a bucket
+ *     description: Deletes a bucket based on the provided bucket ID.
+ *     parameters:
+ *       - in: query
+ *         name: bucketId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: The ID of the bucket to delete.
+ *     responses:
+ *       200:
+ *         description: Bucket successfully deleted.
+ *       404:
+ *         description: Bucket not found.
+ *       500:
+ *         description: Internal Server Error.
+ *       405:
+ *         description: Method Not Allowed.
+ */
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const { method } = req
   const { bucketId } = req.query

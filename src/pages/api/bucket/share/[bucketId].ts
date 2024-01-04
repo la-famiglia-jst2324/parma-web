@@ -1,5 +1,94 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { getInviteesByBucketId, updateBucketAccess, deleteBucketAccess } from '@/api/db/services/bucketAccessService'
+/**
+ * @swagger
+ * /api/bucket/share/id:
+ *   get:
+ *     tags:
+ *       - bucket
+ *     summary: Retrieve invitees for a bucket
+ *     description: Fetches invitees based on the provided bucket ID.
+ *     parameters:
+ *       - in: query
+ *         name: bucketId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: The ID of the bucket to retrieve invitees for.
+ *     responses:
+ *       200:
+ *         description: Successfully retrieved invitees.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/BucketAccess'
+ *       400:
+ *         description: No Invitees found for the provided ID.
+ *       500:
+ *         description: Internal Server Error.
+ *
+ *   put:
+ *     summary: Update bucket access for an invitee
+ *     description: Updates the access permissions for an invitee in a bucket.
+ *     parameters:
+ *       - in: query
+ *         name: bucketId
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: The ID of the bucket to retrieve invitees for.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - inviteeId
+ *               - permission
+ *             properties:
+ *               inviteeId:
+ *                 type: integer
+ *               permission:
+ *                 type: string
+ *                 description: The updated permission for the invitee.
+ *     responses:
+ *       200:
+ *         description: Successfully updated bucket access.
+ *       500:
+ *         description: Internal Server Error.
+ *
+ *   delete:
+ *     summary: Delete bucket access for an invitee
+ *     description: Deletes the access of an invitee to a bucket.
+ *     parameters:
+ *       - in: query
+ *         name: bucketId
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: The ID of the bucket to retrieve invitees for.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - inviteeId
+ *             properties:
+ *               inviteeId:
+ *                 type: integer
+ *     responses:
+ *       200:
+ *         description: Bucket access deleted successfully.
+ *       500:
+ *         description: Internal Server Error.
+ *       405:
+ *         description: Method Not Allowed.
+ */
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const { method } = req

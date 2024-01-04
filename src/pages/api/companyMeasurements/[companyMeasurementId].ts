@@ -5,6 +5,85 @@ import {
   deleteCompanySourceMeasurement
 } from '@/api/db/services/companySourceMeasurementService'
 import { ItemNotFoundError } from '@/api/utils/errorUtils'
+/**
+ * @swagger
+ * /api/companyMeasurements/id:
+ *   get:
+ *     summary: Retrieve a company source measurement by ID
+ *     description: Fetches details of a specific company source measurement based on the provided ID.
+ *     parameters:
+ *       - in: query
+ *         name: companyMeasurementId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: The ID of the company source measurement to retrieve.
+ *     responses:
+ *       200:
+ *         description: Successfully retrieved the company source measurement.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/companySourceMeasurement'
+ *       400:
+ *         description: No company source measurement found or no ID was provided.
+ *       404:
+ *         description: Company source measurement not found.
+ *       500:
+ *         description: Internal Server Error.
+ *
+ *   put:
+ *     summary: Update a company source measurement
+ *     description: Updates the details of an existing company source measurement based on the provided ID.
+ *     parameters:
+ *       - in: query
+ *         name: companyMeasurementId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - sourceMeasurementId
+ *               - companyId
+ *             properties:
+ *               sourceMeasurementId:
+ *                 type: integer
+ *               companyId:
+ *                 type: integer
+ *     responses:
+ *       200:
+ *         description: Successfully updated the company source measurement.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/companySourceMeasurement'
+ *       400:
+ *         description: Invalid request parameters.
+ *       500:
+ *         description: Internal Server Error.
+ *
+ *   delete:
+ *     summary: Delete a company source measurement
+ *     description: Deletes a specific company source measurement based on the provided ID.
+ *     parameters:
+ *       - in: query
+ *         name: companyMeasurementId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Company source measurement deleted successfully.
+ *       400:
+ *         description: Invalid request parameters.
+ *       500:
+ *         description: Internal Server Error.
+ */
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const { method } = req

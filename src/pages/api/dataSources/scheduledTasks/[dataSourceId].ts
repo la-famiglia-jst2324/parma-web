@@ -1,5 +1,63 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { getScheduledTaskByDatasourceID } from '@/api/db/services/scheduledTaskService'
+/**
+ * @swagger
+ * /api/dataSources/scheduledTasks/dataSourceId:
+ *   get:
+ *     summary: Retrieve a scheduled task by data source ID
+ *     description: Fetches details of a scheduled task associated with a specific data source based on the provided data source ID.
+ *     parameters:
+ *       - in: query
+ *         name: dataSourceId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: The ID of the data source to retrieve its associated scheduled task.
+ *     responses:
+ *       200:
+ *         description: Successfully retrieved the scheduled task for the data source.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/scheduledTask'
+ *       400:
+ *         description: No Data Source found for the provided ID.
+ *       500:
+ *         description: Internal Server Error.
+ * components:
+ *   schemas:
+ *     scheduledTask:
+ *       type: object
+ *       required:
+ *         - taskId
+ *         - dataSourceId
+ *         - scheduleType
+ *         - scheduledAt
+ *         - maxRunSeconds
+ *         - status
+ *         - attempts
+ *       properties:
+ *         taskId:
+ *           type: integer
+ *         dataSourceId:
+ *           type: integer
+ *         scheduleType:
+ *           type: string
+ *         scheduledAt:
+ *           type: string
+ *         maxRunSeconds:
+ *           type: string
+ *         status:
+ *           type: string
+ *         attempts:
+ *           type: integer
+ *         startedAt:
+ *           type: string
+ *         endedAt:
+ *           type: string
+ *         resultSummary:
+ *           type: string
+ */
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const { method } = req

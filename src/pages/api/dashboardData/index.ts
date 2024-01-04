@@ -4,6 +4,60 @@ import { getDataSourceByName } from '@/api/db/services/dataSourceService'
 
 const newsSources = await getDataSourceByName('News') // Change when available
 const newsSourceId = Number(newsSources[0].id)
+/**
+ * @swagger
+ * /api/dashboard:
+ *   get:
+ *     summary: Retrieve measurements of companies by source ID
+ *     description: Fetches measurements for companies based on a source ID. Can optionally filter by a list of company IDs.
+ *     parameters:
+ *       - in: query
+ *         name: companyIds
+ *         required: false
+ *         schema:
+ *           type: string
+ *           format: csv
+ *         description: An optional comma-separated list of company IDs to filter the measurements.
+ *     responses:
+ *       200:
+ *         description: Successfully retrieved the company measurements.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/sourceMeasurement'
+ *       400:
+ *         description: No data found for the given parameters.
+ *       500:
+ *         description: Internal Server Error.
+ * components:
+ *   schemas:
+ *     sourceMeasurement:
+ *       type: object
+ *       required:
+ *         - id
+ *         - sourceModuleId
+ *         - type
+ *         - measurementName
+ *       properties:
+ *         id:
+ *           type: integer
+ *         sourceModuleId:
+ *           type: integer
+ *         type:
+ *           type: string
+ *         measurementName:
+ *           type: string
+ *         type:
+ *           type: string
+ *         parentMeasurementId:
+ *           type: integer
+ *         createdAt:
+ *           type: string
+ *         modifiedAt:
+ *           type: string
+ */
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const { method } = req

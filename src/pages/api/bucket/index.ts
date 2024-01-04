@@ -5,8 +5,12 @@ import { ItemNotFoundError } from '@/api/utils/errorUtils'
 import { withAuthValidation } from '@/api/middleware/auth'
 /**
  * @swagger
+ * tags:
+ *   - name: bucket
  * /api/bucket:
  *   get:
+ *     tags:
+ *       - bucket
  *     summary: Retrieve a list of buckets or a specific bucket
  *     description: Fetches a list of all buckets or a specific bucket by name. Requires authentication.
  *     parameters:
@@ -74,13 +78,13 @@ import { withAuthValidation } from '@/api/middleware/auth'
  *         - isPublic
  *       properties:
  *         id:
- *           type: string
+ *           type: integer
  *           description: The unique identifier of the bucket
  *         title:
  *           type: string
  *           description: The name of the bucket
  *         ownerId:
- *           type: string
+ *           type: integer
  *           description: The owner identifier of the bucket
  *         isPublic:
  *           type: boolean

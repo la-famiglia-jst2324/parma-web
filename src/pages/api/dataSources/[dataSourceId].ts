@@ -24,6 +24,73 @@ const updateDataSourceSchema = z.object({
     .refine((val) => !val || val.trim() !== '', { message: 'Invocation endpoint cannot be empty.' })
 })
 
+/**
+ * @swagger
+ * /api/dataSources/id:
+ *   get:
+ *     summary: Retrieve a data source by ID
+ *     description: Fetches details of a specific data source based on the provided ID.
+ *     parameters:
+ *       - in: query
+ *         name: dataSourceId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: The ID of the data source to retrieve.
+ *     responses:
+ *       200:
+ *         description: Successfully retrieved the data source.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/DataSource'
+ *       400:
+ *         description: No Data Source found for the provided ID.
+ *       500:
+ *         description: Internal Server Error.
+ *
+ *   put:
+ *     summary: Update a data source
+ *     description: Updates the details of an existing data source based on the provided ID.
+ *     parameters:
+ *       - in: query
+ *         name: dataSourceId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             # Define the schema for updating a data source here
+ *     responses:
+ *       200:
+ *         description: Successfully updated the data source.
+ *       400:
+ *         description: Validation error or no Data Source found.
+ *       404:
+ *         description: Data Source not found.
+ *       500:
+ *         description: Internal Server Error.
+ *
+ *   delete:
+ *     summary: Delete a data source
+ *     description: Deletes a specific data source based on the provided ID.
+ *     parameters:
+ *       - in: query
+ *         name: dataSourceId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Data Source successfully deleted.
+ *       500:
+ *         description: Internal Server Error.
+ */
+
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const { method } = req
   const { dataSourceId } = req.query

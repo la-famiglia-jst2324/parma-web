@@ -7,6 +7,42 @@ import {
 } from '@/api/db/services/sourceMeasurementService'
 
 import { ItemNotFoundError } from '@/api/utils/errorUtils'
+/**
+ * @swagger
+ * /api/measurements/measurementId:
+ *   get:
+ *     summary: Retrieve a source measurement by ID
+ *     description: Fetches details of a specific source measurement based on the provided ID.
+ *     parameters:
+ *       - in: query
+ *         name: measurementId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: The ID of the source measurement to retrieve.
+ *     responses:
+ *       200:
+ *         description: Successfully retrieved the source measurement.
+ *       400:
+ *         description: No Data Source Measurement found for the provided ID.
+ *       500:
+ *         description: Internal Server Error.
+ *
+ *   delete:
+ *     summary: Delete a source measurement
+ *     description: Deletes a specific source measurement based on the provided ID.
+ *     parameters:
+ *       - in: query
+ *         name: measurementId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Measurement successfully deleted.
+ *       500:
+ *         description: Internal Server Error.
+ */
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const { method } = req

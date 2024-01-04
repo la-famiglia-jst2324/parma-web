@@ -3,6 +3,51 @@ import type { User } from '@prisma/client'
 import { getUserCompanySubscriptions } from '@/api/db/services/companySubscriptionService'
 import { withAuthValidation } from '@/api/middleware/auth'
 import { ItemNotFoundError } from '@/api/utils/errorUtils'
+/**
+ * @swagger
+ * /api/company/subscribed/companyId:
+ *   get:
+ *     summary: Retrieve a user's subscription to a specific company
+ *     description: Fetches subscription details for a user to a specific company based on the provided company ID.
+ *     parameters:
+ *       - in: query
+ *         name: companyId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: The ID of the company for which to retrieve the subscription details.
+ *     responses:
+ *       200:
+ *         description: Successfully retrieved subscription details.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/CompanySubscription'
+ *       400:
+ *         description: Subscription not found.
+ *       404:
+ *         description: Item not found error.
+ *       500:
+ *         description: Internal Server Error.
+ *       405:
+ *         description: Method Not Allowed.
+ * components:
+ *   schemas:
+ *     CompanySubscription:
+ *       type: object
+ *       required:
+ *         - userId
+ *         - companyId
+ *       properties:
+ *         userId:
+ *           type: integer
+ *         companyId:
+ *           type: integer
+ *         createdAt:
+ *           type: string
+ *         modifiedAt:
+ *           type: string
+ */
 
 const handler = async (req: NextApiRequest, res: NextApiResponse, user: User) => {
   const { method } = req

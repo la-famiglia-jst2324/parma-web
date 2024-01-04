@@ -9,6 +9,78 @@ import {
 import { ItemNotFoundError } from '@/api/utils/errorUtils'
 import { withAuthValidation } from '@/api/middleware/auth'
 import { addCompanyDataSourceRelationshipForCompany } from '@/api/db/services/companyDataSourceService'
+/**
+ * @swagger
+ * /api/company:
+ *   get:
+ *     summary: Retrieve companies or a specific company by name
+ *     description: Fetches either a specific company by name or all companies. Supports optional pagination.
+ *     parameters:
+ *       - in: query
+ *         name: name
+ *         required: false
+ *         schema:
+ *           type: string
+ *         description: The name of the company to retrieve. If provided, returns only the specified company.
+ *       - in: query
+ *         name: page
+ *         required: false
+ *         schema:
+ *           type: integer
+ *         description: The page number for pagination.
+ *       - in: query
+ *         name: pageSize
+ *         required: false
+ *         schema:
+ *           type: integer
+ *         description: The number of items per page for pagination.
+ *     responses:
+ *       200:
+ *         description: Successfully retrieved company or companies.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Company'
+ *       400:
+ *         description: No Companies found.
+ *       404:
+ *         description: Company not found.
+ *       500:
+ *         description: Internal Server Error.
+ *   post:
+ *     summary: Create a new company
+ *     description: Creates a new company with the given details.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - name
+ *               - description
+ *               - addedBy
+ *             properties:
+ *               name:
+ *                 type: string
+ *               description:
+ *                 type: string
+ *               addedBy:
+ *                 type: integer
+ *     responses:
+ *       201:
+ *         description: Successfully created a new company.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Company'
+ *       400:
+ *         description: Invalid request parameters.
+ *       500:
+ *         description: Internal Server Error.
+ */
 
 const handler = async (req: NextApiRequest, res: NextApiResponse, user: User) => {
   const { method } = req

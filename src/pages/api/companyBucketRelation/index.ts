@@ -48,6 +48,91 @@ const membershipGetSchema = z.object({
     })
     .transform((val) => (val === undefined ? undefined : parseInt(val, 10)))
 })
+/**
+ * @swagger
+ * /api/companyBucketRelation:
+ *   get:
+ *     summary: Retrieve companies or buckets based on a bucket or company ID
+ *     description: Fetches companies for a given bucket ID or buckets for a given company ID.
+ *     parameters:
+ *       - in: query
+ *         name: bucketId
+ *         required: false
+ *         schema:
+ *           type: integer
+ *         description: The ID of the bucket to retrieve associated companies.
+ *       - in: query
+ *         name: companyId
+ *         required: false
+ *         schema:
+ *           type: integer
+ *         description: The ID of the company to retrieve associated buckets.
+ *     responses:
+ *       200:
+ *         description: Successfully retrieved companies or buckets.
+ *       400:
+ *         description: Invalid arguments.
+ *       404:
+ *         description: No Companies or Buckets found.
+ *       500:
+ *         description: Internal Server Error.
+ *
+ *   post:
+ *     summary: Create a membership between a company and a bucket
+ *     description: Adds a company to a bucket and subscribes the user to the company.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - bucketId
+ *               - companyId
+ *             properties:
+ *               bucketId:
+ *                 type: integer
+ *               companyId:
+ *                 type: integer
+ *     responses:
+ *       200:
+ *         description: Membership already exists.
+ *       201:
+ *         description: Successfully created a new membership and subscribed user to the company.
+ *       400:
+ *         description: Invalid request parameters.
+ *       404:
+ *         description: Company or Bucket not found.
+ *       500:
+ *         description: Internal Server Error.
+ *
+ *   delete:
+ *     summary: Remove a membership between a company and a bucket
+ *     description: Removes a company from a bucket and unsubscribes the user from the company.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - bucketId
+ *               - companyId
+ *             properties:
+ *               bucketId:
+ *                 type: integer
+ *               companyId:
+ *                 type: integer
+ *     responses:
+ *       200:
+ *         description: Company removed from bucket successfully.
+ *       400:
+ *         description: Invalid request parameters.
+ *       404:
+ *         description: Company or Bucket not found.
+ *       500:
+ *         description: Internal Server Error.
+ */
 
 const handler = async (req: NextApiRequest, res: NextApiResponse, user: User) => {
   const { method } = req

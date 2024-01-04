@@ -14,6 +14,65 @@ import { ItemNotFoundError } from '@/api/utils/errorUtils'
 const newsSubscriptionSchema = z.object({
   companyId: z.number().int().positive()
 })
+/**
+ * @swagger
+ * /api/newsSubscription:
+ *   post:
+ *     summary: Manage a news subscription
+ *     description: Creates or deletes a news subscription for a user based on a flag. If the flag is 'true', it creates a subscription; otherwise, it deletes an existing subscription.
+ *     parameters:
+ *       - in: query
+ *         name: flag
+ *         required: true
+ *         schema:
+ *           type: string
+ *           enum: ['true', 'false']
+ *         description: Flag indicating whether to create ('true') or delete ('false') a subscription.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               userId:
+ *                 type: integer
+ *               companyId:
+ *                 type: integer
+ *             required:
+ *               - userId
+ *               - companyId
+ *     responses:
+ *       201:
+ *         description: Successfully created a new news subscription.
+ *       200:
+ *         description: News subscription successfully deleted.
+ *       400:
+ *         description: Invalid request parameters or news subscription not found for deletion.
+ *       404:
+ *         description: News subscription not found for deletion.
+ *       500:
+ *         description: Internal Server Error.
+ *
+ *   get:
+ *     summary: Retrieve news subscriptions by user ID
+ *     description: Fetches news subscriptions associated with a given user ID.
+ *     parameters:
+ *       - in: query
+ *         name: userId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Successfully retrieved news subscriptions for the user.
+ *       400:
+ *         description: No subscribed companies found.
+ *       404:
+ *         description: User not found.
+ *       500:
+ *         description: Internal Server Error.
+ */
 
 const handler = async (req: NextApiRequest, res: NextApiResponse, user: User) => {
   const { method } = req

@@ -3,6 +3,65 @@ import type { User } from '@prisma/client'
 import { createUser, getAllUsers, getUserById, updateUser } from '@/api/db/services/userService'
 import { ItemNotFoundError } from '@/api/utils/errorUtils'
 import { withAuthValidation } from '@/api/middleware/auth'
+/**
+ * @swagger
+ * /api/user:
+ *   get:
+ *     summary: Retrieve all users
+ *     description: Fetches a list of all users.
+ *     responses:
+ *       200:
+ *         description: Successfully retrieved a list of users.
+ *       400:
+ *         description: No Companies found. (Note: This message seems inconsistent with the operation. Consider updating it to "No Users found" if applicable).
+ *       404:
+ *         description: Item not found.
+ *       500:
+ *         description: Internal Server Error.
+ *
+ *   post:
+ *     summary: Create a new user
+ *     description: Creates a new user with the details provided in the request body.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             # Define the schema for creating a new user here
+ *     responses:
+ *       201:
+ *         description: Successfully created a new user.
+ *       400:
+ *         description: Invalid request parameters.
+ *       500:
+ *         description: Internal Server Error.
+ *
+ *   put:
+ *     summary: Update a user
+ *     description: Updates an existing user's information based on their user ID.
+ *     parameters:
+ *       - in: header
+ *         name: userId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: The ID of the user to update.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             # Define the schema for the user update here
+ *     responses:
+ *       200:
+ *         description: Successfully updated the user's information.
+ *       404:
+ *         description: User not Found.
+ *       500:
+ *         description: Internal Server Error.
+ */
 
 const handler = async (req: NextApiRequest, res: NextApiResponse, user: User) => {
   const { method } = req

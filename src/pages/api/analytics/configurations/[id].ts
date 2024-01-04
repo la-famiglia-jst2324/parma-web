@@ -12,6 +12,53 @@ const customizaitonDeleteQuerySchema = z.object({
     })
     .transform((val: string) => parseInt(val, 10))
 })
+/**
+ * @swagger
+ * /api/analytics/configurations/id:
+ *   delete:
+ *     tags:
+ *       - analytics
+ *     summary: Delete a user customization
+ *     description: Deletes a user customization by its ID.
+ *     parameters:
+ *       - in: query
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: The ID of the user customization to delete.
+ *     responses:
+ *       200:
+ *         description: Customization deleted successfully. Returns a success message.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Customization with id 123 deleted successfully"
+ *       400:
+ *         description: Bad request, typically due to validation error.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *       405:
+ *         description: Method not allowed, if an unsupported method is used.
+ *       500:
+ *         description: Internal server error, typically for unhandled exceptions.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ */
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const { method } = req

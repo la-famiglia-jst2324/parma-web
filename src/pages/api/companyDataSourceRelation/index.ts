@@ -9,6 +9,126 @@ import {
 } from '@/api/db/services/companyDataSourceService'
 
 import { ItemNotFoundError } from '@/api/utils/errorUtils'
+/**
+ * @swagger
+ * /api/companyDataSourceRelation:
+ *   get:
+ *     summary: Retrieve companies or data sources
+ *     description: Fetches companies by a data source ID or data sources by a company ID. Only one ID should be provided at a time.
+ *     parameters:
+ *       - in: query
+ *         name: dataSourceId
+ *         required: false
+ *         schema:
+ *           type: integer
+ *         description: The ID of the data source to retrieve associated companies.
+ *       - in: query
+ *         name: companyId
+ *         required: false
+ *         schema:
+ *           type: integer
+ *         description: The ID of the company to retrieve associated data sources.
+ *     responses:
+ *       200:
+ *         description: Successfully retrieved companies or data sources.
+ *       400:
+ *         description: Invalid arguments or no companies/data sources found.
+ *       404:
+ *         description: Item not found.
+ *       500:
+ *         description: Internal Server Error.
+ *
+ *   post:
+ *     summary: Create a new company data source relationship
+ *     description: Creates relation between a data source and a company.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/companyDataSource'
+ *     responses:
+ *       200:
+ *         description: Successfully created a new data source.
+ *       400:
+ *         description: Invalid request parameters.
+ *       500:
+ *         description: Internal Server Error.
+ *
+ *   put:
+ *     summary: Update a company data source
+ *     description: Updates an existing data source for a company.
+ *     parameters:
+ *       - in: query
+ *         name: dataSourceId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *       - in: query
+ *         name: companyId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - isDataSourceActive
+ *               - healthStatus
+ *             properties:
+ *               isDataSourceActive:
+ *                 type: boolean
+ *               healthStatus:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Successfully updated the data source.
+ *       500:
+ *         description: Internal Server Error.
+ *
+ *   delete:
+ *     summary: Delete a company data source
+ *     description: Deletes a data source for a company.
+ *     parameters:
+ *       - in: query
+ *         name: dataSourceId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *       - in: query
+ *         name: companyId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Company data source deleted successfully.
+ *       404:
+ *         description: Item not found.
+ *       500:
+ *         description: Internal Server Error.
+ * components:
+ *   schemas:
+ *     companyDataSource:
+ *       type: object
+ *       required:
+ *         - dataSourceId
+ *         - companyId
+ *         - isDataSourceActive
+ *         - healthStatus
+ *       properties:
+ *         dataSourceId:
+ *           type: integer
+ *         companyId:
+ *           type: integer
+ *         isDataSourceActive:
+ *           type: boolean
+ *         healthStatus:
+ *           type: string
+ */
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const { method } = req

@@ -7,6 +7,66 @@ import {
 } from '@/api/db/services/notificationChannelService'
 
 import { ItemNotFoundError } from '@/api/utils/errorUtils'
+/**
+ * @swagger
+ * /api/notificationChannel/id:
+ *   get:
+ *     summary: Retrieve a notification channel by ID
+ *     description: Fetches details of a specific notification channel based on the provided channel ID.
+ *     parameters:
+ *       - in: query
+ *         name: channelId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: The ID of the notification channel to retrieve.
+ *     responses:
+ *       200:
+ *         description: Successfully retrieved the notification channel.
+ *       400:
+ *         description: No NotificationChannel found for the provided ID.
+ *       404:
+ *         description: NotificationChannel not found.
+ *       500:
+ *         description: Internal Server Error.
+ *
+ *   put:
+ *     summary: Update a notification channel
+ *     description: Updates the details of an existing notification channel based on the provided channel ID.
+ *     parameters:
+ *       - in: query
+ *         name: channelId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             # Define the schema for the notification channel update here
+ *     responses:
+ *       200:
+ *         description: Successfully updated the notification channel.
+ *       500:
+ *         description: Internal Server Error.
+ *
+ *   delete:
+ *     summary: Delete a notification channel
+ *     description: Deletes a specific notification channel based on the provided channel ID.
+ *     parameters:
+ *       - in: query
+ *         name: channelId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: NotificationChannel successfully deleted.
+ *       500:
+ *         description: Internal Server Error.
+ */
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const { method } = req

@@ -5,6 +5,54 @@ import {
   deleteNotificationSubscription
 } from '@/api/db/services/notificationSubscriptionService'
 import { withAuthValidation } from '@/api/middleware/auth'
+/**
+ * @swagger
+ * /api/notificationSubscription:
+ *   post:
+ *     summary: Create a notification subscription
+ *     description: Creates a new notification subscription for a user with the provided channel ID.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - channelId
+ *             properties:
+ *               channelId:
+ *                 type: integer
+ *                 description: The ID of the notification channel to subscribe to.
+ *     responses:
+ *       201:
+ *         description: Successfully created a new notification subscription.
+ *       400:
+ *         description: Invalid request parameters.
+ *       500:
+ *         description: Internal Server Error.
+ *
+ *   delete:
+ *     summary: Delete a notification subscription
+ *     description: Deletes a notification subscription associated with a user for the specified channel ID.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - channelId
+ *             properties:
+ *               channelId:
+ *                 type: integer
+ *                 description: The ID of the notification channel to unsubscribe from.
+ *     responses:
+ *       200:
+ *         description: Notification subscription successfully deleted.
+ *       500:
+ *         description: Internal Server Error.
+ */
+
 const handler = async (req: NextApiRequest, res: NextApiResponse, user: User) => {
   const { method } = req
   const userId = user.id

@@ -11,6 +11,9 @@ import {
 import { createUser } from '@/api/db/services/userService'
 const prisma = new PrismaClient()
 describe('Company Model Tests', () => {
+  let userId: number
+  let companyId: number
+
   beforeAll(async () => {
     await prisma.$connect()
   })
@@ -18,8 +21,7 @@ describe('Company Model Tests', () => {
     await deleteUser(userId)
     await prisma.$disconnect()
   })
-  let userId: number
-  let companyId: number
+
   test('Create a new user with valid details', async () => {
     const user = await createUser({ name: 'John Doe', authId: genRandomDummyAuthId(), role: Role.USER })
     userId = user.id

@@ -14,9 +14,8 @@ import {
 } from '@/api/db/services/commentValueService'
 import { createCompany } from '@/api/db/services/companyService'
 import { createDataSource } from '@/api/db/services/dataSourceService'
-import { createSourceMeasurement, deleteSourceMeasurement } from '@/api/db/services/sourceMeasurementService'
+import { createSourceMeasurement } from '@/api/db/services/sourceMeasurementService'
 import { createUser } from '@/api/db/services/userService'
-import { deleteCompanySourceMeasurement } from '@/api/db/services/companySourceMeasurementService'
 const prisma = new PrismaClient()
 
 describe('comment value Model Tests', () => {

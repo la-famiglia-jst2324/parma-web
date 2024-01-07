@@ -147,6 +147,15 @@ Follow the steps below to update your local database with recent changes
     pnpm prisma migrate dev
    ```
 
+## Database Population
+
+If you want to populate your database, run the following commands, under the root directory, in order:
+
+```
+tsc src/api/db/populate.ts  
+node src/api/db/populate.js 
+```
+
 ## PR workflow
 
 1. **Create a new branch**

@@ -19,6 +19,13 @@ import { createUser } from '@/api/db/services/userService'
 const prisma = new PrismaClient()
 
 describe('text value Model Tests', () => {
+  let paragraphValueId: number
+  let sourceMeasurementId: number
+  let companyMeasurementId: number
+  let companyId: number
+  let dataSourceId: number
+  let userId: number
+
   beforeAll(async () => {
     await prisma.$connect()
   })
@@ -30,12 +37,6 @@ describe('text value Model Tests', () => {
     await prisma.$disconnect()
   })
 
-  let paragraphValueId: number
-  let sourceMeasurementId: number
-  let companyMeasurementId: number
-  let companyId: number
-  let dataSourceId: number
-  let userId: number
   test('Create a new user with valid details', async () => {
     const user = await createUser({ name: 'John Doe', authId: genRandomDummyAuthId(), role: Role.USER })
     userId = user.id

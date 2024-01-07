@@ -152,8 +152,8 @@ Follow the steps below to update your local database with recent changes
 If you want to populate your database, run the following commands, under the root directory, in order:
 
 ```
-tsc src/api/db/populate.ts  
-node src/api/db/populate.js 
+tsc src/api/db/populate.ts
+node src/api/db/populate.js
 ```
 
 ## PR workflow

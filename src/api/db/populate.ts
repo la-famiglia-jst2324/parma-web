@@ -76,18 +76,31 @@ async function main() {
     )
   }
 
+  let companyNames = ["Forto", "Personio", "Luminovo", "Langfuse", "Y42"]
   // Create Companies and relate to user
   const companies: Company[] = []
   for (let i = 0; i < 20; i++) {
-    companies.push(
-      await prisma.company.create({
-        data: {
-          name: `Company ${i}`,
-          addedBy: users[Math.floor(i / 2)].id
-          // Add other fields as necessary
-        }
-      })
-    )
+    if ( i < 5) {
+      companies.push(
+        await prisma.company.create({
+          data: {
+            name: companyNames[i],
+            addedBy: users[Math.floor(i / 2)].id
+            // Add other fields as necessary
+          }
+        })
+      )
+    } else {
+      companies.push(
+        await prisma.company.create({
+          data: {
+            name: `Company ${i}`,
+            addedBy: users[Math.floor(i / 2)].id
+            // Add other fields as necessary
+          }
+        })
+      )
+    }
   }
 
   // Create Buckets and relate to user

@@ -1,23 +1,23 @@
 import { createMocks } from 'node-mocks-http'
-import handler from '@/pages/api/measurements/commentValues/[valueId]'
-import { getCommentValueByID } from '@/api/db/services/commentValueService'
-jest.mock('@/api/db/services/commentValueService')
+import handler from '@/pages/api/measurements/imageValues/[valueId]'
+import { getImageValueByID } from '@/api/db/services/imageValueService'
+jest.mock('@/api/db/services/imageValueService')
 
 const value = {
   id: 1,
   companyMeasurementId: 1,
-  value: 'abc',
+  value: 'image',
   timestamp: new Date(),
   createdAt: new Date(),
   modifiedAt: new Date()
 }
-describe('comment value API', () => {
+describe('image value API', () => {
   afterEach(() => {
     jest.resetAllMocks()
   })
 
   test('GET', async () => {
-    getCommentValueByID.mockResolvedValueOnce(value)
+    getImageValueByID.mockResolvedValueOnce(value)
     const { req, res } = createMocks({
       method: 'GET',
       query: {

@@ -20,7 +20,7 @@ describe('text value Model Tests', () => {
   let companyId: number
   let dataSourceId: number
   let userId: number
-  
+
   beforeAll(async () => {
     await prisma.$connect()
   })
@@ -107,3 +107,4 @@ describe('text value Model Tests', () => {
     expect(deletedValue).toBeNull()
   })
 })
+ 

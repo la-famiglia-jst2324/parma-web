@@ -27,6 +27,10 @@ describe('Notification Channel Model Tests', () => {
     expect(channel).toHaveProperty('id')
     expect(channel.channelType).toBe(ChannelType.SLACK)
     expect(channel.destination).toBe('la-famiglia-data-analytics')
+    expect(channel.secretId).toBe('my_key_id')
+    await prisma.notificationChannel.delete({
+      where: { id: channelId }
+    })
   })
 
   test('Create a new channel without api key', async () => {

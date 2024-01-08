@@ -1,5 +1,6 @@
 import { PrismaClient, Role, HealthStatus, Frequency } from '@prisma/client'
 import { genRandomDummyAuthId } from '../utils/random'
+import { deleteCompany, deleteDataSource, deleteUser } from '../models/utils/helperFunctions'
 import {
   createUserMetricCustomization,
   getAllUserMetricsByCustomizationId
@@ -15,6 +16,9 @@ const prisma = new PrismaClient()
 describe('UserMetricCustomization Model Tests', () => {
   let userCustomizationId: number
   let sourceMeasurementId: number
+  let companyId: number
+  let dataSourceId: number
+  let userId: number
 
   beforeAll(async () => {
     const user = await createUser({ name: 'John Doe', authId: genRandomDummyAuthId(), role: Role.USER })
@@ -34,9 +38,15 @@ describe('UserMetricCustomization Model Tests', () => {
     })
     userCustomizationId = userCustomization.id
     sourceMeasurementId = sourceMeasurement.id
+    companyId = company.id
+    dataSourceId = dataSource.id
+    userId = user.id
     await prisma.$connect()
   })
   afterAll(async () => {
+    await deleteCompany(companyId)
+    await deleteDataSource(dataSourceId)
+    await deleteUser(userId)
     await prisma.$disconnect()
   })
 

@@ -1,6 +1,7 @@
 import { PrismaClient, Role } from '@prisma/client'
 
 import { genRandomDummyAuthId } from '../utils/random'
+import { deleteUser } from '../models/utils/helperFunctions'
 import { createUser } from '@/api/db/services/userService'
 import {
   createBucketAccess,
@@ -15,6 +16,7 @@ const prisma = new PrismaClient()
 describe('Bucket Access Service Tests', () => {
   let bucketId: number
   let inviteeId: number
+  let ownerId: number
 
   beforeAll(async () => {
     const userOwner = await createUser({ name: 'John Doe', authId: genRandomDummyAuthId(), role: Role.USER })
@@ -22,10 +24,14 @@ describe('Bucket Access Service Tests', () => {
     const bucket = await prisma.bucket.create({ data: { title: 'Test Bucket', ownerId: userOwner.id } })
     bucketId = bucket.id
     inviteeId = userInvitee.id
+    ownerId = userOwner.id
     await prisma.$connect()
   })
 
   afterAll(async () => {
+    await prisma.bucket.delete({ where: { id: bucketId } })
+    await deleteUser(inviteeId)
+    await deleteUser(ownerId)
     await prisma.$disconnect()
   })
 

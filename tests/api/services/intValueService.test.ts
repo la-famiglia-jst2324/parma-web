@@ -1,6 +1,11 @@
 import { PrismaClient, Frequency, HealthStatus, Role } from '@prisma/client'
 import { genRandomDummyAuthId } from '../utils/random'
-import { createCompanySourceMeasurement } from '../models/utils/helperFunctions'
+import {
+  createCompanySourceMeasurement,
+  deleteCompany,
+  deleteDataSource,
+  deleteUser
+} from '../models/utils/helperFunctions'
 import { createCompany } from '@/api/db/services/companyService'
 import { createDataSource } from '@/api/db/services/dataSourceService'
 import { createIntValue, deleteIntValue, getIntValueByID, updateIntValue } from '@/api/db/services/intValueService'
@@ -9,20 +14,24 @@ import { createUser } from '@/api/db/services/userService'
 const prisma = new PrismaClient()
 
 describe('int value Model Tests', () => {
-  beforeAll(async () => {
-    await prisma.$connect()
-  })
-
-  afterAll(async () => {
-    await prisma.$disconnect()
-  })
-
   let intValueId: number
   let sourceMeasurementId: number
   let companyMeasurementId: number
   let companyId: number
   let dataSourceId: number
   let userId: number
+
+  beforeAll(async () => {
+    await prisma.$connect()
+  })
+
+  afterAll(async () => {
+    await deleteCompany(companyId)
+    await deleteDataSource(dataSourceId)
+    await deleteUser(userId)
+    await prisma.$disconnect()
+  })
+
   test('Create a new user with valid details', async () => {
     const user = await createUser({ name: 'John Doe', authId: genRandomDummyAuthId(), role: Role.USER })
     userId = user.id

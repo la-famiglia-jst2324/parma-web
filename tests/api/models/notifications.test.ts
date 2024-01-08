@@ -83,6 +83,9 @@ describe('NotificationSubscription Model Tests', () => {
   afterAll(async () => {
     await deleteCompany(companyId)
     await deleteUser(userId)
+    await prisma.notificationChannel.delete({
+      where: { id: channelId }
+    })
     await prisma.$disconnect()
   })
 

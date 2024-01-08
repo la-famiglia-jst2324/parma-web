@@ -1,3 +1,6 @@
+/*
+ * @jest-environment node
+ */
 import { ChannelType, PrismaClient } from '@prisma/client'
 import {
   createNotificationChannel,
@@ -30,8 +33,8 @@ describe('Notification Channel Model Tests', () => {
     expect(channel.channelType).toBe(ChannelType.SLACK)
     expect(channel.destination).toBe('la-famiglia-data-analytics')
     expect(channel.secretId).not.toBeNull()
-    expect(retrieveSecret(getSecretManagerClient(), channel.secretId!)).toBe('my_key')
-  })
+    expect(await retrieveSecret(getSecretManagerClient(), channel.secretId!)).toBe('my_key')
+  }, 20000)
 
   test('Create a new channel without api key', async () => {
     const channel = await createNotificationChannel({

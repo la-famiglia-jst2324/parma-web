@@ -30,6 +30,7 @@ describe('Company Bucket Membership Model Tests', () => {
     await deleteBucket(bucketId)
     await deleteCompany(companyId)
     await deleteUser(userId)
+
     await prisma.$disconnect()
   })
 

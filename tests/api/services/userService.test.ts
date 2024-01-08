@@ -23,6 +23,7 @@ describe('User Model Tests', () => {
     expect(user).toHaveProperty('id')
     expect(user.name).toBe('John Doe')
     expect(user.role).toBe('USER')
+    await deleteUser(userId)
   })
 
   test('Create a new user with valid details', async () => {

@@ -6,7 +6,6 @@ import { ArrowUpTrayIcon } from '@heroicons/react/20/solid'
 import { CheckCircle2Icon, FileDownIcon } from 'lucide-react'
 import type { CompanyData } from '@/types/companies'
 import CompanyAttachment from '@/components/companies/CompanyAttachment'
-import DataSourcesPanel from '@/components/companies/DataSourcesPanel'
 import PerformancePanel from '@/components/companies/PerformancePanel'
 import { MainLayoutWrapper } from '@/components/layout/MainLayout'
 import {
@@ -26,6 +25,7 @@ import { Button } from '@/components/ui/button'
 import { CardTitle, CardHeader, CardContent, Card, CardDescription } from '@/components/ui/card'
 import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
+import ConfigureDatasourcesModal from '@/components/companies/ConfigureDatasoursesModal'
 
 interface SubscriptionResponse {
   addedBy: number
@@ -232,12 +232,12 @@ const CompanyPage = ({ params: { companyId } }: { params: { companyId: string } 
               <FileDownIcon className="mr-2 h-4 w-4" />
               Export Data
             </Button>
+            <ConfigureDatasourcesModal companyId={companyId} />
           </div>
         </div>
       </div>
+      <PerformancePanel companyId={companyId} companyName={companyData?.name} />
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-        <PerformancePanel companyId={companyId} companyName={companyData?.name} />
-        <DataSourcesPanel companyId={companyId} />
         <section className="mb-8">
           <Card>
             <CardHeader>

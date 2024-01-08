@@ -49,7 +49,7 @@ export default function ForgotPasswordPage() {
   }
 
   return (
-    <div className="flex h-screen items-center justify-center bg-white">
+    <div className="flex h-screen items-center justify-center">
       <div>
         <h2 className="mb-4 text-4xl font-bold">Forgot your Password?</h2>
         <p className="mb-4">

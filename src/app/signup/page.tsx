@@ -75,7 +75,7 @@ export default function SignupPage() {
   }
 
   return (
-    <div className="flex h-screen items-center justify-center bg-white px-4">
+    <div className="flex h-screen items-center justify-center px-4">
       <div>
         <h2 className="mb-3 text-5xl font-bold">Signup</h2>
         <p className="mb-3 text-base">Please enter your details to create an account</p>

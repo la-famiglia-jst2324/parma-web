@@ -96,7 +96,7 @@ const PerformancePanel: React.FC<Props> = ({ companyId, companyName }) => {
   }
 
   return (
-    <div className="mt-4 flex w-full flex-col">
+    <div className="my-4 flex w-full flex-col">
       <div className="mb-3 flex w-full flex-row space-x-3">
         <SearchSelect onValueChange={handleDatasourceChange} placeholder={'Select datasources'}>
           {companyDataSources?.map((datasource: CompanyDataSource, index) => (
@@ -116,7 +116,9 @@ const PerformancePanel: React.FC<Props> = ({ companyId, companyName }) => {
             </SearchSelectItem>
           ))}
         </SearchSelect>
-        <Button onClick={handleGetMeasurementData}>Show Data</Button>
+        <Button onClick={handleGetMeasurementData} variant={'secondary'}>
+          Show Data
+        </Button>
         <Button variant="secondary" onClick={handleRefetchDatasources}>
           <RefreshCcw className="h-4 w-4" />
         </Button>

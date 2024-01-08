@@ -47,4 +47,31 @@ describe('company subscribed API', () => {
     expect(res._getStatusCode()).toBe(200)
     expect(JSON.parse(res._getData())).toEqual(mockSubscription)
   })
+
+  test('GET with no subscription found returns 400', async () => {
+    getUserCompanySubscriptions.mockResolvedValueOnce(null) // Simulate no subscription found
+
+    const { req, res } = createMocks({
+      method: 'GET',
+      query: { userId: 1, companyId: 1 } // Example userId and companyId
+    })
+
+    await handler(req, res, mockUser)
+    expect(res._getStatusCode()).toBe(400)
+    expect(JSON.parse(res._getData())).toEqual({ error: 'subscription not found' })
+  })
+
+  test('GET with server error returns 500', async () => {
+    getUserCompanySubscriptions.mockRejectedValueOnce(new Error('Internal Server Error')) // Simulate an internal server error
+
+    const { req, res } = createMocks({
+      method: 'GET',
+      query: { userId: 1, companyId: 1 } // Example userId and companyId
+    })
+
+    await handler(req, res, mockUser)
+
+    expect(res._getStatusCode()).toBe(500)
+    expect(JSON.parse(res._getData())).toEqual({ error: 'Internal Server Error' })
+  })
 })

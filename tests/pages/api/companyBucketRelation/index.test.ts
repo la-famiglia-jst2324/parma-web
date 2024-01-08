@@ -6,10 +6,12 @@ import {
   getBucketsByCompanyId,
   getCompaniesByBucketId,
   addCompanyToBucket,
+  removeCompanyFromBucket,
   checkCompanyBucketMembershipExistence
 } from '@/api/db/services/companyBucketMembershipService'
 import { getCompanyByID, createCompany } from '@/api/db/services/companyService'
 import { getBucketById, createBucket } from '@/api/db/services/bucketService'
+import { ItemNotFoundError } from '@/api/utils/errorUtils'
 jest.mock('@/api/db/services/companyBucketMembershipService')
 jest.mock('@/api/db/services/companyService')
 jest.mock('@/api/db/services/bucketService')
@@ -84,6 +86,34 @@ describe('Company Bucket Membership API', () => {
     expect(JSON.parse(res._getData())).toEqual(mockCompany)
   })
 
+  test('GET with valid bucketId but no companies returns 404', async () => {
+    getCompaniesByBucketId.mockResolvedValueOnce(null) // Simulate no companies found
+
+    const { req, res } = createMocks({
+      method: 'GET',
+      query: { bucketId: '1' } // Valid bucketId
+    })
+
+    await handler(req, res, mockUser)
+
+    expect(res._getStatusCode()).toBe(404)
+    expect(JSON.parse(res._getData())).toEqual({ error: 'No Companies found' })
+  })
+
+  test('GET with server error returns 500', async () => {
+    getCompaniesByBucketId.mockRejectedValueOnce(new Error('Internal Server Error'))
+
+    const { req, res } = createMocks({
+      method: 'GET',
+      query: { bucketId: '1' }
+    })
+
+    await handler(req, res, mockUser)
+
+    expect(res._getStatusCode()).toBe(500)
+    expect(JSON.parse(res._getData())).toEqual({ error: 'Internal Server Error' })
+  })
+
   test('POST creates a new membership', async () => {
     createCompany.mockResolvedValueOnce(mockCompany)
     createBucket.mockResolvedValueOnce(mockBucket)
@@ -108,9 +138,60 @@ describe('Company Bucket Membership API', () => {
           bucketId: '1'
         }
       })
-      // await createCompanySubscription.mockResolvedValueOnce({ , companyId })
+
       await handler(req, res, mockUser)
       expect(res._getStatusCode()).toBe(201)
     }
+  })
+  test('POST with non-existent company or bucket returns 404', async () => {
+    getCompanyByID.mockRejectedValueOnce(new ItemNotFoundError('Company not found'))
+
+    const { req, res } = createMocks({
+      method: 'POST',
+      query: { companyId: 'non_existent_id', bucketId: '1' }
+    })
+
+    await handler(req, res, mockUser)
+
+    expect(res._getStatusCode()).toBe(400)
+  })
+
+  test('POST with server error returns 500', async () => {
+    addCompanyToBucket.mockRejectedValueOnce(new Error('Internal Server Error'))
+
+    const { req, res } = createMocks({
+      method: 'POST',
+      query: { companyId: '1', bucketId: '1' }
+    })
+
+    await handler(req, res, mockUser)
+
+    expect(res._getStatusCode()).toBe(500)
+    expect(JSON.parse(res._getData())).toEqual({ error: 'Internal Server Error' })
+  })
+  test('DELETE with non-existent company or bucket returns 404', async () => {
+    getCompanyByID.mockRejectedValueOnce(new ItemNotFoundError('Company not found'))
+
+    const { req, res } = createMocks({
+      method: 'DELETE',
+      query: { companyId: 'non_existent_id', bucketId: '1' }
+    })
+
+    await handler(req, res, mockUser)
+
+    expect(res._getStatusCode()).toBe(400)
+  })
+  test('DELETE with server error returns 500', async () => {
+    removeCompanyFromBucket.mockRejectedValueOnce(new Error('Internal Server Error'))
+
+    const { req, res } = createMocks({
+      method: 'DELETE',
+      query: { companyId: '1', bucketId: '1' }
+    })
+
+    await handler(req, res, mockUser)
+
+    expect(res._getStatusCode()).toBe(500)
+    expect(JSON.parse(res._getData())).toEqual({ error: 'Internal Server Error' })
   })
 })

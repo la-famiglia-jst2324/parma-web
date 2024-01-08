@@ -80,6 +80,32 @@ describe('Company API', () => {
     expect(JSON.parse(res._getData())).toEqual(companies)
   })
 
+  test('GET without companies returns 400', async () => {
+    getAllCompaniesWithoutPagination.mockResolvedValueOnce(null) // Simulate no companies found
+
+    const { req, res } = createMocks({
+      method: 'GET'
+    })
+
+    await handler(req, res, mockUser)
+
+    expect(res._getStatusCode()).toBe(400)
+    expect(JSON.parse(res._getData())).toEqual({ error: 'No Companies found' })
+  })
+
+  test('GET with server error returns 500', async () => {
+    getAllCompaniesWithoutPagination.mockRejectedValueOnce(new Error('Internal Server Error'))
+
+    const { req, res } = createMocks({
+      method: 'GET'
+    })
+
+    await handler(req, res, mockUser)
+
+    expect(res._getStatusCode()).toBe(500)
+    expect(JSON.parse(res._getData())).toEqual({ error: 'Internal Server Error' })
+  })
+
   test('POST creates a new company', async () => {
     createCompany.mockResolvedValueOnce(mockCompany)
 
@@ -93,5 +119,35 @@ describe('Company API', () => {
       }
     })
     await handler(req, res, mockUser)
+  })
+
+  test('POST with server error returns 500', async () => {
+    createCompany.mockRejectedValueOnce(new Error('Internal Server Error'))
+
+    const { req, res } = createMocks({
+      method: 'POST',
+      body: {
+        name: 'company1',
+        description: 'company1 description',
+        addedBy: mockUser.id,
+        modifiedAt: '2023-12-02T21:23:57.281Z'
+      }
+    })
+
+    await handler(req, res, mockUser)
+
+    expect(res._getStatusCode()).toBe(500)
+    expect(JSON.parse(res._getData())).toEqual({ error: 'Internal Server Error' })
+  })
+
+  test('Unsupported method returns 405', async () => {
+    const { req, res } = createMocks({
+      method: 'PATCH' // An unsupported method
+    })
+
+    await handler(req, res, mockUser)
+
+    expect(res._getStatusCode()).toBe(405)
+    expect(JSON.parse(res._getData())).toEqual({ error: 'Method Not Allowed' })
   })
 })

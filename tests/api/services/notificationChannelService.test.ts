@@ -5,6 +5,7 @@ import {
   getNotificationChannelById,
   updateNotificationChannel
 } from '@/api/db/services/notificationChannelService'
+import { getSecretManagerClient, retrieveSecret } from '@/api/gcp/secret_manager'
 const prisma = new PrismaClient()
 
 describe('Notification Channel Model Tests', () => {
@@ -21,16 +22,15 @@ describe('Notification Channel Model Tests', () => {
   test('Create a new slack channel with valid details', async () => {
     const channel = await createNotificationChannel({
       channelType: ChannelType.SLACK,
-      destination: 'la-famiglia-data-analytics'
+      destination: 'la-famiglia-data-analytics',
+      apiKey: 'my_key'
     })
     channelId = channel.id
     expect(channel).toHaveProperty('id')
     expect(channel.channelType).toBe(ChannelType.SLACK)
     expect(channel.destination).toBe('la-famiglia-data-analytics')
-    expect(channel.secretId).toBe('my_key_id')
-    await prisma.notificationChannel.delete({
-      where: { id: channelId }
-    })
+    expect(channel.secretId).not.toBeNull()
+    expect(retrieveSecret(getSecretManagerClient(), channel.secretId!)).toBe('my_key')
   })
 
   test('Create a new channel without api key', async () => {

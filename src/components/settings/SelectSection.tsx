@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 import { MultiSelect, MultiSelectItem, Select, SelectItem } from '@tremor/react' // Assuming you have these components
 
 interface SelectSectionProps {
+  id: string
   title: string
   description: string
   placeholder: string
@@ -12,6 +13,7 @@ interface SelectSectionProps {
 }
 
 const SelectSection: React.FC<SelectSectionProps> = ({
+  // id,
   title,
   description,
   placeholder,

@@ -58,13 +58,13 @@ const NewsCard: React.FC<NewsCardProps> = ({
       </CardContent>
       <CardFooter className="flex items-center justify-between p-4">
         <Badge
-          className="bg-green-600 transition-colors duration-200 ease-in-out hover:bg-green-700"
+          className="bg-indigo-600 transition-colors duration-200 ease-in-out hover:bg-indigo-700"
           variant="secondary"
         >
           {companyName}
         </Badge>
         <Button
-          className="border border-gray-600 bg-gray-600 text-gray-300 transition-all duration-300 ease-in-out hover:border-gray-500 hover:bg-gray-800"
+          className="hover-text-gray-400 border border-gray-700 bg-indigo-600 text-gray-300 transition-all duration-300 ease-in-out hover:border-indigo-800 hover:bg-indigo-700"
           onClick={toggleAccordion}
         >
           {isAccordionOpen ? 'Hide details' : 'Quick details'}

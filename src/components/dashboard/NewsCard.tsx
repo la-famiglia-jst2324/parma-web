@@ -1,6 +1,8 @@
-import React from 'react'
-import Image from 'next/image'
+import React, { useState, useRef } from 'react'
 import type NewsItem from '@/types/news'
+import { CardTitle, CardDescription, CardHeader, CardContent, CardFooter, Card } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
 
 interface NewsCardProps extends NewsItem {}
 
@@ -8,46 +10,74 @@ const NewsCard: React.FC<NewsCardProps> = ({
   title,
   companyName,
   datasourceName,
+  bucketName,
   timestamp,
-  description,
-  link,
-  icon
+  measureName,
+  measureValue,
+  description
 }) => {
+  const [isAccordionOpen, setIsAccordionOpen] = useState(false)
+  const contentRef = useRef(null)
+
+  const toggleAccordion = () => {
+    setIsAccordionOpen(!isAccordionOpen)
+  }
+
+  const openClasses = 'max-h-96 overflow-auto transition-max-height duration-700 ease-in-out'
+  const closedClasses = 'max-h-0 overflow-hidden transition-max-height duration-700 ease-out'
+
   return (
-    <div className="flex flex-col p-2">
-      <div className="flex w-full flex-col rounded border border-gray-300 p-4">
-        <div className="mb-4 flex flex-col items-center">
-          <div className="flex h-12 items-center justify-center">
-            <Image src={icon} alt={companyName} width={50} height={50} />
+    <Card className="border border-gray-700 bg-gray-900 transition-all duration-300 ease-in-out hover:border-gray-400 hover:bg-slate-900">
+      <CardHeader className="p-4">
+        <CardTitle className="text-lg font-semibold text-white">{title}</CardTitle>
+        <CardDescription className="text-gray-400">{datasourceName}</CardDescription>
+      </CardHeader>
+      <CardContent className="p-4">
+        <div className="grid grid-cols-2 gap-4 text-sm text-gray-300 md:grid-cols-4">
+          <div>
+            Notification Date
+            <br />
+            <span className="text-white">{timestamp}</span>
           </div>
-          <h2 className="mt-2 text-lg font-bold text-slate-800">{title}</h2>
-        </div>
-        <div className="mb-4 flex grow flex-wrap justify-between">
-          <div className="w-full">
-            <p className="text-sm text-gray-500">
-              Company: <span className="font-bold">{companyName} </span>
-            </p>
-            <p className="text-sm text-gray-500">
-              Datasource: <span className="font-bold">{datasourceName}</span>
-            </p>
-            <p className="mt-2 text-xs text-gray-500">Published: {timestamp}</p>
-            <div className="h-44">
-              <p className="mt-2 text-sm">
-                {description.length > 300 ? description.substring(0, 300) + '...' : description}
-              </p>
-            </div>
-            <a
-              href={link}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-4 text-sm text-blue-500 hover:underline"
-            >
-              Read full story here
-            </a>
+          <div>
+            {measureName}
+            <br />
+            <span className="text-white">{measureValue}</span>
+          </div>
+          <div>
+            Bucket
+            <br />
+            <span className="text-white">{bucketName}</span>
+          </div>
+          <div>
+            Trigger Factor
+            <br />
+            <span className="text-white">7.0</span>
           </div>
         </div>
+      </CardContent>
+      <CardFooter className="flex items-center justify-between p-4">
+        <Badge
+          className="bg-green-600 transition-colors duration-200 ease-in-out hover:bg-green-700"
+          variant="secondary"
+        >
+          {companyName}
+        </Badge>
+        <Button
+          className="border border-gray-600 bg-gray-600 text-gray-300 transition-all duration-300 ease-in-out hover:border-gray-500 hover:bg-gray-800"
+          onClick={toggleAccordion}
+        >
+          {isAccordionOpen ? 'Hide details' : 'Quick details'}
+        </Button>
+      </CardFooter>
+      <div ref={contentRef} className={`${isAccordionOpen ? openClasses : closedClasses}`}>
+        {isAccordionOpen && (
+          <div className="border-t border-gray-700 p-4">
+            <p className="text-gray-300">{description}</p>
+          </div>
+        )}
       </div>
-    </div>
+    </Card>
   )
 }
 

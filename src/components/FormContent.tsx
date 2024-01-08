@@ -24,13 +24,13 @@ export const FormContent: React.FC<FormContentProps> = ({
   readonly
 }) => {
   return (
-    <div className="mb-4 flex flex-col">
+    <div className="mb-4 flex-col justify-center">
       <label className="mb-2 block text-sm font-bold text-gray-700" htmlFor={id}>
         {label}
       </label>
       {type === 'input' ? (
         <Input
-          className="w-50 ml-1 mt-2 appearance-none rounded border bg-slate-800 leading-tight shadow focus:text-white focus:outline-none"
+          className="ml-1 mt-2 w-96 appearance-none rounded border bg-slate-800 leading-tight shadow focus:text-white focus:outline-none"
           type="text"
           id={id}
           name={name}

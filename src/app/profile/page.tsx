@@ -83,43 +83,42 @@ const ProfilePage: React.FC = () => {
     setIsModalOpen(false)
   }
   return (
-    <main className="m-4 flex h-[68em] flex-row items-start justify-start space-x-4" role="main">
-      <div className="items-center space-x-7">
-        <h1 className="py-2 pl-2 text-3xl font-bold">Edit Profile</h1>
-
-        <div className="flex">
-          <div className="m-6 ml-10 pt-12">
-            <div className="flex justify-center">
-              <Image
-                className="hover:delay-50 mb-5 block h-[140px] w-[140px] rounded-full transition duration-500 ease-in hover:cursor-pointer hover:shadow-[0_0_15px_15px_rgba(63,55,201,0.5)]"
-                src={userPhotoURL || profilePic}
-                width={500}
-                height={500}
-                alt="Profile"
-                onClick={handleImageClick}
-              />
-              {isModalOpen && (
-                <ProfileImageModal src={userPhotoURL?.toString() || profilePic} alt="Profile" onClose={closeModal} />
-              )}
-            </div>
-
-            <div>
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handleFileChange}
-                id="profile-pic-input"
-                style={{ display: 'none' }}
-              />
-              <Button
-                className="rounded bg-indigo-700 font-bold text-white hover:bg-blue-700 focus:outline-none"
-                onClick={() => document.getElementById('profile-pic-input')?.click()}
-              >
-                New Profile Picture
-              </Button>
-            </div>
+    // <main className="m-4 flex h-[68em] flex-row items-start justify-start space-x-4" role="main">
+    <div className="items-center space-x-7">
+      <h1 className="py-2 pl-2 text-3xl font-bold">Edit Profile</h1>
+      <div className="flex justify-center">
+        <div className="m-2 ml-10 flex-col pt-12 ">
+          <div className="flex justify-center">
+            <Image
+              className="hover:delay-50 mb-5 block h-[180px] w-[180px] rounded-full transition duration-500 ease-in hover:cursor-pointer hover:shadow-[0_0_15px_15px_rgba(63,55,201,0.5)]"
+              src={userPhotoURL || profilePic}
+              width={500}
+              height={500}
+              alt="Profile"
+              onClick={handleImageClick}
+            />
+            {isModalOpen && (
+              <ProfileImageModal src={userPhotoURL?.toString() || profilePic} alt="Profile" onClose={closeModal} />
+            )}
           </div>
-          <div className="ml-60 pt-12 font-bold">
+
+          <div className="flex justify-center">
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleFileChange}
+              id="profile-pic-input"
+              style={{ display: 'none' }}
+            />
+            <Button
+              className="rounded bg-indigo-700 font-bold text-white hover:bg-blue-700 focus:outline-none"
+              onClick={() => document.getElementById('profile-pic-input')?.click()}
+            >
+              New Profile Picture
+            </Button>
+          </div>
+          {/* </div> */}
+          <div className="mt-6 flex-col justify-center font-bold">
             <form role="form" data-testid="create-profile-form" onSubmit={saveProfileData}>
               <FormContent
                 id="Full Name"
@@ -148,7 +147,7 @@ const ProfilePage: React.FC = () => {
                 </Button>
               </div>
             </form>
-            <div className="mb-4 flex flex-col pt-4">
+            <div className=" mb-4 pt-4">
               <label className="mb-2 block text-sm font-bold text-gray-700">Do you want to change your password?</label>
               <div>
                 <Button
@@ -162,7 +161,8 @@ const ProfilePage: React.FC = () => {
           </div>
         </div>
       </div>
-    </main>
+    </div>
+    // </main>
   )
 }
 

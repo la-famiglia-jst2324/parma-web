@@ -34,7 +34,7 @@ export async function createBucket(userId: number) {
 export async function createDataSource() {
   return await prisma.dataSource.create({
     data: {
-      sourceName: 'Test Source',
+      sourceName: 'Test Source a',
       isActive: true,
       frequency: 'DAILY',
       healthStatus: 'UP',

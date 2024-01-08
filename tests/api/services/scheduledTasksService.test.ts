@@ -1,5 +1,5 @@
 import { PrismaClient, ScheduleType, TaskStatus } from '@prisma/client'
-import { createDataSource } from '../models/utils/helperFunctions'
+import { createDataSource, deleteDataSource } from '../models/utils/helperFunctions'
 import {
   createScheduledTask,
   getScheduledTaskByID,
@@ -20,6 +20,7 @@ describe('ScheduledTasks Service Tests', () => {
   })
 
   afterAll(async () => {
+    await deleteDataSource(dataSourceId)
     await prisma.$disconnect()
   })
 

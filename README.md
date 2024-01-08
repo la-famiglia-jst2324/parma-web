@@ -6,8 +6,8 @@
 [![Deploy](https://github.com/la-famiglia-jst2324/parma-web/actions/workflows/release.yml/badge.svg?event=push)](https://staging.parma.software)
 [![Major Tag](https://github.com/la-famiglia-jst2324/parma-web/actions/workflows/tag-major.yml/badge.svg)](https://github.com/la-famiglia-jst2324/parma-web/actions/workflows/tag-major.yml)
 
-![Functions](https://img.shields.io/badge/functions-14.22%25-red.svg?style=flat)
-![Lines](https://img.shields.io/badge/lines-13.09%25-red.svg?style=flat)
+![Functions](https://img.shields.io/badge/functions-14.18%25-red.svg?style=flat)
+![Lines](https://img.shields.io/badge/lines-12.95%25-red.svg?style=flat)
 
 ParmaAI webstack including frontend and REST API backend.
 
@@ -146,6 +146,15 @@ Follow the steps below to update your local database with recent changes
    ```bash
     pnpm prisma migrate dev
    ```
+
+## Database Population
+
+If you want to populate your database, run the following commands, under the root directory, in order:
+
+```
+tsc src/api/db/populate.ts
+node src/api/db/populate.js
+```
 
 ## PR workflow
 

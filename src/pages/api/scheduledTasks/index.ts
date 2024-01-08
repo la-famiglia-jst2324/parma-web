@@ -13,18 +13,27 @@ import { createScheduledTask, getAllScheduledTasks } from '@/api/db/services/sch
  *           schema:
  *             type: object
  *             required:
- *               - name
- *               - schedule
- *               # Include other required fields here
+ *               - dataSourceId
+ *               - scheduleType
+ *               - status
  *             properties:
- *               name:
+ *               dataSourceId:
+ *                 type: integer
+ *               scheduleType:
  *                 type: string
- *               schedule:
+ *               resultSummary:
  *                 type: string
- *               # Define other properties of the scheduled task here
+ *               status:
+ *                 type: string
+ *               attempts:
+ *                 type: integer
  *     responses:
  *       201:
  *         description: Successfully created a new scheduled task.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ScheduledTask'
  *       500:
  *         description: Internal Server Error.
  *
@@ -49,6 +58,12 @@ import { createScheduledTask, getAllScheduledTasks } from '@/api/db/services/sch
  *     responses:
  *       200:
  *         description: Successfully retrieved the list of scheduled tasks.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/ScheduledTask'
  *       500:
  *         description: Internal Server Error.
  */

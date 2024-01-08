@@ -16,8 +16,6 @@ const newsSourceId = Number(newsSources[0].id)
  *         required: false
  *         schema:
  *           type: string
- *           format: csv
- *         description: An optional comma-separated list of company IDs to filter the measurements.
  *     responses:
  *       200:
  *         description: Successfully retrieved the company measurements.
@@ -26,20 +24,22 @@ const newsSourceId = Number(newsSources[0].id)
  *             schema:
  *               type: array
  *               items:
- *                 $ref: '#/components/schemas/sourceMeasurement'
+ *                 $ref: '#/components/schemas/SourceMeasurement'
  *       400:
  *         description: No data found for the given parameters.
  *       500:
  *         description: Internal Server Error.
  * components:
  *   schemas:
- *     sourceMeasurement:
+ *     SourceMeasurement:
  *       type: object
  *       required:
  *         - id
  *         - sourceModuleId
  *         - type
  *         - measurementName
+ *         - createdAt
+ *         - modifiedAt
  *       properties:
  *         id:
  *           type: integer

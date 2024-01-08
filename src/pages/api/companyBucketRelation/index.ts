@@ -60,13 +60,11 @@ const membershipGetSchema = z.object({
  *         required: false
  *         schema:
  *           type: integer
- *         description: The ID of the bucket to retrieve associated companies.
  *       - in: query
  *         name: companyId
  *         required: false
  *         schema:
  *           type: integer
- *         description: The ID of the company to retrieve associated buckets.
  *     responses:
  *       200:
  *         description: Successfully retrieved companies or buckets.
@@ -99,6 +97,10 @@ const membershipGetSchema = z.object({
  *         description: Membership already exists.
  *       201:
  *         description: Successfully created a new membership and subscribed user to the company.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/CompanyBucketMembership'
  *       400:
  *         description: Invalid request parameters.
  *       404:
@@ -132,6 +134,24 @@ const membershipGetSchema = z.object({
  *         description: Company or Bucket not found.
  *       500:
  *         description: Internal Server Error.
+ * components:
+ *   schemas:
+ *     CompanyBucketMembership:
+ *       type: object
+ *       required:
+ *         - companyId
+ *         - bucketId
+ *         - createdAt
+ *         - modifiedAt
+ *       properties:
+ *         companyId:
+ *           type: integer
+ *         bucketId:
+ *           type: integer
+ *         createdAt:
+ *           type: string
+ *         modifiedAt:
+ *           type: string
  */
 
 const handler = async (req: NextApiRequest, res: NextApiResponse, user: User) => {

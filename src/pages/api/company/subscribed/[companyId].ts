@@ -15,7 +15,6 @@ import { ItemNotFoundError } from '@/api/utils/errorUtils'
  *         required: true
  *         schema:
  *           type: integer
- *         description: The ID of the company for which to retrieve the subscription details.
  *     responses:
  *       200:
  *         description: Successfully retrieved subscription details.
@@ -38,6 +37,8 @@ import { ItemNotFoundError } from '@/api/utils/errorUtils'
  *       required:
  *         - userId
  *         - companyId
+ *         - createdAt
+ *         - modifiedAt
  *       properties:
  *         userId:
  *           type: integer

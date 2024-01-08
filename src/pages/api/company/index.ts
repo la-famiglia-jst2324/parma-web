@@ -21,19 +21,16 @@ import { addCompanyDataSourceRelationshipForCompany } from '@/api/db/services/co
  *         required: false
  *         schema:
  *           type: string
- *         description: The name of the company to retrieve. If provided, returns only the specified company.
  *       - in: query
  *         name: page
  *         required: false
  *         schema:
  *           type: integer
- *         description: The page number for pagination.
  *       - in: query
  *         name: pageSize
  *         required: false
  *         schema:
  *           type: integer
- *         description: The number of items per page for pagination.
  *     responses:
  *       200:
  *         description: Successfully retrieved company or companies.
@@ -80,6 +77,27 @@ import { addCompanyDataSourceRelationshipForCompany } from '@/api/db/services/co
  *         description: Invalid request parameters.
  *       500:
  *         description: Internal Server Error.
+ * components:
+ *   schemas:
+ *     Company:
+ *       type: object
+ *       required:
+ *         - id
+ *         - name
+ *         - addedBy
+ *         - createdAt
+ *         - modifiedAt
+ *       properties:
+ *         id:
+ *           type: integer
+ *         name:
+ *           type: string
+ *         description:
+ *           type: string
+ *         createdAt:
+ *           type: string
+ *         modifiedAt:
+ *           type: string
  */
 
 const handler = async (req: NextApiRequest, res: NextApiResponse, user: User) => {

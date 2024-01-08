@@ -15,10 +15,13 @@ import { ItemNotFoundError } from '@/api/utils/errorUtils'
  *         required: true
  *         schema:
  *           type: integer
- *         description: The ID of the user to retrieve.
  *     responses:
  *       200:
  *         description: Successfully retrieved the user.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/User'
  *       400:
  *         description: No User found for the provided ID.
  *       404:
@@ -41,10 +44,20 @@ import { ItemNotFoundError } from '@/api/utils/errorUtils'
  *         application/json:
  *           schema:
  *             type: object
- *             # Define the schema for the user update here
+ *             properties:
+ *               name:
+ *                 type: string
+ *               profilePicture:
+ *                 type: string
+ *               role:
+ *                 type: string
  *     responses:
  *       200:
  *         description: Successfully updated the user.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/User'
  *       404:
  *         description: User not Found.
  *       500:

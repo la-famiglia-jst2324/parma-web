@@ -42,6 +42,10 @@ const companySubscriptionSchema = z.object({
  *     responses:
  *       201:
  *         description: Successfully subscribed to the company.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/CompanySubscription'
  *       200:
  *         description: Successfully unsubscribed from the company.
  *       400:
@@ -71,6 +75,24 @@ const companySubscriptionSchema = z.object({
  *         description: Internal Server Error.
  *       405:
  *         description: Method Not Allowed.
+ * components:
+ *   schemas:
+ *     CompanySubscription:
+ *       type: object
+ *       required:
+ *         - userId
+ *         - companyId
+ *         - createdAt
+ *         - modifiedAt
+ *       properties:
+ *         userId:
+ *           type: integer
+ *         companyId:
+ *           type: integer
+ *         createdAt:
+ *           type: string
+ *         modifiedAt:
+ *           type: string
  */
 
 const handler = async (req: NextApiRequest, res: NextApiResponse, user: User) => {

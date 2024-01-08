@@ -7,25 +7,23 @@ import { withAuthValidation } from '@/api/middleware/auth'
  * @swagger
  * /api/measurements:
  *   get:
- *     summary: Retrieve source measurements by company IDs
+ *     summary: Retrieve common source measurements (intersection) of a list of company IDs
  *     description: Fetches source measurements associated with given company IDs. Can handle multiple company IDs.
  *     parameters:
  *       - in: query
  *         name: companyIds
  *         required: true
  *         schema:
- *           type: string
- *           format: csv
- *         description: A comma-separated list of company IDs to retrieve their associated source measurements.
+ *           type: integer
  *     responses:
  *       200:
- *         description: Successfully retrieved the source measurements for the given company IDs.
+ *         description: Successfully retrieved the common source measurements for the given company IDs.
  *         content:
  *           application/json:
  *             schema:
  *               type: array
  *               items:
- *                 $ref: '#/components/schemas/sourceMeasurement'
+ *                 $ref: '#/components/schemas/SourceMeasurement'
  *       400:
  *         description: No relation found or no data source measurements found.
  *       500:
@@ -59,11 +57,37 @@ import { withAuthValidation } from '@/api/middleware/auth'
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/sourceMeasurement'
+ *               $ref: '#/components/schemas/SourceMeasurement'
  *       400:
  *         description: Invalid request parameters.
  *       500:
  *         description: Internal Server Error.
+ * components:
+ *   schemas:
+ *     SourceMeasurement:
+ *       type: object
+ *       required:
+ *         - id
+ *         - sourceModuleId
+ *         - type
+ *         - measurementName
+ *         - createdAt
+ *         - modifiedAt
+ *       properties:
+ *         id:
+ *           type: integer
+ *         sourceModuleId:
+ *           type: integer
+ *         type:
+ *           type: string
+ *         measurementName:
+ *           type: string
+ *         parentMeasurementId:
+ *           type: integer
+ *         createdAt:
+ *           type: string
+ *         modifiedAt:
+ *           type: string
  */
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {

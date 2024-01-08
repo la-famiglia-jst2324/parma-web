@@ -14,7 +14,6 @@ import { ItemNotFoundError } from '@/api/utils/errorUtils'
  *         required: true
  *         schema:
  *           type: integer
- *         description: The ID of the company to retrieve.
  *     responses:
  *       200:
  *         description: Successfully retrieved the company details.
@@ -38,13 +37,17 @@ import { ItemNotFoundError } from '@/api/utils/errorUtils'
  *         required: true
  *         schema:
  *           type: integer
- *         description: The ID of the company to update.
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/Company'
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *               description:
+ *                 type: string
  *     responses:
  *       200:
  *         description: Successfully updated the company.
@@ -66,7 +69,6 @@ import { ItemNotFoundError } from '@/api/utils/errorUtils'
  *         required: true
  *         schema:
  *           type: integer
- *         description: The ID of the company to delete.
  *     responses:
  *       200:
  *         description: Company successfully deleted.
@@ -76,26 +78,6 @@ import { ItemNotFoundError } from '@/api/utils/errorUtils'
  *         description: Internal Server Error.
  *       405:
  *         description: Method Not Allowed.
- * components:
- *   schemas:
- *     Company:
- *       type: object
- *       required:
- *         - id
- *         - name
- *         - description
- *         - addedBy
- *       properties:
- *         id:
- *           type: integer
- *         name:
- *           type: string
- *         description:
- *           type: string
- *         createdAt:
- *           type: string
- *         modifiedAt:
- *           type: string
  */
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {

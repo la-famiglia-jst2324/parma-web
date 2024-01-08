@@ -14,16 +14,13 @@ import { getInviteesByBucketId, updateBucketAccess, deleteBucketAccess } from '@
  *         required: true
  *         schema:
  *           type: integer
- *         description: The ID of the bucket to retrieve invitees for.
  *     responses:
  *       200:
  *         description: Successfully retrieved invitees.
  *         content:
  *           application/json:
  *             schema:
- *               type: array
- *               items:
- *                 $ref: '#/components/schemas/BucketAccess'
+ *               $ref: '#/components/schemas/BucketAccess'
  *       400:
  *         description: No Invitees found for the provided ID.
  *       500:
@@ -38,7 +35,6 @@ import { getInviteesByBucketId, updateBucketAccess, deleteBucketAccess } from '@
  *         schema:
  *           type: integer
  *         required: true
- *         description: The ID of the bucket to retrieve invitees for.
  *     requestBody:
  *       required: true
  *       content:
@@ -53,10 +49,13 @@ import { getInviteesByBucketId, updateBucketAccess, deleteBucketAccess } from '@
  *                 type: integer
  *               permission:
  *                 type: string
- *                 description: The updated permission for the invitee.
  *     responses:
  *       200:
  *         description: Successfully updated bucket access.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/BucketAccess'
  *       500:
  *         description: Internal Server Error.
  *
@@ -69,7 +68,6 @@ import { getInviteesByBucketId, updateBucketAccess, deleteBucketAccess } from '@
  *         schema:
  *           type: integer
  *         required: true
- *         description: The ID of the bucket to retrieve invitees for.
  *     requestBody:
  *       required: true
  *       content:

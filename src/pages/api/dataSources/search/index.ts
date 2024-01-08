@@ -12,7 +12,6 @@ import { getDataSourceByName } from '@/api/db/services/dataSourceService'
  *         required: true
  *         schema:
  *           type: string
- *         description: The name of the data source to retrieve.
  *     responses:
  *       200:
  *         description: Successfully retrieved data sources.

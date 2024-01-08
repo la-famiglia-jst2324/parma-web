@@ -22,7 +22,7 @@ const newsSubscriptionSchema = z.object({
  *     description: Creates or deletes a news subscription for a user based on a flag. If the flag is 'true', it creates a subscription; otherwise, it deletes an existing subscription.
  *     parameters:
  *       - in: query
- *         name: flag
+ *         name: subscribe
  *         required: true
  *         schema:
  *           type: string
@@ -35,16 +35,17 @@ const newsSubscriptionSchema = z.object({
  *           schema:
  *             type: object
  *             properties:
- *               userId:
- *                 type: integer
  *               companyId:
  *                 type: integer
  *             required:
- *               - userId
  *               - companyId
  *     responses:
  *       201:
  *         description: Successfully created a new news subscription.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/NewsSubscription'
  *       200:
  *         description: News subscription successfully deleted.
  *       400:
@@ -57,21 +58,39 @@ const newsSubscriptionSchema = z.object({
  *   get:
  *     summary: Retrieve news subscriptions by user ID
  *     description: Fetches news subscriptions associated with a given user ID.
- *     parameters:
- *       - in: query
- *         name: userId
- *         required: true
- *         schema:
- *           type: integer
  *     responses:
  *       200:
- *         description: Successfully retrieved news subscriptions for the user.
+ *         description: Successfully retrieved a list of subscribed companies for the user.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Company'
  *       400:
  *         description: No subscribed companies found.
  *       404:
  *         description: User not found.
  *       500:
  *         description: Internal Server Error.
+ * components:
+ *   schemas:
+ *     NewsSubscription:
+ *       type: object
+ *       required:
+ *         - userId
+ *         - companyId
+ *         - createdAt
+ *         - modifiedAt
+ *       properties:
+ *         userId:
+ *           type: integer
+ *         companyId:
+ *           type: integer
+ *         createdAt:
+ *           type: string
+ *         modifiedAt:
+ *           type: string
  */
 
 const handler = async (req: NextApiRequest, res: NextApiResponse, user: User) => {

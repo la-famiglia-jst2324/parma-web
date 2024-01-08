@@ -12,21 +12,20 @@ import { getScheduledTaskByDatasourceID } from '@/api/db/services/scheduledTaskS
  *         required: true
  *         schema:
  *           type: integer
- *         description: The ID of the data source to retrieve its associated scheduled task.
  *     responses:
  *       200:
  *         description: Successfully retrieved the scheduled task for the data source.
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/scheduledTask'
+ *               $ref: '#/components/schemas/ScheduledTask'
  *       400:
  *         description: No Data Source found for the provided ID.
  *       500:
  *         description: Internal Server Error.
  * components:
  *   schemas:
- *     scheduledTask:
+ *     ScheduledTask:
  *       type: object
  *       required:
  *         - taskId

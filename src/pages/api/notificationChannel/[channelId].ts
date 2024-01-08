@@ -9,7 +9,7 @@ import {
 import { ItemNotFoundError } from '@/api/utils/errorUtils'
 /**
  * @swagger
- * /api/notificationChannel/id:
+ * /api/notificationChannel/channelId:
  *   get:
  *     summary: Retrieve a notification channel by ID
  *     description: Fetches details of a specific notification channel based on the provided channel ID.
@@ -19,10 +19,13 @@ import { ItemNotFoundError } from '@/api/utils/errorUtils'
  *         required: true
  *         schema:
  *           type: integer
- *         description: The ID of the notification channel to retrieve.
  *     responses:
  *       200:
  *         description: Successfully retrieved the notification channel.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/NotificationChannel'
  *       400:
  *         description: No NotificationChannel found for the provided ID.
  *       404:
@@ -45,10 +48,20 @@ import { ItemNotFoundError } from '@/api/utils/errorUtils'
  *         application/json:
  *           schema:
  *             type: object
- *             # Define the schema for the notification channel update here
+ *             properties:
+ *               channelType:
+ *                 type: string
+ *               destination:
+ *                 type: string
+ *               apiKey:
+ *                 type: string
  *     responses:
  *       200:
  *         description: Successfully updated the notification channel.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/NotificationChannel'
  *       500:
  *         description: Internal Server Error.
  *

@@ -21,13 +21,11 @@ import { ItemNotFoundError } from '@/api/utils/errorUtils'
  *         required: false
  *         schema:
  *           type: integer
- *         description: The ID of the data source to retrieve associated companies.
  *       - in: query
  *         name: companyId
  *         required: false
  *         schema:
  *           type: integer
- *         description: The ID of the company to retrieve associated data sources.
  *     responses:
  *       200:
  *         description: Successfully retrieved companies or data sources.
@@ -46,10 +44,28 @@ import { ItemNotFoundError } from '@/api/utils/errorUtils'
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/companyDataSource'
+ *             type: object
+ *             required:
+ *               - dataSourceId
+ *               - companyId
+ *               - isDataSourceActive
+ *               - healthStatus
+ *             properties:
+ *               isDataSourceActive:
+ *                 type: boolean
+ *               companyId:
+ *                 type: integer
+ *               dataSourceId:
+ *                 type: integer
+ *               healthStatus:
+ *                 type: string
  *     responses:
  *       200:
  *         description: Successfully created a new data source.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/CompanyDataSource'
  *       400:
  *         description: Invalid request parameters.
  *       500:
@@ -75,9 +91,6 @@ import { ItemNotFoundError } from '@/api/utils/errorUtils'
  *         application/json:
  *           schema:
  *             type: object
- *             required:
- *               - isDataSourceActive
- *               - healthStatus
  *             properties:
  *               isDataSourceActive:
  *                 type: boolean
@@ -86,6 +99,10 @@ import { ItemNotFoundError } from '@/api/utils/errorUtils'
  *     responses:
  *       200:
  *         description: Successfully updated the data source.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/CompanyDataSource'
  *       500:
  *         description: Internal Server Error.
  *
@@ -112,7 +129,7 @@ import { ItemNotFoundError } from '@/api/utils/errorUtils'
  *         description: Internal Server Error.
  * components:
  *   schemas:
- *     companyDataSource:
+ *     CompanyDataSource:
  *       type: object
  *       required:
  *         - dataSourceId

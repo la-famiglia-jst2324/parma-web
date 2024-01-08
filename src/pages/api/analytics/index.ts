@@ -35,7 +35,7 @@ import { withAuthValidation } from '@/api/middleware/auth'
  *         content:
  *           application/json:
  *             schema:
- *                $ref: '#/components/schemas/intValue'
+ *                $ref: '#/components/schemas/IntValue'
  *       400:
  *         description: Bad request, if no relation is found.
  *       404:
@@ -46,20 +46,20 @@ import { withAuthValidation } from '@/api/middleware/auth'
  *         description: Internal server error.
  * components:
  *   schemas:
- *     intValue:
+ *     IntValue:
  *       type: object
  *       required:
  *         - id
  *         - companyMeasurementId
  *         - value
  *         - timestamp
+ *         - createdAt
+ *         - modifiedAt
  *       properties:
  *         id:
  *           type: integer
- *           description: The unique identifier
  *         companyMeasurementId:
- *           type: string
- *           description: The corresponding companyMeasurement id
+ *           type: integer
  *         value:
  *           type: integer
  *         timestamp:
@@ -68,20 +68,20 @@ import { withAuthValidation } from '@/api/middleware/auth'
  *           type: string
  *         modifiedAt:
  *           type: string
- *     floatValue:
+ *     FloatValue:
  *       type: object
  *       required:
  *         - id
  *         - companyMeasurementId
  *         - value
  *         - timestamp
+ *         - createdAt
+ *         - modifiedAt
  *       properties:
  *         id:
  *           type: integer
- *           description: The unique identifier
  *         companyMeasurementId:
- *           type: string
- *           description: The corresponding companyMeasurement id
+ *           type: integer
  *         value:
  *           type: float
  *         timestamp:

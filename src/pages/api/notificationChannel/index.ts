@@ -14,15 +14,13 @@ import { createNotificationChannel } from '@/api/db/services/notificationChannel
  *           schema:
  *             type: object
  *             required:
- *               - name
- *               - type
- *               # Include other required fields here
+ *               - channelType
+ *               - destination
  *             properties:
- *               name:
+ *               channelType:
  *                 type: string
- *               type:
+ *               destination:
  *                 type: string
- *               # Define other properties of the notification channel here
  *     responses:
  *       201:
  *         description: Successfully created a new notification channel.
@@ -42,7 +40,8 @@ import { createNotificationChannel } from '@/api/db/services/notificationChannel
  *         - id
  *         - channelType
  *         - destination
- *         - apiKey
+ *         - createdAt
+ *         - modifiedAt
  *       properties:
  *         id:
  *           type: integer

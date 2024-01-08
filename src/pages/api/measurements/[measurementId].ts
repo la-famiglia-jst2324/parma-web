@@ -19,12 +19,51 @@ import { ItemNotFoundError } from '@/api/utils/errorUtils'
  *         required: true
  *         schema:
  *           type: integer
- *         description: The ID of the source measurement to retrieve.
  *     responses:
  *       200:
  *         description: Successfully retrieved the source measurement.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/SourceMeasurement'
  *       400:
  *         description: No Data Source Measurement found for the provided ID.
+ *       500:
+ *         description: Internal Server Error.
+ *
+ *   put:
+ *     summary: Update a Source Measurement
+ *     description: Updates the details of an existing Source Measurement based on the provided ID.
+ *     parameters:
+ *       - in: query
+ *         name: measurementId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               sourceModuleId:
+ *                 type: integer
+ *               type:
+ *                 type: string
+ *               companyId:
+ *                 type: integer
+ *               measurementName:
+ *                 type: string
+ *               parentMeasurementId:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Successfully updated the Source Measurement.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/SourceMeasurement'
  *       500:
  *         description: Internal Server Error.
  *

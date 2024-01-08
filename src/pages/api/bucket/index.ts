@@ -38,7 +38,9 @@ import { withAuthValidation } from '@/api/middleware/auth'
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/Bucket'
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Bucket'
  *       400:
  *         description: Bad request
  *       404:
@@ -54,7 +56,21 @@ import { withAuthValidation } from '@/api/middleware/auth'
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/BucketCreateRequest'
+ *             type: object
+ *             required:
+ *               - title
+ *               - description
+ *               - ownerId
+ *               - isPublic
+ *             properties:
+ *               title:
+ *                 type: string
+ *               description:
+ *                 type: string
+ *               ownerId:
+ *                 type: integer
+ *               isPublic:
+ *                 type: boolean
  *     responses:
  *       201:
  *         description: The created bucket
@@ -89,14 +105,6 @@ import { withAuthValidation } from '@/api/middleware/auth'
  *         isPublic:
  *           type: boolean
  *           description: Whether the bucket is publicly accessible
- *     BucketCreateRequest:
- *       type: object
- *       required:
- *         - name
- *       properties:
- *         name:
- *           type: string
- *           description: The name of the bucket to be created
  */
 const handler = async (req: NextApiRequest, res: NextApiResponse, user: User) => {
   const { method } = req

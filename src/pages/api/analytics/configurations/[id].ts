@@ -26,7 +26,6 @@ const customizaitonDeleteQuerySchema = z.object({
  *         required: true
  *         schema:
  *           type: integer
- *         description: The ID of the user customization to delete.
  *     responses:
  *       200:
  *         description: Customization deleted successfully. Returns a success message.

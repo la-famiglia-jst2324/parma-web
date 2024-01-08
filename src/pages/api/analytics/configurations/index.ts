@@ -121,10 +121,11 @@ interface MetricDataSourceMappingType {
  *         - id
  *         - customizationId
  *         - companyId
+ *         - createdAt
+ *         - modifiedAt
  *       properties:
  *         id:
  *           type: integer
- *           description: The unique identifier
  *         customizationId:
  *           type: integer
  *         companyId:
@@ -133,12 +134,15 @@ interface MetricDataSourceMappingType {
  *           type: string
  *         modifiedAt:
  *           type: string
+ *
  *     UserCustomization:
  *       type: object
  *       required:
  *         - id
  *         - name
  *         - userId
+ *         - createdAt
+ *         - modifiedAt
  *       properties:
  *         id:
  *           type: integer
@@ -150,12 +154,15 @@ interface MetricDataSourceMappingType {
  *           type: string
  *         modifiedAt:
  *           type: string
+ *
  *     UserMetricCustomization:
  *       type: object
  *       required:
  *         - id
  *         - customizationId
  *         - sourceMeasurementId
+ *         - createdAt
+ *         - modifiedAt
  *       properties:
  *         id:
  *           type: integer

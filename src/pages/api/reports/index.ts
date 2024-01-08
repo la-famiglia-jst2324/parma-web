@@ -14,18 +14,23 @@ import { createReport } from '@/api/db/services/reportService'
  *           schema:
  *             type: object
  *             required:
- *               - title
- *               - content
- *               # Include other required fields here
+ *               - companyId
+ *               - name
+ *               - reportFileUrl
  *             properties:
- *               title:
+ *               companyId:
  *                 type: string
- *               content:
+ *               name:
  *                 type: string
- *               # Define other properties of the report here
+ *               reportFileUrl:
+ *                 type: string
  *     responses:
  *       201:
  *         description: Successfully created a new report.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Report'
  *         content:
  *           application/json:
  *             schema:
@@ -35,6 +40,30 @@ import { createReport } from '@/api/db/services/reportService'
  *         description: Invalid request parameters.
  *       500:
  *         description: Internal Server Error.
+ * components:
+ *   schemas:
+ *     Report:
+ *       type: object
+ *       required:
+ *         - id
+ *         - companyId
+ *         - name
+ *         - reportFileUrl
+ *         - createdAt
+ *         - modifiedAt
+ *       properties:
+ *         id:
+ *           type: integer
+ *         companyId:
+ *           type: integer
+ *         name:
+ *           type: string
+ *         reportFileUrl:
+ *           type: string
+ *         createdAt:
+ *           type: string
+ *         modifiedAt:
+ *           type: string
  */
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {

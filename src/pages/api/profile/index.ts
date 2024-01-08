@@ -10,27 +10,56 @@ import { withAuthValidation } from '@/api/middleware/auth'
  *   put:
  *     summary: Update user information
  *     description: Updates the information of an existing user based on their user ID.
- *     parameters:
- *       - in: query
- *         name: userId
- *         required: true
- *         schema:
- *           type: integer
- *         description: The ID of the user to update.
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
  *             type: object
- *             # Define the schema for the user update here
+ *             properties:
+ *               name:
+ *                 type: string
+ *               role:
+ *                 type: string
+ *               profilePicture:
+ *                 type: string
  *     responses:
  *       200:
  *         description: Successfully updated the user's information.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/User'
  *       404:
  *         description: User not found.
  *       500:
  *         description: Internal Server Error.
+ * components:
+ *   schemas:
+ *     User:
+ *       type: object
+ *       required:
+ *         - id
+ *         - authId
+ *         - name
+ *         - role
+ *         - createdAt
+ *         - modifiedAt
+ *       properties:
+ *         id:
+ *           type: integer
+ *         authId:
+ *           type: string
+ *         name:
+ *           type: string
+ *         profilePicture:
+ *           type: string
+ *         role:
+ *           type: string
+ *         createdAt:
+ *           type: string
+ *         modifiedAt:
+ *           type: string
  */
 
 const handler = async (req: NextApiRequest, res: NextApiResponse, user: User) => {

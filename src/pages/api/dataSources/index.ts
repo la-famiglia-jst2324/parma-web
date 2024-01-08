@@ -22,21 +22,18 @@ const frequencyMapping: { [key: string]: Frequency | undefined } = {
  *         required: false
  *         schema:
  *           type: string
- *         description: Optional name filter for the data sources.
  *       - in: query
  *         name: page
  *         required: false
  *         schema:
  *           type: integer
  *           default: 1
- *         description: The page number for pagination (default is 1).
  *       - in: query
  *         name: size
  *         required: false
  *         schema:
  *           type: integer
  *           default: 10
- *         description: The number of items per page (default is 10).
  *     responses:
  *       200:
  *         description: Successfully retrieved the list of data sources.
@@ -62,10 +59,33 @@ const frequencyMapping: { [key: string]: Frequency | undefined } = {
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/DataSource'
+ *             type: object
+ *             required:
+ *               - sourceName
+ *               - isActive
+ *               - frequency
+ *               - healthStatus
+ *               - invocationEndpoint
+ *             properties:
+ *               sourceName:
+ *                 type: string
+ *               isActive:
+ *                 type: boolean
+ *               frequency:
+ *                 type: string
+ *               healthStatus:
+ *                 type: string
+ *               invocationEndpoint:
+ *                 type: string
+ *               description:
+ *                 type: string
  *     responses:
  *       201:
  *         description: Successfully created a new data source.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/DataSource'
  *       400:
  *         description: Invalid request parameters.
  *       500:

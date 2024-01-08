@@ -13,16 +13,32 @@ import { ItemNotFoundError } from '@/api/utils/errorUtils'
  *         required: true
  *         schema:
  *           type: integer
- *         description: The ID of the data source to update.
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/DataSource'
+ *             type: object
+ *             properties:
+ *               sourceName:
+ *                 type: string
+ *               isActive:
+ *                 type: boolean
+ *               frequency:
+ *                 type: string
+ *               healthStatus:
+ *                 type: string
+ *               invocationEndpoint:
+ *                 type: string
+ *               description:
+ *                 type: string
  *     responses:
  *       200:
  *         description: Successfully updated the data source.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/DataSource'
  *       404:
  *         description: Bucket not found.
  *       500:

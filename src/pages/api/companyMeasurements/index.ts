@@ -18,21 +18,21 @@ import { ItemNotFoundError } from '@/api/utils/errorUtils'
  *         schema:
  *           type: integer
  *           default: 1
- *         description: The page number for pagination (default is 1).
  *       - in: query
  *         name: pageSize
  *         required: false
  *         schema:
  *           type: integer
  *           default: 10
- *         description: The number of items per page (default is 10).
  *     responses:
  *       200:
  *         description: Successfully retrieved a list of company source measurements.
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/companySourceMeasurement'
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/CompanySourceMeasurement'
  *       400:
  *         description: No company source measurements found.
  *       404:
@@ -63,19 +63,21 @@ import { ItemNotFoundError } from '@/api/utils/errorUtils'
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/companySourceMeasurement'
+ *               $ref: '#/components/schemas/CompanySourceMeasurement'
  *       400:
  *         description: Invalid request parameters.
  *       500:
  *         description: Internal Server Error.
  * components:
  *   schemas:
- *     companySourceMeasurement:
+ *     CompanySourceMeasurement:
  *       type: object
  *       required:
  *         - companyMeasurementId
  *         - sourceMeasurementId
  *         - companyId
+ *         - createdAt
+ *         - modifiedAt
  *       properties:
  *         companyMeasurementId:
  *           type: integer

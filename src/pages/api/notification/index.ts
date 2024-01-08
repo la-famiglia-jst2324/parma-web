@@ -14,27 +14,51 @@ import { createNotification } from '@/api/db/services/notificationService'
  *           schema:
  *             type: object
  *             required:
- *               - title
  *               - message
- *               # Include other required fields here
+ *               - companyId
+ *               - dataSourceId
  *             properties:
- *               title:
- *                 type: string
  *               message:
  *                 type: string
- *               # Define other properties of the notification here
+ *               companyId:
+ *                 type: integer
+ *               dataSourceId:
+ *                 type: integer
  *     responses:
  *       201:
  *         description: Successfully created a new notification.
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               # Define the schema for the created notification object here
+ *               $ref: '#/components/schemas/Notification'
  *       400:
  *         description: Invalid request parameters.
  *       500:
  *         description: Internal Server Error.
+ * components:
+ *   schemas:
+ *     Notification:
+ *       type: object
+ *       required:
+ *         - id
+ *         - message
+ *         - companyId
+ *         - dataSourceId
+ *         - createdAt
+ *         - modifiedAt
+ *       properties:
+ *         id:
+ *           type: integer
+ *         message:
+ *           type: string
+ *         companyId:
+ *           type: integer
+ *         dataSourceId:
+ *           type: integer
+ *         createdAt:
+ *           type: string
+ *         modifiedAt:
+ *           type: string
  */
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {

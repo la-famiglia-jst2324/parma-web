@@ -21,7 +21,7 @@ import { getMeasurementsBySourceId } from '@/api/db/services/sourceMeasurementSe
  *             schema:
  *               type: array
  *               items:
- *                 $ref: '#/components/schemas/sourceMeasurement'
+ *                 $ref: '#/components/schemas/SourceMeasurement'
  *       400:
  *         description: No Data Source Measurements found for the provided ID.
  *       500:

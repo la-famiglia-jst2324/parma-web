@@ -15,10 +15,13 @@ import { ItemNotFoundError } from '@/api/utils/errorUtils'
  *         required: true
  *         schema:
  *           type: integer
- *         description: The ID of the notification to retrieve.
  *     responses:
  *       200:
  *         description: Successfully retrieved the notification.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Notification'
  *       400:
  *         description: No Notification found for the provided ID.
  *       404:
@@ -41,10 +44,16 @@ import { ItemNotFoundError } from '@/api/utils/errorUtils'
  *         application/json:
  *           schema:
  *             type: object
- *             # Define the schema for the notification update here
+ *             properties:
+ *               message:
+ *                 type: string
  *     responses:
  *       200:
  *         description: Successfully updated the notification.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Notification'
  *       500:
  *         description: Internal Server Error.
  *

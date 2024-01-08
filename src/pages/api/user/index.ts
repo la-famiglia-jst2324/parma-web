@@ -12,6 +12,12 @@ import { withAuthValidation } from '@/api/middleware/auth'
  *     responses:
  *       200:
  *         description: Successfully retrieved a list of users.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/User'
  *       400:
  *         description: No Companies found. (Note: This message seems inconsistent with the operation. Consider updating it to "No Users found" if applicable).
  *       404:
@@ -28,10 +34,24 @@ import { withAuthValidation } from '@/api/middleware/auth'
  *         application/json:
  *           schema:
  *             type: object
- *             # Define the schema for creating a new user here
+ *             required:
+ *               - name
+ *               - authId
+ *               - role
+ *             properties:
+ *               name:
+ *                 type: string
+ *               authId:
+ *                 type: string
+ *               role:
+ *                 type: string
  *     responses:
  *       201:
  *         description: Successfully created a new user.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/User'
  *       400:
  *         description: Invalid request parameters.
  *       500:
@@ -40,23 +60,26 @@ import { withAuthValidation } from '@/api/middleware/auth'
  *   put:
  *     summary: Update a user
  *     description: Updates an existing user's information based on their user ID.
- *     parameters:
- *       - in: header
- *         name: userId
- *         required: true
- *         schema:
- *           type: integer
- *         description: The ID of the user to update.
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
  *             type: object
- *             # Define the schema for the user update here
+ *             properties:
+ *               name:
+ *                 type: string
+ *               profilePicture:
+ *                 type: string
+ *               role:
+ *                 type: string
  *     responses:
  *       200:
  *         description: Successfully updated the user's information.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/User'
  *       404:
  *         description: User not Found.
  *       500:

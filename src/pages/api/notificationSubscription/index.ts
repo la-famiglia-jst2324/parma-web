@@ -19,13 +19,19 @@ import { withAuthValidation } from '@/api/middleware/auth'
  *             type: object
  *             required:
  *               - channelId
+ *               - channelPurpose
  *             properties:
  *               channelId:
  *                 type: integer
- *                 description: The ID of the notification channel to subscribe to.
+ *               channelPurpose:
+ *                 type: string
  *     responses:
  *       201:
  *         description: Successfully created a new notification subscription.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/NotificationSubscription'
  *       400:
  *         description: Invalid request parameters.
  *       500:
@@ -45,12 +51,32 @@ import { withAuthValidation } from '@/api/middleware/auth'
  *             properties:
  *               channelId:
  *                 type: integer
- *                 description: The ID of the notification channel to unsubscribe from.
  *     responses:
  *       200:
  *         description: Notification subscription successfully deleted.
  *       500:
  *         description: Internal Server Error.
+ * components:
+ *   schemas:
+ *     NotificationSubscription:
+ *       type: object
+ *       required:
+ *         - userId
+ *         - channelId
+ *         - channelPurpose
+ *         - createdAt
+ *         - modifiedAt
+ *       properties:
+ *         userId:
+ *           type: integer
+ *         channelId:
+ *           type: integer
+ *         channelPurpose:
+ *           type: string
+ *         createdAt:
+ *           type: string
+ *         modifiedAt:
+ *           type: string
  */
 
 const handler = async (req: NextApiRequest, res: NextApiResponse, user: User) => {

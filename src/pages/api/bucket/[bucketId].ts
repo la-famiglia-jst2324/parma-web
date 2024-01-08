@@ -17,7 +17,6 @@ import { ItemNotFoundError } from '@/api/utils/errorUtils'
  *         required: true
  *         schema:
  *           type: integer
- *         description: The ID of the bucket to retrieve.
  *     responses:
  *       200:
  *         description: Successfully retrieved the bucket details.
@@ -41,16 +40,28 @@ import { ItemNotFoundError } from '@/api/utils/errorUtils'
  *         required: true
  *         schema:
  *           type: integer
- *         description: The ID of the bucket to update.
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/Bucket'
+ *             type: object
+ *             properties:
+ *               title:
+ *                 type: string
+ *               description:
+ *                 type: string
+ *               isPublic:
+ *                 type: boolean
+ *               ownerId:
+ *                 type: integer
  *     responses:
  *       200:
  *         description: Successfully updated the bucket.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Bucket'
  *       404:
  *         description: Bucket not found.
  *       500:
@@ -65,7 +76,6 @@ import { ItemNotFoundError } from '@/api/utils/errorUtils'
  *         required: true
  *         schema:
  *           type: integer
- *         description: The ID of the bucket to delete.
  *     responses:
  *       200:
  *         description: Bucket successfully deleted.

@@ -36,7 +36,6 @@ const updateDataSourceSchema = z.object({
  *         required: true
  *         schema:
  *           type: integer
- *         description: The ID of the data source to retrieve.
  *     responses:
  *       200:
  *         description: Successfully retrieved the data source.
@@ -64,10 +63,26 @@ const updateDataSourceSchema = z.object({
  *         application/json:
  *           schema:
  *             type: object
- *             # Define the schema for updating a data source here
+ *             properties:
+ *               sourceName:
+ *                 type: string
+ *               isActive:
+ *                 type: boolean
+ *               frequency:
+ *                 type: string
+ *               healthStatus:
+ *                 type: string
+ *               invocationEndpoint:
+ *                 type: string
+ *               description:
+ *                 type: string
  *     responses:
  *       200:
  *         description: Successfully updated the data source.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/DataSource'
  *       400:
  *         description: Validation error or no Data Source found.
  *       404:

@@ -15,7 +15,6 @@ import { createBucketAccess } from '@/api/db/services/bucketAccessService'
  *         required: true
  *         schema:
  *           type: integer
- *         description: The ID of the bucket to be shared.
  *     requestBody:
  *       required: true
  *       content:
@@ -23,17 +22,13 @@ import { createBucketAccess } from '@/api/db/services/bucketAccessService'
  *           schema:
  *             type: object
  *             required:
- *               - userIds
+ *               - inviteeId
  *               - permission
  *             properties:
- *               userIds:
- *                 type: array
- *                 items:
- *                   type: integer
- *                 description: List of user IDs to share the bucket with.
+ *               inviteeId:
+ *                 type: integer
  *               permission:
  *                 type: string
- *                 description: The access level for the shared users.
  *     responses:
  *       201:
  *         description: Successfully created new bucket access.
@@ -55,6 +50,8 @@ import { createBucketAccess } from '@/api/db/services/bucketAccessService'
  *         - bucketId
  *         - inviteeId
  *         - permission
+ *         - createdAt
+ *         - modifiedAt
  *       properties:
  *         bucketId:
  *           type: integer

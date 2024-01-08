@@ -12,10 +12,13 @@ import { getScheduledTaskByID, updateScheduledTask, deleteScheduledTask } from '
  *         required: true
  *         schema:
  *           type: integer
- *         description: The ID of the scheduled task to retrieve.
  *     responses:
  *       200:
  *         description: Successfully retrieved the scheduled task.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ScheduledTask'
  *       404:
  *         description: Task not found.
  *       500:
@@ -36,10 +39,24 @@ import { getScheduledTaskByID, updateScheduledTask, deleteScheduledTask } from '
  *         application/json:
  *           schema:
  *             type: object
- *             # Define the schema for the scheduled task update here
+ *             properties:
+ *               dataSourceId:
+ *                 type: integer
+ *               scheduleType:
+ *                 type: string
+ *               resultSummary:
+ *                 type: string
+ *               status:
+ *                 type: string
+ *               attempts:
+ *                 type: integer
  *     responses:
  *       200:
  *         description: Successfully updated the scheduled task.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ScheduledTask'
  *       500:
  *         description: Internal Server Error.
  *

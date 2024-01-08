@@ -15,10 +15,13 @@ import { ItemNotFoundError } from '@/api/utils/errorUtils'
  *         required: true
  *         schema:
  *           type: integer
- *         description: The ID of the report to retrieve.
  *     responses:
  *       200:
  *         description: Successfully retrieved the report.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Report'
  *       400:
  *         description: No Report found for the provided ID.
  *       404:
@@ -41,10 +44,20 @@ import { ItemNotFoundError } from '@/api/utils/errorUtils'
  *         application/json:
  *           schema:
  *             type: object
- *             # Define the schema for the report update here
+ *             properties:
+ *               companyId:
+ *                 type: string
+ *               name:
+ *                 type: string
+ *               reportFileUrl:
+ *                 type: string
  *     responses:
  *       200:
  *         description: Successfully updated the report.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Report'
  *       500:
  *         description: Internal Server Error.
  *

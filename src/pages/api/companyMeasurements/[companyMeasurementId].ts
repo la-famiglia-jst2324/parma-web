@@ -17,14 +17,13 @@ import { ItemNotFoundError } from '@/api/utils/errorUtils'
  *         required: true
  *         schema:
  *           type: integer
- *         description: The ID of the company source measurement to retrieve.
  *     responses:
  *       200:
  *         description: Successfully retrieved the company source measurement.
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/companySourceMeasurement'
+ *               $ref: '#/components/schemas/CompanySourceMeasurement'
  *       400:
  *         description: No company source measurement found or no ID was provided.
  *       404:
@@ -47,9 +46,6 @@ import { ItemNotFoundError } from '@/api/utils/errorUtils'
  *         application/json:
  *           schema:
  *             type: object
- *             required:
- *               - sourceMeasurementId
- *               - companyId
  *             properties:
  *               sourceMeasurementId:
  *                 type: integer
@@ -61,7 +57,7 @@ import { ItemNotFoundError } from '@/api/utils/errorUtils'
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/companySourceMeasurement'
+ *               $ref: '#/components/schemas/CompanySourceMeasurement'
  *       400:
  *         description: Invalid request parameters.
  *       500:

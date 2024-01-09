@@ -41,9 +41,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
    */
   const [user, setUser] = useState<User | 'pending' | 'loading' | null>('pending')
 
-  if (user === 'pending' && typeof window !== 'undefined' && (window.localStorage || window.sessionStorage)) {
-    setUser(readAuthState() === 'logged_in' ? 'loading' : null)
-  }
+  // access to localstorage avoiding ssr conflicts
+  useEffect(() => {
+    if (user === 'pending' && (window.localStorage || window.sessionStorage)) {
+      setUser(readAuthState() === 'logged_in' ? 'loading' : null)
+    }
+  }, [user])
 
   // to avoid page flicker when user is logged in and reloads the page
   useEffect(() => {

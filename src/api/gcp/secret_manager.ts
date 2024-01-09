@@ -66,4 +66,7 @@ export const storeSecret = async (client: SecretManagerServiceClient, secretId: 
       data: Buffer.from(secretValue, 'utf8')
     }
   })
+
+  // sleep 1 second
+  await new Promise((resolve) => setTimeout(resolve, 1000))
 }

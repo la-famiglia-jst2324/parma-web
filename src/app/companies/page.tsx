@@ -1,80 +1,15 @@
 'use client'
 
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useState, useEffect } from 'react'
 import { MagnifyingGlassIcon } from '@heroicons/react/20/solid'
 import { Button, TextInput } from '@tremor/react'
+import { useRouter } from 'next/navigation'
 import type { Company } from '@/types/companies'
 import CompanyCard from '@/components/Companies/CompanyCard'
-import { AuthContext } from '@/lib/firebase/auth'
-import { MainLayout } from '@/components/MainLayout'
-import AuthCheck from '@/components/Authentication/AuthCheck'
+import { getCompanies, getSubscribedCompanies, getCompaniesByName } from '@/services/company/companyService'
+import { MainLayoutWrapper } from '@/components/Layout/MainLayout'
 
 interface CompaniesPageProps {}
-
-async function getCompanies(offset: number, idToken: string): Promise<Company[]> {
-  try {
-    const res = await fetch(`/api/company?page=${offset}`, {
-      method: 'GET',
-      cache: 'no-cache',
-      headers: {
-        Authorization: idToken
-      }
-    })
-
-    if (!res.ok) {
-      console.log('Response status:', res.status)
-      throw new Error('HTTP response was not OK')
-    }
-    const json = await res.json()
-    return json?.companies
-  } catch (error) {
-    console.log('An error has occurred: ', error)
-    return []
-  }
-}
-
-async function getSubscribedCompanies(idToken: string) {
-  try {
-    const res = await fetch('/api/company/subscribed', {
-      method: 'GET',
-      cache: 'no-cache',
-      headers: {
-        Authorization: idToken
-      }
-    })
-
-    if (!res.ok) {
-      console.log('Response status:', res.status)
-      throw new Error('HTTP response was not OK')
-    }
-    const json = await res.json()
-    return json
-  } catch (error) {
-    console.log('An error has occurred: ', error)
-    return []
-  }
-}
-
-async function getCompaniesByName(companyName: string, idToken: string): Promise<Company[]> {
-  try {
-    const res = await fetch(`/api/company?name=${companyName}`, {
-      method: 'GET',
-      cache: 'no-cache',
-      headers: {
-        Authorization: idToken
-      }
-    })
-    if (!res.ok) {
-      console.log('Response status:', res.status)
-      throw new Error('HTTP response was not OK')
-    }
-    const json = await res.json()
-    return json?.company
-  } catch (error) {
-    console.log('An error has occurred: ', error)
-    return []
-  }
-}
 
 const CompaniesPage: React.FC<CompaniesPageProps> = () => {
   const [subscribedCompanies, setSubscribedCompanies] = useState<Company[]>([])
@@ -85,48 +20,27 @@ const CompaniesPage: React.FC<CompaniesPageProps> = () => {
   const [searchQuery, setSearchQuery] = useState<string>('')
   const [offset, setOffset] = useState<number>(1)
   const [showSeeMoreSubscribedCompanies, setShowSeeMoreSubscribedCompanies] = useState<boolean>(false)
-  const [idToken, setIdToken] = useState<string>('')
-
-  const user = useContext(AuthContext)
-
-  useEffect(() => {
-    const setToken = async () => {
-      if (user) {
-        try {
-          const token = await user.getIdToken()
-          setIdToken(token)
-        } catch (error) {
-          console.error('Error fetching token:', error)
-        }
-      }
-    }
-
-    setToken()
-  }, [user])
+  const router = useRouter()
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        if (idToken) {
-          const data = await getSubscribedCompanies(idToken)
-          setShowSeeMoreSubscribedCompanies(data.length > 3)
-          setSubscribedCompanies(data.slice(0, 3))
-        }
+        const data = await getSubscribedCompanies()
+        setShowSeeMoreSubscribedCompanies(data.length > 3)
+        setSubscribedCompanies(data.slice(0, 3))
       } catch (error) {
         console.error('Failed to fetch subscribed companies:', error)
       }
     }
     fetchData()
-  }, [idToken, setShowSeeMoreSubscribedCompanies, setSubscribedCompanies])
+  }, [setShowSeeMoreSubscribedCompanies, setSubscribedCompanies])
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        if (idToken) {
-          const data = await getCompanies(offset, idToken)
-          setCompanies(data)
-          setOffset((prevOffset) => prevOffset + 1)
-        }
+        const data = await getCompanies(offset, 10)
+        setCompanies(data)
+        setOffset(2)
       } catch (error) {
         console.error('Failed to fetch companies:', error)
       }
@@ -134,11 +48,11 @@ const CompaniesPage: React.FC<CompaniesPageProps> = () => {
 
     fetchData()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [idToken, setCompanies, setOffset])
+  }, [])
 
   const fetchMoreCompanies = async () => {
     try {
-      const moreCompanies = await getCompanies(offset, idToken)
+      const moreCompanies = await getCompanies(offset, 10)
 
       if (moreCompanies.length === 0) {
         setDisableSeeMore(true)
@@ -153,7 +67,7 @@ const CompaniesPage: React.FC<CompaniesPageProps> = () => {
 
   const fetchSearchedCompanies = async () => {
     try {
-      const searchCompanies = await getCompaniesByName(searchQuery, idToken)
+      const searchCompanies = await getCompaniesByName(searchQuery)
       setSearchedCompanies(searchCompanies)
       setDisplaySearchCompanies(true)
     } catch (error) {
@@ -161,11 +75,16 @@ const CompaniesPage: React.FC<CompaniesPageProps> = () => {
     }
   }
 
+  const handleAddCompanyPressed = () => {
+    router.push('/companies/add-company')
+  }
+
   return (
-    <MainLayout>
+    <main className="m-4 flex h-[68em] flex-row items-start justify-start space-x-4" role="main">
       <div className="m-3 flex min-h-[calc(100vh-90px)] flex-col items-start rounded-lg border-0 bg-white p-3 shadow-md">
-        <div className="mb-3 flex items-center justify-start space-x-4">
+        <div className="mb-3 flex w-full items-center justify-between space-x-4">
           <h1 className="py-2 pl-2 text-2xl font-bold">Subscribed companies</h1>
+          <Button onClick={handleAddCompanyPressed}>Create a new company</Button>
         </div>
         <div className="flex w-full flex-wrap">
           {subscribedCompanies?.length > 0 ? (
@@ -239,8 +158,8 @@ const CompaniesPage: React.FC<CompaniesPageProps> = () => {
           )}
         </div>
       </div>
-    </MainLayout>
+    </main>
   )
 }
 
-export default AuthCheck(CompaniesPage)
+export default MainLayoutWrapper(CompaniesPage)

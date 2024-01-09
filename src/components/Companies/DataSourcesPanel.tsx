@@ -2,19 +2,25 @@ import React, { useEffect, useState } from 'react'
 import type { CalloutProps } from '@tremor/react'
 import { MultiSelect, MultiSelectItem, Button } from '@tremor/react'
 import DatasourceHealth from './DatasourceHealth'
+import {
+  getDataSourcesByCompanyId,
+  addDatasourceToCompany,
+  deleteCompanyDataSource,
+  getDataSources
+} from '@/services/datasource/datasourceService'
 
 interface CompanyDataSource {
   id: number
   sourceName: string
   isActive: boolean
-  defaultFrequency: string
+  frequency: string
   frequencyPattern: null | string
   healthStatus: string
   description: null | string
   createdAt: string
   modifiedAt: string
   version: string
-  maximumExpectedRunTime: number
+  maxRunSeconds: number
   invocationEndpoint: string
   additionalParams: null | string
 }
@@ -27,101 +33,11 @@ interface PopupContent {
 
 interface Props {
   companyId: string
-  idToken: string
   setPopupContents: React.Dispatch<React.SetStateAction<PopupContent>>
   setShowPopup: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-async function getDataSourcesByCompanyId(companyId: string, idToken: string) {
-  try {
-    const res = await fetch(`/api/companyDataSourceRelation?companyId=${companyId}`, {
-      method: 'GET',
-      cache: 'no-cache',
-      headers: {
-        Authorization: idToken
-      }
-    })
-    if (!res.ok) {
-      console.log('Response status:', res.status)
-      throw new Error('HTTP response was not OK')
-    }
-    const json = await res.json()
-    return json
-  } catch (error) {
-    console.log('An error has occurred: ', error)
-    return []
-  }
-}
-
-async function addDatasourceToCompany(companyId: string, dataSourceId: string, idToken: string) {
-  try {
-    const body = {
-      dataSourceId: Number(dataSourceId),
-      companyId: Number(companyId),
-      isDataSourceActive: false,
-      healthStatus: 'UP'
-    }
-
-    const res = await fetch(`/api/companyDataSourceRelation`, {
-      method: 'POST',
-      cache: 'no-cache',
-      body: JSON.stringify(body),
-      headers: {
-        Authorization: idToken
-      }
-    })
-    if (!res.ok) {
-      console.log('Response status:', res.status)
-      throw new Error('HTTP response was not OK')
-    }
-    const json = await res.json()
-    return json
-  } catch (error) {
-    console.log('An error has occurred: ', error)
-  }
-}
-
-async function deleteCompanyDataSource(companyId: string, dataSourceId: string, idToken: string) {
-  try {
-    const res = await fetch(`/api/companyDataSourceRelation?companyId=${companyId}&dataSourceId=${dataSourceId}`, {
-      method: 'DELETE',
-      cache: 'no-cache',
-      headers: {
-        Authorization: idToken
-      }
-    })
-    if (!res.ok) {
-      console.log('Response status:', res.status)
-      throw new Error('HTTP response was not OK')
-    }
-    const json = await res.json()
-    return json
-  } catch (error) {
-    console.log('An error has occurred: ', error)
-  }
-}
-
-async function getDataSources(idToken: string) {
-  try {
-    const res = await fetch(`/api/dataSources`, {
-      method: 'GET',
-      cache: 'no-cache',
-      headers: {
-        Authorization: idToken
-      }
-    })
-    if (!res.ok) {
-      console.log('Response status:', res.status)
-      throw new Error('HTTP response was not OK')
-    }
-    const json = await res.json()
-    return json
-  } catch (error) {
-    console.log('An error has occurred: ', error)
-  }
-}
-
-const DataSourcesPanel: React.FC<Props> = ({ companyId, idToken, setPopupContents, setShowPopup }) => {
+const DataSourcesPanel: React.FC<Props> = ({ companyId, setPopupContents, setShowPopup }) => {
   const [companyDataSources, setCompanyDataSources] = useState<CompanyDataSource[]>([])
   const [allDataSources, setAllDataSources] = useState<CompanyDataSource[]>([])
   const [filteredDataSources, setFilteredDataSources] = useState<CompanyDataSource[]>([])
@@ -130,7 +46,7 @@ const DataSourcesPanel: React.FC<Props> = ({ companyId, idToken, setPopupContent
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const data = await getDataSourcesByCompanyId(companyId, idToken)
+        const data = await getDataSourcesByCompanyId(companyId)
         setCompanyDataSources(data)
       } catch (error) {
         console.error('Failed to fetch data sources:', error)
@@ -138,12 +54,12 @@ const DataSourcesPanel: React.FC<Props> = ({ companyId, idToken, setPopupContent
     }
 
     fetchData()
-  }, [companyId, idToken])
+  }, [companyId])
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const data = await getDataSources(idToken)
+        const data = await getDataSources()
         setAllDataSources(data)
       } catch (error) {
         console.error('Error fetching data sources:', error)
@@ -151,7 +67,7 @@ const DataSourcesPanel: React.FC<Props> = ({ companyId, idToken, setPopupContent
     }
 
     fetchData()
-  }, [idToken])
+  }, [])
 
   useEffect(() => {
     if (allDataSources && companyDataSources) {
@@ -169,10 +85,10 @@ const DataSourcesPanel: React.FC<Props> = ({ companyId, idToken, setPopupContent
   }
 
   const handleUnlinkDataSource = async (dataSourceId: string) => {
-    await deleteCompanyDataSource(companyId, dataSourceId, idToken)
-    const alldatasource = await getDataSources(idToken)
+    await deleteCompanyDataSource(companyId, dataSourceId)
+    const alldatasource = await getDataSources()
     setAllDataSources(alldatasource)
-    const companydatasources = await getDataSourcesByCompanyId(companyId, idToken)
+    const companydatasources = await getDataSourcesByCompanyId(companyId)
     setCompanyDataSources(companydatasources)
     setPopupContents({
       title: `Datasource unlinked successfully`,
@@ -180,14 +96,16 @@ const DataSourcesPanel: React.FC<Props> = ({ companyId, idToken, setPopupContent
       description: 'You have successfully unlinked a datasource from this company'
     })
     setShowPopup(true)
-    setSelectedValues([])
   }
 
   const handleAddDataSourceToCompany = async () => {
-    await Promise.all(selectedValues.map((dataSourceId) => addDatasourceToCompany(companyId, dataSourceId, idToken)))
-    const alldatasource = await getDataSources(idToken)
+    await Promise.allSettled(
+      selectedValues.map((dataSourceId: string) => addDatasourceToCompany(companyId, dataSourceId))
+    )
+    setSelectedValues([])
+    const alldatasource = await getDataSources()
     setAllDataSources(alldatasource)
-    const companydatasources = await getDataSourcesByCompanyId(companyId, idToken)
+    const companydatasources = await getDataSourcesByCompanyId(companyId)
     setCompanyDataSources(companydatasources)
     setPopupContents({
       title: `Datasource/s linked successfully`,
@@ -195,7 +113,6 @@ const DataSourcesPanel: React.FC<Props> = ({ companyId, idToken, setPopupContent
       description: 'You have successfully added a datasource to the company'
     })
     setShowPopup(true)
-    setSelectedValues([])
   }
 
   return (
@@ -203,7 +120,7 @@ const DataSourcesPanel: React.FC<Props> = ({ companyId, idToken, setPopupContent
       <h3 className="pb-2 font-bold">Link data sources with this company</h3>
       <div className="flex">
         <div className="w-64 pb-3">
-          <MultiSelect onValueChange={handleMultiSelectChange}>
+          <MultiSelect onValueChange={handleMultiSelectChange} value={selectedValues}>
             {filteredDataSources?.map((datasource: CompanyDataSource, index) => (
               <MultiSelectItem key={index} value={String(datasource.id)}>
                 {datasource.sourceName}

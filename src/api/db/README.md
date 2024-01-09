@@ -20,7 +20,6 @@ erDiagram
     report_subscription ||--o{ notification_channel : ""
     user ||--o{ user_important_measurement_preference : "chooses"
     user ||--o{ notification_subscription : ""
-    user ||--|| report_subscription : ""
     user ||--o{ company : "subscribes"
     user ||--o{ bucket_access : "has"
     user ||--|| news_subscription :""
@@ -83,16 +82,27 @@ erDiagram
         int id PK
         string source_name
         boolean is_active
-        string default_frequency
-        string frequency_pattern
+        string frequency
         string health_status
         string description
         datetime created_at
         datetime modified_at
+        int max_run_seconds
         string version
-        int maximum_expected_run_time
         string invocation_endpoint
         json additional_params
+    }
+    scheduled_task {
+        int task_id PK
+        int data_source_id FK
+        string schedule_type
+        datetime scheduled_at
+        datetime started_at
+        datetime ended_at
+        int max_run_seconds
+        string result_summary
+        string status
+        int attempts
     }
     news_subscription {
         int user_id PK,FK
@@ -110,18 +120,16 @@ erDiagram
     }
     notification_channel {
         int id PK
-        int entity_id FK
-        string entity_type
         string channel_type
         string destination
-        string encryptedApiKey
+        string secret_id
         datetime created_at
         datetime modified_at
     }
     notification_subscription {
         int user_id FK, PK
-        int company_id FK, PK
         int channel_id FK, PK
+        ChannelPurpose channel_purpose
         datetime created_at
         datetime modified_at
     }
@@ -130,13 +138,6 @@ erDiagram
         int company_id FK
         string name
         string report_file_url
-        datetime created_at
-        datetime modified_at
-    }
-    report_subscription {
-        int user_id FK,PK
-        int company_id FK,PK
-        int channel_id FK,PK
         datetime created_at
         datetime modified_at
     }
@@ -174,6 +175,7 @@ erDiagram
         id measurement_value_id PK
         id company_measurement_id FK
         string value
+        datetime timestamp
         datetime created_at
         datetime modified_at
     }
@@ -181,6 +183,7 @@ erDiagram
         id measurement_value_id PK
         id company_measurement_id FK
         int value
+        datetime timestamp
         datetime created_at
         datetime modified_at
     }

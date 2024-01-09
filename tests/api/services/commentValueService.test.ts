@@ -1,6 +1,11 @@
 import { PrismaClient, Frequency, HealthStatus, Role } from '@prisma/client'
 import { genRandomDummyAuthId } from '../utils/random'
-import { createCompanySourceMeasurement } from '../models/utils/helperFunctions'
+import {
+  createCompanySourceMeasurement,
+  deleteCompany,
+  deleteDataSource,
+  deleteUser
+} from '../models/utils/helperFunctions'
 import {
   createCommentValue,
   deleteCommentValue,
@@ -14,20 +19,24 @@ import { createUser } from '@/api/db/services/userService'
 const prisma = new PrismaClient()
 
 describe('comment value Model Tests', () => {
-  beforeAll(async () => {
-    await prisma.$connect()
-  })
-
-  afterAll(async () => {
-    await prisma.$disconnect()
-  })
-
   let commentValueId: number
   let sourceMeasurementId: number
   let companyMeasurementId: number
   let companyId: number
   let dataSourceId: number
   let userId: number
+
+  beforeAll(async () => {
+    await prisma.$connect()
+  })
+
+  afterAll(async () => {
+    await deleteCompany(companyId)
+    await deleteDataSource(dataSourceId)
+    await deleteUser(userId)
+    await prisma.$disconnect()
+  })
+
   test('Create a new user with valid details', async () => {
     const user = await createUser({ name: 'John Doe', authId: genRandomDummyAuthId(), role: Role.USER })
     userId = user.id
@@ -45,7 +54,7 @@ describe('comment value Model Tests', () => {
     const dataSource = await await createDataSource({
       sourceName: 'source1',
       isActive: true,
-      defaultFrequency: Frequency.DAILY,
+      frequency: Frequency.DAILY,
       healthStatus: HealthStatus.UP,
       invocationEndpoint: 'dummy endpoint'
     })
@@ -53,7 +62,7 @@ describe('comment value Model Tests', () => {
     expect(dataSource).toHaveProperty('id')
     expect(dataSource.sourceName).toBe('source1')
     expect(dataSource.isActive).toBe(true)
-    expect(dataSource.defaultFrequency).toBe(Frequency.DAILY)
+    expect(dataSource.frequency).toBe(Frequency.DAILY)
     expect(dataSource.healthStatus).toBe(HealthStatus.UP)
   })
 
@@ -74,7 +83,7 @@ describe('comment value Model Tests', () => {
   })
 
   test('Create a new comment value with valid details', async () => {
-    const commentValue = await createCommentValue({ companyMeasurementId, value: 'comment' })
+    const commentValue = await createCommentValue({ companyMeasurementId, value: 'comment', timestamp: new Date() })
     commentValueId = commentValue.id
     expect(commentValue).toHaveProperty('id')
     expect(commentValue.companyMeasurementId).toBe(companyMeasurementId)

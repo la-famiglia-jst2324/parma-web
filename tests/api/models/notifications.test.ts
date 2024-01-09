@@ -17,8 +17,6 @@ describe('NotificationChannel Model Tests', () => {
   test('Create a new NotificationChannel', async () => {
     const channel = await prisma.notificationChannel.create({
       data: {
-        entityId: 'entity1',
-        entityType: 'REPORT',
         channelType: 'SLACK',
         destination: 'slack channel'
       }
@@ -27,7 +25,7 @@ describe('NotificationChannel Model Tests', () => {
     channelId = channel.id
 
     expect(channel).toHaveProperty('id')
-    expect(channel.entityId).toBe('entity1')
+    expect(channel.destination).toBe('slack channel')
   })
 
   test('Retrieve a NotificationChannel', async () => {
@@ -36,7 +34,7 @@ describe('NotificationChannel Model Tests', () => {
     })
 
     expect(channel).toBeTruthy()
-    expect(channel.id).toBe(channelId)
+    expect(channel?.id).toBe(channelId)
   })
 
   test('Update a NotificationChannel', async () => {
@@ -62,7 +60,7 @@ describe('NotificationChannel Model Tests', () => {
 })
 
 describe('NotificationSubscription Model Tests', () => {
-  let subscriptionId: { userId: number; companyId: number; channelId: number }
+  let subscriptionId: { userId: number; channelId: number }
   let userId: number
   let companyId: number
   let channelId: number
@@ -74,8 +72,6 @@ describe('NotificationSubscription Model Tests', () => {
     companyId = company.id
     const channel = await prisma.notificationChannel.create({
       data: {
-        entityId: 'entity1',
-        entityType: 'REPORT',
         channelType: 'SLACK',
         destination: 'slack channel'
       }
@@ -87,6 +83,9 @@ describe('NotificationSubscription Model Tests', () => {
   afterAll(async () => {
     await deleteCompany(companyId)
     await deleteUser(userId)
+    await prisma.notificationChannel.delete({
+      where: { id: channelId }
+    })
     await prisma.$disconnect()
   })
 
@@ -94,19 +93,17 @@ describe('NotificationSubscription Model Tests', () => {
     const subscription = await prisma.notificationSubscription.create({
       data: {
         userId,
-        companyId,
-        channelId // Assume channelId is obtained from NotificationChannel test
+        channelId, // Assume channelId is obtained from NotificationChannel test
+        channelPurpose: 'REPORT'
       }
     })
 
     subscriptionId = {
       userId: subscription.userId,
-      companyId: subscription.companyId,
       channelId: subscription.channelId
     }
 
     expect(subscription).toHaveProperty('userId')
-    expect(subscription.companyId).toBe(companyId)
     expect(subscription.channelId).toBe(channelId)
     expect(subscription.userId).toBe(userId)
   })
@@ -114,33 +111,29 @@ describe('NotificationSubscription Model Tests', () => {
   test('Retrieve a new NotificationSubscription', async () => {
     const subscription = await prisma.notificationSubscription.findUnique({
       where: {
-        userId_companyId_channelId: {
+        userId_channelId: {
           userId: subscriptionId.userId,
-          companyId: subscriptionId.companyId,
           channelId: subscriptionId.channelId
         }
       }
     })
 
     subscriptionId = {
-      userId: subscription.userId,
-      companyId: subscription.companyId,
-      channelId: subscription.channelId
+      userId: subscription!.userId,
+      channelId: subscription!.channelId
     }
 
     expect(subscription).toHaveProperty('userId')
-    expect(subscription.companyId).toBe(companyId)
-    expect(subscription.channelId).toBe(channelId)
-    expect(subscription.userId).toBe(userId)
+    expect(subscription?.channelId).toBe(channelId)
+    expect(subscription?.userId).toBe(userId)
   })
 
   // Delete a new subscription
   test('Delete a new NotificationSubscription', async () => {
     await prisma.notificationSubscription.delete({
       where: {
-        userId_companyId_channelId: {
+        userId_channelId: {
           userId: subscriptionId.userId,
-          companyId: subscriptionId.companyId,
           channelId: subscriptionId.channelId
         }
       }
@@ -148,9 +141,8 @@ describe('NotificationSubscription Model Tests', () => {
 
     const deletedSubscription = await prisma.notificationSubscription.findUnique({
       where: {
-        userId_companyId_channelId: {
+        userId_channelId: {
           userId: subscriptionId.userId,
-          companyId: subscriptionId.companyId,
           channelId: subscriptionId.channelId
         }
       }

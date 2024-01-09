@@ -29,6 +29,50 @@ const getCompanySourceMeasurementByID = async (id: number) => {
   }
 }
 
+const getCompanySourceMeasurementByCompanyId = async (companyIds: number[]) => {
+  try {
+    const companySourceMeasurement = await prisma.companySourceMeasurement.findMany({
+      where: {
+        companyId: companyIds ? { in: companyIds } : undefined
+      },
+      include: {
+        sourceMeasurement: true
+      }
+    })
+    if (!companySourceMeasurement) {
+      throw new Error(`Company source measurement with ID ${companyIds} not found.`)
+    }
+    return companySourceMeasurement
+  } catch (error) {
+    console.error('Error getting a company source measurement by ID:', error)
+    throw error
+  }
+}
+
+const getValueByMeasurementIdCompanyId = async (sourceMeasurementId: number, companyIds: number[]) => {
+  try {
+    const companySourceMeasurement = await prisma.companySourceMeasurement.findMany({
+      where: {
+        sourceMeasurementId,
+        companyId: companyIds ? { in: companyIds } : undefined
+      },
+      include: {
+        sourceMeasurement: true,
+        company: true,
+        measurementIntValues: true,
+        measurementFloatValues: true
+      }
+    })
+    if (!companySourceMeasurement) {
+      throw new Error(`Company source measurement relation not found.`)
+    }
+    return companySourceMeasurement
+  } catch (error) {
+    console.error('Error getting a company source measurement by ID:', error)
+    throw error
+  }
+}
+
 const getAllCompanySourceMeasurements = async (page: number, pageSize: number) => {
   try {
     const skip = (page - 1) * pageSize
@@ -82,6 +126,8 @@ const deleteCompanySourceMeasurement = async (id: number) => {
 export {
   createCompanySourceMeasurement,
   getCompanySourceMeasurementByID,
+  getValueByMeasurementIdCompanyId,
+  getCompanySourceMeasurementByCompanyId,
   getAllCompanySourceMeasurements,
   updateCompanySourceMeasurement,
   deleteCompanySourceMeasurement

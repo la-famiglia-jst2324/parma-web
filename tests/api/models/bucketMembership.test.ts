@@ -30,6 +30,7 @@ describe('Company Bucket Membership Model Tests', () => {
     await deleteBucket(bucketId)
     await deleteCompany(companyId)
     await deleteUser(userId)
+
     await prisma.$disconnect()
   })
 
@@ -56,8 +57,8 @@ describe('Company Bucket Membership Model Tests', () => {
     })
 
     expect(foundMembership).toBeTruthy()
-    expect(foundMembership.companyId).toBe(companyId)
-    expect(foundMembership.bucketId).toBe(bucketId)
+    expect(foundMembership?.companyId).toBe(companyId)
+    expect(foundMembership?.bucketId).toBe(bucketId)
   })
 
   test('Update a CompanyBucketMembership', async () => {

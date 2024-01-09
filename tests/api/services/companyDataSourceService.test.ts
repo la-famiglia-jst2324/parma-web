@@ -1,5 +1,6 @@
 import { Frequency, HealthStatus, PrismaClient, Role } from '@prisma/client'
 import { genRandomDummyAuthId } from '../utils/random'
+import { deleteDataSource } from '../models/utils/helperFunctions'
 import {
   createCompanyDataSource,
   deleteCompanyDataSource,
@@ -24,7 +25,7 @@ describe('Company Datasource Model Tests', () => {
     const dataSource = await createDataSource({
       sourceName: 'source1',
       isActive: true,
-      defaultFrequency: Frequency.DAILY,
+      frequency: Frequency.DAILY,
       healthStatus: HealthStatus.UP,
       description: 'a new data source',
       invocationEndpoint: 'dummy endpoint'
@@ -37,6 +38,7 @@ describe('Company Datasource Model Tests', () => {
   })
 
   afterAll(async () => {
+    await deleteDataSource(dataSourceId)
     await deleteCompany(companyId)
     await deleteUser(userId)
     await prisma.$disconnect()

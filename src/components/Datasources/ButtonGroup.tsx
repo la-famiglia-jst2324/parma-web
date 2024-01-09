@@ -44,13 +44,15 @@ export const ButtonGroup: React.FC<ButtonGroupProps> = ({
   return (
     <div className="mr-8 flex items-center justify-end space-x-4">
       {/* Edit Button */}
-      <button
-        className="flex items-center rounded-md border border-slate-500 bg-transparent px-4 py-2 text-slate-500 hover:bg-slate-200 hover:text-gray-700"
+      <Button
+        className="mr-2 flex items-center "
+        icon={PencilIcon}
+        variant="secondary"
+        color="gray"
         onClick={handleEditButtonClick}
       >
-        <PencilIcon className="mr-2 h-5 w-5" />
         Edit Information
-      </button>
+      </Button>
       <EditInformationModal
         isOpen={editModal.isOpen}
         handleClose={editModal.closeModal}

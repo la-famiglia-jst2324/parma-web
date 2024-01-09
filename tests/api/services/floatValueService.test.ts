@@ -1,6 +1,11 @@
 import { PrismaClient, Frequency, HealthStatus, Role } from '@prisma/client'
 import { genRandomDummyAuthId } from '../utils/random'
-import { createCompanySourceMeasurement } from '../models/utils/helperFunctions'
+import {
+  createCompanySourceMeasurement,
+  deleteCompany,
+  deleteDataSource,
+  deleteUser
+} from '../models/utils/helperFunctions'
 import { createCompany } from '@/api/db/services/companyService'
 import { createDataSource } from '@/api/db/services/dataSourceService'
 import {
@@ -15,20 +20,24 @@ import { createUser } from '@/api/db/services/userService'
 const prisma = new PrismaClient()
 
 describe('float value Model Tests', () => {
-  beforeAll(async () => {
-    await prisma.$connect()
-  })
-
-  afterAll(async () => {
-    await prisma.$disconnect()
-  })
-
   let floatValueId: number
   let companyMeasurementId: number
   let sourceMeasurementId: number
   let companyId: number
   let dataSourceId: number
   let userId: number
+
+  beforeAll(async () => {
+    await prisma.$connect()
+  })
+
+  afterAll(async () => {
+    await deleteCompany(companyId)
+    await deleteDataSource(dataSourceId)
+    await deleteUser(userId)
+    await prisma.$disconnect()
+  })
+
   test('Create a new user with valid details', async () => {
     const user = await createUser({ name: 'John Doe', authId: genRandomDummyAuthId(), role: Role.USER })
     userId = user.id
@@ -46,7 +55,7 @@ describe('float value Model Tests', () => {
     const dataSource = await await createDataSource({
       sourceName: 'source1',
       isActive: true,
-      defaultFrequency: Frequency.DAILY,
+      frequency: Frequency.DAILY,
       healthStatus: HealthStatus.UP,
       invocationEndpoint: 'dummy endpoint'
     })
@@ -54,7 +63,7 @@ describe('float value Model Tests', () => {
     expect(dataSource).toHaveProperty('id')
     expect(dataSource.sourceName).toBe('source1')
     expect(dataSource.isActive).toBe(true)
-    expect(dataSource.defaultFrequency).toBe(Frequency.DAILY)
+    expect(dataSource.frequency).toBe(Frequency.DAILY)
     expect(dataSource.healthStatus).toBe(HealthStatus.UP)
   })
 
@@ -73,7 +82,7 @@ describe('float value Model Tests', () => {
   })
 
   test('Create a new float value with valid details', async () => {
-    const floatValue = await createFloatValue({ companyMeasurementId, value: 1.1 })
+    const floatValue = await createFloatValue({ companyMeasurementId, value: 1.1, timestamp: new Date() })
     floatValueId = floatValue.id
     expect(floatValue).toHaveProperty('id')
     expect(floatValue.companyMeasurementId).toBe(companyMeasurementId)

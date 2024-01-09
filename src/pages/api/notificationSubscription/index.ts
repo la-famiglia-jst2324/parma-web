@@ -1,14 +1,14 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-
 import type { User } from '@prisma/client'
 import {
   createNotificationSubscription,
   deleteNotificationSubscription
 } from '@/api/db/services/notificationSubscriptionService'
-export default async (req: NextApiRequest, res: NextApiResponse, user: User) => {
+import { withAuthValidation } from '@/api/middleware/auth'
+const handler = async (req: NextApiRequest, res: NextApiResponse, user: User) => {
   const { method } = req
   const userId = user.id
-  const { companyId, channelId } = req.body
+  const { channelId } = req.body
   switch (method) {
     case 'POST':
       try {
@@ -23,7 +23,7 @@ export default async (req: NextApiRequest, res: NextApiResponse, user: User) => 
 
     case 'DELETE':
       try {
-        await deleteNotificationSubscription(userId, companyId, channelId)
+        await deleteNotificationSubscription(userId, channelId)
         res.status(200).json({ message: 'Notification Subscription successfully Deleted' })
       } catch (error) {
         res.status(500).json({ error })
@@ -34,3 +34,4 @@ export default async (req: NextApiRequest, res: NextApiResponse, user: User) => 
       break
   }
 }
+export default withAuthValidation(handler)

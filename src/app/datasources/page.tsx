@@ -1,39 +1,34 @@
 'use client'
 import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
+import type { DataSource } from '@prisma/client'
 import Table from '../../components/Datasources/Table'
-import type Datasource from '@/types/datasource'
-import { MainLayout } from '@/components/MainLayout'
-import AuthCheck from '@/components/Authentication/AuthCheck'
 import CustomButton from '@/components/BlueButton'
-
-async function getDatasources() {
-  try {
-    const res = await fetch('/api/dataSources', {
-      method: 'GET',
-      cache: 'no-cache'
-    })
-    if (!res.ok) {
-      console.log('Response status:', res.status)
-      throw new Error('HTTP response was not OK')
-    }
-    const json = await res.json()
-    return json
-  } catch (error) {
-    console.log('An error has occurred: ', error)
-  }
-}
+import { getDataSourcesPagination as getDatasources } from '@/services/datasource/datasourceService'
+import { MainLayoutWrapper } from '@/components/Layout/MainLayout'
 
 function DatasourcesPage() {
-  const [data, setData] = useState<Datasource[]>([])
+  const [data, setData] = useState<DataSource[] | null>(null)
+  const [pagination, setPagination] = useState({ currentPage: 1, pageSize: 10, totalPages: 0, totalCount: 0 })
 
   useEffect(() => {
-    getDatasources()
-      .then(setData)
+    getDatasources(pagination.currentPage, pagination.pageSize)
+      .then((response) => {
+        setData(response.datasources)
+        setPagination(response.pagination)
+      })
       .catch((error) => {
         console.error('Failed to fetch datasources:', error)
       })
-  }, [])
+  }, [pagination.currentPage, pagination.pageSize])
+
+  const handlePageChange = (newPage: number) => {
+    setPagination((prevState) => ({ ...prevState, currentPage: newPage }))
+  }
+
+  const handleItemsPerPageChange = (newSize: number) => {
+    setPagination((prevState) => ({ ...prevState, pageSize: newSize }))
+  }
 
   const router = useRouter()
   const navigateToCreate = () => {
@@ -42,33 +37,38 @@ function DatasourcesPage() {
 
   return (
     <>
-      <MainLayout>
+      <main className="m-4 flex h-[68em] flex-row items-start justify-start space-x-4" role="main">
         <div className="relative m-5 flex min-h-screen w-auto flex-col justify-start rounded-md bg-white shadow-lg">
-          <div className="flex items-center justify-between p-4">
+          <div className="flex items-center justify-between p-6">
             <div className="mb-4 flex items-center justify-start space-x-4">
               <h1 className="m-4 text-4xl text-black">Datasources</h1>
             </div>
-            <div className="m-4">
+            <div className="m-5">
               <CustomButton text="Create Datasource" onClick={navigateToCreate} />
             </div>
           </div>
-          <div className="p-8">
-            {data ? (
-              <div className="mx-4 rounded-lg border-0 bg-white shadow-md">
-                <div>
-                  <Table data={data} />
-                </div>
+          <div className="mb-8 px-6">
+            <div className="mx-auto overflow-auto rounded-lg border-0 bg-white shadow-md">
+              <div className="w-full">
+                {data ? (
+                  <Table
+                    initialData={data}
+                    pagination={pagination}
+                    onPageChange={handlePageChange}
+                    onItemsPerPageChange={handleItemsPerPageChange}
+                  />
+                ) : (
+                  <p className="text-lg font-bold text-gray-700">
+                    No datasources available yet. Start by creating one.
+                  </p>
+                )}
               </div>
-            ) : (
-              <p className="text-lg font-semibold text-gray-600">
-                No datasources available yet. Start by creating one.
-              </p>
-            )}
+            </div>
           </div>
         </div>
-      </MainLayout>
+      </main>
     </>
   )
 }
 
-export default AuthCheck(DatasourcesPage)
+export default MainLayoutWrapper(DatasourcesPage)

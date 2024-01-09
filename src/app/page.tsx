@@ -1,11 +1,13 @@
 'use client'
-import React, { useContext } from 'react'
-import { AuthContext } from '@/lib/firebase/auth'
-import Home from '@/components/Dashboard/Dashboard'
-import LandingPage from '@/components/LandingPage'
+
+import React from 'react'
+import { Home } from '@/components/Dashboard/Home'
+import { MainLayout } from '@/components/Layout/MainLayout'
 
 export default function Page() {
-  const user = useContext(AuthContext)
-
-  return <>{user ? <Home /> : <LandingPage />}</>
+  return (
+    <MainLayout>
+      <Home />
+    </MainLayout>
+  )
 }

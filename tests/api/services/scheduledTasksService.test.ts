@@ -1,12 +1,12 @@
 import { PrismaClient, ScheduleType, TaskStatus } from '@prisma/client'
-import { createDataSource } from '../models/utils/helperFunctions'
+import { createDataSource, deleteDataSource } from '../models/utils/helperFunctions'
 import {
   createScheduledTask,
   getScheduledTaskByID,
   getAllScheduledTasks,
   updateScheduledTask,
   deleteScheduledTask
-} from '@/api/db/services/scheduledTasksService'
+} from '@/api/db/services/scheduledTaskService'
 
 const prisma = new PrismaClient()
 
@@ -20,6 +20,7 @@ describe('ScheduledTasks Service Tests', () => {
   })
 
   afterAll(async () => {
+    await deleteDataSource(dataSourceId)
     await prisma.$disconnect()
   })
 
@@ -65,7 +66,7 @@ describe('ScheduledTasks Service Tests', () => {
 
   test('Delete a scheduled task', async () => {
     await deleteScheduledTask(taskId)
-    const deletedTask = await prisma.scheduledTasks.findUnique({
+    const deletedTask = await prisma.scheduledTask.findUnique({
       where: { taskId }
     })
     expect(deletedTask).toBeNull()

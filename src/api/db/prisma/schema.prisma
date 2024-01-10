@@ -489,13 +489,13 @@ model CompanySubscription {
 }
 
 model NotificationRules {
-  ruleId                Int    @id @map("rule_id")
+  ruleId                Int    @id @default(autoincrement()) @map("rule_id")
   ruleName              String @map("rule_name")
   sourceMeasurementId   Int    @map("source_measurement_id")
   threshold             Float  @map("threshold")
-  aggregationMethod     String @map("aggregation_method")
-  numAggregationEntries Int    @map("num_aggregation_entries")
-  notificationMessage   String @map("notification_message")
+  aggregationMethod     String? @map("aggregation_method")
+  numAggregationEntries Int?    @map("num_aggregation_entries")
+  notificationMessage   String? @map("notification_message")
 
   // relations
   sourceMeasurement SourceMeasurement @relation(fields: [sourceMeasurementId], references: [id], onDelete: Cascade)

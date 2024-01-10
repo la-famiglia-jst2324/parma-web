@@ -1,13 +1,13 @@
 'use client'
 import React, { useContext, useState } from 'react'
 import Image from 'next/image'
-import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import profilePic from '@/../../public/Default_pfp.jpg'
 import { FormContent } from '@/components/FormContent'
 import { MainLayoutWrapper } from '@/components/layout/MainLayout'
-import { AuthContext, getAuthToken } from '@/lib/firebase/auth'
+import { AuthContext, getAuthToken, authResetPassword } from '@/lib/firebase/auth'
 import ProfileImageModal from '@/components/profile/ProfileImageModal'
+import SuccessInfo from '@/components/authentication/SuccessInfo'
 
 // TODO: @Analytics team need to implement the api end points for attaching profile picture to firebase similar to the one for company attachment
 
@@ -16,12 +16,15 @@ const ProfilePage: React.FC = () => {
   const [fullName, setFullName] = useState('')
   // const [email, setEmail] = useState(user !== 'loading' ? user?.email : '')
 
+  // const [loading, setLoading] = useState(false)
+  // const [error, setError] = useState('')
+  const [success, setSuccess] = useState('')
+
   const saveProfileData = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     const formData = {
       fullName
     }
-
     try {
       const token = await getAuthToken(user)
       if (!token) return
@@ -64,10 +67,10 @@ const ProfilePage: React.FC = () => {
       uploadFile(file)
     }
   }
-  const router = useRouter()
-  const handleForgotPasswordClick = () => {
-    router.push('/forgot-password')
-  }
+  // const router = useRouter()
+  // const handleForgotPasswordClick = () => {
+  //   router.push('/forgot-password')
+  // }
 
   const userMail = user === 'loading' ? null : user?.email
   const userFullName = user === 'loading' ? null : user?.displayName
@@ -81,6 +84,31 @@ const ProfilePage: React.FC = () => {
 
   const closeModal = () => {
     setIsModalOpen(false)
+  }
+  const handleSubmit = async () => {
+    let timeoutId: NodeJS.Timeout | null = null
+    try {
+      if (!userMail) {
+        // setError('Please enter your email.')
+        return
+      }
+      // Add timeout
+      timeoutId = setTimeout(() => {
+        // setError('Your request could not be processed. Please try again.')
+        // setLoading(false)
+      }, 10000)
+
+      await authResetPassword(userMail)
+      clearTimeout(timeoutId)
+      timeoutId = null
+      setSuccess('We have sent instructions on your given email to reset your password.')
+    } catch (error) {
+      // setError(error instanceof Error ? error.message : 'Something went wrong.')
+    } finally {
+      if (timeoutId) {
+        clearTimeout(timeoutId)
+      }
+    }
   }
   return (
     // <main className="m-4 flex h-[68em] flex-row items-start justify-start space-x-4" role="main">
@@ -152,11 +180,16 @@ const ProfilePage: React.FC = () => {
               <div>
                 <Button
                   className="rounded bg-red-700 px-4 py-2 font-bold text-white hover:bg-red-600 focus:outline-none"
-                  onClick={handleForgotPasswordClick}
+                  onClick={handleSubmit}
                 >
                   Change Password
                 </Button>
               </div>
+              {success ? (
+                <div className="m-15">
+                  <SuccessInfo msg={success} />
+                </div>
+              ) : null}
             </div>
           </div>
         </div>

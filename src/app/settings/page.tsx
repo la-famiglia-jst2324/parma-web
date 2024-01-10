@@ -1,124 +1,72 @@
 'use client'
 
 import type { FormEvent } from 'react'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
+import { ChannelType } from '@prisma/client'
 // import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import SelectSection from '@/components/settings/SelectSection'
 import ApiKeyConfiguration from '@/components/settings/ApiKeyConfiguration'
-import BucketFunctions from '@/app/services/bucket.service'
-import useSubscribedCompanies from '@/components/hooks/useSubscribedCompanies'
 import { MainLayoutWrapper } from '@/components/layout/MainLayout'
 import { Input } from '@/components/ui/input'
 // import useCompanies from '@/components/hooks/useCompanies'
 // import {user} from '@/pages/api/user/[userId]'
 
 function SettingsPage() {
-  const [selectedCompanies, setSelectedCompanies] = useState<string[]>([])
-  const [subscribedBuckets, setSubscribedBuckets] = useState<string[]>([])
-  const [selectedBuckets, setSelectedBuckets] = useState<string[]>([])
   const [selectedChannels, setSelectedChannels] = useState<string[]>([])
-  const subscribedCompanies = useSubscribedCompanies()
-  const channels = ['Email', 'Slack']
+  const channels = [ChannelType.EMAIL, ChannelType.SLACK]
 
   // tbd
   const handleConfigureSlack = () => {}
   const handleConfigureAffinity = () => {}
 
-  selectedCompanies.map((company) => console.log(company))
-  selectedBuckets.map((bucket) => console.log(bucket))
-  selectedChannels.map((channel) => console.log(channel))
-
-  useEffect(() => {
-    BucketFunctions.getAllBuckets(1)
-      .then((res) => {
-        if (Array.isArray(res.buckets)) {
-          const uniqueTitles = Array.from(
-            new Set(res.buckets.map((bucket: { title: string }) => bucket.title))
-          ) as string[]
-          setSubscribedBuckets(uniqueTitles)
-        } else {
-          console.error('Expected an array but received', res)
-        }
-      })
-      .catch((error) => {
-        console.error('Failed to fetch buckets', error)
-      })
-  }, [])
-
-  // const deleteUser = async () => {
-  //   const router = useRouter()
-
-  //   try {
-  //     const res = await fetch(`/api/user`, {
-  //       method: 'DELETE',
-  //       cache: 'no-cache'
-  //     })
-  //     if (!res.ok) {
-  //       console.log('Response status:', res.status)
-  //       throw new Error('HTTP response was not OK')
-  //     }
-  //     const json = await res.json()
-  //     router.push('/')
-  //     // Log out user
-
-  //     return json
-  //   } catch (error) {
-  //     console.log('An error has occurred: ', error)
-  //   }
-  // }
-
   const saveChanges = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
-
-    //   try {
-    //     await notificationSubscription(companyName, "REPORT")
-    //     router.push('/companies')
-    //   } catch (error) {
-    //     console.error('Failed to fetch more companies:', error)
-    //     setPopupContents({
-    //       title: `Unable to create company ${companyName}`,
-    //       color: 'red',
-    //       description: 'An error occurred while creating a company! Please try again'
-    //     })
-    //     setShowPopup(true)
-    //   }
-    // throw new Error('Function not implemented.')
+    console.log(selectedChannels)
   }
-
   return (
     <main>
       <div className="space-x-3 text-white">
         <h1 className="mb-2 p-4 text-3xl font-bold">Preferences</h1>
 
         <div className="pl-8">
-          <h2 className="text-xl font-bold ">Report Configuration</h2>
+          <h2 className="text-xl font-bold ">Report & Notification Configuration</h2>
           <form role="form" data-testid="create-datasource-form" onSubmit={saveChanges}>
-            <SelectSection
-              id="companies"
-              title="Select Companies"
-              description="Select companies to receive weekly reports on"
-              placeholder="companies"
-              options={subscribedCompanies}
-              onValueChange={(value) => setSelectedCompanies(value)}
-            />
-            <SelectSection
-              id="buckets"
-              title="Select Buckets"
-              description="Select buckets to receive weekly reports on"
-              placeholder="buckets"
-              options={subscribedBuckets}
-              onValueChange={(value) => setSelectedBuckets(value)}
-            />
             <SelectSection
               id="channel"
               title="Select Channel"
-              description="Select channel for receiving reports"
-              placeholder="channels"
-              options={channels}
+              description="Select channel for receiving reports and notifications"
+              placeholder="Channel"
+              options={channels.map(
+                (channel) =>
+                  channel.toString().toLowerCase().charAt(0).toUpperCase() + channel.toString().toLowerCase().slice(1)
+              )}
               onValueChange={(value) => setSelectedChannels(value)}
               isMultiSelect={false}
             />
+            <div>
+              <div className="pb-1 pt-6 font-bold">
+                <h3>Configure Email</h3>
+              </div>
+              <div className="flex">
+                <div>
+                  <h4 className="flex">Provide email address where you want to receive reports and notifications</h4>
+                </div>
+                <div className="absolute right-8 flex w-56 justify-center">
+                  <Button
+                    className="rounded bg-indigo-700 px-4 py-2 font-bold text-white hover:bg-blue-700 focus:outline-none"
+                    // onClick={saveChanges}
+                  >
+                    Save Changes
+                  </Button>
+                </div>
+              </div>
+              <Input
+                className="w-50 ml-1 mt-2 rounded bg-slate-800"
+                placeholder="Enter Your Email Address"
+                color=""
+              ></Input>
+            </div>
           </form>
         </div>
 
@@ -126,14 +74,17 @@ function SettingsPage() {
           className="p-5 pl-8"
           // onSubmit={saveChanges}
         >
-          <Button className="rounded bg-indigo-700 px-4 py-2 font-bold text-white hover:bg-blue-700 focus:outline-none">
+          {/* <Button className="rounded bg-indigo-700 px-4 py-2 font-bold text-white hover:bg-blue-700 focus:outline-none">
             Save changes
-          </Button>
+          </Button> */}
         </div>
         <div className="w-full rounded-b border-b border-gray-200 p-2"></div>
 
         <div className="p-8">
           <h2 className="text-xl font-bold ">API Keys</h2>
+
+          <ApiKeyConfiguration serviceName="Slack" onConfigure={handleConfigureSlack} />
+          <Input className="w-50 ml-1 mt-2 rounded bg-slate-800" placeholder="Enter Your API Key" color=""></Input>
 
           <ApiKeyConfiguration serviceName="OpenAI" onConfigure={handleConfigureSlack} />
           <Input className="w-50 ml-1 mt-2 rounded bg-slate-800" placeholder="Enter Your API Key" color=""></Input>

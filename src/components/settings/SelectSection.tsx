@@ -41,7 +41,7 @@ const SelectSection: React.FC<SelectSectionProps> = ({
               ))}
             </MultiSelect>
           ) : (
-            <Select value={value} onValueChange={setValue}>
+            <Select placeholder={placeholder} value={value} onValueChange={setValue}>
               {options.map((option) => (
                 <SelectItem key={option} value={option}>
                   {option}

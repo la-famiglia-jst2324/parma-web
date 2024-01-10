@@ -2,6 +2,7 @@ import type { Bucket } from '@prisma/client'
 
 import { PrismaClient, Role } from '@prisma/client'
 import { genRandomDummyAuthId } from '../utils/random'
+import { deleteUser } from '../models/utils/helperFunctions'
 import {
   createBucket,
   deleteBucket,
@@ -12,30 +13,39 @@ import {
   getBucketByName
 } from '@/api/db/services/bucketService'
 import { createUser } from '@/api/db/services/userService'
-
 const prisma = new PrismaClient()
-
 describe('Bucket Model Tests', () => {
   let userId: number
   let bucketId: number
   let createdbucket: Bucket
-
   beforeAll(async () => {
     const user = await createUser({ name: 'John Doe', authId: genRandomDummyAuthId(), role: Role.USER })
     userId = user.id
-    const bucket = await createBucket({ title: 'bucket', description: 'Test bucket', ownerId: userId, isPublic: true })
+    const bucket = await createBucket({
+      title: 'bucket 1',
+      description: 'Test bucket',
+      ownerId: userId,
+      isPublic: true
+    })
     createdbucket = bucket
     await prisma.$connect()
   })
   afterAll(async () => {
+    await deleteBucket(createdbucket.id)
+    await deleteUser(userId)
     await prisma.$disconnect()
   })
-
   test('Create a new user with valid details', async () => {
-    await createUser({ name: 'John Doe', authId: genRandomDummyAuthId(), role: Role.USER })
-    await createBucket({ title: 'bucket', description: 'Test bucket', ownerId: userId, isPublic: true })
+    const user = await createUser({ name: 'Jane Doe', authId: genRandomDummyAuthId(), role: Role.USER })
+    const testBucket = await createBucket({
+      title: 'bucket',
+      description: 'Test bucket',
+      ownerId: userId,
+      isPublic: true
+    })
+    await deleteBucket(testBucket.id)
+    await deleteUser(user.id)
   })
-
   test('Create a new bucket with valid details', async () => {
     const bucket = await createBucket({ title: 'bucket', description: 'Test bucket', ownerId: userId, isPublic: true })
     bucketId = bucket.id
@@ -45,7 +55,6 @@ describe('Bucket Model Tests', () => {
     expect(bucket.ownerId).toBe(userId)
     expect(bucket.isPublic).toBe(true)
   })
-
   test('Retrieve a bucket by ID', async () => {
     const bucket = await getBucketById(bucketId)
     expect(bucket).toBeTruthy()
@@ -82,7 +91,6 @@ describe('Bucket Model Tests', () => {
     }
     expect(bucket).toBeTruthy()
   })
-
   test('Update a bucket', async () => {
     const updatedBucket = await updateBucket(bucketId, {
       title: 'updatedBucket',
@@ -94,7 +102,6 @@ describe('Bucket Model Tests', () => {
     expect(updatedBucket.ownerId).toBe(userId)
     expect(updatedBucket.isPublic).toBe(false)
   })
-
   test('Delete a bucket', async () => {
     await deleteBucket(bucketId)
     const deletedBucket = await prisma.bucket.findUnique({

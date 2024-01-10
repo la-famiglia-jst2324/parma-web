@@ -1,57 +1,32 @@
 'use client'
 import React, { useEffect, useState } from 'react'
-import { Button, Tab, TabGroup, TabList, TabPanel, TabPanels } from '@tremor/react'
 import type { DataSource } from '@prisma/client'
 import Link from 'next/link'
-import {
-  BuildingOffice2Icon,
-  PencilIcon,
-  PresentationChartLineIcon,
-  ShieldCheckIcon,
-  TrashIcon,
-  WifiIcon
-} from '@heroicons/react/20/solid'
-import GoBackButton from '@/components/Datasources/GoBackButton'
-import ModalComponent from '@/components/Datasources/DisableModal'
-import DeleteModal from '@/components/Datasources/DeleteModal'
-import EditInformationModal from '@/components/Datasources/EditInformationModal'
-import { CompaniesTable } from '@/components/Datasources/CompaniesTable'
-import { editDatasource } from '@/utils/datasources/editDatasource'
+import { editDatasource, getDatasourceById } from '@/services/datasource/datasourceService'
+import { MainLayoutWrapper } from '@/components/Layout/MainLayout'
+import { HeaderComponent } from '@/components/Datasources/DatasourcePageHeader'
+import { ButtonGroup } from '@/components/Datasources/ButtonGroup'
+import { TabComponent } from '@/components/Datasources/DatasourceTabComponent'
+import { useModal } from '@/components/Datasources/hooks/useModal'
 
-async function getDatasource(id: string) {
-  try {
-    const res = await fetch(`/api/dataSources/${id}`, {
-      method: 'GET'
-    })
-    if (!res.ok) {
-      console.log('Response status:', res.status)
-      throw new Error('HTTP response was not OK')
-    }
-    const json = await res.json()
-    return json
-  } catch (error) {
-    console.log('An error has occurred: ', error)
-  }
-}
-
-export default function DatasourcePage({ params: { id } }: { params: { id: string } }) {
+function DatasourcePage({ params: { id } }: { params: { id: string } }) {
   const [data, setData] = useState<DataSource>()
-  const [isDisableModalOpen, setIsDisableModalOpen] = useState(false)
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false)
-  const [sourceName, setName] = useState('')
-  const [description, setDescription] = useState('')
-  const [invocationEndpoint, SetInvocationEndpoint] = useState('')
-  const [status, setStatus] = useState(false)
-  const [isLoading, setIsLoading] = useState(true)
+  const disableModal = useModal()
+  const deleteModal = useModal()
+  const editModal = useModal()
+  const [sourceName, setName] = useState<string>('')
+  const [description, setDescription] = useState<string>('')
+  const [invocationEndpoint, setInvocationEndpoint] = useState<string>('')
+  const [, setStatus] = useState<boolean>(false)
+  const [isLoading, setIsLoading] = useState<boolean>(true)
 
   useEffect(() => {
-    getDatasource(id)
+    getDatasourceById(id)
       .then((datasource) => {
         setData(datasource)
         setName(datasource.sourceName)
         setDescription(datasource.description)
-        SetInvocationEndpoint(datasource.invocationEndpoint)
+        setInvocationEndpoint(datasource.invocationEndpoint)
         setStatus(datasource.isActive)
         setIsLoading(false)
       })
@@ -73,39 +48,42 @@ export default function DatasourcePage({ params: { id } }: { params: { id: strin
   }
 
   const handleDisableButtonClick = () => {
-    setIsDisableModalOpen(true)
+    disableModal.openModal()
   }
 
   const handleDeleteButtonClick = async () => {
-    setIsDeleteModalOpen(true)
-  }
-
-  const handleEnableButtonClick = async () => {
-    try {
-      const updatedDatasource = await editDatasource(id, sourceName, true, description, invocationEndpoint)
-      if (data.id === Number(id)) {
-        setData(updatedDatasource)
-      }
-    } catch (error) {
-      console.error('Failed to update datasource:', error)
-    }
+    deleteModal.openModal()
   }
 
   const handleEditButtonClick = async () => {
-    setIsEditModalOpen(true)
+    editModal.openModal()
   }
 
   const handleClose = () => {
-    setIsDisableModalOpen(false)
-    setIsDeleteModalOpen(false)
-    setIsEditModalOpen(false)
+    disableModal.closeModal()
+    deleteModal.closeModal()
+    editModal.closeModal()
   }
 
-  const handleSave = async (newName: string, newStatus: boolean, newDescription: string, newUrl: string) => {
+  const handleSave = async (
+    newName: string,
+    newDescription: string,
+    newInvocationEndpoint: string,
+    newStatus: boolean
+  ) => {
     try {
-      const updatedDatasource = await editDatasource(id, newName, newStatus, newDescription, newUrl)
-      if (data.id === Number(id)) {
+      const updatedDatasource = await editDatasource(id, {
+        sourceName: newName,
+        isActive: newStatus,
+        description: newDescription,
+        invocationEndpoint: newInvocationEndpoint
+      })
+      if (data && data.id === Number(id)) {
         setData(updatedDatasource)
+        setName(newName)
+        setDescription(newDescription)
+        setInvocationEndpoint(newInvocationEndpoint)
+        setStatus(newStatus)
         handleClose()
       }
     } catch (error) {
@@ -113,86 +91,33 @@ export default function DatasourcePage({ params: { id } }: { params: { id: strin
     }
   }
 
+  const handleEnableButtonClick = async () => {
+    handleSave(sourceName, description, invocationEndpoint, true).catch((error) => {
+      console.error('An error occurred:', error)
+    })
+  }
+
   return (
-    <div className="m-6 flex flex-col items-start rounded-lg border-0 bg-white p-5 shadow-md">
+    <main className="m-4 flex h-[68em] flex-row items-start justify-start space-x-4" role="main">
       <div className="mb-3 flex w-full items-center justify-between space-x-4">
-        <div className="mb-2 flex items-center justify-start space-x-4">
-          <GoBackButton />
-          <h1> {data.sourceName} </h1>
-          <div
-            className={`inline-flex items-center rounded-full px-2 py-1 text-sm ${
-              data.isActive ? 'bg-blue-200 text-blue-700' : 'bg-red-200 text-red-700'
-            }`}
-          >
-            <WifiIcon className="mr-2 h-5 w-5" />
-            {data.isActive ? 'Active' : 'Inactive'}
-          </div>
-        </div>
-        <div className="mr-8 flex items-center justify-end space-x-4">
-          <div>
-            <button
-              className="flex items-center rounded-md border border-slate-500 bg-transparent px-4 py-2 text-slate-500 hover:bg-slate-200 hover:text-gray-700"
-              onClick={handleEditButtonClick}
-            >
-              <PencilIcon className="mr-2 h-5 w-5" />
-              Edit Information
-            </button>
-            <EditInformationModal
-              isOpen={isEditModalOpen}
-              handleClose={handleClose}
-              sourceName={sourceName}
-              description={description}
-              url={invocationEndpoint}
-              isActive={status}
-              handleSave={async (newName: string, newDescription: string, newUrl: string, newStatus: boolean) => {
-                try {
-                  await handleSave(newName, newStatus, newDescription, newUrl)
-                } catch (error) {
-                  console.error('Failed to save:', error)
-                }
-              }}
-            />
-          </div>
-          <div>
-            {data.isActive ? (
-              <>
-                <Button color="red" onClick={handleDisableButtonClick}>
-                  Disable
-                </Button>
-                <ModalComponent
-                  isOpen={isDisableModalOpen}
-                  handleClose={handleClose}
-                  sourceName={data.sourceName}
-                  description={data.description || ''}
-                  url={data.invocationEndpoint || ''}
-                  handleSave={async (newName: string, newDescription: string, newUrl: string, newStatus: boolean) => {
-                    try {
-                      await handleSave(newName, newStatus, newDescription, newUrl)
-                    } catch (error) {
-                      console.error('Failed to save:', error)
-                    }
-                  }}
-                />
-              </>
-            ) : (
-              <Button color="gray" onClick={handleEnableButtonClick}>
-                Enable
-              </Button>
-            )}
-          </div>
-          <div>
-            <button
-              color="blue"
-              className="mr-2 flex items-center bg-transparent text-red-500"
-              onClick={handleDeleteButtonClick}
-            >
-              <TrashIcon className="mr-2 h-5 w-5 text-red-500" />
-              Delete
-            </button>
-            <DeleteModal isOpen={isDeleteModalOpen} handleClose={handleClose} id={data.id.toString()} />
-          </div>
-        </div>
+        {/* Name, description and status */}
+        <HeaderComponent data={data} />
+        {/* Buttons */}
+        <ButtonGroup
+          handleSave={(updates) =>
+            handleSave(updates.newName, updates.newDescription, updates.newUrl, updates.newStatus)
+          }
+          data={data}
+          handleDisableButtonClick={handleDisableButtonClick}
+          handleDeleteButtonClick={handleDeleteButtonClick}
+          handleEnableButtonClick={handleEnableButtonClick}
+          handleEditButtonClick={handleEditButtonClick}
+          disableModal={disableModal}
+          deleteModal={deleteModal}
+          editModal={editModal}
+        />
       </div>
+      {/* Datasource Information */}
       <p className="mb-1 ml-9 mr-10 text-base text-gray-700">{data.description}</p>
       <Link
         href={data.invocationEndpoint}
@@ -200,32 +125,12 @@ export default function DatasourcePage({ params: { id } }: { params: { id: strin
         rel="noopener noreferrer"
         className="mb-1 ml-9 text-base text-gray-900 hover:text-blue-600"
       >
-        Source Link: {data.invocationEndpoint}
+        Source: {data.invocationEndpoint}
       </Link>
-      <TabGroup>
-        <TabList className="mt-8" variant="solid">
-          <Tab icon={BuildingOffice2Icon}>Companies Monitored</Tab>
-          <Tab icon={ShieldCheckIcon}>Datasource Health</Tab>
-          <Tab icon={PresentationChartLineIcon}>Scheduling Tasks</Tab>
-        </TabList>
-        <TabPanels>
-          <TabPanel>
-            <CompaniesTable datasourceId={data.id.toString()} />
-          </TabPanel>
-          <TabPanel>
-            <div className="flex flex-col items-center justify-center">
-              <h1 className="text-2xl font-bold">No data available</h1>
-              <p className="text-gray-500">No data has been collected yet</p>
-            </div>
-          </TabPanel>
-          <TabPanel>
-            <div className="flex flex-col items-center justify-center">
-              <h1 className="text-2xl font-bold">No data available</h1>
-              <p className="text-gray-500">No data has been collected yet</p>
-            </div>
-          </TabPanel>
-        </TabPanels>
-      </TabGroup>
-    </div>
+      {/* Tabs */}
+      <TabComponent sourceId={data.id.toString()} />
+    </main>
   )
 }
+
+export default MainLayoutWrapper(DatasourcePage)

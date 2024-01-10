@@ -1,21 +1,29 @@
-import type { ChannelType, EntityType } from '@prisma/client'
+import type { ChannelType } from '@prisma/client'
+import { v4 as uuid } from 'uuid'
 import { prisma } from '../prisma/prismaClient'
+import { getSecretManagerClient, storeSecret } from '@/api/gcp/secret_manager'
 
-const createNotificationChannel = async (data: {
-  entityId: string
-  entityType: EntityType
-  channelType: ChannelType
-  destination: string
-  apiKey?: string
-}) => {
+/**
+ * The apiKey, if provided, is stored in the secret manager and a secretId
+ * is stored instead in the database.
+ * @param data
+ * @returns
+ */
+const createNotificationChannel = async (data: { channelType: ChannelType; destination: string; apiKey?: string }) => {
   try {
+    let secretId = null
+    // create a secret if the request contains a key.
+    if (data.apiKey) {
+      secretId = `parma-analytics-notification-channel-key-${uuid()}`
+      const smClient = getSecretManagerClient()
+      await storeSecret(smClient, secretId, data.apiKey)
+    }
+
     return await prisma.notificationChannel.create({
       data: {
-        entityId: data.entityId,
-        entityType: data.entityType,
         channelType: data.channelType,
         destination: data.destination,
-        apiKey: data.apiKey
+        secretId
       }
     })
   } catch (error) {
@@ -29,8 +37,7 @@ const getNotificationChannelById = async (id: number) => {
     const notificationChannel = await prisma.notificationChannel.findUnique({
       where: { id },
       include: {
-        notificationSubscriptions: true,
-        reportSubscriptions: true
+        notificationSubscriptions: true
       }
     })
     if (!notificationChannel) {
@@ -43,20 +50,43 @@ const getNotificationChannelById = async (id: number) => {
   }
 }
 
+/**
+ * Updates the notification channel with id with the provided data.
+ * If an apiKey is provided in the request, the method adds a secretId (if not
+ * existing) and updates the value stored in the secret manager.
+ * @param id
+ * @param data
+ * @returns
+ */
 const updateNotificationChannel = async (
   id: number,
   data: {
     entityId?: string
-    entityType?: EntityType
     channelType?: ChannelType
     destination?: string
     apiKey?: string
   }
 ) => {
   try {
+    let secretId = null
+    if (data.apiKey) {
+      const notificationChannel = await getNotificationChannelById(id)
+      // check if a secretId already exists or not.
+      secretId = notificationChannel?.secretId || `parma-analytics-notification-channel-key-${uuid()}`
+      const smClient = getSecretManagerClient()
+      await storeSecret(smClient, secretId, data.apiKey)
+    }
+    // ignore apiKey
+    delete data.apiKey
+    // include secretId to the payload only if it is defined
+    const updatePayload = {
+      ...data,
+      ...(secretId != null && { secretId })
+    }
+
     return await prisma.notificationChannel.update({
       where: { id },
-      data: { ...data }
+      data: { ...updatePayload }
     })
   } catch (error) {
     console.error('Error updating notification channel:', error)

@@ -1,10 +1,11 @@
 import type { Frequency, HealthStatus } from '@prisma/client'
 import { prisma } from '../prisma/prismaClient'
+import { ItemNotFoundError } from '@/api/utils/errorUtils'
 
 const createDataSource = async (data: {
   sourceName: string
   isActive: boolean
-  defaultFrequency: Frequency
+  frequency: Frequency
   healthStatus: HealthStatus
   description?: string
   invocationEndpoint: string
@@ -14,7 +15,7 @@ const createDataSource = async (data: {
       data: {
         sourceName: data.sourceName,
         isActive: data.isActive,
-        defaultFrequency: data.defaultFrequency,
+        frequency: data.frequency,
         healthStatus: data.healthStatus,
         description: data.description,
         invocationEndpoint: data.invocationEndpoint
@@ -32,7 +33,7 @@ const getDataSourceByID = async (id: number) => {
       where: { id }
     })
     if (!datasource) {
-      throw new Error(`Data source with ID ${id} not found.`)
+      throw new ItemNotFoundError(`Data source with ID ${id} not found.`)
     }
     return datasource
   } catch (error) {
@@ -56,7 +57,7 @@ const getDataSourceByName = async (sourceName: string) => {
   }
 }
 
-const getAllDataSources = async (page: number, size: number, name: string) => {
+const getAllDataSources = async (page: number, pageSize: number, name: string) => {
   try {
     const datasources = await prisma.dataSource.findMany({
       where: {
@@ -65,10 +66,20 @@ const getAllDataSources = async (page: number, size: number, name: string) => {
           mode: 'insensitive' // case-insensitive
         }
       },
-      skip: (page - 1) * size,
-      take: size
+      skip: (page - 1) * pageSize,
+      take: pageSize
     })
-    return datasources
+    const totalCount = await prisma.dataSource.count()
+    const totalPages = Math.ceil(totalCount / pageSize)
+    return {
+      datasources,
+      pagination: {
+        currentPage: page,
+        pageSize,
+        totalPages,
+        totalCount
+      }
+    }
   } catch (error) {
     console.error('Error getting all data sources:', error)
     throw error
@@ -81,7 +92,7 @@ const updateDataSource = async (
     sourceName?: string
     isActive?: boolean
     healthStatus?: HealthStatus
-    defaultFrequency?: Frequency
+    frequency?: Frequency
     description?: string
     invocationEndpoint?: string
   }

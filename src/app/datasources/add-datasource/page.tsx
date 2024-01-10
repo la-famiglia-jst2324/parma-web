@@ -1,44 +1,58 @@
 'use client'
+
 import type { FormEvent } from 'react'
 import React, { useState } from 'react'
 import { Select, SelectItem, Callout } from '@tremor/react'
 import { Frequency } from '@prisma/client'
 import { CheckCircleIcon, ExclamationCircleIcon } from '@heroicons/react/20/solid'
-import GoBackButton from '@/components/Datasources/GoBackButton'
+import { MainLayoutWrapper } from '@/components/Layout/MainLayout'
 import { FormContent } from '@/components/FormContent'
+import CustomButton from '@/components/BlueButton'
+import GoBackButton from '@/components/Datasources/GoBackButton'
 
-export default function CreateDatasourcePage() {
-  const [name, setName] = useState('')
-  const [url, setUrl] = useState('')
-  const [description, setDescription] = useState('')
-  const [defaultFrequency, setDefaultFrequency] = useState('')
-  const [showSuccess, setShowSuccess] = useState(false)
-  const [showError, setShowError] = useState(false)
+function CreateDatasourcePage() {
+  const [name, setName] = useState<string>('')
+  const [url, setUrl] = useState<string>('')
+  const [description, setDescription] = useState<string>('')
+  const [frequency, setFrequency] = useState<string>('')
+  const [showSuccess, setShowSuccess] = useState<boolean>(false)
+  const [showError, setShowError] = useState<boolean>(false)
+  const [errorMessage, setErrorMessage] = useState<string>('')
 
   async function createDatasource(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
 
     const formData = new FormData(event.currentTarget)
 
-    if (!(defaultFrequency in Frequency)) {
-      throw new Error(`Invalid frequency: ${defaultFrequency}`)
+    if (frequency === undefined || frequency === '') {
+      setErrorMessage('You need to select a frequency for the datasource!')
+      setShowError(true)
+      return
     }
 
-    const frequencyEnum = Frequency[defaultFrequency as keyof typeof Frequency]
+    if (formData.get('name') === null || formData.get('name') === '') {
+      setErrorMessage('You need to provide a name for the datasource!')
+      setShowError(true)
+      return
+    }
 
-    console.log('Form url', formData.get('url'))
+    if (formData.get('url') === null || formData.get('url') === '') {
+      setErrorMessage('You need to provide a URL for the datasource!')
+      setShowError(true)
+      return
+    }
+
+    const frequencyEnum = Frequency[frequency as keyof typeof Frequency]
 
     const dataSource = {
       sourceName: formData.get('name') as string,
-      isActive: false,
-      defaultFrequency: frequencyEnum,
-      healthStatus: 'DOWN',
+      isActive: true,
+      frequency: frequencyEnum,
+      healthStatus: 'UP',
       modifiedAt: new Date().toISOString(),
       invocationEndpoint: formData.get('url') as string,
       description: formData.get('description') as string
     }
-
-    console.log('dataSource: ', dataSource)
 
     fetch('/api/dataSources', {
       method: 'POST',
@@ -49,21 +63,22 @@ export default function CreateDatasourcePage() {
     })
       .then((response) => {
         if (!response.ok) {
-          throw new Error('Network response was not ok')
+          console.error(response)
         }
         setShowSuccess(true)
         setTimeout(() => setShowSuccess(false), 5000)
       })
       .then((data) => console.log(data))
       .catch((error) => {
+        setErrorMessage('Any error happened while creating the datasource. Please Try again.')
         setShowError(true)
         setTimeout(() => setShowSuccess(false), 5000)
-        console.error('Error:', error)
+        console.error(error)
       })
   }
 
   return (
-    <>
+    <main className="m-4 flex h-[68em] flex-row items-start justify-start space-x-4" role="main">
       <div className="mx-6 h-screen pt-12">
         <div className="mx-auto max-w-screen-xl rounded-lg border-0 bg-white p-6 shadow-md">
           <div className="mb-3 flex items-center justify-start space-x-4">
@@ -92,9 +107,11 @@ export default function CreateDatasourcePage() {
             />
             <div className="mb-4 flex flex-col">
               <label className="mb-2 block text-sm font-bold text-gray-700">Frequency</label>
-              <Select value={defaultFrequency} onValueChange={setDefaultFrequency}>
+              <Select value={frequency} onValueChange={setFrequency}>
+                <SelectItem value="HOURLY">Hourly</SelectItem>
                 <SelectItem value="DAILY">Daily</SelectItem>
                 <SelectItem value="WEEKLY">Weekly</SelectItem>
+                <SelectItem value="MONTHLY">Monthly</SelectItem>
               </Select>
             </div>
             <FormContent
@@ -107,12 +124,7 @@ export default function CreateDatasourcePage() {
               onChange={(e) => setUrl(e.target.value)}
             />
             <div>
-              <button
-                className="rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700 focus:outline-none"
-                type="submit"
-              >
-                Create Datasource
-              </button>
+              <CustomButton text="Create Datasource" type="submit" />
             </div>
           </form>
         </div>
@@ -123,12 +135,14 @@ export default function CreateDatasourcePage() {
             </Callout>
           )}
           {showError && (
-            <Callout title="Error creating datasource" icon={ExclamationCircleIcon} color="red">
-              There was an error creating the datasource. Please try again.
+            <Callout title="Error while creating Datasource" icon={ExclamationCircleIcon} color="red">
+              {errorMessage}
             </Callout>
           )}
         </div>
       </div>
-    </>
+    </main>
   )
 }
+
+export default MainLayoutWrapper(CreateDatasourcePage)

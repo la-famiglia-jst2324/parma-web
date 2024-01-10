@@ -19,7 +19,7 @@ export const fetchUserRoles = async (firebaseUser: User | null): Promise<Role[] 
 
     const user = await response.json()
 
-    return user?.roles || null
+    return user?.role || null
   } catch (error) {
     console.error('Error fetching user roles:', error)
     return null

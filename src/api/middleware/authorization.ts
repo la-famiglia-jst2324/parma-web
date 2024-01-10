@@ -5,8 +5,8 @@ export const withAuthorizationValidation = (
   handler: (req: NextApiRequest, res: NextApiResponse, user: User) => Promise<void>
 ) => {
   return async (req: NextApiRequest, res: NextApiResponse, user: User, authorizedRoles: Role[]) => {
-    const userRoles = user.roles
-    const isAuthorized = userRoles.some((role) => authorizedRoles.includes(role))
+    const userRole = user.role
+    const isAuthorized = authorizedRoles.includes(userRole)
 
     if (isAuthorized) {
       return handler(req, res, user)

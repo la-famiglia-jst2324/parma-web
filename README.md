@@ -5,8 +5,9 @@
 [![Deploy](https://github.com/la-famiglia-jst2324/parma-web/actions/workflows/release.yml/badge.svg?event=release)](https://parma.software)
 [![Deploy](https://github.com/la-famiglia-jst2324/parma-web/actions/workflows/release.yml/badge.svg?event=push)](https://staging.parma.software)
 [![Major Tag](https://github.com/la-famiglia-jst2324/parma-web/actions/workflows/tag-major.yml/badge.svg)](https://github.com/la-famiglia-jst2324/parma-web/actions/workflows/tag-major.yml)
-![Functions](https://img.shields.io/badge/functions-49.55%25-red.svg?style=flat)
-![Lines](https://img.shields.io/badge/lines-40.2%25-red.svg?style=flat)
+
+![Functions](https://img.shields.io/badge/functions-14.32%25-red.svg?style=flat)
+![Lines](https://img.shields.io/badge/lines-13.39%25-red.svg?style=flat)
 
 ParmaAI webstack including frontend and REST API backend.
 
@@ -14,7 +15,7 @@ ParmaAI webstack including frontend and REST API backend.
 
 ## Deployment
 
-You can find the latest deployment on [parma.software](https://parma.software). The staging deployment is available on [staging.parma.software](https://staging.parma.software).
+You can find the latest deployment of this project on [parma.software](https://parma.software). The staging deployment is available on [staging.parma.software](https://staging.parma.software).
 
 ## Getting Started
 
@@ -44,7 +45,7 @@ The following steps will get you started with the project.
 
    **Skip to 4. if everything worked**
 
-   In case you encounter errors while installing **_pre-commit_**, do _one_ of the following:
+   In case you encounter errors while installing **_pre-commit_**, do _one_ of the following :
 
    1. Install pre-commit with sudo:
 
@@ -71,10 +72,12 @@ The following steps will get you started with the project.
    make install
    ```
 
-4. **Setup Firebase Admin SDK**:
+4. **Setup Firebase Admin SDK & GCP Credentials**:
 
    The Firebase Admin SDK is used to verify user tokens in the backend (Next API routes).
    Please download [this secrets json file](https://www.notion.so/firebase-admin-sdk-certificate-4279aa3b4e904e1b927619ed69537045) from Notion and place it in `/src/api/.secrets/la-famiglia-parma-ai-firebase-adminsdk.json`.
+
+   Also make sure to have `/src/api/.secrets/la-famiglia-parma-ai-secret-manager.json` file with [this certificate](https://www.notion.so/GCP-Service-Account-Certificate-Secret-Manager-4252786a29e64cdcb2d8d359164a1731) to be able to access the secret manager.
 
 5. **Start the development server**
 
@@ -116,7 +119,13 @@ The following steps will get you started with the project.
    make test  # runs jest and typescript-coverage-report
    ```
 
-8. Optional: Run a production build (used in the CI pipeline)
+8. Environment Variables Other Than Database
+
+   ```bash
+   export PARMA_ANALYTICS_BASE_URL=http://127.0.0.1:8000
+   ```
+
+9. Optional: Run a production build (used in the CI pipeline)
 
    ```bash
    make start
@@ -137,6 +146,15 @@ Follow the steps below to update your local database with recent changes
    ```bash
     pnpm prisma migrate dev
    ```
+
+## Database Population
+
+If you want to populate your database, run the following commands, under the root directory, in order:
+
+```
+tsc src/api/db/populate.ts
+node src/api/db/populate.js
+```
 
 ## PR workflow
 

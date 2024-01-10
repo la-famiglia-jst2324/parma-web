@@ -27,7 +27,7 @@ describe('DataSource Model Tests', () => {
       data: {
         sourceName: 'Test Source',
         isActive: true,
-        defaultFrequency: 'DAILY',
+        frequency: 'DAILY',
         healthStatus: 'UP',
         description: 'Test Description'
       }
@@ -38,7 +38,7 @@ describe('DataSource Model Tests', () => {
     expect(dataSource).toHaveProperty('id')
     expect(dataSource.sourceName).toBe('Test Source')
     expect(dataSource.isActive).toBe(true)
-    expect(dataSource.defaultFrequency).toBe('DAILY')
+    expect(dataSource.frequency).toBe('DAILY')
     expect(dataSource.healthStatus).toBe('UP')
     expect(dataSource.description).toBe('Test Description')
   })

@@ -1,4 +1,5 @@
 import { prisma } from '../prisma/prismaClient'
+import { ItemNotFoundError } from '@/api/utils/errorUtils'
 
 // can create a new bucket with the same name??  skip for now
 const createBucket = async (data: { title: string; description?: string; ownerId: number; isPublic: boolean }) => {
@@ -23,16 +24,17 @@ const getBucketById = async (id: number) => {
       where: { id },
       include: {
         user: true,
+        companyBucketMember: true,
         permissions: true
       }
     })
     if (!bucket) {
-      throw new Error(`Bucket with ID ${id} not found`)
+      throw new ItemNotFoundError(`Bucket with ID ${id} not found.`)
     }
     return bucket
   } catch (error) {
     console.error('Error retrieving bucket:', error)
-    throw new Error('Unable to retrieve bucket')
+    throw error
   }
 }
 
@@ -41,7 +43,10 @@ const getBucketByName = async (title: string, page: number, pageSize: number) =>
     const skip = (page - 1) * pageSize
     const buckets = await prisma.bucket.findMany({
       where: {
-        title
+        title: {
+          contains: title,
+          mode: 'insensitive'
+        }
       },
       skip,
       take: pageSize

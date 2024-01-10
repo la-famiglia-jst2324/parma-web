@@ -23,7 +23,6 @@ const getUserById = async (id: number) => {
       include: {
         ownedBuckets: true,
         notificationSubscriptions: true,
-        reportSubscriptions: true,
         permissions: true
       }
     })
@@ -112,7 +111,6 @@ const deleteUser = async (id: number) => {
       // delete associated data
       await prisma.newsSubscription.deleteMany({ where: { userId: id } })
       await prisma.userImportantMeasurementPreference.deleteMany({ where: { userId: id } })
-      await prisma.reportSubscription.deleteMany({ where: { userId: id } })
       await prisma.notificationSubscription.deleteMany({ where: { userId: id } })
       // delete user
       return prisma.user.delete({ where: { id } })

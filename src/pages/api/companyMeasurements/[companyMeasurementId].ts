@@ -7,8 +7,12 @@ import {
 import { ItemNotFoundError } from '@/api/utils/errorUtils'
 /**
  * @swagger
+ * tags:
+ *   - name: companyMeasurement
  * /api/companyMeasurements/id:
  *   get:
+ *     tags:
+ *       - companyMeasurement
  *     summary: Retrieve a company source measurement by ID
  *     description: Fetches details of a specific company source measurement based on the provided ID.
  *     parameters:
@@ -32,6 +36,8 @@ import { ItemNotFoundError } from '@/api/utils/errorUtils'
  *         description: Internal Server Error.
  *
  *   put:
+ *     tags:
+ *       - companyMeasurement
  *     summary: Update a company source measurement
  *     description: Updates the details of an existing company source measurement based on the provided ID.
  *     parameters:
@@ -64,6 +70,8 @@ import { ItemNotFoundError } from '@/api/utils/errorUtils'
  *         description: Internal Server Error.
  *
  *   delete:
+ *     tags:
+ *       - companyMeasurement
  *     summary: Delete a company source measurement
  *     description: Deletes a specific company source measurement based on the provided ID.
  *     parameters:

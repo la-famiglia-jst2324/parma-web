@@ -11,6 +11,8 @@ import { ItemNotFoundError } from '@/api/utils/errorUtils'
  * @swagger
  * /api/measurements/measurementId:
  *   get:
+ *     tags:
+ *       - sourceMeasurement
  *     summary: Retrieve a source measurement by ID
  *     description: Fetches details of a specific source measurement based on the provided ID.
  *     parameters:
@@ -32,6 +34,8 @@ import { ItemNotFoundError } from '@/api/utils/errorUtils'
  *         description: Internal Server Error.
  *
  *   put:
+ *     tags:
+ *       - sourceMeasurement
  *     summary: Update a Source Measurement
  *     description: Updates the details of an existing Source Measurement based on the provided ID.
  *     parameters:
@@ -68,6 +72,8 @@ import { ItemNotFoundError } from '@/api/utils/errorUtils'
  *         description: Internal Server Error.
  *
  *   delete:
+ *     tags:
+ *       - sourceMeasurement
  *     summary: Delete a source measurement
  *     description: Deletes a specific source measurement based on the provided ID.
  *     parameters:

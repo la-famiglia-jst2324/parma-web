@@ -3,8 +3,12 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import { createReport } from '@/api/db/services/reportService'
 /**
  * @swagger
+ * tags:
+ *   - name: report
  * /api/reports:
  *   post:
+ *     tags:
+ *       - report
  *     summary: Create a new report
  *     description: Creates a new report with the details provided in the request body.
  *     requestBody:

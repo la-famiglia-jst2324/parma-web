@@ -5,8 +5,12 @@ import { getCompanySourceMeasurementByCompanyId } from '@/api/db/services/compan
 import { withAuthValidation } from '@/api/middleware/auth'
 /**
  * @swagger
+ * tags:
+ *   - name: sourceMeasurement
  * /api/measurements:
  *   get:
+ *     tags:
+ *       - sourceMeasurement
  *     summary: Retrieve common source measurements (intersection) of a list of company IDs
  *     description: Fetches source measurements associated with given company IDs. Can handle multiple company IDs.
  *     parameters:
@@ -30,6 +34,8 @@ import { withAuthValidation } from '@/api/middleware/auth'
  *         description: Internal Server Error.
  *
  *   post:
+ *     tags:
+ *       - sourceMeasurement
  *     summary: Create a new source measurement
  *     description: Creates a new source measurement with the given details.
  *     requestBody:

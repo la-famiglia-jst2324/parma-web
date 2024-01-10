@@ -7,6 +7,8 @@ import { ItemNotFoundError } from '@/api/utils/errorUtils'
  * @swagger
  * /api/company/subscribed/companyId:
  *   get:
+ *     tags:
+ *       - companySubscription
  *     summary: Retrieve a user's subscription to a specific company
  *     description: Fetches subscription details for a user to a specific company based on the provided company ID.
  *     parameters:

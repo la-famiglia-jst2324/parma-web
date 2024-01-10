@@ -16,8 +16,12 @@ const newsSubscriptionSchema = z.object({
 })
 /**
  * @swagger
+ * tags:
+ *   - name: newsSubscription
  * /api/newsSubscription:
  *   post:
+ *     tags:
+ *       - newsSubscription
  *     summary: Manage a news subscription
  *     description: Creates or deletes a news subscription for a user based on a flag. If the flag is 'true', it creates a subscription; otherwise, it deletes an existing subscription.
  *     parameters:
@@ -56,6 +60,8 @@ const newsSubscriptionSchema = z.object({
  *         description: Internal Server Error.
  *
  *   get:
+ *     tags:
+ *       - newsSubscription
  *     summary: Retrieve news subscriptions by user ID
  *     description: Fetches news subscriptions associated with a given user ID.
  *     responses:

@@ -6,6 +6,8 @@ import { ItemNotFoundError } from '@/api/utils/errorUtils'
  * @swagger
  * /api/company/id:
  *   get:
+ *     tags:
+ *       - company
  *     summary: Retrieve a company by ID
  *     description: Fetches details of a company based on the provided company ID.
  *     parameters:
@@ -29,6 +31,8 @@ import { ItemNotFoundError } from '@/api/utils/errorUtils'
  *         description: Internal Server Error.
  *
  *   put:
+ *     tags:
+ *       - company
  *     summary: Update a company
  *     description: Updates the details of an existing company based on the provided company ID.
  *     parameters:
@@ -61,6 +65,8 @@ import { ItemNotFoundError } from '@/api/utils/errorUtils'
  *         description: Internal Server Error.
  *
  *   delete:
+ *     tags:
+ *       - company
  *     summary: Delete a company
  *     description: Deletes a company based on the provided company ID.
  *     parameters:

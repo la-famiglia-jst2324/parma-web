@@ -3,8 +3,12 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import { createNotificationChannel } from '@/api/db/services/notificationChannelService'
 /**
  * @swagger
+ * tags:
+ *   - name: channel
  * /api/notificationChannel:
  *   post:
+ *     tags:
+ *       - channel
  *     summary: Create a new notification channel
  *     description: Creates a new notification channel with the details provided in the request body.
  *     requestBody:

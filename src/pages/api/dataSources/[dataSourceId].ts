@@ -28,6 +28,8 @@ const updateDataSourceSchema = z.object({
  * @swagger
  * /api/dataSources/id:
  *   get:
+ *     tags:
+ *       - dataSource
  *     summary: Retrieve a data source by ID
  *     description: Fetches details of a specific data source based on the provided ID.
  *     parameters:
@@ -49,6 +51,8 @@ const updateDataSourceSchema = z.object({
  *         description: Internal Server Error.
  *
  *   put:
+ *     tags:
+ *       - dataSource
  *     summary: Update a data source
  *     description: Updates the details of an existing data source based on the provided ID.
  *     parameters:
@@ -91,6 +95,8 @@ const updateDataSourceSchema = z.object({
  *         description: Internal Server Error.
  *
  *   delete:
+ *     tags:
+ *       - dataSource
  *     summary: Delete a data source
  *     description: Deletes a specific data source based on the provided ID.
  *     parameters:

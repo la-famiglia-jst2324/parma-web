@@ -9,6 +9,8 @@ import { ItemNotFoundError } from '@/api/utils/errorUtils'
  * @swagger
  * /api/companyMeasurements:
  *   get:
+ *     tags:
+ *       - companyMeasurement
  *     summary: Retrieve all company source measurements
  *     description: Fetches a paginated list of all company source measurements.
  *     parameters:
@@ -41,6 +43,8 @@ import { ItemNotFoundError } from '@/api/utils/errorUtils'
  *         description: Internal Server Error.
  *
  *   post:
+ *     tags:
+ *       - companyMeasurement
  *     summary: Create a new company source measurement
  *     description: Creates a new company source measurement with the given details.
  *     requestBody:

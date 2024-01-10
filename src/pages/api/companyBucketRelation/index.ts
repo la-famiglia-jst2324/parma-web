@@ -50,8 +50,12 @@ const membershipGetSchema = z.object({
 })
 /**
  * @swagger
+ * tags:
+ *   - name: companyBucketRelation
  * /api/companyBucketRelation:
  *   get:
+ *     tags:
+ *       - companyBucketRelation
  *     summary: Retrieve companies or buckets based on a bucket or company ID
  *     description: Fetches companies for a given bucket ID or buckets for a given company ID.
  *     parameters:
@@ -76,6 +80,8 @@ const membershipGetSchema = z.object({
  *         description: Internal Server Error.
  *
  *   post:
+ *     tags:
+ *       - companyBucketRelation
  *     summary: Create a membership between a company and a bucket
  *     description: Adds a company to a bucket and subscribes the user to the company.
  *     requestBody:
@@ -109,6 +115,8 @@ const membershipGetSchema = z.object({
  *         description: Internal Server Error.
  *
  *   delete:
+ *     tags:
+ *       - companyBucketRelation
  *     summary: Remove a membership between a company and a bucket
  *     description: Removes a company from a bucket and unsubscribes the user from the company.
  *     requestBody:

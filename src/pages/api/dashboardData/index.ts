@@ -6,8 +6,12 @@ const newsSources = await getDataSourceByName('News') // Change when available
 const newsSourceId = Number(newsSources[0].id)
 /**
  * @swagger
+ * tags:
+ *   - name: dashboard
  * /api/dashboard:
  *   get:
+ *     tags:
+ *       - dashboard
  *     summary: Retrieve measurements of companies by source ID
  *     description: Fetches measurements for companies based on a source ID. Can optionally filter by a list of company IDs.
  *     parameters:

@@ -11,8 +11,12 @@ import {
 import { ItemNotFoundError } from '@/api/utils/errorUtils'
 /**
  * @swagger
+ * tags:
+ *   - name: companyDataSourceRelation
  * /api/companyDataSourceRelation:
  *   get:
+ *     tags:
+ *       - companyDataSourceRelation
  *     summary: Retrieve companies or data sources
  *     description: Fetches companies by a data source ID or data sources by a company ID. Only one ID should be provided at a time.
  *     parameters:
@@ -37,6 +41,8 @@ import { ItemNotFoundError } from '@/api/utils/errorUtils'
  *         description: Internal Server Error.
  *
  *   post:
+ *     tags:
+ *       - companyDataSourceRelation
  *     summary: Create a new company data source relationship
  *     description: Creates relation between a data source and a company.
  *     requestBody:
@@ -72,6 +78,8 @@ import { ItemNotFoundError } from '@/api/utils/errorUtils'
  *         description: Internal Server Error.
  *
  *   put:
+ *     tags:
+ *       - companyDataSourceRelation
  *     summary: Update a company data source
  *     description: Updates an existing data source for a company.
  *     parameters:
@@ -107,6 +115,8 @@ import { ItemNotFoundError } from '@/api/utils/errorUtils'
  *         description: Internal Server Error.
  *
  *   delete:
+ *     tags:
+ *       - companyDataSourceRelation
  *     summary: Delete a company data source
  *     description: Deletes a data source for a company.
  *     parameters:

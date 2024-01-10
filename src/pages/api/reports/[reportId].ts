@@ -7,6 +7,8 @@ import { ItemNotFoundError } from '@/api/utils/errorUtils'
  * @swagger
  * /api/reports/reportId:
  *   get:
+ *     tags:
+ *       - report
  *     summary: Retrieve a report by ID
  *     description: Fetches details of a specific report based on the provided report ID.
  *     parameters:
@@ -30,6 +32,8 @@ import { ItemNotFoundError } from '@/api/utils/errorUtils'
  *         description: Internal Server Error.
  *
  *   put:
+ *     tags:
+ *       - report
  *     summary: Update a report
  *     description: Updates the details of an existing report based on the provided report ID.
  *     parameters:
@@ -62,6 +66,8 @@ import { ItemNotFoundError } from '@/api/utils/errorUtils'
  *         description: Internal Server Error.
  *
  *   delete:
+ *     tags:
+ *       - report
  *     summary: Delete a report
  *     description: Deletes a specific report based on the provided report ID.
  *     parameters:

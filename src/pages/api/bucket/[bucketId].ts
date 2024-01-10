@@ -32,6 +32,8 @@ import { ItemNotFoundError } from '@/api/utils/errorUtils'
  *         description: Internal Server Error.
  *
  *   put:
+ *     tags:
+ *       - bucket
  *     summary: Update a bucket
  *     description: Updates the details of an existing bucket based on the provided bucket ID.
  *     parameters:
@@ -68,6 +70,8 @@ import { ItemNotFoundError } from '@/api/utils/errorUtils'
  *         description: Failed to update bucket.
  *
  *   delete:
+ *     tags:
+ *       - bucket
  *     summary: Delete a bucket
  *     description: Deletes a bucket based on the provided bucket ID.
  *     parameters:

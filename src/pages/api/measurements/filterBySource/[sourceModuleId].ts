@@ -4,6 +4,8 @@ import { getMeasurementsBySourceId } from '@/api/db/services/sourceMeasurementSe
  * @swagger
  * /api/measurements/filterBySource/sourceModuleId:
  *   get:
+ *     tags:
+ *       - sourceMeasurement
  *     summary: Retrieve measurements by source module ID
  *     description: Fetches measurements associated with a specific source module based on the provided source module ID.
  *     parameters:

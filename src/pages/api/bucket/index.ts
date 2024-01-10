@@ -49,6 +49,8 @@ import { withAuthValidation } from '@/api/middleware/auth'
  *         description: Internal server error
  *
  *   post:
+ *     tags:
+ *       - bucket
  *     summary: Create a new bucket
  *     description: Creates a new bucket with the given details. Requires authentication.
  *     requestBody:

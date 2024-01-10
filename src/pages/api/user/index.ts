@@ -7,6 +7,8 @@ import { withAuthValidation } from '@/api/middleware/auth'
  * @swagger
  * /api/user:
  *   get:
+ *     tags:
+ *       - user
  *     summary: Retrieve all users
  *     description: Fetches a list of all users.
  *     responses:
@@ -26,6 +28,8 @@ import { withAuthValidation } from '@/api/middleware/auth'
  *         description: Internal Server Error.
  *
  *   post:
+ *     tags:
+ *       - user
  *     summary: Create a new user
  *     description: Creates a new user with the details provided in the request body.
  *     requestBody:
@@ -58,6 +62,8 @@ import { withAuthValidation } from '@/api/middleware/auth'
  *         description: Internal Server Error.
  *
  *   put:
+ *     tags:
+ *       - user
  *     summary: Update a user
  *     description: Updates an existing user's information based on their user ID.
  *     requestBody:

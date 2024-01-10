@@ -7,8 +7,12 @@ import {
 import { withAuthValidation } from '@/api/middleware/auth'
 /**
  * @swagger
+ * tags:
+ *   - name: notificationReportSubscription
  * /api/notificationSubscription:
  *   post:
+ *     tags:
+ *       - notificationReportSubscription
  *     summary: Create a notification subscription
  *     description: Creates a new notification subscription for a user with the provided channel ID.
  *     requestBody:
@@ -38,6 +42,8 @@ import { withAuthValidation } from '@/api/middleware/auth'
  *         description: Internal Server Error.
  *
  *   delete:
+ *     tags:
+ *       - notificationReportSubscription
  *     summary: Delete a notification subscription
  *     description: Deletes a notification subscription associated with a user for the specified channel ID.
  *     requestBody:

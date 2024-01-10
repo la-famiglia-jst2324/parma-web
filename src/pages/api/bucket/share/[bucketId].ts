@@ -27,6 +27,8 @@ import { getInviteesByBucketId, updateBucketAccess, deleteBucketAccess } from '@
  *         description: Internal Server Error.
  *
  *   put:
+ *     tags:
+ *       - bucket
  *     summary: Update bucket access for an invitee
  *     description: Updates the access permissions for an invitee in a bucket.
  *     parameters:
@@ -60,6 +62,8 @@ import { getInviteesByBucketId, updateBucketAccess, deleteBucketAccess } from '@
  *         description: Internal Server Error.
  *
  *   delete:
+ *     tags:
+ *       - bucket
  *     summary: Delete bucket access for an invitee
  *     description: Deletes the access of an invitee to a bucket.
  *     parameters:

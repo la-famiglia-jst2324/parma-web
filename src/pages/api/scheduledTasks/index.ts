@@ -4,6 +4,8 @@ import { createScheduledTask, getAllScheduledTasks } from '@/api/db/services/sch
  * @swagger
  * /api/scheduledTasks:
  *   post:
+ *     tags:
+ *       - scheduledTask
  *     summary: Create a new scheduled task
  *     description: Creates a new scheduled task with the details provided in the request body.
  *     requestBody:
@@ -38,6 +40,8 @@ import { createScheduledTask, getAllScheduledTasks } from '@/api/db/services/sch
  *         description: Internal Server Error.
  *
  *   get:
+ *     tags:
+ *       - scheduledTask
  *     summary: Retrieve all scheduled tasks
  *     description: Fetches a paginated list of all scheduled tasks.
  *     parameters:

@@ -11,8 +11,12 @@ import { withAuthValidation } from '@/api/middleware/auth'
 import { addCompanyDataSourceRelationshipForCompany } from '@/api/db/services/companyDataSourceService'
 /**
  * @swagger
+ * tags:
+ *   - name: company
  * /api/company:
  *   get:
+ *     tags:
+ *       - company
  *     summary: Retrieve companies or a specific company by name
  *     description: Fetches either a specific company by name or all companies. Supports optional pagination.
  *     parameters:
@@ -47,6 +51,8 @@ import { addCompanyDataSourceRelationshipForCompany } from '@/api/db/services/co
  *       500:
  *         description: Internal Server Error.
  *   post:
+ *     tags:
+ *       - company
  *     summary: Create a new company
  *     description: Creates a new company with the given details.
  *     requestBody:

@@ -79,6 +79,8 @@ interface MetricDataSourceMappingType {
  *         description: Internal server error.
  *
  *   get:
+ *     tags:
+ *       - analytics
  *     summary: Retrieve all user customizations
  *     description: Fetches all user customizations for the logged-in user.
  *     responses:

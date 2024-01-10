@@ -7,6 +7,8 @@ import { ItemNotFoundError } from '@/api/utils/errorUtils'
  * @swagger
  * /api/notification/notificationId:
  *   get:
+ *     tags:
+ *       - notification
  *     summary: Retrieve a notification by ID
  *     description: Fetches details of a specific notification based on the provided notification ID.
  *     parameters:
@@ -30,6 +32,8 @@ import { ItemNotFoundError } from '@/api/utils/errorUtils'
  *         description: Internal Server Error.
  *
  *   put:
+ *     tags:
+ *       - notification
  *     summary: Update a notification
  *     description: Updates the details of an existing notification based on the provided ID.
  *     parameters:
@@ -58,6 +62,8 @@ import { ItemNotFoundError } from '@/api/utils/errorUtils'
  *         description: Internal Server Error.
  *
  *   delete:
+ *     tags:
+ *       - notification
  *     summary: Delete a notification
  *     description: Deletes a specific notification based on the provided ID.
  *     parameters:

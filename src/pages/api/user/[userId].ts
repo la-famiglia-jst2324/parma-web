@@ -7,6 +7,8 @@ import { ItemNotFoundError } from '@/api/utils/errorUtils'
  * @swagger
  * /api/user/id:
  *   get:
+ *     tags:
+ *       - user
  *     summary: Retrieve a user by ID
  *     description: Fetches details of a specific user based on the provided user ID.
  *     parameters:
@@ -29,41 +31,9 @@ import { ItemNotFoundError } from '@/api/utils/errorUtils'
  *       500:
  *         description: Internal Server Error.
  *
- *   put:
- *     summary: Update a user
- *     description: Updates the details of an existing user based on the provided user ID.
- *     parameters:
- *       - in: query
- *         name: userId
- *         required: true
- *         schema:
- *           type: integer
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               name:
- *                 type: string
- *               profilePicture:
- *                 type: string
- *               role:
- *                 type: string
- *     responses:
- *       200:
- *         description: Successfully updated the user.
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/User'
- *       404:
- *         description: User not Found.
- *       500:
- *         description: Internal Server Error.
- *
  *   delete:
+ *     tags:
+ *       - user
  *     summary: Delete a user
  *     description: Deletes a specific user based on the provided user ID.
  *     parameters:

@@ -11,6 +11,8 @@ import { ItemNotFoundError } from '@/api/utils/errorUtils'
  * @swagger
  * /api/notificationChannel/channelId:
  *   get:
+ *     tags:
+ *       - channel
  *     summary: Retrieve a notification channel by ID
  *     description: Fetches details of a specific notification channel based on the provided channel ID.
  *     parameters:
@@ -34,6 +36,8 @@ import { ItemNotFoundError } from '@/api/utils/errorUtils'
  *         description: Internal Server Error.
  *
  *   put:
+ *     tags:
+ *       - channel
  *     summary: Update a notification channel
  *     description: Updates the details of an existing notification channel based on the provided channel ID.
  *     parameters:
@@ -66,6 +70,8 @@ import { ItemNotFoundError } from '@/api/utils/errorUtils'
  *         description: Internal Server Error.
  *
  *   delete:
+ *     tags:
+ *       - channel
  *     summary: Delete a notification channel
  *     description: Deletes a specific notification channel based on the provided channel ID.
  *     parameters:

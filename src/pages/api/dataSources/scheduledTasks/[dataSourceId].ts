@@ -2,8 +2,12 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import { getScheduledTaskByDatasourceID } from '@/api/db/services/scheduledTaskService'
 /**
  * @swagger
+ * tags:
+ *   - name: scheduledTask
  * /api/dataSources/scheduledTasks/dataSourceId:
  *   get:
+ *     tags:
+ *       - scheduledTask
  *     summary: Retrieve a scheduled task by data source ID
  *     description: Fetches details of a scheduled task associated with a specific data source based on the provided data source ID.
  *     parameters:

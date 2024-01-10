@@ -3,8 +3,12 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import { createNotification } from '@/api/db/services/notificationService'
 /**
  * @swagger
+ * tags:
+ *   - name: notification
  * /api/notification:
  *   post:
+ *     tags:
+ *       - notification
  *     summary: Create a new notification
  *     description: Creates a new notification with the given details in the request body.
  *     requestBody:

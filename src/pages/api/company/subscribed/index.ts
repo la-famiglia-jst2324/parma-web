@@ -15,8 +15,12 @@ const companySubscriptionSchema = z.object({
 })
 /**
  * @swagger
+ * tags:
+ *   - name: companySubscription
  * /api/company/subscribed:
  *   post:
+ *     tags:
+ *       - companySubscription
  *     summary: Subscribe or unsubscribe a user to a company
  *     description: Allows a user to subscribe or unsubscribe from a company. The action is based on the query parameter 'subscribe'.
  *     parameters:
@@ -56,6 +60,8 @@ const companySubscriptionSchema = z.object({
  *         description: Internal Server Error.
  *
  *   get:
+ *     tags:
+ *       - companySubscription
  *     summary: Retrieve subscribed companies for a user
  *     description: Fetches all companies that the user is currently subscribed to.
  *     responses:

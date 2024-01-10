@@ -6,8 +6,12 @@ import { withAuthValidation } from '@/api/middleware/auth'
 
 /**
  * @swagger
+ * tags:
+ *   - name: user
  * /api/profile:
  *   put:
+ *     tags:
+ *       - user
  *     summary: Update user information
  *     description: Updates the information of an existing user based on their user ID.
  *     requestBody:

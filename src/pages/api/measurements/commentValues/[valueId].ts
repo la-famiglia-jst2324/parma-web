@@ -4,8 +4,12 @@ import { getCommentValueByID } from '@/api/db/services/commentValueService'
 
 /**
  * @swagger
+ * tags:
+ *   - name: measurementValue
  * /api/commentValues/valueId:
  *   get:
+ *     tags:
+ *       - measurementValue
  *     summary: Retrieve comment value by value ID
  *     description: Fetches comment value associated with a given value ID.
  *     responses:

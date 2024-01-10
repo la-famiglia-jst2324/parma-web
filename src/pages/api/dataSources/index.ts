@@ -12,8 +12,12 @@ const frequencyMapping: { [key: string]: Frequency | undefined } = {
 }
 /**
  * @swagger
+ * tags:
+ *   - name: dataSource
  * /api/dataSources:
  *   get:
+ *     tags:
+ *       - dataSource
  *     summary: Retrieve a paginated list of data sources
  *     description: Fetches a list of data sources with optional filtering by name. Supports pagination.
  *     parameters:
@@ -52,6 +56,8 @@ const frequencyMapping: { [key: string]: Frequency | undefined } = {
  *         description: Internal Server Error.
  *
  *   post:
+ *     tags:
+ *       - dataSource
  *     summary: Create a new data source
  *     description: Creates a new data source and registers it in the company data source relationship. It also sends a handshake request to a specified URL.
  *     requestBody:

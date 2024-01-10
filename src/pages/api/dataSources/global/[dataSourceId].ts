@@ -5,6 +5,8 @@ import { ItemNotFoundError } from '@/api/utils/errorUtils'
  * @swagger
  * /api/dataSources/global/dataSourceId:
  *   put:
+ *     tags:
+ *       - dataSource
  *     summary: Update a data source
  *     description: Updates an existing data source based on the provided data source ID.
  *     parameters:

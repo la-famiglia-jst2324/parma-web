@@ -2,8 +2,12 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import { getDataSourceByName } from '@/api/db/services/dataSourceService'
 /**
  * @swagger
+ * tags:
+ *   - name: dataSourceSearching
  * /api/dataSources/search:
  *   get:
+ *     tags:
+ *       - dataSourceSearching
  *     summary: Retrieve data sources by name
  *     description: Fetches data sources based on a provided name.
  *     parameters:

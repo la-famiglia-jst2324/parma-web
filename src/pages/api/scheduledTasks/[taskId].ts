@@ -4,6 +4,8 @@ import { getScheduledTaskByID, updateScheduledTask, deleteScheduledTask } from '
  * @swagger
  * /api/scheduledTasks/taskId:
  *   get:
+ *     tags:
+ *       - scheduledTask
  *     summary: Retrieve a scheduled task by ID
  *     description: Fetches details of a specific scheduled task based on the provided task ID.
  *     parameters:
@@ -25,6 +27,8 @@ import { getScheduledTaskByID, updateScheduledTask, deleteScheduledTask } from '
  *         description: Internal Server Error.
  *
  *   put:
+ *     tags:
+ *       - scheduledTask
  *     summary: Update a scheduled task
  *     description: Updates the details of an existing scheduled task based on the provided task ID.
  *     parameters:
@@ -61,6 +65,8 @@ import { getScheduledTaskByID, updateScheduledTask, deleteScheduledTask } from '
  *         description: Internal Server Error.
  *
  *   delete:
+ *     tags:
+ *       - scheduledTask
  *     summary: Delete a scheduled task
  *     description: Deletes a specific scheduled task based on the provided task ID.
  *     parameters:

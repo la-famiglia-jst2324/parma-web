@@ -7,7 +7,7 @@ const news: NewsItem[] = [
     companyName: 'Tesla',
     datasourceName: 'LinkedIn',
     bucketName: 'Technology',
-    timestamp: '2023-03-24 12:00:00',
+    timestamp: '2 days ago',
     measureName: 'Growth Rate',
     measureValue: 4.8,
     description:
@@ -46,7 +46,7 @@ const news: NewsItem[] = [
     companyName: 'OpenAI',
     datasourceName: 'Twitter',
     bucketName: 'Artificial Intelligence',
-    timestamp: '2022-09-15 10:00',
+    timestamp: '1 month ago',
     measureName: 'Rating',
     measureValue: 9.8,
     description:

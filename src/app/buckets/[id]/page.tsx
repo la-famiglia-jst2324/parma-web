@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import type { Company, Bucket } from '@prisma/client'
 import { useRouter } from 'next/navigation'
+import { Checkbox } from '@/components/ui/checkbox'
 import { Button } from '@/components/ui/button'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { GoBackButton } from '@/components/GoBackButton'
@@ -33,7 +34,8 @@ const BucketPage = ({ params: { id } }: { params: { id: string } }) => {
   const [showSuccess, setShowSuccess] = useState(false)
   const [showError, setShowError] = useState(false)
   const [popupText, setPopupText] = useState('')
-
+  const [editCompanies, setEditCompanies] = useState(false)
+  const [selectedCompanies, setSelectedCompanies] = useState<number[]>([])
   useEffect(() => {
     BucketFunctions.getBucketById(+id)
       .then((data) => {
@@ -50,6 +52,14 @@ const BucketPage = ({ params: { id } }: { params: { id: string } }) => {
         console.log(e)
       })
   }, [id])
+
+  const onSelectCheckbox = (companyId: number, value: string | boolean) => {
+    if (!value) {
+      setSelectedCompanies(selectedCompanies.filter((id) => id !== companyId))
+    } else {
+      setSelectedCompanies([...selectedCompanies, companyId])
+    }
+  }
 
   const saveBucket = (title: string, description: string | null, isPublic: boolean) => {
     BucketFunctions.updateBucket(title, description, +id, isPublic)
@@ -112,6 +122,10 @@ const BucketPage = ({ params: { id } }: { params: { id: string } }) => {
         })
     })
   }
+
+  const removeCompanies = () => {
+    console.log(selectedCompanies)
+  }
   return (
     <main className="m-4 flex h-screen flex-row items-start justify-start space-x-4" role="main">
       <div className="w-full">
@@ -152,9 +166,44 @@ const BucketPage = ({ params: { id } }: { params: { id: string } }) => {
         <div className="ml-8 flex items-center justify-between">
           <h1 className="mb-8 text-2xl font-bold">All companies in this bucket</h1>
           <div className="flex flex-row items-center gap-4">
-            <Button className="mr-2 flex items-center border-gray-500" variant="outline" color="gray">
-              Edit Companies
-            </Button>
+            {!editCompanies && (
+              <Button
+                className="mr-2 flex items-center border-gray-500"
+                variant="outline"
+                color="gray"
+                onClick={() => setEditCompanies(true)}
+              >
+                Edit Companies
+              </Button>
+            )}
+            {editCompanies && (
+              <Button
+                className="mr-2 flex items-center gap-2 border-blue-600 bg-transparent text-blue-600"
+                variant="outline"
+              >
+                Add New Companies
+              </Button>
+            )}
+            {editCompanies && (
+              <Button
+                className="mr-2 flex items-center border-gray-500"
+                variant="destructive"
+                color="gray"
+                onClick={removeCompanies}
+              >
+                Remove Companies
+              </Button>
+            )}
+            {editCompanies && (
+              <Button
+                className="mr-2 flex items-center border-gray-500"
+                variant="outline"
+                color="gray"
+                onClick={() => setEditCompanies(false)}
+              >
+                Cancel
+              </Button>
+            )}
           </div>
         </div>
 
@@ -162,6 +211,7 @@ const BucketPage = ({ params: { id } }: { params: { id: string } }) => {
           <Table className="ml-8">
             <TableHeader>
               <TableRow>
+                {editCompanies && <TableHead></TableHead>}
                 <TableHead>Company name</TableHead>
                 <TableHead>Description</TableHead>
                 <TableHead>Metric</TableHead>
@@ -170,6 +220,11 @@ const BucketPage = ({ params: { id } }: { params: { id: string } }) => {
             <TableBody>
               {bucketCompanies.map((item) => (
                 <TableRow key={item.id}>
+                  {editCompanies && (
+                    <TableCell>
+                      <Checkbox onCheckedChange={(e) => onSelectCheckbox(item.id, e)} />
+                    </TableCell>
+                  )}
                   <TableCell className="font-medium">{item.name}</TableCell>
                   <TableCell>{item.description}</TableCell>
                   <TableCell></TableCell>

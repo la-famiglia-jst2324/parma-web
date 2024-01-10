@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button } from '@tremor/react' // Assuming you have a Button component
+import { Button } from '@/components/ui/button' // Assuming you have a Button component
 
 interface ApiKeyConfigurationProps {
   serviceName: string
@@ -15,12 +15,17 @@ const ApiKeyConfiguration: React.FC<ApiKeyConfigurationProps> = ({ serviceName, 
       <div>
         <div className="flex">
           <div>
-            <h4 className="flex" style={{ textAlign: 'left' }}>
+            <h4 className="flex p-1" style={{ textAlign: 'left' }}>
               Configure API key for {serviceName.toLowerCase()}
             </h4>
           </div>
           <div className="absolute right-8 w-[180px] p-2">
-            <Button onClick={onConfigure}>Configure</Button>
+            <Button
+              className="rounded bg-indigo-700 px-4 py-2 font-bold text-white hover:bg-blue-700 focus:outline-none"
+              onClick={onConfigure}
+            >
+              Configure
+            </Button>
           </div>
         </div>
       </div>

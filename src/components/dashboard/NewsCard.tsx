@@ -35,14 +35,14 @@ const NewsCard: React.FC<NewsCardProps> = ({
       <CardContent className="p-4">
         <div className="grid grid-cols-2 items-center gap-4 text-sm text-gray-300 md:grid-cols-4">
           <div className="flex flex-col items-center space-y-2">
-            <Badge className="rounded-full bg-orange-500 px-3 py-1 text-xs text-white transition-colors duration-300 ease-in-out hover:bg-orange-600">
+            <Badge className="rounded-full bg-sky-600 px-3 py-1 text-xs text-white transition-colors duration-300 ease-in-out hover:bg-blue-700">
               Notification Date
             </Badge>
             <div className="my-2 w-full border-b border-transparent"></div>
             <span className="text-white">{timestamp}</span>
           </div>
           <div className="flex flex-col items-center space-y-2">
-            <Badge className="rounded-full bg-red-500 px-3 py-1 text-xs text-white transition-colors duration-300 ease-in-out hover:bg-red-600">
+            <Badge className="rounded-full bg-sky-600 px-3 py-1 text-xs text-white transition-colors duration-300 ease-in-out hover:bg-blue-700">
               {measureName}
             </Badge>
             <div className="my-2 w-full border-b border-transparent"></div>
@@ -56,7 +56,7 @@ const NewsCard: React.FC<NewsCardProps> = ({
             <span className="text-white">{bucketName}</span>
           </div>
           <div className="flex flex-col items-center space-y-2">
-            <Badge className="rounded-full bg-emerald-500 px-3 py-1 text-xs text-white transition-colors duration-300 ease-in-out hover:bg-green-700">
+            <Badge className="rounded-full bg-sky-600 px-3 py-1 text-xs text-white transition-colors duration-300 ease-in-out hover:bg-blue-700">
               Trigger Factor
             </Badge>
             <div className="my-2 w-full border-b border-transparent"></div>

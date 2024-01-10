@@ -11,4 +11,4 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<ResponseData>, 
   res.status(200).json({ message: `Authorized to do this action! Welcome ${user.name}!` })
 }
 
-export default withAuthenticatorAndAuthorizer(handler, [Role.ADMIN])
+export default withAuthenticatorAndAuthorizer(handler, Role.USER)

@@ -1,83 +1,82 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
-import { Button } from '@tremor/react'
+import type { FormEvent } from 'react'
+import React, { useState } from 'react'
+import { ChannelType } from '@prisma/client'
+// import { useRouter } from 'next/navigation'
+import { Button } from '@/components/ui/button'
 import SelectSection from '@/components/settings/SelectSection'
 import ApiKeyConfiguration from '@/components/settings/ApiKeyConfiguration'
-import BucketFunctions from '@/app/services/bucket.service'
-import useSubscribedCompanies from '@/components/hooks/useSubscribedCompanies'
 import { MainLayoutWrapper } from '@/components/layout/MainLayout'
+import { Input } from '@/components/ui/input'
+// import useCompanies from '@/components/hooks/useCompanies'
+// import {user} from '@/pages/api/user/[userId]'
 
 function SettingsPage() {
-  const [selectedCompanies, setSelectedCompanies] = useState<string[]>([])
-  const [subscribedBuckets, setSubscribedBuckets] = useState<string[]>([])
-  const [selectedBuckets, setSelectedBuckets] = useState<string[]>([])
   const [selectedChannels, setSelectedChannels] = useState<string[]>([])
-  const subscribedCompanies = useSubscribedCompanies()
-  const channels = ['Email', 'Slack']
+  const channels = [ChannelType.EMAIL, ChannelType.SLACK]
 
   // tbd
   const handleConfigureSlack = () => {}
   const handleConfigureAffinity = () => {}
 
-  selectedCompanies.map((company) => console.log(company))
-  selectedBuckets.map((bucket) => console.log(bucket))
-  selectedChannels.map((channel) => console.log(channel))
-
-  useEffect(() => {
-    BucketFunctions.getAllBuckets(1)
-      .then((res) => {
-        if (Array.isArray(res.buckets)) {
-          const uniqueTitles = Array.from(
-            new Set(res.buckets.map((bucket: { title: string }) => bucket.title))
-          ) as string[]
-          setSubscribedBuckets(uniqueTitles)
-        } else {
-          console.error('Expected an array but received', res)
-        }
-      })
-      .catch((error) => {
-        console.error('Failed to fetch buckets', error)
-      })
-  }, [])
-  function saveChanges(): React.MouseEventHandler<HTMLDivElement> | undefined {
-    throw new Error('Function not implemented.')
+  const saveChanges = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    console.log(selectedChannels)
   }
-
   return (
     <main>
       <div className="space-x-3 text-white">
-        <h1 className="p-2 text-3xl font-bold">Preferences</h1>
+        <h1 className="mb-2 p-4 text-3xl font-bold">Preferences</h1>
 
-        <div>
-          <h2 className="text-xl font-bold ">Report Configuration</h2>
-
-          <SelectSection
-            title="Select Companies"
-            description="Select companies to receive weekly reports on"
-            placeholder="companies"
-            options={subscribedCompanies}
-            onValueChange={setSelectedCompanies}
-          />
-          <SelectSection
-            title="Select Buckets"
-            description="Select buckets to receive weekly reports on"
-            placeholder="buckets"
-            options={subscribedBuckets}
-            onValueChange={setSelectedBuckets}
-          />
-          <SelectSection
-            title="Select Channels"
-            description="Select channels for receiving reports"
-            placeholder="channels"
-            options={channels}
-            onValueChange={setSelectedChannels}
-            isMultiSelect={false}
-          />
+        <div className="pl-8">
+          <h2 className="text-xl font-bold ">Report & Notification Configuration</h2>
+          <form role="form" data-testid="create-datasource-form" onSubmit={saveChanges}>
+            <SelectSection
+              // id="channel"
+              title="Select Channel"
+              description="Select channel for receiving reports and notifications"
+              placeholder="Channel"
+              options={channels.map(
+                (channel) =>
+                  channel.toString().toLowerCase().charAt(0).toUpperCase() + channel.toString().toLowerCase().slice(1)
+              )}
+              onValueChange={(value) => setSelectedChannels(value)}
+              isMultiSelect={false}
+            />
+            <div>
+              <div className="pb-1 pt-6 font-bold">
+                <h3>Configure Email</h3>
+              </div>
+              <div className="flex">
+                <div>
+                  <h4 className="flex">Provide email address where you want to receive reports and notifications</h4>
+                </div>
+                <div className="absolute right-8 flex w-56 justify-center">
+                  <Button
+                    className="rounded bg-indigo-700 px-4 py-2 font-bold text-white hover:bg-blue-700 focus:outline-none"
+                    // onClick={saveChanges}
+                  >
+                    Save Changes
+                  </Button>
+                </div>
+              </div>
+              <Input
+                className="w-50 ml-1 mt-2 rounded bg-slate-800"
+                placeholder="Enter Your Email Address"
+                color=""
+              ></Input>
+            </div>
+          </form>
         </div>
 
-        <div className="pl-8" onClick={saveChanges}>
-          <Button>Save changes</Button>
+        <div
+          className="p-5 pl-8"
+          // onSubmit={saveChanges}
+        >
+          {/* <Button className="rounded bg-indigo-700 px-4 py-2 font-bold text-white hover:bg-blue-700 focus:outline-none">
+            Save changes
+          </Button> */}
         </div>
         <div className="w-full rounded-b border-b border-gray-200 p-2"></div>
 
@@ -85,8 +84,24 @@ function SettingsPage() {
           <h2 className="text-xl font-bold ">API Keys</h2>
 
           <ApiKeyConfiguration serviceName="Slack" onConfigure={handleConfigureSlack} />
+          <Input className="w-50 ml-1 mt-2 rounded bg-slate-800" placeholder="Enter Your API Key" color=""></Input>
+
+          <ApiKeyConfiguration serviceName="OpenAI" onConfigure={handleConfigureSlack} />
+          <Input className="w-50 ml-1 mt-2 rounded bg-slate-800" placeholder="Enter Your API Key" color=""></Input>
 
           <ApiKeyConfiguration serviceName="Affinity" onConfigure={handleConfigureAffinity} />
+          <Input className="w-50 ml-1 mt-2 rounded bg-slate-800" placeholder="Enter Your API Key" color=""></Input>
+        </div>
+
+        <div className="w-full rounded-b border-b border-gray-200 p-2"></div>
+
+        <div className="flex p-8">
+          <h2 className="pt-4 text-xl font-bold">Delete Account</h2>
+          <div className=" absolute right-8 w-[180px] pt-2 ">
+            <Button className="rounded bg-red-700 font-bold text-white hover:bg-red-600 focus:outline-none">
+              Delete Account
+            </Button>
+          </div>
         </div>
       </div>
     </main>

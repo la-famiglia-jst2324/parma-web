@@ -1,5 +1,12 @@
 import { PrismaClient } from '@prisma/client'
 import { createUser, createCompany, deleteUser, deleteCompany } from './utils/helperFunctions'
+import {
+  createNotificationRule,
+  deleteNotificationRule,
+  getNotificationRuleById,
+  updateNotificationRule
+} from '@/api/db/services/notificationRulesService'
+import { getAllSourceMeasurements } from '@/api/db/services/sourceMeasurementService'
 
 const prisma = new PrismaClient()
 
@@ -149,5 +156,49 @@ describe('NotificationSubscription Model Tests', () => {
     })
 
     expect(deletedSubscription).toBeNull()
+  })
+
+  describe('NotificationRules Service Tests', async () => {
+    let ruleId: number
+    const sourceMeasurement = (await getAllSourceMeasurements())[0]
+
+    test('Create a new NotificationRule', async () => {
+      const rule = await createNotificationRule({
+        ruleName: 'Test Rule',
+        sourceMeasurementId: sourceMeasurement.id,
+        threshold: 10.5,
+        aggregationMethod: 'Average',
+        numAggregationEntries: 5,
+        notificationMessage: 'Test Message'
+      })
+
+      ruleId = rule.ruleId
+
+      expect(rule).toHaveProperty('ruleId')
+      expect(rule.ruleName).toBe('Test Rule')
+    })
+
+    test('Retrieve a NotificationRule', async () => {
+      const rule = await getNotificationRuleById(ruleId)
+
+      expect(rule).toBeTruthy()
+      expect(rule?.ruleId).toBe(ruleId)
+    })
+
+    test('Update a NotificationRule', async () => {
+      const updatedRule = await updateNotificationRule(ruleId, {
+        ruleName: 'Updated Test Rule'
+      })
+
+      expect(updatedRule.ruleName).toBe('Updated Test Rule')
+    })
+
+    test('Delete a NotificationRule', async () => {
+      await deleteNotificationRule(ruleId)
+
+      const rule = await getNotificationRuleById(ruleId)
+
+      expect(rule).toBeNull()
+    })
   })
 })

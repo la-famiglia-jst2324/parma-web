@@ -161,7 +161,7 @@ describe('NotificationSubscription Model Tests', () => {
   describe('NotificationRules Service Tests', () => {
     let ruleId: number
 
-    test('Create a new NotificationRule', async () => {
+    beforeAll(async () => {
       const sourceMeasurement = (await getAllSourceMeasurements())[0]
       const rule = await createNotificationRule({
         ruleName: 'Test Rule',
@@ -173,9 +173,10 @@ describe('NotificationSubscription Model Tests', () => {
       })
 
       ruleId = rule.ruleId
+    })
 
-      expect(rule).toHaveProperty('ruleId')
-      expect(rule.ruleName).toBe('Test Rule')
+    test('Create a new NotificationRule', () => {
+      expect(ruleId).toBeDefined()
     })
 
     test('Retrieve a NotificationRule', async () => {

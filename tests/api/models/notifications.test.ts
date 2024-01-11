@@ -1,5 +1,14 @@
 import { PrismaClient } from '@prisma/client'
-import { createUser, createCompany, deleteUser, deleteCompany } from './utils/helperFunctions'
+import {
+  createUser,
+  createCompany,
+  deleteUser,
+  deleteCompany,
+  createDataSource,
+  createSourceMeasurement,
+  deleteSourceMeasurement,
+  deleteDataSource
+} from './utils/helperFunctions'
 import {
   createNotificationRule,
   deleteNotificationRule,
@@ -157,52 +166,57 @@ describe('NotificationSubscription Model Tests', () => {
 
     expect(deletedSubscription).toBeNull()
   })
+})
 
-  describe('NotificationRules Service Tests', () => {
-    let ruleId: number
+describe('NotificationRules Service Tests', () => {
+  let ruleId: number
+  let sourceMeasurementId: number
+  let dataSourceId: number
 
-    beforeAll(async () => {
-      const sourceMeasurements = await getAllSourceMeasurements()
+  beforeAll(async () => {
+    dataSourceId = (await createDataSource()).id
+    sourceMeasurementId = (await createSourceMeasurement(dataSourceId)).id
+    await prisma.$connect()
+  })
 
-      if (!sourceMeasurements || sourceMeasurements.length === 0) {
-        throw new Error('No source measurements found')
-      }
+  afterAll(async () => {
+    await deleteSourceMeasurement(sourceMeasurementId)
+    await deleteDataSource(dataSourceId)
+    await prisma.$disconnect()
+  })
 
-      const sourceMeasurement = sourceMeasurements[0]
-      const rule = await createNotificationRule({
-        ruleName: 'Test Rule',
-        sourceMeasurementId: sourceMeasurement.id,
-        threshold: 10.5,
-        aggregationMethod: 'Average',
-        numAggregationEntries: 5,
-        notificationMessage: 'Test Message'
-      })
-
-      ruleId = rule.ruleId
+  test('Create a new NotificationRule', async () => {
+    const rule = await createNotificationRule({
+      ruleName: 'Test Rule',
+      sourceMeasurementId,
+      threshold: 10.5,
+      aggregationMethod: 'Average',
+      numAggregationEntries: 5,
+      notificationMessage: 'Test Message'
     })
 
-    test('Create a new NotificationRule', () => {
-      expect(ruleId).toBeDefined()
+    ruleId = rule.ruleId
+
+    expect(ruleId).toBeDefined()
+  })
+
+  test('Retrieve a NotificationRule', async () => {
+    const rule = await getNotificationRuleById(ruleId)
+
+    expect(rule).toBeTruthy()
+    expect(rule?.ruleId).toBe(ruleId)
+  })
+
+  test('Update a NotificationRule', async () => {
+    const updatedRule = await updateNotificationRule(ruleId, {
+      ruleName: 'Updated Test Rule'
     })
 
-    test('Retrieve a NotificationRule', async () => {
-      const rule = await getNotificationRuleById(ruleId)
+    expect(updatedRule.ruleName).toBe('Updated Test Rule')
+  })
 
-      expect(rule).toBeTruthy()
-      expect(rule?.ruleId).toBe(ruleId)
-    })
-
-    test('Update a NotificationRule', async () => {
-      const updatedRule = await updateNotificationRule(ruleId, {
-        ruleName: 'Updated Test Rule'
-      })
-
-      expect(updatedRule.ruleName).toBe('Updated Test Rule')
-    })
-
-    test('Delete a NotificationRule', async () => {
-      const deletedRule = await deleteNotificationRule(ruleId)
-      expect(deletedRule.ruleId).toBe(ruleId)
-    })
+  test('Delete a NotificationRule', async () => {
+    const deletedRule = await deleteNotificationRule(ruleId)
+    expect(deletedRule.ruleId).toBe(ruleId)
   })
 })

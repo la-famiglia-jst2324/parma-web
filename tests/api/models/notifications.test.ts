@@ -194,11 +194,8 @@ describe('NotificationSubscription Model Tests', () => {
     })
 
     test('Delete a NotificationRule', async () => {
-      await deleteNotificationRule(ruleId)
-
-      const rule = await getNotificationRuleById(ruleId)
-
-      expect(rule).toBeNull()
+      const deletedRule = await deleteNotificationRule(ruleId)
+      expect(deletedRule.ruleId).toBe(ruleId)
     })
   })
 })

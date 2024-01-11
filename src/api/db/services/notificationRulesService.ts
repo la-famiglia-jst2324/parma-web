@@ -1,6 +1,13 @@
 import { prisma } from '../prisma/prismaClient'
 
-const createNotificationRule = async (data: { ruleName: string; sourceMeasurementId: number; threshold: number; aggregationMethod?: string; numAggregationEntries?: number; notificationMessage?: string }) => {
+const createNotificationRule = async (data: {
+  ruleName: string
+  sourceMeasurementId: number
+  threshold: number
+  aggregationMethod?: string
+  numAggregationEntries?: number
+  notificationMessage?: string
+}) => {
   try {
     return await prisma.notificationRules.create({
       data: {
@@ -21,7 +28,7 @@ const createNotificationRule = async (data: { ruleName: string; sourceMeasuremen
 const getNotificationRuleById = async (id: number) => {
   try {
     const notificationRule = await prisma.notificationRules.findUnique({
-      where: { ruleId: id },
+      where: { ruleId: id }
     })
     if (!notificationRule) {
       throw new Error(`NotificationRule with ID ${id} not found`)
@@ -36,12 +43,12 @@ const getNotificationRuleById = async (id: number) => {
 const updateNotificationRule = async (
   id: number,
   data: {
-    ruleName?: string;
-    sourceMeasurementId?: number;
-    threshold?: number;
-    aggregationMethod?: string;
-    numAggregationEntries?: number;
-    notificationMessage?: string;
+    ruleName?: string
+    sourceMeasurementId?: number
+    threshold?: number
+    aggregationMethod?: string
+    numAggregationEntries?: number
+    notificationMessage?: string
   }
 ) => {
   try {

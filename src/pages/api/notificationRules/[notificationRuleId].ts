@@ -10,19 +10,18 @@ import {
 import { ItemNotFoundError } from '@/api/utils/errorUtils'
 import { withAuthValidation } from '@/api/middleware/auth'
 
-
 const notificationRuleIdtQuerySchema = z.object({
-    notificationRuleId: z
-      .string()
-      .refine((val: string) => !isNaN(parseInt(val, 10)), {
-        message: 'ID must be a number'
-      })
-      .transform((val: string) => parseInt(val, 10))
-  })
+  notificationRuleId: z
+    .string()
+    .refine((val: string) => !isNaN(parseInt(val, 10)), {
+      message: 'ID must be a number'
+    })
+    .transform((val: string) => parseInt(val, 10))
+})
 
-  const handler = async (req: NextApiRequest, res: NextApiResponse) => {
+const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const query = notificationRuleIdtQuerySchema.parse(req.query)
-  
+
   const { method } = req
   const { notificationRuleId } = query
 

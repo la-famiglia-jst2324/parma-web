@@ -235,7 +235,7 @@ model SourceMeasurement {
   userMetricCustomization   UserMetricCustomization[]
   parentSourceMeasurement   SourceMeasurement?         @relation(name: "ParentChild", fields: [parentMeasurementId], references: [id], onDelete: Cascade)
   childSourceMeasurements   SourceMeasurement[]        @relation("ParentChild")
-  NotificationRules         NotificationRules[]      
+  NotificationRules         NotificationRules[]
 
   @@map("source_measurement")
 }

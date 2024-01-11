@@ -122,7 +122,7 @@ erDiagram
         int id PK
         string channel_type
         string destination
-        string encryptedApiKey
+        string secret_id
         datetime created_at
         datetime modified_at
     }

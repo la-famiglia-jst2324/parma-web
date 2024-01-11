@@ -1,5 +1,6 @@
 import { PrismaClient, Frequency, HealthStatus, Role } from '@prisma/client'
 import { genRandomDummyAuthId } from '../utils/random'
+import { deleteCompany, deleteDataSource, deleteUser } from '../models/utils/helperFunctions'
 import { createCompany } from '@/api/db/services/companyService'
 import { createDataSource } from '@/api/db/services/dataSourceService'
 import {
@@ -12,28 +13,32 @@ import { createUser } from '@/api/db/services/userService'
 const prisma = new PrismaClient()
 
 describe('Notification Model Tests', () => {
+  let notificationId: number
+  let companyId: number
+  let dataSourceId: number
+  let userId: number
+
   beforeAll(async () => {
     await prisma.$connect()
   })
 
   afterAll(async () => {
+    await deleteCompany(companyId)
+    await deleteDataSource(dataSourceId)
+    await deleteUser(userId)
     await prisma.$disconnect()
   })
 
-  let notificationId: number
-  let companyId: number
-  let dataSourceId: number
-  let userId: number
   test('Create a new user with valid details', async () => {
     const user = await createUser({ name: 'John Doe', authId: genRandomDummyAuthId(), role: Role.USER })
     userId = user.id
   })
   test('Create a new company with valid details', async () => {
-    const company = await createCompany({ name: 'google', description: 'Test Company', addedBy: userId })
+    const company = await createCompany({ name: 'google', description: 'Test Company 2', addedBy: userId })
     companyId = company.id
     expect(company).toHaveProperty('id')
     expect(company.name).toBe('google')
-    expect(company.description).toBe('Test Company')
+    expect(company.description).toBe('Test Company 2')
     expect(company.addedBy).toBe(userId)
   })
 

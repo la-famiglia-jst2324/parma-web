@@ -29,10 +29,11 @@ const handler = async (req: NextApiRequest, res: NextApiResponse, user: User) =>
           const fileDestPrefix = `user/${userId}/attachments/`
           const { incomingFile, name, type } = await fileValidation(req)
           const { fileDest } = await uploadFileToFirebase(incomingFile, type, name, fileDestPrefix)
-          const updatedUser = await updateUser(userId, {
+          await updateUser(userId, {
             profilePicture: fileDest
           })
-          res.status(201).json(updatedUser)
+          const fileLink = await generateFileUrl(fileDest)
+          res.status(200).json({ profilePicture: fileLink })
         }
       } catch (error) {
         if (error instanceof Error) res.status(500).json({ error: error.message || 'Internal Server Error' })
@@ -75,10 +76,11 @@ const handler = async (req: NextApiRequest, res: NextApiResponse, user: User) =>
           const { incomingFile, name, type } = await fileValidation(req)
           const { fileDest } = await uploadFileToFirebase(incomingFile, type, name, fileDestPrefix)
           await deleteFileFromFirebaseStorage(user.profilePicture)
-          const updatedUser = await updateUser(userId, {
+          await updateUser(userId, {
             profilePicture: fileDest
           })
-          res.status(200).json(updatedUser)
+          const fileLink = await generateFileUrl(fileDest)
+          res.status(200).json({ profilePicture: fileLink })
         } else res.status(404).json({ error: 'User not Found' })
       } catch (error) {
         if (error instanceof ItemNotFoundError) res.status(404).json({ error: error.message })

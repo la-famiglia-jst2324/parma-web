@@ -26,7 +26,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse, user: User) =>
         if (user.profilePicture) {
           res.status(400).json({ error: 'Profile picture already exists' })
         } else {
-          const fileDestPrefix = `user/${userId}/attachments/`
+          const fileDestPrefix = `user/${userId}/pic/`
           const { incomingFile, name, type } = await fileValidation(req)
           const { fileDest } = await uploadFileToFirebase(incomingFile, type, name, fileDestPrefix)
           await updateUser(userId, {
@@ -72,7 +72,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse, user: User) =>
       try {
         const user = await getUserById(Number(userId))
         if (user && user.profilePicture) {
-          const fileDestPrefix = `user/${userId}/attachments/`
+          const fileDestPrefix = `user/${userId}/pic/`
           const { incomingFile, name, type } = await fileValidation(req)
           const { fileDest } = await uploadFileToFirebase(incomingFile, type, name, fileDestPrefix)
           await deleteFileFromFirebaseStorage(user.profilePicture)

@@ -1,0 +1,94 @@
+import type { NextApiRequest, NextApiResponse } from 'next'
+import type { User } from '@prisma/client'
+import fileValidation from '@/pages/api/lib/utils/fileValidation'
+import { withAuthValidation } from '@/api/middleware/auth'
+import {
+  uploadFileToFirebase,
+  generateFileUrl,
+  deleteFileFromFirebaseStorage
+} from '@/pages/api/lib/utils/firebaseStorage'
+import { getUserById, updateUser } from '@/api/db/services/userService'
+import { ItemNotFoundError } from '@/api/utils/errorUtils'
+
+export const config = {
+  api: {
+    bodyParser: false
+  }
+}
+
+const handler = async (req: NextApiRequest, res: NextApiResponse, user: User) => {
+  const { method } = req
+  const userId = user.id
+
+  switch (method) {
+    case 'POST':
+      try {
+        if (user.profilePicture) {
+          res.status(400).json({ error: 'Profile picture already exists' })
+        } else {
+          const fileDestPrefix = `user/${userId}/attachments/`
+          const { incomingFile, name, type } = await fileValidation(req)
+          const { fileDest } = await uploadFileToFirebase(incomingFile, type, name, fileDestPrefix)
+          const updatedUser = await updateUser(userId, {
+            profilePicture: fileDest
+          })
+          res.status(201).json(updatedUser)
+        }
+      } catch (error) {
+        if (error instanceof Error) res.status(500).json({ error: error.message || 'Internal Server Error' })
+      }
+      break
+    case 'GET':
+      try {
+        const user = await getUserById(Number(userId))
+        if (user) {
+          if (user.profilePicture) {
+            const fileUrl = await generateFileUrl(user.profilePicture)
+            res.status(200).json({ fileUrl })
+          } else res.status(404).json({ error: 'Profile picture not found' })
+        } else res.status(404).json({ error: 'User not Found!' })
+      } catch (error) {
+        if (error instanceof ItemNotFoundError) res.status(404).json({ error: error.message })
+        else if (error instanceof Error) res.status(500).json({ error: error.message || 'Internal Server Error' })
+      }
+      break
+    case 'DELETE':
+      try {
+        const user = await getUserById(Number(userId))
+        if (user && user.profilePicture) {
+          await deleteFileFromFirebaseStorage(user.profilePicture)
+          await updateUser(userId, {
+            profilePicture: ''
+          })
+          res.status(204).end()
+        } else res.status(404).json({ error: 'User not Found' })
+      } catch (error) {
+        if (error instanceof ItemNotFoundError) res.status(404).json({ error: error.message })
+        else if (error instanceof Error) res.status(500).json({ error: error.message || 'Internal Server Error' })
+      }
+      break
+    case 'PUT':
+      try {
+        const user = await getUserById(Number(userId))
+        if (user && user.profilePicture) {
+          const fileDestPrefix = `user/${userId}/attachments/`
+          const { incomingFile, name, type } = await fileValidation(req)
+          const { fileDest } = await uploadFileToFirebase(incomingFile, type, name, fileDestPrefix)
+          await deleteFileFromFirebaseStorage(user.profilePicture)
+          const updatedUser = await updateUser(userId, {
+            profilePicture: fileDest
+          })
+          res.status(200).json(updatedUser)
+        } else res.status(404).json({ error: 'User not Found' })
+      } catch (error) {
+        if (error instanceof ItemNotFoundError) res.status(404).json({ error: error.message })
+        else if (error instanceof Error) res.status(500).json({ error: error.message || 'Internal Server Error' })
+      }
+      break
+    default:
+      res.status(405).json({ error: 'Method Not Allowed' })
+      break
+  }
+}
+
+export default withAuthValidation(handler)

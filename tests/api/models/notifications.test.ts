@@ -158,11 +158,11 @@ describe('NotificationSubscription Model Tests', () => {
     expect(deletedSubscription).toBeNull()
   })
 
-  describe('NotificationRules Service Tests', async () => {
+  describe('NotificationRules Service Tests', () => {
     let ruleId: number
-    const sourceMeasurement = (await getAllSourceMeasurements())[0]
 
     test('Create a new NotificationRule', async () => {
+      const sourceMeasurement = (await getAllSourceMeasurements())[0]
       const rule = await createNotificationRule({
         ruleName: 'Test Rule',
         sourceMeasurementId: sourceMeasurement.id,

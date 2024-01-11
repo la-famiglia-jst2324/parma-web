@@ -15,7 +15,6 @@ import {
   getNotificationRuleById,
   updateNotificationRule
 } from '@/api/db/services/notificationRulesService'
-import { getAllSourceMeasurements } from '@/api/db/services/sourceMeasurementService'
 
 const prisma = new PrismaClient()
 

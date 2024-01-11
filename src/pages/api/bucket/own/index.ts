@@ -3,7 +3,28 @@ import type { User } from '@prisma/client'
 import { getOwnBuckets } from '@/api/db/services/bucketService'
 import { ItemNotFoundError } from '@/api/utils/errorUtils'
 import { withAuthValidation } from '@/api/middleware/auth'
-
+/**
+ * @swagger
+ * /api/bucket/own:
+ *   get:
+ *     tags:
+ *       - bucket
+ *     summary: Retrieve a user's own buckets
+ *     description: Fetches buckets associated with user
+ *     responses:
+ *       200:
+ *         description: Successfully retrieved the user's own buckets.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Bucket'
+ *       400:
+ *         description: No buckets found.
+ *       500:
+ *         description: Internal Server Error.
+ */
 const handler = async (req: NextApiRequest, res: NextApiResponse, user: User) => {
   const { method } = req
   const userId = user.id

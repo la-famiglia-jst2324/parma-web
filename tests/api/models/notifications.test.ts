@@ -162,7 +162,13 @@ describe('NotificationSubscription Model Tests', () => {
     let ruleId: number
 
     beforeAll(async () => {
-      const sourceMeasurement = (await getAllSourceMeasurements())[0]
+      const sourceMeasurements = await getAllSourceMeasurements()
+
+      if (!sourceMeasurements || sourceMeasurements.length === 0) {
+        throw new Error('No source measurements found')
+      }
+
+      const sourceMeasurement = sourceMeasurements[0]
       const rule = await createNotificationRule({
         ruleName: 'Test Rule',
         sourceMeasurementId: sourceMeasurement.id,

@@ -1,6 +1,7 @@
 import type { Frequency, HealthStatus } from '@prisma/client'
 import { prisma } from '../prisma/prismaClient'
 import { ItemNotFoundError } from '@/api/utils/errorUtils'
+import { paginate } from '@/api/utils/paginationUtils'
 
 const createDataSource = async (data: {
   sourceName: string
@@ -59,27 +60,10 @@ const getDataSourceByName = async (sourceName: string) => {
 
 const getAllDataSources = async (page: number, pageSize: number, name: string) => {
   try {
-    const datasources = await prisma.dataSource.findMany({
-      where: {
-        sourceName: {
-          contains: name,
-          mode: 'insensitive' // case-insensitive
-        }
-      },
-      skip: (page - 1) * pageSize,
-      take: pageSize
+    const result = await paginate(prisma.dataSource, page, pageSize, {
+      sourceName: { contains: name, mode: 'insensitive' }
     })
-    const totalCount = await prisma.dataSource.count()
-    const totalPages = Math.ceil(totalCount / pageSize)
-    return {
-      datasources,
-      pagination: {
-        currentPage: page,
-        pageSize,
-        totalPages,
-        totalCount
-      }
-    }
+    return result
   } catch (error) {
     console.error('Error getting all data sources:', error)
     throw error

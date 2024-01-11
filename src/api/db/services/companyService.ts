@@ -1,5 +1,6 @@
 import { prisma } from '../prisma/prismaClient'
 import { ItemNotFoundError } from '@/api/utils/errorUtils'
+import { paginate } from '@/api/utils/paginationUtils'
 
 const createCompany = async (data: { name: string; description?: string; addedBy: number }) => {
   try {
@@ -33,63 +34,19 @@ const getCompanyByID = async (id: number) => {
 
 const getCompanyByName = async (name: string, page: number, pageSize: number) => {
   try {
-    const skip = (page - 1) * pageSize
-    const company = await prisma.company.findMany({
-      where: {
-        name: {
-          contains: name,
-          mode: 'insensitive'
-        }
-      },
-      skip,
-      take: pageSize
+    const result = await paginate(prisma.company, page, pageSize, {
+      name: { contains: name, mode: 'insensitive' }
     })
-
-    const totalCount = await prisma.company.count({
-      where: {
-        name
-      }
-    })
-    const totalPages = Math.ceil(totalCount / pageSize)
-    if (company) {
-      return {
-        company,
-        pagination: {
-          currentPage: page,
-          pageSize,
-          totalPages,
-          totalCount
-        }
-      }
-    }
-    if (!company) {
-      throw new Error(`Company with name ${name} not found.`)
-    }
-    return company
+    return result
   } catch (error) {
     console.error('Error finding company by name:', error)
     throw error
   }
 }
-
 const getAllCompanies = async (page: number, pageSize: number) => {
   try {
-    const skip = (page - 1) * pageSize
-    const companies = await prisma.company.findMany({
-      skip,
-      take: pageSize
-    })
-    const totalCount = await prisma.bucket.count()
-    const totalPages = Math.ceil(totalCount / pageSize)
-    return {
-      companies,
-      pagination: {
-        currentPage: page,
-        pageSize,
-        totalPages,
-        totalCount
-      }
-    }
+    const result = await paginate(prisma.company, page, pageSize)
+    return result
   } catch (error) {
     console.error('Error fetching all companies:', error)
     throw error

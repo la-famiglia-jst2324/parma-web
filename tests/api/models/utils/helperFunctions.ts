@@ -16,7 +16,7 @@ export async function createUser(name: string = 'Used in Tests') {
 export async function createCompany(userId: number) {
   return await prisma.company.create({
     data: {
-      name: 'User in Tests',
+      name: 'Company in Tests',
       addedBy: userId
     }
   })

@@ -33,25 +33,33 @@ const NewsCard: React.FC<NewsCardProps> = ({
         <CardDescription className="text-gray-400">{datasourceName}</CardDescription>
       </CardHeader>
       <CardContent className="p-4">
-        <div className="grid grid-cols-2 gap-4 text-sm text-gray-300 md:grid-cols-4">
-          <div>
-            Notification Date
-            <br />
+        <div className="grid grid-cols-2 items-center gap-4 text-sm text-gray-300 md:grid-cols-4">
+          <div className="flex flex-col items-center space-y-2">
+            <Badge className="rounded-full bg-sky-600 px-3 py-1 text-xs text-white transition-colors duration-300 ease-in-out hover:bg-blue-700">
+              Notification Date
+            </Badge>
+            <div className="my-2 w-full border-b border-transparent"></div>
             <span className="text-white">{timestamp}</span>
           </div>
-          <div>
-            {measureName}
-            <br />
+          <div className="flex flex-col items-center space-y-2">
+            <Badge className="rounded-full bg-sky-600 px-3 py-1 text-xs text-white transition-colors duration-300 ease-in-out hover:bg-blue-700">
+              {measureName}
+            </Badge>
+            <div className="my-2 w-full border-b border-transparent"></div>
             <span className="text-white">{measureValue}</span>
           </div>
-          <div>
-            Bucket
-            <br />
+          <div className="flex flex-col items-center space-y-2">
+            <Badge className="rounded-full bg-sky-600 px-3 py-1 text-xs text-white transition-colors duration-300 ease-in-out hover:bg-blue-700">
+              Bucket
+            </Badge>
+            <div className="my-2 w-full border-b border-transparent"></div>
             <span className="text-white">{bucketName}</span>
           </div>
-          <div>
-            Trigger Factor
-            <br />
+          <div className="flex flex-col items-center space-y-2">
+            <Badge className="rounded-full bg-sky-600 px-3 py-1 text-xs text-white transition-colors duration-300 ease-in-out hover:bg-blue-700">
+              Trigger Factor
+            </Badge>
+            <div className="my-2 w-full border-b border-transparent"></div>
             <span className="text-white">7.0</span>
           </div>
         </div>
@@ -64,7 +72,6 @@ const NewsCard: React.FC<NewsCardProps> = ({
           {companyName}
         </Badge>
         <Button
-          className="hover-text-gray-400 border border-gray-700 bg-indigo-600 text-gray-300 transition-all duration-300 ease-in-out hover:border-indigo-800 hover:bg-indigo-700"
           onClick={(e) => {
             e.preventDefault()
             e.stopPropagation()

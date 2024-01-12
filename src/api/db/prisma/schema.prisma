@@ -90,7 +90,7 @@ model NotificationChannel {
   id          Int         @id @default(autoincrement())
   channelType ChannelType @map("channel_type")
   destination String
-  secretId      String? @map("secret_id")
+  secretId    String?     @map("secret_id")
   createdAt   DateTime    @default(now()) @map("created_at")
   modifiedAt  DateTime    @updatedAt @map("modified_at")
 
@@ -101,11 +101,11 @@ model NotificationChannel {
 }
 
 model NotificationSubscription {
-  userId     Int      @map("user_id")
-  channelId  Int      @map("channel_id")
+  userId         Int            @map("user_id")
+  channelId      Int            @map("channel_id")
   channelPurpose ChannelPurpose @map("channel_purpose")
-  createdAt  DateTime @default(now()) @map("created_at")
-  modifiedAt DateTime @updatedAt @map("modified_at")
+  createdAt      DateTime       @default(now()) @map("created_at")
+  modifiedAt     DateTime       @updatedAt @map("modified_at")
 
   // Relation fields
   user    User                @relation("UserToNotificationSubscription", fields: [userId], references: [id], onDelete: Cascade)
@@ -133,18 +133,18 @@ model CompanyAttachment {
 }
 
 model DataSource {
-  id                     Int          @id @default(autoincrement())
-  sourceName             String       @map("source_name")
-  isActive               Boolean      @map("is_active")
-  frequency              Frequency    @map("frequency")
-  healthStatus           HealthStatus @map("health_status")
-  description            String?
-  createdAt              DateTime     @default(now()) @map("created_at")
-  modifiedAt             DateTime     @updatedAt @map("modified_at")
-  maxRunSeconds          Int          @default(300) @map("max_run_seconds")
-  version                String       @default("1.0")
-  invocationEndpoint     String       @default("") @map("invocation_endpoint")
-  additionalParams       Json?        @map("additional_params")
+  id                 Int          @id @default(autoincrement())
+  sourceName         String       @map("source_name")
+  isActive           Boolean      @map("is_active")
+  frequency          Frequency    @map("frequency")
+  healthStatus       HealthStatus @map("health_status")
+  description        String?
+  createdAt          DateTime     @default(now()) @map("created_at")
+  modifiedAt         DateTime     @updatedAt @map("modified_at")
+  maxRunSeconds      Int          @default(300) @map("max_run_seconds")
+  version            String       @default("1.0")
+  invocationEndpoint String       @default("") @map("invocation_endpoint")
+  additionalParams   Json?        @map("additional_params")
 
   // Relations
   companyDataSource                  CompanyDataSource[]
@@ -163,7 +163,7 @@ model ScheduledTask {
   scheduledAt   DateTime     @default(now()) @map("scheduled_at")
   startedAt     DateTime?    @map("started_at")
   endedAt       DateTime?    @map("ended_at")
-  maxRunSeconds          Int @default(300) @map("max_run_seconds")
+  maxRunSeconds Int          @default(300) @map("max_run_seconds")
   resultSummary String?      @map("result_summary")
   status        TaskStatus   @default(PENDING)
   attempts      Int          @default(0)
@@ -235,6 +235,7 @@ model SourceMeasurement {
   userMetricCustomization   UserMetricCustomization[]
   parentSourceMeasurement   SourceMeasurement?         @relation(name: "ParentChild", fields: [parentMeasurementId], references: [id], onDelete: Cascade)
   childSourceMeasurements   SourceMeasurement[]        @relation("ParentChild")
+  NotificationRules         NotificationRules[]
 
   @@map("source_measurement")
 }
@@ -254,9 +255,9 @@ model CompanySourceMeasurement {
   measurementCommentValues   MeasurementCommentValue[]
   measurementParagraphValues MeasurementParagraphValue[]
   measurementLinkValues      MeasurementLinkValue[]
-  measurementImageValues      MeasurementImageValue[]
+  measurementImageValues     MeasurementImageValue[]
   measurementDateValues      MeasurementDateValue[]
-  measurementNestedValues      MeasurementNestedValue[]
+  measurementNestedValues    MeasurementNestedValue[]
 
   @@map("company_source_measurement")
 }
@@ -485,6 +486,21 @@ model CompanySubscription {
 
   @@id([userId, companyId])
   @@map("company_subscription")
+}
+
+model NotificationRules {
+  ruleId                Int    @id @default(autoincrement()) @map("rule_id")
+  ruleName              String @map("rule_name")
+  sourceMeasurementId   Int    @map("source_measurement_id")
+  threshold             Float  @map("threshold")
+  aggregationMethod     String? @map("aggregation_method")
+  numAggregationEntries Int?    @map("num_aggregation_entries")
+  notificationMessage   String? @map("notification_message")
+
+  // relations
+  sourceMeasurement SourceMeasurement @relation(fields: [sourceMeasurementId], references: [id], onDelete: Cascade)
+
+  @@map("notification_rules")
 }
 
 // -------------------------------------- ENUMS ----------------------------------------

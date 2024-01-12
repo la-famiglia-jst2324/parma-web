@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 
+import { deleteFileFromFirebaseStorage, generateFileUrl } from '../lib/utils/firebaseStorage'
 import { getUserById, updateUser, deleteUser } from '@/api/db/services/userService'
 
 import { ItemNotFoundError } from '@/api/utils/errorUtils'
@@ -13,8 +14,11 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       try {
         // get a single user
         const user = await getUserById(Number(userId))
-        if (user) res.status(200).json(user)
-        else res.status(400).json({ error: 'No User found' })
+        let profilePictureUrl = ''
+        if (user) {
+          if (user.profilePicture) profilePictureUrl = await generateFileUrl(user.profilePicture)
+          res.status(200).json({ ...user, profilePicture: profilePictureUrl })
+        } else res.status(400).json({ error: 'No User found' })
       } catch (error) {
         if (error instanceof ItemNotFoundError) res.status(404).json({ error: error.message })
         else res.status(500).json({ error: 'Internal Server Error' })
@@ -40,6 +44,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         const existingUser = await getUserById(Number(userId))
         // delete a user
         if (existingUser) {
+          if (existingUser.profilePicture) await deleteFileFromFirebaseStorage(existingUser.profilePicture)
           await deleteUser(Number(userId))
           res.status(200).json({ message: 'User successfully Deleted' })
         } else {

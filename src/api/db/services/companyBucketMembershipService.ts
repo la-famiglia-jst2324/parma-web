@@ -96,27 +96,6 @@ const getCompanyBucketByID = async (bucketId: number, companyId: number) => {
   }
 }
 
-const getCompanyByCompanyBucketId = async (bucketId: number, companyId: number) => {
-  try {
-    const membership = await prisma.companyBucketMembership.findMany({
-      where: {
-        bucketId,
-        companyId
-      },
-      include: {
-        company: true
-      }
-    })
-    if (!membership) {
-      throw new Error(`bucket${bucketId} does not have any company.`)
-    }
-    return membership.map((membership) => membership.company)
-  } catch (error) {
-    console.error('Error retrieving companies from bucket:', error)
-    throw error
-  }
-}
-
 const removeCompanyFromBucket = async (companyId: number, bucketId: number) => {
   try {
     const membership = await prisma.companyBucketMembership.delete({
@@ -157,6 +136,5 @@ export {
   getBucketsByCompanyId,
   getCompanyBucketByID,
   removeCompanyFromBucket,
-  checkCompanyBucketMembershipExistence,
-  getCompanyByCompanyBucketId
+  checkCompanyBucketMembershipExistence
 }

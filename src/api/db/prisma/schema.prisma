@@ -175,6 +175,7 @@ model ScheduledTask {
 }
 
 model CompanyDataSource {
+  id                 Int          @id @default(autoincrement()) @map("id")
   dataSourceId       Int          @map("data_source_id")
   companyId          Int          @map("company_id")
   isDataSourceActive Boolean      @map("is_data_source_active")
@@ -183,10 +184,11 @@ model CompanyDataSource {
   modifiedAt         DateTime     @updatedAt @map("modified_at")
 
   // Relations
-  dataSources DataSource @relation(fields: [dataSourceId], references: [id], onDelete: Cascade)
-  companies   Company    @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  dataSources                  DataSource                     @relation(fields: [dataSourceId], references: [id], onDelete: Cascade)
+  companies                    Company                        @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  CompanyDataSourceIdentifiers CompanyDataSourceIdentifier[]
 
-  @@id([dataSourceId, companyId])
+  @@unique([dataSourceId, companyId])
   @@map("company_data_source")
 }
 
@@ -489,10 +491,10 @@ model CompanySubscription {
 }
 
 model NotificationRules {
-  ruleId                Int    @id @default(autoincrement()) @map("rule_id")
-  ruleName              String @map("rule_name")
-  sourceMeasurementId   Int    @map("source_measurement_id")
-  threshold             Float  @map("threshold")
+  ruleId                Int     @id @default(autoincrement()) @map("rule_id")
+  ruleName              String  @map("rule_name")
+  sourceMeasurementId   Int     @map("source_measurement_id")
+  threshold             Float   @map("threshold")
   aggregationMethod     String? @map("aggregation_method")
   numAggregationEntries Int?    @map("num_aggregation_entries")
   notificationMessage   String? @map("notification_message")
@@ -501,6 +503,21 @@ model NotificationRules {
   sourceMeasurement SourceMeasurement @relation(fields: [sourceMeasurementId], references: [id], onDelete: Cascade)
 
   @@map("notification_rules")
+}
+
+model CompanyDataSourceIdentifier {
+  id                  Int      @id @default(autoincrement())
+  companyDataSourceId Int      @map("company_data_source_id")
+  identifierKey       String   @map("identifier_key")
+  identifierType      IdentifierType   @map("identifier_type")
+  property            String
+  value               String
+  validity            DateTime
+
+  // Relation fields
+  companyDataSource CompanyDataSource @relation(fields: [companyDataSourceId], references: [id], onDelete: Cascade)
+
+  @@map("company_data_source_identifier")
 }
 
 // -------------------------------------- ENUMS ----------------------------------------
@@ -571,4 +588,11 @@ enum ScheduleType {
   REGULAR
 
   @@map("schedule_type")
+}
+
+enum IdentifierType {
+  AUTOMATICALLY_DISCOVERED
+  MANUALLY_ADDED
+
+  @@map("identifier_type")
 }

@@ -28,6 +28,7 @@ erDiagram
     source_measurement ||--o{ company_source_measurement : ""
     company_source_measurement ||--o{ measurement_text_value : ""
     company_source_measurement ||--o{ measurement_int_value : ""
+    notification_rules ||--o{ source_measurement : ""
     bucket {
         int id PK
         string title
@@ -132,6 +133,15 @@ erDiagram
         ChannelPurpose channel_purpose
         datetime created_at
         datetime modified_at
+    }
+    notification_rules {
+        int rule_id PK
+        string rule_name
+        int source_measurement FK
+        float threshold
+        string aggregation_method
+        int num_aggregation_entries
+        string notification_message
     }
     report{
         int id PK

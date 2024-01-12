@@ -1,11 +1,41 @@
+import {
+  createBucket,
+  createCompany,
+  createUser,
+  deleteBucket,
+  deleteCompany,
+  deleteUser
+} from '../models/utils/helperFunctions'
 import { searchCompaniesAndBuckets } from '@/api/db/services/searchService'
 
-describe('searchCompaniesAndBuckets', () => {
-  it('returns combined and paginated results', async () => {
-    const result = await searchCompaniesAndBuckets('', 1, 2)
+import { prisma } from '@/api/db/prisma/prismaClient'
 
-    // Check the result
-    expect(result.data.length).toBeGreaterThan(0)
+describe('searchCompaniesAndBuckets', () => {
+  let userId: number
+  let companyId: number
+  let bucketId: number
+
+  beforeAll(async () => {
+    // Create a company before each test
+    userId = (await createUser()).id
+    companyId = (await createCompany(userId)).id
+    bucketId = (await createBucket(userId)).id
+    await prisma.$connect()
+  })
+
+  afterAll(async () => {
+    // Delete the company after each test
+    deleteCompany(companyId)
+    deleteBucket(bucketId)
+    deleteUser(userId)
+    await prisma.$disconnect()
+  })
+
+  it('returns combined and paginated results', async () => {
+    const result = await searchCompaniesAndBuckets('test', 1, 2)
+
+    // Check the result, per default the names contain the key word test
+    expect(result.data.length).toEqual(2)
     expect(result.pagination.currentPage).toEqual(1)
     expect(result.pagination.pageSize).toEqual(2)
   })

@@ -25,9 +25,9 @@ describe('searchCompaniesAndBuckets', () => {
 
   afterAll(async () => {
     // Delete the company after each test
-    deleteCompany(companyId)
-    deleteBucket(bucketId)
-    deleteUser(userId)
+    await deleteCompany(companyId)
+    await deleteBucket(bucketId)
+    await deleteUser(userId)
     await prisma.$disconnect()
   })
 

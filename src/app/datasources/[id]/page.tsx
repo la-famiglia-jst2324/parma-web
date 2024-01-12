@@ -1,7 +1,6 @@
 'use client'
 import React, { useEffect, useState } from 'react'
 import type { DataSource } from '@prisma/client'
-import Link from 'next/link'
 import { editDatasource, getDatasourceById } from '@/services/datasource/datasourceService'
 import { MainLayoutWrapper } from '@/components/layout/MainLayout'
 import { HeaderComponent } from '@/components/datasources/DatasourcePageHeader'
@@ -98,36 +97,31 @@ function DatasourcePage({ params: { id } }: { params: { id: string } }) {
   }
 
   return (
-    <main className="m-4 flex h-[68em] flex-row items-start justify-start space-x-4" role="main">
-      <div className="mb-3 flex w-full items-center justify-between space-x-4">
-        {/* Name, description and status */}
-        <HeaderComponent data={data} />
-        {/* Buttons */}
-        <ButtonGroup
-          handleSave={(updates) =>
-            handleSave(updates.newName, updates.newDescription, updates.newUrl, updates.newStatus)
-          }
-          data={data}
-          handleDisableButtonClick={handleDisableButtonClick}
-          handleDeleteButtonClick={handleDeleteButtonClick}
-          handleEnableButtonClick={handleEnableButtonClick}
-          handleEditButtonClick={handleEditButtonClick}
-          disableModal={disableModal}
-          deleteModal={deleteModal}
-          editModal={editModal}
-        />
+    <main className="m-4 ml-9 flex h-[68em] flex-col items-start justify-start space-y-4" role="main">
+      <div className="flex items-center justify-between ">
+        <div>
+          <HeaderComponent data={data} />
+        </div>
+        <div className="flex justify-end">
+          <ButtonGroup
+            handleSave={(updates) =>
+              handleSave(updates.newName, updates.newDescription, updates.newUrl, updates.newStatus)
+            }
+            data={data}
+            handleDisableButtonClick={handleDisableButtonClick}
+            handleDeleteButtonClick={handleDeleteButtonClick}
+            handleEnableButtonClick={handleEnableButtonClick}
+            handleEditButtonClick={handleEditButtonClick}
+            disableModal={disableModal}
+            deleteModal={deleteModal}
+            editModal={editModal}
+          />
+        </div>
       </div>
-      {/* Datasource Information */}
-      <p className="mb-1 ml-9 mr-10 text-base text-gray-700">{data.description}</p>
-      <Link
-        href={data.invocationEndpoint}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="mb-1 ml-9 text-base text-gray-900 hover:text-blue-600"
-      >
-        Source: {data.invocationEndpoint}
-      </Link>
-      {/* Tabs */}
+      <div className="flex flex-col items-start justify-start space-y-4">
+        <div className="flex flex-col items-start justify-start space-y-4 font-semibold text-gray-500">DESCRIPTION</div>
+        <p className="mb-1 text-base text-gray-700">{data.description}</p>
+      </div>
       <TabComponent sourceId={data.id.toString()} />
     </main>
   )

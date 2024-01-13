@@ -173,6 +173,40 @@ const updateParentMeasurementId = async (childId: number, newParentId: number | 
     throw new Error('Unable to update child source measurement parent')
   }
 }
+
+const getMeasurementsByCompanyIdSourceId = async (sourceModuleId: number, companyId: number) => {
+  try {
+    const measurements = await prisma.sourceMeasurement.findMany({
+      where: {
+        sourceModuleId
+      },
+      include: {
+        companySourceMeasurements: {
+          where: {
+            companyId
+          },
+          select: {
+            companyId: true
+          }
+        }
+      }
+    })
+    // add the companyId to the result
+
+    const flattenedMeasurements = measurements.flatMap((measurement) =>
+      measurement.companySourceMeasurements.map((csm) => {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { companySourceMeasurements, ...rest } = { ...measurement, ...csm }
+        return rest
+      })
+    )
+    // console.log(rest)
+    return flattenedMeasurements
+  } catch (error) {
+    console.error('Error getting the measurements of specific company and data source module:', error)
+    throw error
+  }
+}
 export {
   createSourceMeasurement,
   getSourceMeasurementByID,
@@ -182,5 +216,6 @@ export {
   getChildMeasurementsByParentId,
   updateParentMeasurementId,
   deleteSourceMeasurement,
-  getMeasurementsOfCompaniesBySourceId
+  getMeasurementsOfCompaniesBySourceId,
+  getMeasurementsByCompanyIdSourceId
 }

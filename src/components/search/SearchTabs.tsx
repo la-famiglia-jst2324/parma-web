@@ -22,8 +22,8 @@ interface SearchTabsProps {
 }
 
 const SearchTabs: React.FC<SearchTabsProps> = ({ searchData }) => {
-  const bucketData = Object.values(searchData).filter((item: SearchItem) => item.type === 'bucket')
-  const companiesData = Object.values(searchData).filter((item: SearchItem) => item.type === 'company')
+  const bucketData = Object.values(searchData?.data || {}).filter((item: SearchItem) => item.type === 'bucket')
+  const companiesData = Object.values(searchData?.data || {}).filter((item: SearchItem) => item.type === 'company')
 
   return (
     <Tabs defaultValue="all">

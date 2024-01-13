@@ -1,55 +1,66 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
+import DataTable from './SearchResultsTable'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { getSearchData } from '@/services/search/searchService'
+import { Separator } from '@/components/ui/separator'
 
 interface SearchItem {
   id: number
   name: string
-  // Add other properties as needed
+  description: string
+  addedBy: number
+  createdAt: string
+  modifiedAt: string
+  type: string
+}
+
+type SearchData = {
+  [key: string]: SearchItem
 }
 
 interface SearchTabsProps {
-  searchTerm: string
+  searchData: SearchData
 }
 
-const SearchTabs: React.FC<SearchTabsProps> = ({ searchTerm }) => {
-  const [searchData, setSearchData] = useState<SearchItem[] | null>(null)
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const data = await getSearchData(searchTerm, 1, 10)
-        setSearchData(data)
-      } catch (error) {
-        console.error('Error fetching data:', error)
-      }
-    }
-
-    fetchData()
-  }, [])
+const SearchTabs: React.FC<SearchTabsProps> = ({ searchData }) => {
+  const bucketData = Object.values(searchData).filter((item: SearchItem) => item.type === 'bucket')
+  const companiesData = Object.values(searchData).filter((item: SearchItem) => item.type === 'company')
 
   return (
-    <Tabs>
+    <Tabs defaultValue="all">
       <TabsList>
         <TabsTrigger value="all">All</TabsTrigger>
         <TabsTrigger value="buckets">Buckets</TabsTrigger>
         <TabsTrigger value="companies">Companies</TabsTrigger>
       </TabsList>
+      <Separator className="my-3 w-full" />
       <TabsContent value="all">
-        {Array.isArray(searchData) && (
+        {Array.isArray(searchData?.data) && searchData.data.length > 0 ? (
           <div>
-            <h2>All Content</h2>
-            {searchData.map((item: SearchItem) => (
-              <div key={item.id}>{item.name}</div>
-            ))}
+            <DataTable data={searchData.data} />
           </div>
+        ) : (
+          <p className="flex items-center justify-center text-center text-white">
+            No results matching your search query.
+          </p>
         )}
       </TabsContent>
       <TabsContent value="buckets">
-        <div>Buckets</div>
+        {Array.isArray(bucketData) && bucketData.length > 0 ? (
+          <div>
+            <DataTable data={bucketData} />
+          </div>
+        ) : (
+          <p className="flex items-center justify-center text-center text-white">No buckets found.</p>
+        )}
       </TabsContent>
       <TabsContent value="companies">
-        <div>Companies</div>
+        {Array.isArray(companiesData) && companiesData.length > 0 ? (
+          <div>
+            <DataTable data={companiesData} />
+          </div>
+        ) : (
+          <p className="flex items-center justify-center text-center text-white">No companies found.</p>
+        )}
       </TabsContent>
     </Tabs>
   )

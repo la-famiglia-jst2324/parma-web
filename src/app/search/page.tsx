@@ -5,7 +5,6 @@ import { SearchBar } from '@/components/search/Searchbar'
 import SearchTabs from '@/components/search/SearchTabs'
 import { Button } from '@/components/ui/button'
 import { getSearchData } from '@/services/search/searchService'
-import { Separator } from '@/components/ui/separator'
 
 const SearchPage: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState<string>('')
@@ -32,7 +31,6 @@ const SearchPage: React.FC = () => {
           <Button onClick={fetchSearchedData}>Search</Button>
         </div>
       </div>
-      <Separator className="mb-3" />
       <SearchTabs searchData={searchData || {}} />
     </MainLayout>
   )

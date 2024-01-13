@@ -32,36 +32,38 @@ const SearchTabs: React.FC<SearchTabsProps> = ({ searchData }) => {
         <TabsTrigger value="buckets">Buckets</TabsTrigger>
         <TabsTrigger value="companies">Companies</TabsTrigger>
       </TabsList>
-      <Separator className="my-3 w-full" />
-      <TabsContent value="all">
-        {Array.isArray(searchData?.data) && searchData.data.length > 0 ? (
-          <div>
-            <DataTable data={searchData.data} />
-          </div>
-        ) : (
-          <p className="flex items-center justify-center text-center text-white">
-            No results matching your search query.
-          </p>
-        )}
-      </TabsContent>
-      <TabsContent value="buckets">
-        {Array.isArray(bucketData) && bucketData.length > 0 ? (
-          <div>
-            <DataTable data={bucketData} />
-          </div>
-        ) : (
-          <p className="flex items-center justify-center text-center text-white">No buckets found.</p>
-        )}
-      </TabsContent>
-      <TabsContent value="companies">
-        {Array.isArray(companiesData) && companiesData.length > 0 ? (
-          <div>
-            <DataTable data={companiesData} />
-          </div>
-        ) : (
-          <p className="flex items-center justify-center text-center text-white">No companies found.</p>
-        )}
-      </TabsContent>
+      <div className="-mx-4">
+        <Separator className="my-3 w-full" />
+        <TabsContent value="all">
+          {Array.isArray(searchData?.data) && searchData.data.length > 0 ? (
+            <div>
+              <DataTable data={searchData.data} />
+            </div>
+          ) : (
+            <p className="flex items-center justify-center text-center text-white">
+              No results matching your search query.
+            </p>
+          )}
+        </TabsContent>
+        <TabsContent value="buckets">
+          {Array.isArray(bucketData) && bucketData.length > 0 ? (
+            <div>
+              <DataTable data={bucketData} />
+            </div>
+          ) : (
+            <p className="flex items-center justify-center text-center text-white">No buckets found.</p>
+          )}
+        </TabsContent>
+        <TabsContent value="companies">
+          {Array.isArray(companiesData) && companiesData.length > 0 ? (
+            <div>
+              <DataTable data={companiesData} />
+            </div>
+          ) : (
+            <p className="flex items-center justify-center text-center text-white">No companies found.</p>
+          )}
+        </TabsContent>
+      </div>
     </Tabs>
   )
 }

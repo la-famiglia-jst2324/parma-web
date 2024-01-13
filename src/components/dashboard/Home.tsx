@@ -1,6 +1,5 @@
 'use client'
 import React, { useContext, useEffect, useState } from 'react'
-import Link from 'next/link'
 import Spinner from '../Spinner'
 import NewsCard from '@/components/dashboard/NewsCard'
 import type NewsItem from '@/types/news'
@@ -44,11 +43,11 @@ export const Home = () => {
   if (!user) return <Spinner />
 
   return (
-    <main className="m-4 flex h-full flex-col items-start justify-start space-y-4" role="main">
-      <h1 className="text-3xl font-semibold text-slate-200">Trending News</h1>
-      <div className="grid w-full grid-cols-1 gap-4">
-        {news.map((item, index) => (
-          <Link href={`/companies/${item.id}`} key={index}>
+    <main className="m-4 flex h-full flex-col items-center justify-start space-y-4" role="main">
+      <h1 className="text-center text-3xl font-semibold text-slate-200">Trending News</h1>
+      <div className="flex justify-center">
+        <div className="grid w-full max-w-4xl grid-cols-1 gap-4">
+          {news.map((item, index) => (
             <NewsCard
               key={index}
               id={item.id}
@@ -61,8 +60,8 @@ export const Home = () => {
               measureValue={item.measureValue}
               timestamp={item.timestamp}
             />
-          </Link>
-        ))}
+          ))}
+        </div>
       </div>
     </main>
   )

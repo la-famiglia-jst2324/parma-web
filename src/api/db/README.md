@@ -11,6 +11,8 @@ erDiagram
     company ||--o{ notification : ""
     company ||--o{ company_data_source : ""
     company ||--|| news_subscription :""
+    company ||--o{ news : ""
+    data_source ||--o{ news : ""
     data_source ||--o{ company_data_source : ""
     data_source ||--o{ source_measurement : ""
     data_source ||--o{ NOTIFICATION : ""
@@ -29,6 +31,7 @@ erDiagram
     company_source_measurement ||--o{ measurement_text_value : ""
     company_source_measurement ||--o{ measurement_int_value : ""
     notification_rules ||--o{ source_measurement : ""
+
     bucket {
         int id PK
         string title
@@ -194,6 +197,16 @@ erDiagram
         id company_measurement_id FK
         int value
         datetime timestamp
+        datetime created_at
+        datetime modified_at
+    }
+    news {
+        int id PK
+        string message
+        int company_id
+        int data_source_id
+        string trigger_factor
+        string title
         datetime created_at
         datetime modified_at
     }

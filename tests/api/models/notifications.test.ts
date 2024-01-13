@@ -1,5 +1,20 @@
 import { PrismaClient } from '@prisma/client'
-import { createUser, createCompany, deleteUser, deleteCompany } from './utils/helperFunctions'
+import {
+  createUser,
+  createCompany,
+  deleteUser,
+  deleteCompany,
+  createDataSource,
+  createSourceMeasurement,
+  deleteSourceMeasurement,
+  deleteDataSource
+} from './utils/helperFunctions'
+import {
+  createNotificationRule,
+  deleteNotificationRule,
+  getNotificationRuleById,
+  updateNotificationRule
+} from '@/api/db/services/notificationRulesService'
 
 const prisma = new PrismaClient()
 
@@ -149,5 +164,58 @@ describe('NotificationSubscription Model Tests', () => {
     })
 
     expect(deletedSubscription).toBeNull()
+  })
+})
+
+describe('NotificationRules Service Tests', () => {
+  let ruleId: number
+  let sourceMeasurementId: number
+  let dataSourceId: number
+
+  beforeAll(async () => {
+    dataSourceId = (await createDataSource()).id
+    sourceMeasurementId = (await createSourceMeasurement(dataSourceId)).id
+    await prisma.$connect()
+  })
+
+  afterAll(async () => {
+    await deleteSourceMeasurement(sourceMeasurementId)
+    await deleteDataSource(dataSourceId)
+    await prisma.$disconnect()
+  })
+
+  test('Create a new NotificationRule', async () => {
+    const rule = await createNotificationRule({
+      ruleName: 'Test Rule',
+      sourceMeasurementId,
+      threshold: 10.5,
+      aggregationMethod: 'Average',
+      numAggregationEntries: 5,
+      notificationMessage: 'Test Message'
+    })
+
+    ruleId = rule.ruleId
+
+    expect(ruleId).toBeDefined()
+  })
+
+  test('Retrieve a NotificationRule', async () => {
+    const rule = await getNotificationRuleById(ruleId)
+
+    expect(rule).toBeTruthy()
+    expect(rule?.ruleId).toBe(ruleId)
+  })
+
+  test('Update a NotificationRule', async () => {
+    const updatedRule = await updateNotificationRule(ruleId, {
+      ruleName: 'Updated Test Rule'
+    })
+
+    expect(updatedRule.ruleName).toBe('Updated Test Rule')
+  })
+
+  test('Delete a NotificationRule', async () => {
+    const deletedRule = await deleteNotificationRule(ruleId)
+    expect(deletedRule.ruleId).toBe(ruleId)
   })
 })

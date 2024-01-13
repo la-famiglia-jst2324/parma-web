@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import type { User } from '@prisma/client'
+import { generateFileUrl } from '../lib/utils/firebaseStorage'
 import { createUser, getAllUsers, getUserById, updateUser } from '@/api/db/services/userService'
 import { ItemNotFoundError } from '@/api/utils/errorUtils'
 import { withAuthValidation } from '@/api/middleware/auth'
@@ -99,8 +100,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse, user: User) =>
     case 'GET':
       try {
         // Gets a user
-        const companies = await getAllUsers()
-        if (companies.length > 0) res.status(200).json(companies)
+        const users = await getAllUsers()
+        if (users.length > 0) res.status(200).json(users)
         else res.status(400).json({ error: 'No Companies found' })
       } catch (error) {
         if (error instanceof ItemNotFoundError) res.status(404).json({ error: error.message })
@@ -125,7 +126,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse, user: User) =>
         const existingUser = await getUserById(userId)
         if (existingUser) {
           const updatedUser = await updateUser(userId, req.body)
-          res.status(200).json(updatedUser)
+          let profilePictureUrl = ''
+          if (updatedUser.profilePicture) profilePictureUrl = await generateFileUrl(updatedUser.profilePicture)
+          res.status(200).json({ ...updatedUser, profilePicture: profilePictureUrl })
         } else res.status(404).json({ error: 'User not Found' })
       } catch (error) {
         if (error instanceof ItemNotFoundError) res.status(404).json({ error: error.message })

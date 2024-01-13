@@ -1,10 +1,13 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-
 import { ZodError, z } from 'zod'
 import { Frequency, HealthStatus } from '@prisma/client'
 import { deleteDataSource, getDataSourceByID, updateDataSource } from '@/api/db/services/dataSourceService'
+
+import { getMeasurementsByCompanyIdSourceId } from '@/api/db/services/sourceMeasurementService'
+
 import { ItemNotFoundError } from '@/api/utils/errorUtils'
 import formatZodErrors from '@/pages/api/lib/utils/zodCustomMessage'
+import { withAuthValidation } from '@/api/middleware/auth'
 
 const updateDataSourceSchema = z.object({
   sourceName: z
@@ -26,13 +29,18 @@ const updateDataSourceSchema = z.object({
 
 /**
  * @swagger
- * /api/dataSources/id:
+ * /api/dataSources/dataSourceId:
  *   get:
  *     tags:
- *       - dataSource
- *     summary: Retrieve a data source by ID
- *     description: Fetches details of a specific data source based on the provided ID.
+ *       - sourceMeasurement
+ *     summary: Retrieve source measurements by a company ID and a source module ID
+ *     description: Fetches source measurements associated with given company ID and source module ID
  *     parameters:
+ *       - in: query
+ *         name: companyId
+ *         required: true
+ *         schema:
+ *           type: integer
  *       - in: query
  *         name: dataSourceId
  *         required: true
@@ -40,13 +48,15 @@ const updateDataSourceSchema = z.object({
  *           type: integer
  *     responses:
  *       200:
- *         description: Successfully retrieved the data source.
+ *         description: Successfully retrieved the source measurements for the given company ID and source module ID
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/DataSource'
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/MeasurementWithCompanyId'
  *       400:
- *         description: No Data Source found for the provided ID.
+ *         description: No relation found or no data source measurements found.
  *       500:
  *         description: Internal Server Error.
  *
@@ -110,18 +120,54 @@ const updateDataSourceSchema = z.object({
  *         description: Data Source successfully deleted.
  *       500:
  *         description: Internal Server Error.
+ * components:
+ *   schemas:
+ *     MeasurementWithCompanyId:
+ *       type: object
+ *       required:
+ *         - id
+ *         - sourceModuleId
+ *         - type
+ *         - measurementName
+ *         - companyId
+ *         - createdAt
+ *         - modifiedAt
+ *       properties:
+ *         id:
+ *           type: integer
+ *         sourceModuleId:
+ *           type: integer
+ *         type:
+ *           type: string
+ *         measurementName:
+ *           type: string
+ *         parentMeasurementId:
+ *           type: integer
+ *         companyId:
+ *           type: integer
+ *         createdAt:
+ *           type: string
+ *         modifiedAt:
+ *           type: string
  */
 
-export default async (req: NextApiRequest, res: NextApiResponse) => {
+const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const { method } = req
   const { dataSourceId } = req.query
+  const companyId = req.query.companyId
 
   switch (method) {
     case 'GET':
       try {
-        const dataSource = await getDataSourceByID(Number(dataSourceId))
-        if (dataSource) res.status(200).json(dataSource)
-        else res.status(400).json({ error: 'No Data Source found' })
+        if (companyId) {
+          const measurements = await getMeasurementsByCompanyIdSourceId(Number(dataSourceId), Number(companyId))
+          if (measurements) res.status(200).json(measurements)
+          else res.status(400).json({ error: 'No measurements found' })
+        } else {
+          const dataSource = await getDataSourceByID(Number(dataSourceId))
+          if (dataSource) res.status(200).json(dataSource)
+          else res.status(400).json({ error: 'No Data Source found' })
+        }
       } catch (error) {
         res.status(500).json({ error: 'Internal Server Error' })
       }
@@ -157,3 +203,4 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       break
   }
 }
+export default withAuthValidation(handler)

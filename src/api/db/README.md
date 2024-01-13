@@ -72,8 +72,9 @@ erDiagram
         datetime modified_at
     }
     company_data_source {
-        int data_source_id PK,FK
-        int company_id PK,FK
+        int id PK
+        int data_source_id FK
+        int company_id FK
         boolean is_data_source_active
         string health_status
         datetime created_at

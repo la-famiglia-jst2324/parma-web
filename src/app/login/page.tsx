@@ -63,7 +63,7 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="flex h-screen items-center justify-center bg-white">
+    <div className="flex h-screen items-center justify-center">
       <div>
         <h2 className="mb-4 text-6xl font-bold">Login</h2>
         <p className="mb-4">Please enter your login details to sign in</p>

@@ -1,7 +1,7 @@
 import React from 'react'
 import Image from 'next/image'
-import { Button } from '@tremor/react'
 import type { StaticImport } from 'next/dist/shared/lib/get-img-props'
+import { Button } from '@/components/ui/button'
 
 interface ProfileImageModalProps {
   src: string | StaticImport
@@ -12,13 +12,12 @@ interface ProfileImageModalProps {
 const ProfileImageModal: React.FC<ProfileImageModalProps> = ({ src, alt, onClose }) => {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50" onClick={onClose}>
-      <div className="relative bg-white p-4">
+      <div className="bg-slate-1000 relative rounded p-4">
         {/* Close Button */}
         <Button
-          className="absolute right-0 top-0 m-2 text-xl font-semibold text-white"
+          className="font-shadbold absolute right-0 top-0 m-2 rounded border border-indigo-600 bg-indigo-600 bg-opacity-0 text-xl text-white hover:bg-slate-400 hover:text-black focus:outline-none"
           onClick={onClose}
-          color="red"
-          tooltip="Close"
+          // tooltip="Close"
         >
           X
         </Button>

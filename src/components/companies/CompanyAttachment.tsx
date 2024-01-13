@@ -1,7 +1,14 @@
 import React from 'react'
-import { Button } from '@tremor/react'
-import { TrashIcon } from '@heroicons/react/20/solid'
-
+import { EyeIcon, MoreHorizontalIcon, Trash2Icon } from 'lucide-react'
+import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger
+} from '@/components/ui/dropdown-menu'
 interface CompanyAttachmentProps {
   fileId: string
   fileType: string
@@ -28,20 +35,31 @@ const CompanyAttachment: React.FC<CompanyAttachmentProps> = ({ fileId, fileType,
   }
 
   return (
-    <div className="max-w-[300px] rounded-md border p-3 shadow-md">
-      <div className="mb-1 flex items-start justify-between">
-        <h2 className="line-clamp-2 max-w-[200px] break-all text-lg font-bold">{title}</h2>
-        <div className="ml-3 w-6 cursor-pointer" onClick={handleDelete}>
-          <TrashIcon color="red" />
+    <Card>
+      <CardHeader>
+        <div className="flex max-w-[300px] items-center space-x-4">
+          <CardTitle className="text-lg">{title}</CardTitle>
+          <DropdownMenu>
+            <DropdownMenuTrigger>
+              <MoreHorizontalIcon className="h-6 w-6" />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuLabel>Actions</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={handleDownload}>
+                <EyeIcon className="mr-2 h-4 w-4" />
+                Open
+              </DropdownMenuItem>
+              <DropdownMenuItem className="text-red-600" onClick={handleDelete}>
+                <Trash2Icon className="mr-2 h-4 w-4" />
+                Delete
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
-      </div>
-      <p>Filetype: {fileType}</p>
-      <div className="mt-2 flex">
-        <Button color="slate" onClick={handleDownload}>
-          See contents
-        </Button>
-      </div>
-    </div>
+        <CardDescription>Filetype: {fileType}</CardDescription>
+      </CardHeader>
+    </Card>
   )
 }
 

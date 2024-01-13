@@ -89,15 +89,17 @@ const membershipGetSchema = z.object({
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             required:
- *               - bucketId
- *               - companyId
- *             properties:
- *               bucketId:
- *                 type: integer
- *               companyId:
- *                 type: integer
+ *             type: array
+ *             items:
+ *               type: object
+ *               required:
+ *                 - bucketId
+ *                 - companyId
+ *               properties:
+ *                 bucketId:
+ *                   type: integer
+ *                 companyId:
+ *                   type: integer
  *     responses:
  *       200:
  *         description: Membership already exists.
@@ -106,7 +108,9 @@ const membershipGetSchema = z.object({
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/CompanyBucketMembership'
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/CompanyBucketMembership'
  *       400:
  *         description: Invalid request parameters.
  *       404:
@@ -119,20 +123,19 @@ const membershipGetSchema = z.object({
  *       - companyBucketRelation
  *     summary: Remove a membership between a company and a bucket
  *     description: Removes a company from a bucket and unsubscribes the user from the company.
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             required:
- *               - bucketId
- *               - companyId
- *             properties:
- *               bucketId:
- *                 type: integer
- *               companyId:
- *                 type: integer
+ *     parameters:
+ *       - in: query
+ *         name: bucketId
+ *         schema:
+ *           type: integer
+ *         required: true
+ *       - in: query
+ *         name: companyId
+ *         schema:
+ *           type: array
+ *           items:
+ *             type: integer
+ *         required: true
  *     responses:
  *       200:
  *         description: Company removed from bucket successfully.

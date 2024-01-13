@@ -10,33 +10,34 @@ import { withAuthValidation } from '@/api/middleware/auth'
  *       - bucket
  *     summary: Share a bucket with other users
  *     description: Allows the sharing of a specific bucket with other users by creating new bucket access.
- *     parameters:
- *       - in: query
- *         name: bucketId
- *         required: true
- *         schema:
- *           type: integer
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             required:
- *               - inviteeId
- *               - permission
- *             properties:
- *               inviteeId:
- *                 type: integer
- *               permission:
- *                 type: string
+ *             type: array
+ *             items:
+ *               type: object
+ *               required:
+ *                 - bucketId
+ *                 - inviteeId
+ *                 - permission
+ *               properties:
+ *                 bucketId:
+ *                   type: integer
+ *                 inviteeId:
+ *                   type: integer
+ *                 permission:
+ *                   type: string
  *     responses:
  *       201:
  *         description: Successfully created new bucket access.
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/BucketAccess'
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/BucketAccess'
  *       400:
  *         description: Invalid request parameters.
  *       500:
@@ -56,13 +57,10 @@ import { withAuthValidation } from '@/api/middleware/auth'
  *       properties:
  *         bucketId:
  *           type: integer
- *           description: The unique identifier of the bucket
  *         inviteeId:
  *           type: integer
- *           description: The name of the bucket
  *         permission:
- *           type: integer
- *           description: The invitee id
+ *           type: string
  *         createdAt:
  *           type: string
  *         modifiedAt:

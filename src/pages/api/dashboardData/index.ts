@@ -53,8 +53,6 @@ const newsSourceId = Number(newsSources[0].id)
  *           type: string
  *         measurementName:
  *           type: string
- *         type:
- *           type: string
  *         parentMeasurementId:
  *           type: integer
  *         createdAt:

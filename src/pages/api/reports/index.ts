@@ -35,11 +35,6 @@ import { createReport } from '@/api/db/services/reportService'
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Report'
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               # Define the schema for the created report object here
  *       400:
  *         description: Invalid request parameters.
  *       500:

@@ -29,6 +29,16 @@ import { withAuthValidation } from '@/api/middleware/auth'
  *             type: integer
  *         required: true
  *         description: An array of company IDs to retrieve measurement data for.
+ *       - in: query
+ *         name: startDate
+ *         schema:
+ *           type: string
+ *         required: true
+ *       - in: query
+ *         name: endDate
+ *         schema:
+ *           type: string
+ *         required: true
  *     responses:
  *       200:
  *         description: Successfully retrieved the measurement data.

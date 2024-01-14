@@ -50,6 +50,42 @@ import { ItemNotFoundError } from '@/api/utils/errorUtils'
  *         description: User not found.
  *       500:
  *         description: Internal Server Error.
+ *
+ *   put:
+ *     tags:
+ *       - user
+ *     summary: Update user information
+ *     description: Updates the information of an existing user based on their user ID.
+ *     parameters:
+ *       - in: query
+ *         name: userId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *               role:
+ *                 type: string
+ *               profilePicture:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Successfully updated the user's information.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/User'
+ *       404:
+ *         description: User not found.
+ *       500:
+ *         description: Internal Server Error.
  */
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {

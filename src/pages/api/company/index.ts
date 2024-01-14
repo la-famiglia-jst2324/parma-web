@@ -46,8 +46,6 @@ import { addCompanyDataSourceRelationshipForCompany } from '@/api/db/services/co
  *                 $ref: '#/components/schemas/Company'
  *       400:
  *         description: No Companies found.
- *       404:
- *         description: Company not found.
  *       500:
  *         description: Internal Server Error.
  *   post:
@@ -91,6 +89,7 @@ import { addCompanyDataSourceRelationshipForCompany } from '@/api/db/services/co
  *         - id
  *         - name
  *         - addedBy
+ *         - description
  *         - createdAt
  *         - modifiedAt
  *       properties:

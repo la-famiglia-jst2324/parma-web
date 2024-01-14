@@ -22,7 +22,7 @@ import { withAuthValidation } from '@/api/middleware/auth'
  *               items:
  *                 $ref: '#/components/schemas/User'
  *       400:
- *         description: No Companies found. (Note: This message seems inconsistent with the operation. Consider updating it to "No Users found" if applicable).
+ *         description: No Users found.
  *       404:
  *         description: Item not found.
  *       500:
@@ -102,7 +102,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse, user: User) =>
         // Gets a user
         const users = await getAllUsers()
         if (users.length > 0) res.status(200).json(users)
-        else res.status(400).json({ error: 'No Companies found' })
+        else res.status(400).json({ error: 'No users found' })
       } catch (error) {
         if (error instanceof ItemNotFoundError) res.status(404).json({ error: error.message })
         else res.status(500).json({ error: 'Internal Server Error' })

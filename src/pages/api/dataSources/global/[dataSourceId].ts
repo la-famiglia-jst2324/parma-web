@@ -42,7 +42,7 @@ import { ItemNotFoundError } from '@/api/utils/errorUtils'
  *             schema:
  *               $ref: '#/components/schemas/DataSource'
  *       404:
- *         description: Bucket not found.
+ *         description: data source not found.
  *       500:
  *         description: Internal Server Error.
  */
@@ -53,12 +53,12 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   switch (method) {
     case 'PUT':
       try {
-        const existingBucket = await getDataSourceByID(Number(dataSourceId))
-        if (existingBucket) {
-          const updatedBucket = await updateDataSource(Number(dataSourceId), req.body)
-          res.status(200).json(updatedBucket)
+        const existingDataSource = await getDataSourceByID(Number(dataSourceId))
+        if (existingDataSource) {
+          const updatedDataSource = await updateDataSource(Number(dataSourceId), req.body)
+          res.status(200).json(updatedDataSource)
         } else {
-          res.status(404).json({ error: 'Bucket not found' })
+          res.status(404).json({ error: 'data source not found' })
         }
       } catch (error) {
         if (error instanceof ItemNotFoundError) res.status(404).json({ error: error.message })

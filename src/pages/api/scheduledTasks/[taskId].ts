@@ -48,10 +48,18 @@ import { getScheduledTaskByID, updateScheduledTask, deleteScheduledTask } from '
  *                 type: integer
  *               scheduleType:
  *                 type: string
+ *                 enum:
+ *                   - ON_DEMAND
+ *                   - REGULAR
  *               resultSummary:
  *                 type: string
  *               status:
  *                 type: string
+ *                 enum:
+ *                   - PENDING
+ *                   - PROCESSING
+ *                   - SUCCESS
+ *                   - FAILED
  *               attempts:
  *                 type: integer
  *     responses:

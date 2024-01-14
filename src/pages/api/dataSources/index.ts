@@ -118,8 +118,16 @@ const frequencyMapping: { [key: string]: Frequency | undefined } = {
  *           type: boolean
  *         frequency:
  *           type: string
+ *           enum:
+ *             - HOURLY
+ *             - DAILY
+ *             - WEEKLY
+ *             - MONTHLY
  *         healthStatus:
  *           type: string
+ *           enum:
+ *             - UP
+ *             - DOWN
  *         maxRunSeconds:
  *           type: integer
  *         version:

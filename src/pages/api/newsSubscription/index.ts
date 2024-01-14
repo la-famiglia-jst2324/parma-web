@@ -27,7 +27,7 @@ const newsSubscriptionSchema = z.object({
  *     parameters:
  *       - in: query
  *         name: subscribe
- *         required: true
+ *         required: false
  *         schema:
  *           type: string
  *           enum: ['true', 'false']

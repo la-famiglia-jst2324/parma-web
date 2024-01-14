@@ -19,9 +19,11 @@ type SearchData = {
 
 interface SearchTabsProps {
   searchData: SearchData
+  hasSearched: boolean
+  searchTerm: string
 }
 
-const SearchTabs: React.FC<SearchTabsProps> = ({ searchData }) => {
+const SearchTabs: React.FC<SearchTabsProps> = ({ searchData, searchTerm, hasSearched }) => {
   const bucketData = Object.values(searchData?.data || {}).filter((item: SearchItem) => item.type === 'bucket')
   const companiesData = Object.values(searchData?.data || {}).filter((item: SearchItem) => item.type === 'company')
 
@@ -35,15 +37,15 @@ const SearchTabs: React.FC<SearchTabsProps> = ({ searchData }) => {
       <div className="-mx-4">
         <Separator className="my-3 w-full" />
         <TabsContent value="all">
-          {Array.isArray(searchData?.data) && searchData.data.length > 0 ? (
+          {hasSearched && Array.isArray(searchData?.data) && searchData.data.length > 0 ? (
             <div>
               <DataTable data={searchData.data} />
             </div>
-          ) : (
+          ) : hasSearched ? (
             <p className="flex items-center justify-center text-center text-white">
-              No results matching your search query.
+              No results found matching '{searchTerm}'.
             </p>
-          )}
+          ) : null}
         </TabsContent>
         <TabsContent value="buckets">
           {Array.isArray(bucketData) && bucketData.length > 0 ? (

@@ -34,9 +34,15 @@ describe('News Model Tests', () => {
   })
 
   test('Create a news with valid details', async () => {
-    const news = await createNews({ message: 'Test News', companyId, dataSourceId })
+    const news = await createNews({
+      message: 'Test News',
+      companyId,
+      dataSourceId,
+      timestamp: new Date()
+    })
     newsId = news.id
     expect(news).toHaveProperty('id')
+    expect(news).toHaveProperty('timestamp')
     expect(news.message).toBe('Test News')
     expect(news.companyId).toBe(companyId)
     expect(news.dataSourceId).toBe(dataSourceId)

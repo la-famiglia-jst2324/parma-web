@@ -248,6 +248,7 @@ model News {
   dataSourceId  Int      @map("data_source_id")
   triggerFactor String?  @map("trigger_factor")
   title         String?  @map("title")
+  timestamp     DateTime
   createdAt     DateTime @default(now()) @map("created_at")
   modifiedAt    DateTime @updatedAt @map("modified_at")
 

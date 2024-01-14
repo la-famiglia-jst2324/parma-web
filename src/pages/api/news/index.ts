@@ -31,7 +31,29 @@ const NewsSchema = z.object({
     .refine((val: string | undefined) => val === undefined || !isNaN(parseInt(val, 10)), {
       message: 'bucketId must be a number'
     })
-    .transform((val: string | undefined) => (val === undefined ? undefined : parseInt(val, 10)))
+    .transform((val: string | undefined) => (val === undefined ? undefined : parseInt(val, 10))),
+  startDate: z
+    .string()
+    .optional()
+    .refine(
+      (val: string | undefined) => {
+        return val === undefined || !isNaN(Date.parse(val))
+      },
+      {
+        message: 'date must be a valid date string'
+      }
+    ),
+  endDate: z
+    .string()
+    .optional()
+    .refine(
+      (val: string | undefined) => {
+        return val === undefined || !isNaN(Date.parse(val))
+      },
+      {
+        message: 'date must be a valid date string'
+      }
+    )
 })
 
 export type NewsData = z.infer<typeof NewsSchema>
@@ -42,13 +64,13 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   switch (method) {
     case 'GET':
       try {
-        const { page, pageSize, companyId, bucketId } = NewsSchema.parse(req.query)
+        const { page, pageSize, companyId, bucketId, startDate, endDate } = NewsSchema.parse(req.query)
         if (page && pageSize) {
-          const news = await getAllNews(page, pageSize, companyId, bucketId)
+          const news = await getAllNews(page, pageSize, companyId, bucketId, startDate, endDate)
           if (news) res.status(200).json(news)
-          else res.status(400).json({ error: 'No News found' })
+          else res.status(404).json({ error: 'No News found' })
         } else {
-          res.status(400).json({ error: 'No News found' })
+          res.status(400).json({ error: 'page and pageSize are required!' })
         }
       } catch (error) {
         if (error instanceof ItemNotFoundError) res.status(404).json({ error: error.message })

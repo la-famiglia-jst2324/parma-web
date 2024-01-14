@@ -14,6 +14,7 @@ interface NewsItemReturn {
   companyName: string
   dataSourceName: string
   notificationDate: string
+  timestamp: Date
   bucketName?: string
   triggerFactor: string | null
 }
@@ -30,10 +31,18 @@ interface NewsItem {
     sourceName: string
   }
   createdAt: Date
+  timestamp: Date
   bucket?: {
     title: string
   }
   triggerFactor: string
+}
+
+interface NewsWhereInput {
+  timestamp?: {
+    gte?: string // Greater than or equal
+    lte?: string // Less than or equal
+  }
 }
 
 const transformNewsItems = (newsItems: NewsItem[]): NewsItemReturn[] => {
@@ -46,15 +55,35 @@ const transformNewsItems = (newsItems: NewsItem[]): NewsItemReturn[] => {
     dataSourceName: item.dataSource.sourceName,
     notificationDate: item.createdAt.toISOString(),
     bucketName: item.bucket?.title,
-    triggerFactor: item.triggerFactor
+    triggerFactor: item.triggerFactor,
+    timestamp: item.timestamp
   }))
 }
 
-const getBaseNewsQuery = (page: number, pageSize: number) => {
+const getBaseNewsQuery = (page: number, pageSize: number, startDate?: Date, endDate?: Date) => {
   const skip = (page - 1) * pageSize
+
+  const where: NewsWhereInput = {}
+
+  // Add conditional date range filtering
+  if (startDate) {
+    where.timestamp = {
+      ...where.timestamp,
+      gte: startDate.toISOString() // Greater than or equal to startDate
+    }
+  }
+
+  if (endDate) {
+    where.timestamp = {
+      ...where.timestamp,
+      lte: endDate.toISOString() // Less than or equal to endDate
+    }
+  }
+
   return {
     skip,
     take: pageSize,
+    where,
     include: {
       company: true, // Include related company data
       dataSource: true // Include related dataSource data
@@ -100,6 +129,7 @@ const createNews = async (data: {
   message: string
   companyId: number
   dataSourceId: number
+  timestamp: Date
   title?: string
   triggerFactor?: string
 }) => {
@@ -113,25 +143,36 @@ const createNews = async (data: {
   }
 }
 
-const getAllNews = async (page: number, pageSize: number, companyId?: number, bucketId?: number) => {
+const getAllNews = async (
+  page: number,
+  pageSize: number,
+  companyId?: number,
+  bucketId?: number,
+  startDateStr?: string,
+  endDateStr?: string
+) => {
   try {
     if (companyId && bucketId) {
       throw new Error(`Only one of companyId or bucketId can be provided`)
     }
+    const startDate = startDateStr ? new Date(startDateStr) : undefined
+    const endDate = endDateStr ? new Date(endDateStr) : undefined
     if (!companyId && !bucketId) {
-      const newsItems = await prisma.news.findMany(getBaseNewsQuery(page, pageSize))
+      const newsItems = await prisma.news.findMany(getBaseNewsQuery(page, pageSize, startDate, endDate))
       const totalCount = await prisma.news.count()
       const transformedNewsItems = transformNewsItems(newsItems as NewsItem[])
 
       return createReturnObject(transformedNewsItems, page, pageSize, totalCount)
     } else if (companyId) {
       await getCompanyByID(companyId)
-      const queryOptionsWithCompanyId = {
-        ...getBaseNewsQuery(page, pageSize),
-        where: { companyId }
-      }
-      const newsItems = await prisma.news.findMany(queryOptionsWithCompanyId)
 
+      const baseQuery = getBaseNewsQuery(page, pageSize, startDate, endDate)
+      const queryOptionsWithCompanyId = {
+        ...baseQuery,
+        where: { ...baseQuery.where, companyId }
+      }
+
+      const newsItems = await prisma.news.findMany(queryOptionsWithCompanyId)
       const totalCount = await prisma.news.count({
         where: {
           companyId
@@ -145,11 +186,12 @@ const getAllNews = async (page: number, pageSize: number, companyId?: number, bu
       const companies = await getCompaniesByBucketId(bucketId as number)
       const companyIds = companies.map((company) => company.id)
 
-      const queryOptionsWithCompanyId = {
-        ...getBaseNewsQuery(page, pageSize),
-        where: { companyId }
+      const baseQuery = getBaseNewsQuery(page, pageSize, startDate, endDate)
+      const queryOptionsWithCompanyIds = {
+        ...baseQuery,
+        where: { ...baseQuery.where, companyId: { in: companyIds } }
       }
-      const newsItems = await prisma.news.findMany(queryOptionsWithCompanyId)
+      const newsItems = await prisma.news.findMany(queryOptionsWithCompanyIds)
 
       const totalCount = await prisma.news.count({
         where: {

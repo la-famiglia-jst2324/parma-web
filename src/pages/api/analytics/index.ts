@@ -7,15 +7,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const { method } = req
   const { measurementId, companies, startDate, endDate } = req.query
   const companiesArray = Array.isArray(companies) ? companies.map((company) => Number(company)) : [Number(companies)]
-  // check startDate and endDate
-  if (typeof startDate !== 'string' || typeof endDate !== 'string') {
-    return res.status(400).send('Invalid start or end date')
-  }
-  // ensure the whole day
-  const start = new Date(startDate)
-  start.setHours(0, 0, 0, 0)
-  const end = new Date(endDate)
-  end.setHours(23, 59, 59, 999)
   switch (method) {
     case 'GET':
       try {
@@ -50,7 +41,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
               break
           }
         })
-        const result = Object.entries(dateCompanyMap).map(([date, companies]) => {
+        let result = Object.entries(dateCompanyMap).map(([date, companies]) => {
           return {
             date,
             ...companies
@@ -58,11 +49,23 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         })
 
         //  timespan filter
-        const filteredResult = result.filter((entry) => {
-          const entryDate = new Date(entry.date)
-          return entryDate >= start && entryDate <= end
-        })
-        if (filteredResult) res.status(200).json(filteredResult)
+        if (startDate && endDate) {
+          // check startDate and endDate
+          if (typeof startDate !== 'string' || typeof endDate !== 'string') {
+            return res.status(400).send('Invalid start or end date')
+          }
+          // ensure the whole day
+          const start = new Date(startDate)
+          start.setHours(0, 0, 0, 0)
+          const end = new Date(endDate)
+          end.setHours(23, 59, 59, 999)
+          result = result.filter((entry) => {
+            const entryDate = new Date(entry.date)
+            return entryDate >= start && entryDate <= end
+          })
+        }
+
+        if (result) res.status(200).json(result)
         else res.status(400).json({ error: 'No relation found' })
       } catch (error) {
         if (error instanceof ItemNotFoundError) res.status(404).json({ error: error.message })

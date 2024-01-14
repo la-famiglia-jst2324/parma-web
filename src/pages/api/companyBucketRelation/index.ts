@@ -8,7 +8,11 @@ import {
   removeCompanyFromBucket,
   checkCompanyBucketMembershipExistence
 } from '@/api/db/services/companyBucketMembershipService'
-import { createCompanySubscription, deleteCompanySubscription } from '@/api/db/services/companySubscriptionService'
+import {
+  createCompanySubscription,
+  deleteCompanySubscription,
+  getUserCompanySubscriptions
+} from '@/api/db/services/companySubscriptionService'
 import { getCompanyByID } from '@/api/db/services/companyService'
 import { getBucketById } from '@/api/db/services/bucketService'
 import { ItemNotFoundError } from '@/api/utils/errorUtils'
@@ -100,8 +104,17 @@ const handler = async (req: NextApiRequest, res: NextApiResponse, user: User) =>
               if (existingMembership) return { existingMembership }
 
               const membership = await addCompanyToBucket(parsedData.companyId, parsedData.bucketId)
-              await createCompanySubscription({ userId, companyId: parsedData.companyId })
 
+              try {
+                await getUserCompanySubscriptions(userId, parsedData.companyId)
+              } catch (error) {
+                // Handle the case where the subscription does not exist
+                if (error instanceof Error && error.message.startsWith('User does not have a subscription')) {
+                  await createCompanySubscription({ userId, companyId: parsedData.companyId })
+                } else {
+                  throw error
+                }
+              }
               return { membership }
             } catch (error) {
               if (error instanceof ZodError) return { error: formatZodErrors(error) }

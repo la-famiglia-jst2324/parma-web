@@ -16,6 +16,7 @@ import type { ShareBucketProps } from '@/components/buckets/ShareBucketModal'
 import ShareBucketModal from '@/components/buckets/ShareBucketModal'
 import { MainLayoutWrapper } from '@/components/layout/MainLayout'
 import BucketGraph from '@/components/buckets/bucketGraph'
+import AddCompaniesToBucket from '@/components/buckets/addCompanies'
 
 const initialBucketValue = {
   id: 0,
@@ -102,29 +103,74 @@ const BucketPage = ({ params: { id } }: { params: { id: string } }) => {
   }
 
   const onHandleShare = (shareUsersList: ShareBucketProps[]) => {
-    shareUsersList.forEach((user) => {
-      BucketFunctions.shareBucket(user)
-        .then((res) => {
-          if (res) {
-            setPopupText('Bucket is shared successfully')
-            setShowSuccess(true)
-            setTimeout(() => {
-              setShowSuccess(false)
-            }, 3000)
-          }
-        })
-        .catch((e) => {
-          setPopupText(e)
-          setShowError(true)
+    BucketFunctions.shareBucket(shareUsersList)
+      .then((res) => {
+        if (res) {
+          setPopupText('Bucket is shared successfully')
+          setShowSuccess(true)
           setTimeout(() => {
-            setShowError(false)
+            setShowSuccess(false)
           }, 3000)
-        })
-    })
+        }
+      })
+      .catch((e) => {
+        setPopupText(e)
+        setShowError(true)
+        setTimeout(() => {
+          setShowError(false)
+        }, 3000)
+      })
   }
 
   const removeCompanies = () => {
-    console.log(selectedCompanies)
+    BucketFunctions.deleteCompaniesFromBucket(+id, selectedCompanies)
+      .then((res) => {
+        if (res) {
+          const filteredCompanies = bucketCompanies?.filter((company) => !res.includes(company.id))
+          setBucketCompanies(filteredCompanies)
+          setPopupText('Companies are deleted successfully')
+          setShowSuccess(true)
+          setTimeout(() => {
+            setShowSuccess(false)
+          }, 3000)
+        }
+      })
+      .catch((e) => {
+        setPopupText(e)
+        setShowError(true)
+        setTimeout(() => {
+          setShowError(false)
+        }, 3000)
+      })
+  }
+
+  const addCompaniesToBucket = (companies: string[]) => {
+    const updatedCompanies = companies.map((c) => {
+      return { bucketId: id, companyId: c }
+    })
+    BucketFunctions.addCompaniesToBucket(updatedCompanies)
+      .then((res) => {
+        if (res) {
+          setBucketCompanies((oldValue) => {
+            if (oldValue) {
+              return [...oldValue, ...res]
+            }
+            return undefined
+          })
+          setPopupText('Companies are added successfully')
+          setShowSuccess(true)
+          setTimeout(() => {
+            setShowSuccess(false)
+          }, 3000)
+        }
+      })
+      .catch((e) => {
+        setPopupText(e)
+        setShowError(true)
+        setTimeout(() => {
+          setShowError(false)
+        }, 3000)
+      })
   }
   return (
     <main className="m-4 flex h-screen flex-row items-start justify-start space-x-4" role="main">
@@ -163,49 +209,46 @@ const BucketPage = ({ params: { id } }: { params: { id: string } }) => {
         <div className="mb-12">
           <BucketGraph companies={bucketCompanies}></BucketGraph>
         </div>
-        <div className="ml-8 flex items-center justify-between">
-          <h1 className="mb-8 text-2xl font-bold">All companies in this bucket</h1>
-          <div className="flex flex-row items-center gap-4">
-            {!editCompanies && (
-              <Button
-                className="mr-2 flex items-center border-gray-500"
-                variant="outline"
-                color="gray"
-                onClick={() => setEditCompanies(true)}
-              >
-                Edit Companies
-              </Button>
-            )}
-            {editCompanies && (
-              <Button
-                className="mr-2 flex items-center gap-2 border-blue-600 bg-transparent text-blue-600"
-                variant="outline"
-              >
-                Add New Companies
-              </Button>
-            )}
-            {editCompanies && (
-              <Button
-                className="mr-2 flex items-center border-gray-500"
-                variant="destructive"
-                color="gray"
-                onClick={removeCompanies}
-              >
-                Remove Companies
-              </Button>
-            )}
-            {editCompanies && (
-              <Button
-                className="mr-2 flex items-center border-gray-500"
-                variant="outline"
-                color="gray"
-                onClick={() => setEditCompanies(false)}
-              >
-                Cancel
-              </Button>
-            )}
+        {bucketCompanies && bucketCompanies.length > 0 && (
+          <div className="ml-8 flex items-center justify-between">
+            <h1 className="mb-8 text-2xl font-bold">All companies in this bucket</h1>
+            <div className="flex flex-row items-center gap-4">
+              {!editCompanies && (
+                <Button
+                  className="mr-2 flex items-center border-gray-500"
+                  variant="outline"
+                  color="gray"
+                  onClick={() => setEditCompanies(true)}
+                >
+                  Edit Companies
+                </Button>
+              )}
+              {editCompanies && (
+                <AddCompaniesToBucket handleSave={(val) => addCompaniesToBucket(val)}></AddCompaniesToBucket>
+              )}
+              {editCompanies && (
+                <Button
+                  className="mr-2 flex items-center gap-2 border-red-600 bg-transparent text-red-600"
+                  variant="outline"
+                  color="gray"
+                  onClick={removeCompanies}
+                >
+                  Remove Companies
+                </Button>
+              )}
+              {editCompanies && (
+                <Button
+                  className="mr-2 flex items-center border-gray-500"
+                  variant="outline"
+                  color="gray"
+                  onClick={() => setEditCompanies(false)}
+                >
+                  Cancel
+                </Button>
+              )}
+            </div>
           </div>
-        </div>
+        )}
 
         {bucketCompanies && bucketCompanies.length > 0 && (
           <Table className="ml-8">

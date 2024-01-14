@@ -6,6 +6,7 @@ import UserNav from './UserNav'
 import useCompanies from './hooks/useCompanies'
 import useBuckets from './hooks/useBuckets'
 import { Button } from './ui/button'
+import CreateBucket from './buckets/createBucket'
 
 interface SidebarLinkProps {
   href: string
@@ -58,7 +59,10 @@ const Sidebar: React.FC = () => {
           </div>
           {/* Buckets */}
           <div className="mb-8">
-            <SidebarLink href="/buckets" icon={FolderIcon} text="Buckets" />
+            <div className="flex items-center justify-between">
+              <SidebarLink href="/buckets" icon={FolderIcon} text="Buckets" />
+              <CreateBucket></CreateBucket>
+            </div>
             <div className="ml-6">
               {buckets.slice(0, 3).map((bucket) => (
                 <SidebarLink key={bucket.id} href={`/buckets/${bucket.id}`} text={bucket.title} />

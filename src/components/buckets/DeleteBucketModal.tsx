@@ -41,13 +41,13 @@ const DeleteBucketModal: React.FC<DeleteBucketModalProps> = ({ handleDelete }) =
           <div className="flex items-center space-x-2"></div>
           <DialogFooter className="sm:justify-end">
             <DialogClose asChild>
-              <Button type="button" variant="secondary">
-                Cancel
+              <Button variant="destructive" onClick={handleDelete}>
+                Delete permanently
               </Button>
             </DialogClose>
             <DialogClose asChild>
-              <Button variant="destructive" onClick={handleDelete}>
-                Delete permanently
+              <Button type="button" variant="secondary">
+                Cancel
               </Button>
             </DialogClose>
           </DialogFooter>

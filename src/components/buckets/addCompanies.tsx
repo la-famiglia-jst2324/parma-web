@@ -60,13 +60,13 @@ const AddCompaniesToBucket: React.FC<AddCompaniesToBucketProps> = ({ handleSave 
           </div>
           <DialogFooter className="sm:justify-end">
             <DialogClose asChild>
-              <Button type="button" variant="secondary">
-                Cancel
+              <Button variant="default" onClick={onSaveClick}>
+                Save
               </Button>
             </DialogClose>
             <DialogClose asChild>
-              <Button variant="default" onClick={onSaveClick}>
-                Save
+              <Button type="button" variant="secondary">
+                Cancel
               </Button>
             </DialogClose>
           </DialogFooter>

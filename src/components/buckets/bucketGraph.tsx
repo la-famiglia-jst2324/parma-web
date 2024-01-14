@@ -1,6 +1,8 @@
 'use client'
 import React, { useEffect, useState } from 'react'
 import type { Company } from '@prisma/client'
+import type { DateRangePickerValue } from '@tremor/react'
+import { DateRangePicker } from '@tremor/react'
 import GraphChart from '@/components/analytics/Graph'
 import { useMeasurementsCompanies } from '@/components/hooks/useMetrics'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
@@ -8,6 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 function BucketGraph({ companies }: { companies: Company[] | undefined }) {
   const [selectedCompanies, setSelectedCompanies] = useState<string[]>([])
   const [selectedMetric, setSelectedMetric] = useState<string>('')
+  const [datePickerValue, setDatePickerValue] = useState<DateRangePickerValue>()
   const [graphData, setGraphData] = useState<{
     companies: string[]
     metric: string
@@ -27,6 +30,12 @@ function BucketGraph({ companies }: { companies: Company[] | undefined }) {
 
   const metrics = useMeasurementsCompanies(selectedCompanies)
 
+  const changeDatePicker = (value: DateRangePickerValue) => {
+    console.log(value)
+    if (value.from && value.to) {
+      setDatePickerValue(value)
+    }
+  }
   const metricName = metrics.find((metric) => metric.id.toString() === selectedMetric)?.measurementName
   return (
     <main className="m-4 flex flex-row items-start justify-start" role="main">
@@ -54,7 +63,7 @@ function BucketGraph({ companies }: { companies: Company[] | undefined }) {
                   )}
                 </MultiSelect> */}
               {/* </div> */}
-              <div className="w-1/2">
+              <div className="flex w-1/2 flex-row gap-4">
                 <Select
                   onValueChange={(selectedName) => {
                     setSelectedMetric(selectedName)
@@ -78,6 +87,7 @@ function BucketGraph({ companies }: { companies: Company[] | undefined }) {
                     )}
                   </SelectContent>
                 </Select>
+                <DateRangePicker onValueChange={(value) => changeDatePicker(value)} />
               </div>
             </div>
           </div>
@@ -88,6 +98,7 @@ function BucketGraph({ companies }: { companies: Company[] | undefined }) {
             measurementId={graphData.metric || ''}
             companiesArray={graphData.companies}
             measurementName={metricName || ''}
+            datepickerValue={datePickerValue || null}
           />
         ) : (
           <p className="ml-4">Please select a metric to compare.</p>

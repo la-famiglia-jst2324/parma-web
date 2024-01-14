@@ -208,6 +208,7 @@ erDiagram
         int data_source_id
         string trigger_factor
         string title
+        datetiem timestamp
         datetime created_at
         datetime modified_at
     }

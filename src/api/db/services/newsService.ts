@@ -158,16 +158,19 @@ const getAllNews = async (
     }
     const startDate = startDateStr ? new Date(startDateStr) : undefined
     const endDate = endDateStr ? new Date(endDateStr) : undefined
+    const baseQuery = getBaseNewsQuery(page, pageSize, startDate, endDate)
+
     if (!companyId && !bucketId) {
       const newsItems = await prisma.news.findMany(getBaseNewsQuery(page, pageSize, startDate, endDate))
-      const totalCount = await prisma.news.count()
+      const totalCount = await prisma.news.count({
+        where: baseQuery.where // Use the same where condition as in findMany
+      })
       const transformedNewsItems = transformNewsItems(newsItems as NewsItem[])
 
       return createReturnObject(transformedNewsItems, page, pageSize, totalCount)
     } else if (companyId) {
       await getCompanyByID(companyId)
 
-      const baseQuery = getBaseNewsQuery(page, pageSize, startDate, endDate)
       const queryOptionsWithCompanyId = {
         ...baseQuery,
         where: { ...baseQuery.where, companyId }
@@ -176,7 +179,8 @@ const getAllNews = async (
       const newsItems = await prisma.news.findMany(queryOptionsWithCompanyId)
       const totalCount = await prisma.news.count({
         where: {
-          companyId
+          ...baseQuery.where,
+          companyId // Include companyId in the where condition
         }
       })
       // Transform the news items to match the required structure
@@ -187,7 +191,6 @@ const getAllNews = async (
       const companies = await getCompaniesByBucketId(bucketId as number)
       const companyIds = companies.map((company) => company.id)
 
-      const baseQuery = getBaseNewsQuery(page, pageSize, startDate, endDate)
       const queryOptionsWithCompanyIds = {
         ...baseQuery,
         where: { ...baseQuery.where, companyId: { in: companyIds } }
@@ -196,9 +199,8 @@ const getAllNews = async (
 
       const totalCount = await prisma.news.count({
         where: {
-          companyId: {
-            in: companyIds
-          }
+          ...baseQuery.where,
+          companyId: { in: companyIds } // Include companyId filter
         }
       })
       const transformedNewsItems = transformNewsItems(newsItems as NewsItem[])

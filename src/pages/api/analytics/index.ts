@@ -5,9 +5,8 @@ import { withAuthValidation } from '@/api/middleware/auth'
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const { method } = req
-  const { measurementId, companies } = req.query
+  const { measurementId, companies, startDate, endDate } = req.query
   const companiesArray = Array.isArray(companies) ? companies.map((company) => Number(company)) : [Number(companies)]
-
   switch (method) {
     case 'GET':
       try {
@@ -18,17 +17,18 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
           switch (valueType) {
             case 'int':
               data.measurementIntValues.forEach((measurement) => {
-                const date = new Date(measurement.modifiedAt).toLocaleDateString('en-US')
+                const date = new Date(measurement.timestamp).toLocaleDateString('en-US')
                 if (!dateCompanyMap[date]) {
                   dateCompanyMap[date] = {}
                 }
                 dateCompanyMap[date][data.company.name] = measurement.value
               })
+
               break
 
             case 'float':
               data.measurementFloatValues.forEach((measurement) => {
-                const date = new Date(measurement.modifiedAt).toLocaleDateString('en-US')
+                const date = new Date(measurement.timestamp).toLocaleDateString('en-US')
                 if (!dateCompanyMap[date]) {
                   dateCompanyMap[date] = {}
                 }
@@ -41,12 +41,30 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
               break
           }
         })
-        const result = Object.entries(dateCompanyMap).map(([date, companies]) => {
+        let result = Object.entries(dateCompanyMap).map(([date, companies]) => {
           return {
             date,
             ...companies
           }
         })
+
+        //  timespan filter
+        if (startDate && endDate) {
+          // check startDate and endDate
+          if (typeof startDate !== 'string' || typeof endDate !== 'string') {
+            return res.status(400).send('Invalid start or end date')
+          }
+          // ensure the whole day
+          const start = new Date(startDate)
+          start.setHours(0, 0, 0, 0)
+          const end = new Date(endDate)
+          end.setHours(23, 59, 59, 999)
+          result = result.filter((entry) => {
+            const entryDate = new Date(entry.date)
+            return entryDate >= start && entryDate <= end
+          })
+        }
+
         if (result) res.status(200).json(result)
         else res.status(400).json({ error: 'No relation found' })
       } catch (error) {

@@ -11,6 +11,8 @@ erDiagram
     company ||--o{ notification : ""
     company ||--o{ company_data_source : ""
     company ||--|| news_subscription :""
+    company ||--o{ news : ""
+    data_source ||--o{ news : ""
     data_source ||--o{ company_data_source : ""
     data_source ||--o{ source_measurement : ""
     data_source ||--o{ NOTIFICATION : ""
@@ -28,6 +30,8 @@ erDiagram
     source_measurement ||--o{ company_source_measurement : ""
     company_source_measurement ||--o{ measurement_text_value : ""
     company_source_measurement ||--o{ measurement_int_value : ""
+    notification_rules ||--o{ source_measurement : ""
+
     bucket {
         int id PK
         string title
@@ -71,8 +75,9 @@ erDiagram
         datetime modified_at
     }
     company_data_source {
-        int data_source_id PK,FK
-        int company_id PK,FK
+        int id PK
+        int data_source_id FK
+        int company_id FK
         boolean is_data_source_active
         string health_status
         datetime created_at
@@ -133,6 +138,15 @@ erDiagram
         datetime created_at
         datetime modified_at
     }
+    notification_rules {
+        int rule_id PK
+        string rule_name
+        int source_measurement FK
+        float threshold
+        string aggregation_method
+        int num_aggregation_entries
+        string notification_message
+    }
     report{
         int id PK
         int company_id FK
@@ -184,6 +198,18 @@ erDiagram
         id company_measurement_id FK
         int value
         datetime timestamp
+        datetime created_at
+        datetime modified_at
+    }
+    news {
+        int id PK
+        int company_id FK
+        int data_source_id FK
+        int source_measurement_id FK
+        string message
+        string trigger_factor
+        string title
+        datetiem timestamp
         datetime created_at
         datetime modified_at
     }

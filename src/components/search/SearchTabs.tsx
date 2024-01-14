@@ -48,22 +48,26 @@ const SearchTabs: React.FC<SearchTabsProps> = ({ searchData, searchTerm, hasSear
           ) : null}
         </TabsContent>
         <TabsContent value="buckets">
-          {Array.isArray(bucketData) && bucketData.length > 0 ? (
+          {hasSearched && Array.isArray(bucketData) && bucketData.length > 0 ? (
             <div>
               <DataTable data={bucketData} />
             </div>
-          ) : (
-            <p className="flex items-center justify-center text-center text-white">No buckets found.</p>
-          )}
+          ) : hasSearched ? (
+            <p className="flex items-center justify-center text-center text-white">
+              No buckets found with the name '{searchTerm}'.
+            </p>
+          ) : null}
         </TabsContent>
         <TabsContent value="companies">
-          {Array.isArray(companiesData) && companiesData.length > 0 ? (
+          {hasSearched && Array.isArray(companiesData) && companiesData.length > 0 ? (
             <div>
               <DataTable data={companiesData} />
             </div>
-          ) : (
-            <p className="flex items-center justify-center text-center text-white">No companies found.</p>
-          )}
+          ) : hasSearched ? (
+            <p className="flex items-center justify-center text-center text-white">
+              No companies found with the name '{searchTerm}'.
+            </p>
+          ) : null}
         </TabsContent>
       </div>
     </Tabs>

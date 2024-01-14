@@ -203,9 +203,10 @@ erDiagram
     }
     news {
         int id PK
+        int company_id FK
+        int data_source_id FK
+        int source_measurement_id FK
         string message
-        int company_id
-        int data_source_id
         string trigger_factor
         string title
         datetiem timestamp

@@ -8,6 +8,7 @@ import {
   deleteUser
 } from '../models/utils/helperFunctions'
 import { createNews, deleteNewsById, getAllNews, getNewsById } from '@/api/db/services/newsService'
+import { createSourceMeasurement } from '@/api/db/services/sourceMeasurementService'
 
 const prisma = new PrismaClient()
 describe('News Model Tests', () => {
@@ -15,6 +16,7 @@ describe('News Model Tests', () => {
   let dataSourceId: number
   let userId: number
   let newsId: number
+  let sourceMeasurementId: number
 
   beforeAll(async () => {
     const user = await createUser()
@@ -23,10 +25,17 @@ describe('News Model Tests', () => {
     companyId = company.id
     const dataSource = await createDataSource()
     dataSourceId = dataSource.id
+    const sourceMeasurement = await createSourceMeasurement({
+      sourceModuleId: dataSourceId,
+      type: 'int',
+      measurementName: 'intMea'
+    })
+    sourceMeasurementId = sourceMeasurement.id
     await prisma.$connect()
   })
 
   afterAll(async () => {
+    // await deleteSourceMeasurement(sourceMeasurementId)
     await deleteCompany(companyId)
     await deleteDataSource(dataSourceId)
     await deleteUser(userId)
@@ -38,6 +47,7 @@ describe('News Model Tests', () => {
       message: 'Test News',
       companyId,
       dataSourceId,
+      sourceMeasurementId,
       timestamp: new Date()
     })
     newsId = news.id
@@ -46,6 +56,7 @@ describe('News Model Tests', () => {
     expect(news.message).toBe('Test News')
     expect(news.companyId).toBe(companyId)
     expect(news.dataSourceId).toBe(dataSourceId)
+    expect(news.sourceMeasurementId).toBe(sourceMeasurementId)
   })
 
   test('Retrieve a news by ID', async () => {

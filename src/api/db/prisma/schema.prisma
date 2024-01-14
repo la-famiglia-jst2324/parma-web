@@ -251,10 +251,12 @@ model News {
   timestamp     DateTime
   createdAt     DateTime @default(now()) @map("created_at")
   modifiedAt    DateTime @updatedAt @map("modified_at")
+  sourceMeasurementId Int @map("source_measurement_id")
 
   // Relations
   company    Company    @relation(fields: [companyId], references: [id], onDelete: Cascade)
   dataSource DataSource @relation(fields: [dataSourceId], references: [id])
+  sourceMeasurement SourceMeasurement @relation(fields: [sourceMeasurementId], references: [id])
 
   @@map("news")
 }
@@ -289,6 +291,7 @@ model SourceMeasurement {
   parentSourceMeasurement   SourceMeasurement?         @relation(name: "ParentChild", fields: [parentMeasurementId], references: [id], onDelete: Cascade)
   childSourceMeasurements   SourceMeasurement[]        @relation("ParentChild")
   NotificationRules         NotificationRules[]
+  news                      News[]
 
   @@map("source_measurement")
 }

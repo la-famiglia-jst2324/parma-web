@@ -130,6 +130,7 @@ const createNews = async (data: {
   companyId: number
   dataSourceId: number
   timestamp: Date
+  sourceMeasurementId: number
   title?: string
   triggerFactor?: string
 }) => {

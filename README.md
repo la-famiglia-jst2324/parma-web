@@ -121,7 +121,7 @@ The following steps will get you started with the project.
    make test  # runs jest and typescript-coverage-report
    ```
 
-8. Environment Variables Other Than Database
+8. Environment Variables Other Than Database URL
 
    ```bash
    export PARMA_ANALYTICS_BASE_URL=http://127.0.0.1:8000

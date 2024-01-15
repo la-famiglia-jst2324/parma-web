@@ -10,14 +10,23 @@ const SearchPage: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState<string>('')
   const [searchData, setSearchData] = useState()
   const [hasSearched, setHasSearched] = useState<boolean>(false)
+  const [pagination, setPagination] = useState({ currentPage: 1, pageSize: 10, totalPages: 0, totalCount: 0 })
+
+  const handlePageChange = (newPage: number) => {
+    setPagination((prevState) => ({ ...prevState, currentPage: newPage }))
+  }
+
+  const handleItemsPerPageChange = (newSize: number) => {
+    setPagination((prevState) => ({ ...prevState, pageSize: newSize }))
+  }
 
   const fetchSearchedData = async () => {
     try {
-      const searchCompanies = await getSearchData(searchTerm, 1, 15)
-      setSearchData(searchCompanies)
+      const searchedData = await getSearchData(searchTerm, 1, 10)
+      setSearchData(searchedData)
       setHasSearched(true)
     } catch (error) {
-      console.error('Failed to fetch more companies:', error)
+      console.error('Failed to fetch search data:', error)
     }
   }
 
@@ -40,7 +49,13 @@ const SearchPage: React.FC = () => {
           </Button>
         </div>
       </div>
-      <SearchTabs hasSearched={hasSearched} searchTerm={searchTerm} searchData={searchData || {}} />
+      <SearchTabs
+        hasSearched={hasSearched}
+        searchTerm={searchTerm}
+        searchData={searchData || { data: [], pagination }}
+        onPageChange={handlePageChange}
+        onItemsPerPageChange={handleItemsPerPageChange}
+      />
     </MainLayout>
   )
 }

@@ -1,5 +1,6 @@
 import React from 'react'
 import { useRouter } from 'next/navigation'
+import Pagination from '../datasources/TablePagination'
 import { Table, TableBody, TableHeader, TableCell, TableHead, TableRow } from '@/components/ui/table'
 
 interface SearchItem {
@@ -11,9 +12,17 @@ interface SearchItem {
 
 interface DataTableProps {
   data: SearchItem[]
+  pagination: {
+    currentPage: number
+    pageSize: number
+    totalPages: number
+    totalCount: number
+  }
+  onPageChange: (page: number) => void
+  onItemsPerPageChange: (itemsPerPage: number) => void
 }
 
-function DataTable({ data }: DataTableProps) {
+function DataTable({ data, pagination, onPageChange, onItemsPerPageChange }: DataTableProps) {
   const router = useRouter()
 
   return (
@@ -38,6 +47,14 @@ function DataTable({ data }: DataTableProps) {
           </TableRow>
         ))}
       </TableBody>
+      {/* <Pagination /> */}
+      <Pagination
+        totalItems={pagination.totalCount}
+        currentPage={pagination.currentPage}
+        itemsPerPage={pagination.pageSize}
+        onPageChange={onPageChange}
+        onItemsPerPageChange={onItemsPerPageChange}
+      />
     </Table>
   )
 }

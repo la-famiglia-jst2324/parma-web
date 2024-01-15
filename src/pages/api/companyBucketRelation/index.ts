@@ -52,6 +52,122 @@ const membershipGetSchema = z.object({
     })
     .transform((val) => (val === undefined ? undefined : parseInt(val, 10)))
 })
+/**
+ * @swagger
+ * tags:
+ *   - name: companyBucketRelation
+ * /api/companyBucketRelation:
+ *   get:
+ *     tags:
+ *       - companyBucketRelation
+ *     summary: Retrieve companies or buckets based on a bucket or company ID
+ *     description: Fetches companies for a given bucket ID or buckets for a given company ID.
+ *     parameters:
+ *       - in: query
+ *         name: bucketId
+ *         required: false
+ *         schema:
+ *           type: integer
+ *       - in: query
+ *         name: companyId
+ *         required: false
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Successfully retrieved companies or buckets.
+ *       400:
+ *         description: Invalid arguments.
+ *       404:
+ *         description: No Companies or Buckets found.
+ *       500:
+ *         description: Internal Server Error.
+ *
+ *   post:
+ *     tags:
+ *       - companyBucketRelation
+ *     summary: Create a membership between a company and a bucket
+ *     description: Adds a company to a bucket and subscribes the user to the company.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: array
+ *             items:
+ *               type: object
+ *               required:
+ *                 - bucketId
+ *                 - companyId
+ *               properties:
+ *                 bucketId:
+ *                   type: integer
+ *                 companyId:
+ *                   type: integer
+ *     responses:
+ *       200:
+ *         description: Membership already exists.
+ *       201:
+ *         description: Successfully created a new membership and subscribed user to the company.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/CompanyBucketMembership'
+ *       400:
+ *         description: Invalid request parameters.
+ *       404:
+ *         description: Company or Bucket not found.
+ *       500:
+ *         description: Internal Server Error.
+ *
+ *   delete:
+ *     tags:
+ *       - companyBucketRelation
+ *     summary: Remove a membership between a company and a bucket
+ *     description: Removes a company from a bucket and unsubscribes the user from the company.
+ *     parameters:
+ *       - in: query
+ *         name: bucketId
+ *         schema:
+ *           type: integer
+ *         required: true
+ *       - in: query
+ *         name: companyId
+ *         schema:
+ *           type: array
+ *           items:
+ *             type: integer
+ *         required: true
+ *     responses:
+ *       200:
+ *         description: Company removed from bucket successfully.
+ *       400:
+ *         description: Invalid request parameters.
+ *       404:
+ *         description: Company or Bucket not found.
+ *       500:
+ *         description: Internal Server Error.
+ * components:
+ *   schemas:
+ *     CompanyBucketMembership:
+ *       type: object
+ *       required:
+ *         - companyId
+ *         - bucketId
+ *         - createdAt
+ *         - modifiedAt
+ *       properties:
+ *         companyId:
+ *           type: integer
+ *         bucketId:
+ *           type: integer
+ *         createdAt:
+ *           type: string
+ *         modifiedAt:
+ *           type: string
+ */
 
 const handler = async (req: NextApiRequest, res: NextApiResponse, user: User) => {
   const { method } = req

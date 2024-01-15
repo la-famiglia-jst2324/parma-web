@@ -94,6 +94,8 @@ import { withAuthValidation } from '@/api/middleware/auth'
  *         - title
  *         - ownerId
  *         - isPublic
+ *         - createdAt
+ *         - modifiedAt
  *       properties:
  *         id:
  *           type: integer
@@ -104,9 +106,15 @@ import { withAuthValidation } from '@/api/middleware/auth'
  *         ownerId:
  *           type: integer
  *           description: The owner identifier of the bucket
+ *         description:
+ *           type: string
  *         isPublic:
  *           type: boolean
  *           description: Whether the bucket is publicly accessible
+ *         createdAt:
+ *           type: string
+ *         modifiedAt:
+ *           type: string
  */
 const handler = async (req: NextApiRequest, res: NextApiResponse, user: User) => {
   const { method } = req

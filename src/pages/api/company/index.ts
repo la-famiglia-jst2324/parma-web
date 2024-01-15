@@ -27,12 +27,12 @@ import { addCompanyDataSourceRelationshipForCompany } from '@/api/db/services/co
  *           type: string
  *       - in: query
  *         name: page
- *         required: false
+ *         required: true
  *         schema:
  *           type: integer
  *       - in: query
  *         name: pageSize
- *         required: false
+ *         required: true
  *         schema:
  *           type: integer
  *     responses:

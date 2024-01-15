@@ -3,7 +3,7 @@
 import type { ChangeEvent } from 'react'
 import React, { useState, useEffect } from 'react'
 import { ArrowUpTrayIcon } from '@heroicons/react/20/solid'
-import { CheckCircle2Icon, FileDownIcon, RefreshCcw } from 'lucide-react'
+import { CheckCircle2Icon, FileDownIcon, Loader2Icon, RefreshCcw } from 'lucide-react'
 import { LineChart, SearchSelect, SearchSelectItem } from '@tremor/react'
 import type { CompanyData } from '@/types/companies'
 import CompanyAttachment from '@/components/companies/CompanyAttachment'
@@ -90,6 +90,7 @@ const CompanyPage = ({ params: { companyId } }: { params: { companyId: string } 
   const [measurement, setMeasurement] = useState<string>('')
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [graphData, setGraphData] = useState<any[]>([])
+  const [uploadLoading, setUploadLoading] = useState<boolean>(false)
 
   useEffect(() => {
     const fetchData = async () => {
@@ -223,6 +224,7 @@ const CompanyPage = ({ params: { companyId } }: { params: { companyId: string } 
   }
 
   const handleUpload = async () => {
+    setUploadLoading(true)
     try {
       const data = new FormData()
       data.append('file', uploadAttachment)
@@ -237,6 +239,7 @@ const CompanyPage = ({ params: { companyId } }: { params: { companyId: string } 
     } catch (error) {
       console.error('Error uploading the file:', error)
     }
+    setUploadLoading(false)
     setUploadAttachment('')
   }
 
@@ -387,12 +390,21 @@ const CompanyPage = ({ params: { companyId } }: { params: { companyId: string } 
                     <Label htmlFor="picture">Choose file</Label>
                     <Input id="picture" type="file" name="attachment" onChange={uploadToClient} />
                   </div>
-                  <Button onClick={handleUpload} disabled={uploadAttachment === ''}>
-                    <ArrowUpTrayIcon className="h-4 w-4" />
-                  </Button>
+                  {uploadLoading === false ? (
+                    <Button onClick={handleUpload} disabled={uploadAttachment === ''}>
+                      <ArrowUpTrayIcon className="h-4 w-4" />
+                    </Button>
+                  ) : (
+                    <>
+                      <Button disabled>
+                        <Loader2Icon className="mr-2 h-4 w-4 animate-spin" />
+                        Please wait
+                      </Button>
+                    </>
+                  )}
                 </div>
               </div>
-              <div className="my-2 flex flex-wrap space-x-2">
+              <div className="my-2 flex flex-wrap">
                 {companyAttachments.length > 0
                   ? companyAttachments?.map((attachment) => (
                       <CompanyAttachment

@@ -1,87 +1,64 @@
 'use client'
-import React, { useContext, useState } from 'react'
+
+import type { ChangeEvent } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import Image from 'next/image'
+import { ArrowUpTrayIcon } from '@heroicons/react/20/solid'
 import { Button } from '@/components/ui/button'
 import profilePic from '@/../../public/Default_pfp.jpg'
 import { FormContent } from '@/components/FormContent'
 import { MainLayoutWrapper } from '@/components/layout/MainLayout'
-import { AuthContext, getAuthToken, authResetPassword } from '@/lib/firebase/auth'
+import { AuthContext, authResetPassword } from '@/lib/firebase/auth'
 import ProfileImageModal from '@/components/profile/ProfileImageModal'
-import SuccessInfo from '@/components/authentication/SuccessInfo'
-
-// TODO: @Analytics team need to implement the api end points for attaching profile picture to firebase similar to the one for company attachment
+import { getUserAttachment, putUserAttachment, putUsername } from '@/services/user/userService'
+import { toast } from '@/components/ui/use-toast'
 
 const ProfilePage: React.FC = () => {
   const user = useContext(AuthContext)
   const [fullName, setFullName] = useState('')
-  // const [email, setEmail] = useState(user !== 'loading' ? user?.email : '')
-
-  // const [loading, setLoading] = useState(false)
-  // const [error, setError] = useState('')
-  const [success, setSuccess] = useState('')
-
+  const [userPhotoURL, setUserPhotoURL] = useState<string | null>('')
   const saveProfileData = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
-    const formData = {
-      fullName
-    }
     try {
-      const token = await getAuthToken(user)
-      if (!token) return
-
-      const response = await fetch('/api/profile', {
-        method: 'PUT',
-        cache: 'no-cache',
-        body: JSON.stringify(formData),
-        headers: {
-          Authorization: token
-        }
-      })
-
+      const Userdata = new FormData()
+      Userdata.append('name', fullName)
+      const response = await putUsername(Userdata)
       if (!response.ok) {
         throw new Error('Network response was not ok')
       }
-
       const data = await response.json()
       console.log('Profile updated successfully:', data)
+      toast({
+        title: `Profile updated successfully`,
+        description: 'You have successfully updated your profile'
+      })
     } catch (error) {
       console.error('Error updating profile:', error)
+      toast({
+        title: `Error updating profile`,
+        description: 'Please try again'
+      })
     }
   }
-  const uploadFile = async (file: File) => {
-    const formData = new FormData()
-    formData.append('file', file)
-
-    try {
-      // Post the form data to your API route for file upload
-      // const response = ''
-    } catch (error) {
-      console.error('Error uploading file:', error)
+  useEffect(() => {
+    const fetchUserAttachment = async () => {
+      try {
+        const response = await getUserAttachment()
+        console.log('value:', response.fileUrl)
+        setUserPhotoURL(response.fileUrl)
+      } catch (error) {
+        console.error('Error fetching the attachment:', error)
+      }
     }
-  }
-
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files && event.target.files.length > 0) {
-      const file = event.target.files[0]
-
-      uploadFile(file)
-    }
-  }
-  // const router = useRouter()
-  // const handleForgotPasswordClick = () => {
-  //   router.push('/forgot-password')
-  // }
-
+    fetchUserAttachment()
+  })
   const userMail = user === 'loading' ? null : user?.email
   const userFullName = user === 'loading' ? null : user?.displayName
-  const userPhotoURL = user === 'loading' ? null : user?.photoURL
-  // setEmail(userMail || '')
   const [isModalOpen, setIsModalOpen] = useState(false)
 
   const handleImageClick = () => {
     setIsModalOpen(true)
   }
-
   const closeModal = () => {
     setIsModalOpen(false)
   }
@@ -89,29 +66,64 @@ const ProfilePage: React.FC = () => {
     let timeoutId: NodeJS.Timeout | null = null
     try {
       if (!userMail) {
-        // setError('Please enter your email.')
         return
       }
       // Add timeout
-      timeoutId = setTimeout(() => {
-        // setError('Your request could not be processed. Please try again.')
-        // setLoading(false)
-      }, 10000)
-
+      timeoutId = setTimeout(() => {}, 10000)
       await authResetPassword(userMail)
       clearTimeout(timeoutId)
       timeoutId = null
-      setSuccess('We have sent instructions on your given email to reset your password.')
+      toast({
+        title: `We have sent instructions on your given email to reset your password.`,
+        description: 'Please check your email'
+      })
     } catch (error) {
-      // setError(error instanceof Error ? error.message : 'Something went wrong.')
+      console.error('Error resetting password:', error)
+      toast({
+        title: `Error resetting password`,
+        description: 'Please try again'
+      })
     } finally {
       if (timeoutId) {
         clearTimeout(timeoutId)
       }
     }
   }
+
+  const fileUpload = (event: ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && event.target.files.length > 0) {
+      const file = event.target.files[0]
+      console.log('File:', file)
+      setUploadAttachment(file)
+    }
+  }
+  const [uploadAttachment, setUploadAttachment] = useState<Blob | string>('')
+  const handleFileChange = async () => {
+    try {
+      console.log('uploadAttachment:', uploadAttachment)
+      const data = new FormData()
+      data.append('file', uploadAttachment)
+      const response = await putUserAttachment(data)
+      console.log('value:', response.profilePicture)
+      if (!response.ok) {
+        throw new Error('Network response was not ok')
+      }
+      setUserPhotoURL(response.profilePicture)
+      toast({
+        title: `Attachment uploaded successfully`,
+        description: 'You have successfully uploaded an attachment'
+      })
+    } catch (error) {
+      console.error('Error uploading the file:', error)
+      toast({
+        title: `Error uploading the file`,
+        description: 'Please upload file in jpg format only'
+      })
+    }
+    setUploadAttachment('')
+  }
+
   return (
-    // <main className="m-4 flex h-[68em] flex-row items-start justify-start space-x-4" role="main">
     <div className="items-center space-x-7">
       <h1 className="py-2 pl-2 text-3xl font-bold">Edit Profile</h1>
       <div className="flex justify-center">
@@ -130,22 +142,18 @@ const ProfilePage: React.FC = () => {
             )}
           </div>
 
-          <div className="flex justify-center">
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleFileChange}
-              id="profile-pic-input"
-              style={{ display: 'none' }}
-            />
-            <Button
-              className="rounded bg-indigo-700 font-bold text-white hover:bg-blue-700 focus:outline-none"
-              onClick={() => document.getElementById('profile-pic-input')?.click()}
-            >
-              New Profile Picture
+          <div className="flex justify-center gap-1.5">
+            <Button>
+              <label htmlFor="files" className="btn">
+                Update
+              </label>
+              <input id="files" accept="image/*,.jpg" hidden type="file" onChange={fileUpload} />
+              {/* <input  id="picture" type="file" accept="image/*,.jpg" name="attachment" onChange={fileUpload}/> */}
+            </Button>
+            <Button onClick={handleFileChange} disabled={uploadAttachment === ''}>
+              <ArrowUpTrayIcon className="h-4 w-4" />
             </Button>
           </div>
-          {/* </div> */}
           <div className="mt-6 flex-col justify-center font-bold">
             <form role="form" data-testid="create-profile-form" onSubmit={saveProfileData}>
               <FormContent
@@ -165,31 +173,17 @@ const ProfilePage: React.FC = () => {
                 // onChange={(event) => setEmail(userMail || event.target.value)}
                 readonly={!!userMail}
               />
-
               <div>
-                <Button
-                  className="rounded bg-indigo-700 px-4 py-2 font-bold text-white hover:bg-blue-700 focus:outline-none"
-                  type="submit"
-                >
-                  Save Changes
-                </Button>
+                <Button type="submit">Save Changes</Button>
               </div>
             </form>
             <div className=" mb-4 pt-4">
               <label className="mb-2 block text-sm font-bold text-gray-700">Do you want to change your password?</label>
               <div>
-                <Button
-                  className="rounded bg-red-700 px-4 py-2 font-bold text-white hover:bg-red-600 focus:outline-none"
-                  onClick={handleSubmit}
-                >
+                <Button className="bg-red-700" onClick={handleSubmit}>
                   Change Password
                 </Button>
               </div>
-              {success ? (
-                <div className="m-15">
-                  <SuccessInfo msg={success} />
-                </div>
-              ) : null}
             </div>
           </div>
         </div>

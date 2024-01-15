@@ -112,7 +112,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         const dateCompanyMap: Record<string, Record<string, number>> = {}
         const valueType = relation[0].sourceMeasurement.type
         relation.forEach((data) => {
-          switch (valueType) {
+          switch (valueType.toLowerCase()) {
             case 'int':
               data.measurementIntValues.forEach((measurement) => {
                 const date = new Date(measurement.timestamp).toLocaleDateString('en-US')

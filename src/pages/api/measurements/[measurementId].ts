@@ -7,6 +7,87 @@ import {
 } from '@/api/db/services/sourceMeasurementService'
 
 import { ItemNotFoundError } from '@/api/utils/errorUtils'
+/**
+ * @swagger
+ * /api/measurements/measurementId:
+ *   get:
+ *     tags:
+ *       - sourceMeasurement
+ *     summary: Retrieve a source measurement by ID
+ *     description: Fetches details of a specific source measurement based on the provided ID.
+ *     parameters:
+ *       - in: query
+ *         name: measurementId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Successfully retrieved the source measurement.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/SourceMeasurement'
+ *       400:
+ *         description: No Data Source Measurement found for the provided ID.
+ *       500:
+ *         description: Internal Server Error.
+ *
+ *   put:
+ *     tags:
+ *       - sourceMeasurement
+ *     summary: Update a Source Measurement
+ *     description: Updates the details of an existing Source Measurement based on the provided ID.
+ *     parameters:
+ *       - in: query
+ *         name: measurementId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               sourceModuleId:
+ *                 type: integer
+ *               type:
+ *                 type: string
+ *               companyId:
+ *                 type: integer
+ *               measurementName:
+ *                 type: string
+ *               parentMeasurementId:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Successfully updated the Source Measurement.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/SourceMeasurement'
+ *       500:
+ *         description: Internal Server Error.
+ *
+ *   delete:
+ *     tags:
+ *       - sourceMeasurement
+ *     summary: Delete a source measurement
+ *     description: Deletes a specific source measurement based on the provided ID.
+ *     parameters:
+ *       - in: query
+ *         name: measurementId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Measurement successfully deleted.
+ *       500:
+ *         description: Internal Server Error.
+ */
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const { method } = req

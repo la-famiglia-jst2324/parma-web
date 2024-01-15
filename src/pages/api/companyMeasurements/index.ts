@@ -5,6 +5,91 @@ import {
 } from '@/api/db/services/companySourceMeasurementService'
 import { ItemNotFoundError } from '@/api/utils/errorUtils'
 
+/**
+ * @swagger
+ * /api/companyMeasurements:
+ *   get:
+ *     tags:
+ *       - companyMeasurement
+ *     summary: Retrieve all company source measurements
+ *     description: Fetches a paginated list of all company source measurements.
+ *     parameters:
+ *       - in: query
+ *         name: page
+ *         required: false
+ *         schema:
+ *           type: integer
+ *           default: 1
+ *       - in: query
+ *         name: pageSize
+ *         required: false
+ *         schema:
+ *           type: integer
+ *           default: 10
+ *     responses:
+ *       200:
+ *         description: Successfully retrieved a list of company source measurements.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/CompanySourceMeasurement'
+ *       400:
+ *         description: No company source measurements found.
+ *       404:
+ *         description: Item not found.
+ *       500:
+ *         description: Internal Server Error.
+ *
+ *   post:
+ *     tags:
+ *       - companyMeasurement
+ *     summary: Create a new company source measurement
+ *     description: Creates a new company source measurement with the given details.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - sourceMeasurementId
+ *               - companyId
+ *             properties:
+ *               sourceMeasurementId:
+ *                 type: integer
+ *               companyId:
+ *                 type: integer
+ *     responses:
+ *       201:
+ *         description: Successfully created a new company source measurement.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/CompanySourceMeasurement'
+ *       400:
+ *         description: Invalid request parameters.
+ *       500:
+ *         description: Internal Server Error.
+ * components:
+ *   schemas:
+ *     CompanySourceMeasurement:
+ *       type: object
+ *       required:
+ *         - companyMeasurementId
+ *         - sourceMeasurementId
+ *         - companyId
+ *         - createdAt
+ *         - modifiedAt
+ *       properties:
+ *         companyMeasurementId:
+ *           type: integer
+ *         sourceMeasurementId:
+ *           type: integer
+ *         companyId:
+ *           type: integer
+ */
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const { method } = req
 

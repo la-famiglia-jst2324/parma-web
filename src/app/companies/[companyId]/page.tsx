@@ -3,10 +3,10 @@
 import type { ChangeEvent } from 'react'
 import React, { useState, useEffect } from 'react'
 import { ArrowUpTrayIcon } from '@heroicons/react/20/solid'
-import { CheckCircle2Icon, FileDownIcon } from 'lucide-react'
+import { CheckCircle2Icon, FileDownIcon, RefreshCcw } from 'lucide-react'
+import { LineChart, SearchSelect, SearchSelectItem } from '@tremor/react'
 import type { CompanyData } from '@/types/companies'
 import CompanyAttachment from '@/components/companies/CompanyAttachment'
-import PerformancePanel from '@/components/companies/PerformancePanel'
 import { MainLayoutWrapper } from '@/components/layout/MainLayout'
 import {
   getSubscribedCompanies,
@@ -26,6 +26,8 @@ import { CardTitle, CardHeader, CardContent, Card, CardDescription } from '@/com
 import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
 import ConfigureDatasourcesModal from '@/components/companies/ConfigureDatasoursesModal'
+import { getAnalyticsDataForCompany, getMeasurementsForCompany } from '@/services/measurement/measurementService'
+import { getDataSourcesByCompanyId } from '@/services/datasource/datasourceService'
 
 interface SubscriptionResponse {
   addedBy: number
@@ -47,6 +49,31 @@ interface Attachment {
   modifiedAt: string
 }
 
+interface CompanyDataSource {
+  id: number
+  sourceName: string
+  isActive: boolean
+  frequency: string
+  healthStatus: string
+  description: null | string
+  createdAt: string
+  modifiedAt: string
+  version: string
+  maxRunSeconds: number
+  invocationEndpoint: string
+  additionalParams: null | string
+}
+
+interface CompanyMeasurement {
+  id: number
+  createdAt: string
+  measurementName: string
+  modifiedAt: string
+  parentMeasurementId: number | null
+  sourceModuleId: number
+  type: string
+}
+
 const CompanyPage = ({ params: { companyId } }: { params: { companyId: string } }) => {
   const [companyData, setCompanyData] = useState<CompanyData>({
     name: '',
@@ -56,6 +83,13 @@ const CompanyPage = ({ params: { companyId } }: { params: { companyId: string } 
   const [isSubscribed, setIsSubscribed] = useState(false)
   const [uploadAttachment, setUploadAttachment] = useState<Blob | string>('')
   const { toast } = useToast()
+
+  const [companyDataSources, setCompanyDataSources] = useState<CompanyDataSource[]>([])
+  const [companyMeasurements, setCompanyMeasurements] = useState<CompanyMeasurement[]>([])
+  const [datasource, setDatasource] = useState<string>('')
+  const [measurement, setMeasurement] = useState<string>('')
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [graphData, setGraphData] = useState<any[]>([])
 
   useEffect(() => {
     const fetchData = async () => {
@@ -101,7 +135,8 @@ const CompanyPage = ({ params: { companyId } }: { params: { companyId: string } 
   const handleExport = async (name: string) => {
     try {
       const exportDataResponse = await getExportData(companyId)
-      const exportBlob = new Blob([exportDataResponse], { type: 'text/plain' })
+      const jsonString = JSON.stringify(exportDataResponse, null, 2)
+      const exportBlob = new Blob([jsonString], { type: 'application/json' })
       const exportURL = window.URL.createObjectURL(exportBlob)
       const downloadLink = document.createElement('a')
       downloadLink.href = exportURL
@@ -212,6 +247,52 @@ const CompanyPage = ({ params: { companyId } }: { params: { companyId: string } 
     }
   }
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const data = await getDataSourcesByCompanyId(companyId)
+        setCompanyDataSources(data)
+      } catch (error) {
+        console.error('Failed to fetch data sources:', error)
+      }
+    }
+
+    fetchData()
+  }, [companyId])
+
+  const handleDatasourceChange = async (value: string) => {
+    setDatasource(value)
+    const dataSourceId = value
+    try {
+      const data = await getMeasurementsForCompany(dataSourceId, companyId)
+      setCompanyMeasurements(data)
+    } catch (error) {
+      console.error('Failed to get the measurement data', error)
+    }
+  }
+
+  const handleMeasurementChange = (value: string) => {
+    setMeasurement(value)
+  }
+
+  const handleGetMeasurementData = async () => {
+    try {
+      const data = await getAnalyticsDataForCompany(measurement, companyId)
+      setGraphData(data)
+    } catch (error) {
+      console.error('Failed to get the measurement data', error)
+    }
+  }
+
+  const handleRefetchDatasources = async () => {
+    try {
+      const data = await getDataSourcesByCompanyId(companyId)
+      setCompanyDataSources(data)
+    } catch (error) {
+      console.error('Failed to fetch data sources:', error)
+    }
+  }
+
   return (
     <main role="main">
       <div className="mb-6 flex w-full justify-between px-2">
@@ -236,7 +317,45 @@ const CompanyPage = ({ params: { companyId } }: { params: { companyId: string } 
           </div>
         </div>
       </div>
-      <PerformancePanel companyId={companyId} companyName={companyData?.name} />
+      <div className="my-4 flex w-full flex-col">
+        <div className="mb-3 flex w-full flex-row space-x-3">
+          <SearchSelect onValueChange={handleDatasourceChange} placeholder={'Select datasources'}>
+            {companyDataSources?.map((datasource: CompanyDataSource, index) => (
+              <SearchSelectItem key={index} value={String(datasource.id)}>
+                {datasource.sourceName}
+              </SearchSelectItem>
+            ))}
+          </SearchSelect>
+          <SearchSelect
+            onValueChange={handleMeasurementChange}
+            placeholder={'Select measurement'}
+            disabled={datasource === ''}
+          >
+            {companyMeasurements?.map((measurement, index) => (
+              <SearchSelectItem key={index} value={String(measurement.id)}>
+                {measurement.measurementName}
+              </SearchSelectItem>
+            ))}
+          </SearchSelect>
+          <Button onClick={handleGetMeasurementData} variant={'secondary'}>
+            Show Data
+          </Button>
+          <Button variant="secondary" onClick={handleRefetchDatasources}>
+            <RefreshCcw className="h-4 w-4" />
+          </Button>
+        </div>
+        <Card>
+          <LineChart
+            className="mt-6"
+            data={graphData}
+            index="date"
+            categories={[companyData?.name]}
+            colors={['emerald']}
+            yAxisWidth={40}
+          />
+        </Card>
+      </div>
+      {/* <PerformancePanel companyId={companyId} companyName={companyData?.name} /> */}
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
         <section className="mb-8">
           <Card>

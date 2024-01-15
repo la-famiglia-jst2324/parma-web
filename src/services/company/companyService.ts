@@ -152,5 +152,11 @@ export async function getCompaniesByName(companyName: string) {
 }
 
 export async function getExportData(companyId: string) {
-  return `${companyId}`
+  try {
+    const response = await fetchClient.get(`/api/company/${companyId}/rawData`)
+    return response.data
+  } catch (error) {
+    console.log('An error has occurred: ', error)
+    return ''
+  }
 }

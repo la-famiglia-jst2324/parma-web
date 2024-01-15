@@ -54,13 +54,6 @@ const UserNav: React.FC<UserNavProps> = () => {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-40" align="start" forceMount>
-        {/* <DropdownMenuLabel className="font-normal">
-          <div className="flex flex-col space-y-1">
-            <p className="text-sm font-medium leading-none">{displayName}</p>
-            <p className="text-xs leading-none text-muted-foreground">{email}</p>
-          </div>
-        </DropdownMenuLabel>
-        <DropdownMenuSeparator /> */}
         <DropdownMenuGroup>
           <DropdownMenuItem className="hover:cursor-pointer" onClick={() => router.push('/profile')}>
             <div className="flex">

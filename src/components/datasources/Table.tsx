@@ -2,10 +2,9 @@
 import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import type { DataSource } from '@prisma/client'
+import { Badge } from '@tremor/react'
 import Pagination from './TablePagination'
-import { Badge } from '@/components/ui/badge'
-import { Table, TableBody, TableCell, TableFooter, TableHead, TableHeader, TableRow } from '@/components/ui/table'
-
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 interface TableProps {
   initialData: DataSource[]
   pagination: {
@@ -31,9 +30,9 @@ const DatasourceTable: React.FC<TableProps> = ({ initialData, pagination, onPage
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>Datasource Name</TableHead>
-            <TableHead>Description</TableHead>
-            <TableHead>Status</TableHead>
+            <TableHead className="font-bold">Name</TableHead>
+            <TableHead className="font-bold">Description</TableHead>
+            <TableHead className="font-bold">Status</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -45,20 +44,20 @@ const DatasourceTable: React.FC<TableProps> = ({ initialData, pagination, onPage
             >
               <TableCell>{datasource.sourceName}</TableCell>
               <TableCell>{datasource.description}</TableCell>
-              <TableCell>{datasource.isActive ? <Badge>Active</Badge> : <Badge>Inactive</Badge>}</TableCell>
+              <TableCell>
+                {datasource.isActive ? <Badge color="blue">Active</Badge> : <Badge color="red">Inactive</Badge>}
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>
-        <TableFooter>
-          <Pagination
-            totalItems={pagination.totalCount}
-            currentPage={pagination.currentPage}
-            itemsPerPage={pagination.pageSize}
-            onPageChange={onPageChange}
-            onItemsPerPageChange={onItemsPerPageChange}
-          />
-        </TableFooter>
       </Table>
+      <Pagination
+        totalItems={pagination.totalCount}
+        currentPage={pagination.currentPage}
+        itemsPerPage={pagination.pageSize}
+        onPageChange={onPageChange}
+        onItemsPerPageChange={onItemsPerPageChange}
+      />
     </>
   )
 }

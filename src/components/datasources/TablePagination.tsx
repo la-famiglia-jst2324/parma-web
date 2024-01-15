@@ -29,8 +29,8 @@ const Pagination: React.FC<PaginationProps> = ({
   }
 
   return (
-    <div className="flex items-center justify-between rounded-lg bg-transparent p-4">
-      <div className="flex-1 text-sm font-semibold text-gray-700">
+    <div className="flex items-center justify-between bg-transparent p-4">
+      <div className="flex-1 text-sm font-semibold">
         Page {currentPage} of {totalPages}
       </div>
       <div className="flex items-center space-x-2">
@@ -50,11 +50,11 @@ const Pagination: React.FC<PaginationProps> = ({
         </button>
       </div>
       <div className="flex items-center space-x-2">
-        <p className="text-sm font-medium text-gray-700">Rows per page</p>
+        <p className="text-sm font-medium">Rows per page</p>
         <select
           value={itemsPerPage}
           onChange={(e) => handleItemsPerPageChange(e.target.value)}
-          className="rounded-md border-gray-200 p-1 text-sm text-gray-700"
+          className="rounded-md p-1 text-sm"
         >
           {ITEMS_PER_PAGE_OPTIONS.map((option) => (
             <option key={option} value={option}>

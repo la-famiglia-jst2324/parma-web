@@ -4,8 +4,7 @@ import type { DataSource } from '@prisma/client'
 import Table from '../../components/datasources/Table'
 import { getDataSourcesPagination as getDatasources } from '@/services/datasource/datasourceService'
 import { MainLayoutWrapper } from '@/components/layout/MainLayout'
-import { Button } from '@/components/ui/button'
-
+import CreateDatasource from '@/components/datasources/CreateDatasource'
 function DatasourcesPage() {
   const [data, setData] = useState<DataSource[] | null>(null)
   const [pagination, setPagination] = useState({ currentPage: 1, pageSize: 10, totalPages: 0, totalCount: 0 })
@@ -36,11 +35,11 @@ function DatasourcesPage() {
           <h1 className="m-4 text-4xl text-white">Datasources</h1>
         </div>
         <div className="m-5">
-          <Button variant="secondary">Create Datasource</Button>
+          <CreateDatasource />
         </div>
       </div>
       <div className="mb-8 px-6">
-        <div>
+        <div className="mx-auto overflow-auto rounded-lg border-0 shadow-md">
           <div className="w-full">
             {data ? (
               <Table

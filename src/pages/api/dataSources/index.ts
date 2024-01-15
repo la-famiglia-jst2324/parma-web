@@ -10,6 +10,135 @@ const frequencyMapping: { [key: string]: Frequency | undefined } = {
   hourly: Frequency.HOURLY,
   monthly: Frequency.MONTHLY
 }
+/**
+ * @swagger
+ * tags:
+ *   - name: dataSource
+ * /api/dataSources:
+ *   get:
+ *     tags:
+ *       - dataSource
+ *     summary: Retrieve a paginated list of data sources
+ *     description: Fetches a list of data sources with optional filtering by name. Supports pagination.
+ *     parameters:
+ *       - in: query
+ *         name: name
+ *         required: false
+ *         schema:
+ *           type: string
+ *       - in: query
+ *         name: page
+ *         required: false
+ *         schema:
+ *           type: integer
+ *           default: 1
+ *       - in: query
+ *         name: size
+ *         required: false
+ *         schema:
+ *           type: integer
+ *           default: 10
+ *     responses:
+ *       200:
+ *         description: Successfully retrieved the list of data sources.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 datasources:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/DataSource'
+ *       400:
+ *         description: No Data Sources found.
+ *       500:
+ *         description: Internal Server Error.
+ *
+ *   post:
+ *     tags:
+ *       - dataSource
+ *     summary: Create a new data source
+ *     description: Creates a new data source and registers it in the company data source relationship. It also sends a handshake request to a specified URL.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - sourceName
+ *               - isActive
+ *               - frequency
+ *               - healthStatus
+ *               - invocationEndpoint
+ *             properties:
+ *               sourceName:
+ *                 type: string
+ *               isActive:
+ *                 type: boolean
+ *               frequency:
+ *                 type: string
+ *               healthStatus:
+ *                 type: string
+ *               invocationEndpoint:
+ *                 type: string
+ *               description:
+ *                 type: string
+ *     responses:
+ *       201:
+ *         description: Successfully created a new data source.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/DataSource'
+ *       400:
+ *         description: Invalid request parameters.
+ *       500:
+ *         description: Internal Server Error.
+ * components:
+ *   schemas:
+ *     DataSource:
+ *       type: object
+ *       required:
+ *         - id
+ *         - sourceName
+ *         - isActive
+ *         - frequency
+ *         - healthStatus
+ *         - maxRunSeconds
+ *         - version
+ *         - invocationEndpoint
+ *       properties:
+ *         id:
+ *           type: integer
+ *         sourceName:
+ *           type: string
+ *         isActive:
+ *           type: boolean
+ *         frequency:
+ *           type: string
+ *           enum:
+ *             - HOURLY
+ *             - DAILY
+ *             - WEEKLY
+ *             - MONTHLY
+ *         healthStatus:
+ *           type: string
+ *           enum:
+ *             - UP
+ *             - DOWN
+ *         maxRunSeconds:
+ *           type: integer
+ *         version:
+ *           type: string
+ *         invocationEndpoint:
+ *           type: string
+ *         description:
+ *           type: string
+ *         additionalParams:
+ *           type: string
+ */
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const { method } = req

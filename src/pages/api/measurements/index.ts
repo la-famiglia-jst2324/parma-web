@@ -3,6 +3,98 @@ import type { SourceMeasurement } from '@prisma/client'
 import { createSourceMeasurement, getAllSourceMeasurements } from '@/api/db/services/sourceMeasurementService'
 import { getCompanySourceMeasurementByCompanyId } from '@/api/db/services/companySourceMeasurementService'
 import { withAuthValidation } from '@/api/middleware/auth'
+/**
+ * @swagger
+ * tags:
+ *   - name: sourceMeasurement
+ * /api/measurements:
+ *   get:
+ *     tags:
+ *       - sourceMeasurement
+ *     summary: Retrieve common source measurements (intersection) of a list of company IDs
+ *     description: Fetches source measurements associated with given company IDs. Can handle multiple company IDs.
+ *     parameters:
+ *       - in: query
+ *         name: companyIds
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Successfully retrieved the common source measurements for the given company IDs.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/SourceMeasurement'
+ *       400:
+ *         description: No relation found or no data source measurements found.
+ *       500:
+ *         description: Internal Server Error.
+ *
+ *   post:
+ *     tags:
+ *       - sourceMeasurement
+ *     summary: Create a new source measurement
+ *     description: Creates a new source measurement with the given details.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - sourceModuleId
+ *               - type
+ *               - measurementName
+ *             properties:
+ *               sourceModuleId:
+ *                 type: integer
+ *               type:
+ *                 type: string
+ *               measurementName:
+ *                 type: string
+ *               parentMeasurementId:
+ *                 type: integer
+ *     responses:
+ *       201:
+ *         description: Successfully created a new source measurement.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/SourceMeasurement'
+ *       400:
+ *         description: Invalid request parameters.
+ *       500:
+ *         description: Internal Server Error.
+ * components:
+ *   schemas:
+ *     SourceMeasurement:
+ *       type: object
+ *       required:
+ *         - id
+ *         - sourceModuleId
+ *         - type
+ *         - measurementName
+ *         - createdAt
+ *         - modifiedAt
+ *       properties:
+ *         id:
+ *           type: integer
+ *         sourceModuleId:
+ *           type: integer
+ *         type:
+ *           type: string
+ *         measurementName:
+ *           type: string
+ *         parentMeasurementId:
+ *           type: integer
+ *         createdAt:
+ *           type: string
+ *         modifiedAt:
+ *           type: string
+ */
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const { method } = req

@@ -47,11 +47,11 @@ const ProfilePage: React.FC = () => {
         console.log('value:', response.fileUrl)
         setUserPhotoURL(response.fileUrl)
       } catch (error) {
-        console.error('Error fetching the attachment:', error)
+        console.warn('No user attachment available', error)
       }
     }
     fetchUserAttachment()
-  })
+  }, [])
   const userMail = user === 'loading' ? null : user?.email
   const userFullName = user === 'loading' ? null : user?.displayName
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -68,20 +68,21 @@ const ProfilePage: React.FC = () => {
       if (!userMail) {
         return
       }
-      // Add timeout
       timeoutId = setTimeout(() => {}, 10000)
       await authResetPassword(userMail)
       clearTimeout(timeoutId)
       timeoutId = null
       toast({
         title: `We have sent instructions on your given email to reset your password.`,
-        description: 'Please check your email'
+        description: 'Please check your email',
+        duration: 5000
       })
     } catch (error) {
       console.error('Error resetting password:', error)
       toast({
         title: `Error resetting password`,
-        description: 'Please try again'
+        description: 'Please try again',
+        duration: 5000
       })
     } finally {
       if (timeoutId) {
@@ -105,19 +106,18 @@ const ProfilePage: React.FC = () => {
       data.append('file', uploadAttachment)
       const response = await putUserAttachment(data)
       console.log('value:', response.profilePicture)
-      if (!response.ok) {
-        throw new Error('Network response was not ok')
-      }
       setUserPhotoURL(response.profilePicture)
       toast({
         title: `Attachment uploaded successfully`,
-        description: 'You have successfully uploaded an attachment'
+        description: 'You have successfully uploaded an attachment',
+        duration: 5000
       })
     } catch (error) {
       console.error('Error uploading the file:', error)
       toast({
         title: `Error uploading the file`,
-        description: 'Please upload file in jpg format only'
+        description: 'Please upload file in jpg format only',
+        duration: 5000
       })
     }
     setUploadAttachment('')
@@ -130,7 +130,7 @@ const ProfilePage: React.FC = () => {
         <div className="m-2 ml-10 flex-col pt-12 ">
           <div className="flex justify-center">
             <Image
-              className="hover:delay-50 mb-5 block h-[180px] w-[180px] rounded-full transition duration-500 ease-in hover:cursor-pointer hover:shadow-[0_0_15px_15px_rgba(63,55,201,0.5)]"
+              className="mb-5 block h-[180px] w-[180px] rounded-full transition duration-500 ease-in hover:cursor-pointer hover:shadow-[0_0_15px_15px_rgba(63,55,201,0.5)] hover:delay-75"
               src={userPhotoURL || profilePic}
               width={500}
               height={500}
@@ -144,11 +144,8 @@ const ProfilePage: React.FC = () => {
 
           <div className="flex justify-center gap-1.5">
             <Button>
-              <label htmlFor="files" className="btn">
-                Update
-              </label>
+              <label htmlFor="files">Update</label>
               <input id="files" accept="image/*,.jpg" hidden type="file" onChange={fileUpload} />
-              {/* <input  id="picture" type="file" accept="image/*,.jpg" name="attachment" onChange={fileUpload}/> */}
             </Button>
             <Button onClick={handleFileChange} disabled={uploadAttachment === ''}>
               <ArrowUpTrayIcon className="h-4 w-4" />
@@ -170,7 +167,6 @@ const ProfilePage: React.FC = () => {
                 label="Email"
                 placeholder={userMail || 'please write your email here'}
                 type="input"
-                // onChange={(event) => setEmail(userMail || event.target.value)}
                 readonly={!!userMail}
               />
               <div>
@@ -189,7 +185,6 @@ const ProfilePage: React.FC = () => {
         </div>
       </div>
     </div>
-    // </main>
   )
 }
 

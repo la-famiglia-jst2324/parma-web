@@ -6,8 +6,8 @@
 [![Deploy](https://github.com/la-famiglia-jst2324/parma-web/actions/workflows/release.yml/badge.svg?event=push)](https://staging.parma.software)
 [![Major Tag](https://github.com/la-famiglia-jst2324/parma-web/actions/workflows/tag-major.yml/badge.svg)](https://github.com/la-famiglia-jst2324/parma-web/actions/workflows/tag-major.yml)
 
-![Functions](https://img.shields.io/badge/functions-14.12%25-red.svg?style=flat)
-![Lines](https://img.shields.io/badge/lines-12.99%25-red.svg?style=flat)
+![Functions](https://img.shields.io/badge/functions-14.3%25-red.svg?style=flat)
+![Lines](https://img.shields.io/badge/lines-13.27%25-red.svg?style=flat)
 
 ParmaAI webstack including frontend and REST API backend.
 
@@ -119,7 +119,7 @@ The following steps will get you started with the project.
    make test  # runs jest and typescript-coverage-report
    ```
 
-8. Environment Variables Other Than Database
+8. Environment Variables Other Than Database URL
 
    ```bash
    export PARMA_ANALYTICS_BASE_URL=http://127.0.0.1:8000

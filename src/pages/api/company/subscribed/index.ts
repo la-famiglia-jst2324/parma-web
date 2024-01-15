@@ -13,6 +13,93 @@ import { ItemNotFoundError } from '@/api/utils/errorUtils'
 const companySubscriptionSchema = z.object({
   companyId: z.number().int().positive()
 })
+/**
+ * @swagger
+ * tags:
+ *   - name: companySubscription
+ * /api/company/subscribed:
+ *   post:
+ *     tags:
+ *       - companySubscription
+ *     summary: Subscribe or unsubscribe a user to a company
+ *     description: Allows a user to subscribe or unsubscribe from a company. The action is based on the query parameter 'subscribe'.
+ *     parameters:
+ *       - in: query
+ *         name: subscribe
+ *         required: true
+ *         schema:
+ *           type: string
+ *           enum: [ 'true', 'false' ]
+ *         description: Flag to indicate subscribing (true) or unsubscribing (false).
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - companyId
+ *             properties:
+ *               companyId:
+ *                 type: integer
+ *                 description: The ID of the company to subscribe or unsubscribe.
+ *     responses:
+ *       201:
+ *         description: Successfully subscribed to the company.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/CompanySubscription'
+ *       200:
+ *         description: Successfully unsubscribed from the company.
+ *       400:
+ *         description: Invalid request parameters.
+ *       404:
+ *         description: Company subscription not found (for unsubscribing).
+ *       500:
+ *         description: Internal Server Error.
+ *
+ *   get:
+ *     tags:
+ *       - companySubscription
+ *     summary: Retrieve subscribed companies for a user
+ *     description: Fetches all companies that the user is currently subscribed to.
+ *     responses:
+ *       200:
+ *         description: Successfully retrieved subscribed companies.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Company'
+ *       400:
+ *         description: No subscribed companies found.
+ *       404:
+ *         description: Item not found.
+ *       500:
+ *         description: Internal Server Error.
+ *       405:
+ *         description: Method Not Allowed.
+ * components:
+ *   schemas:
+ *     CompanySubscription:
+ *       type: object
+ *       required:
+ *         - userId
+ *         - companyId
+ *         - createdAt
+ *         - modifiedAt
+ *       properties:
+ *         userId:
+ *           type: integer
+ *         companyId:
+ *           type: integer
+ *         createdAt:
+ *           type: string
+ *         modifiedAt:
+ *           type: string
+ */
 
 const handler = async (req: NextApiRequest, res: NextApiResponse, user: User) => {
   const { method } = req

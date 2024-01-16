@@ -1,9 +1,8 @@
 'use client'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { MainLayout } from '@/components/layout/MainLayout'
 import { SearchBar } from '@/components/search/Searchbar'
 import SearchTabs from '@/components/search/SearchTabs'
-import { Button } from '@/components/ui/button'
 import { getSearchData } from '@/services/search/searchService'
 
 const SearchPage: React.FC = () => {
@@ -12,22 +11,27 @@ const SearchPage: React.FC = () => {
   const [hasSearched, setHasSearched] = useState<boolean>(false)
   const [pagination, setPagination] = useState({ currentPage: 1, pageSize: 10, totalPages: 0, totalCount: 0 })
 
+  useEffect(() => {
+    const fetchSearchedData = async () => {
+      try {
+        const searchedData = await getSearchData(searchTerm, pagination.currentPage, pagination.pageSize)
+        setSearchData(searchedData)
+        setPagination(searchedData.pagination)
+        setHasSearched(true)
+      } catch (error) {
+        console.error('Failed to fetch search data:', error)
+      }
+    }
+
+    fetchSearchedData()
+  }, [searchTerm, pagination.currentPage, pagination.pageSize])
+
   const handlePageChange = (newPage: number) => {
     setPagination((prevState) => ({ ...prevState, currentPage: newPage }))
   }
 
   const handleItemsPerPageChange = (newSize: number) => {
     setPagination((prevState) => ({ ...prevState, pageSize: newSize }))
-  }
-
-  const fetchSearchedData = async () => {
-    try {
-      const searchedData = await getSearchData(searchTerm, 1, 10)
-      setSearchData(searchedData)
-      setHasSearched(true)
-    } catch (error) {
-      console.error('Failed to fetch search data:', error)
-    }
   }
 
   const handleSearchChange = (newSearchTerm: string) => {
@@ -39,15 +43,6 @@ const SearchPage: React.FC = () => {
     <MainLayout>
       <div className="flex">
         <SearchBar searchTerm={searchTerm} onSearchChange={handleSearchChange} />
-        <div className="pl-2">
-          <Button
-            onClick={() => {
-              fetchSearchedData()
-            }}
-          >
-            Search
-          </Button>
-        </div>
       </div>
       <SearchTabs
         hasSearched={hasSearched}

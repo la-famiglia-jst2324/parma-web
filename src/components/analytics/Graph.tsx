@@ -4,6 +4,11 @@ import { AreaChart } from '@tremor/react'
 import { AuthContext, getAuthToken } from '@/lib/firebase/auth'
 import extractCategories from '@/utils/extractCategories'
 
+interface DataItem {
+  date: string
+  [key: string]: number | string
+}
+
 async function getAnalyticsData(
   measurementId: string,
   companiesArray: string[],
@@ -37,7 +42,7 @@ interface GraphChartProps {
 }
 
 const GraphChart: React.FC<GraphChartProps> = ({ measurementId, measurementName, companiesArray, datepickerValue }) => {
-  const [analyticsData, setAnalyticsData] = useState([])
+  const [analyticsData, setAnalyticsData] = useState<DataItem[]>([])
   const user = useContext(AuthContext)
 
   useEffect(() => {
@@ -45,14 +50,31 @@ const GraphChart: React.FC<GraphChartProps> = ({ measurementId, measurementName,
       const token = await getAuthToken(user)
       if (!token) return
       const data = await getAnalyticsData(measurementId, companiesArray, token, datepickerValue)
-      setAnalyticsData(data)
+      const groupedArray: DataItem[] = []
+
+      data.forEach((item: DataItem) => {
+        const existingItem = groupedArray.find((groupedItem) => groupedItem.date === item.date)
+
+        if (existingItem) {
+          // Merge the values if the date already exists in the grouped array
+          Object.keys(item).forEach((key) => {
+            if (key !== 'date') {
+              existingItem[key] = (+existingItem[key] || 0) + +item[key]
+            }
+          })
+        } else {
+          // Add a new entry if the date doesn't exist in the grouped array
+          groupedArray.push({ ...item })
+        }
+      })
+
+      console.log(groupedArray)
+      setAnalyticsData(groupedArray)
     }
     fetchAnalyticsData()
   }, [user, measurementId, companiesArray, datepickerValue])
 
-  console.log('Analytics data:', analyticsData)
   const categories = extractCategories(analyticsData)
-
   return (
     <div className="mt-2 w-full">
       <div>
@@ -63,7 +85,7 @@ const GraphChart: React.FC<GraphChartProps> = ({ measurementId, measurementName,
         data={analyticsData}
         index="date"
         categories={categories}
-        colors={['indigo', 'cyan', 'pink']}
+        colors={['indigo', 'cyan', 'pink', 'blue', 'red', 'yellow', 'green', 'purple', 'orange', 'gray']}
       />
     </div>
   )

@@ -271,8 +271,10 @@ const CompanyPage = ({ params: { companyId } }: { params: { companyId: string } 
     setDatasource(value)
     const dataSourceId = value
     try {
-      const data = await getMeasurementsForCompany(dataSourceId, companyId)
-      setCompanyMeasurements(data)
+      if (dataSourceId) {
+        const data = await getMeasurementsForCompany(dataSourceId, companyId)
+        setCompanyMeasurements(data)
+      }
     } catch (error) {
       console.error('Failed to get the measurement data', error)
     }

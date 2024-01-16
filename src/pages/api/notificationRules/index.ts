@@ -3,7 +3,7 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import { createNotificationRule } from '@/api/db/services/notificationRulesService'
 import { withAuthValidation } from '@/api/middleware/auth'
 
-const handler = async (req: NextApiRequest, res: NextApiResponse) => {
+export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const { method } = req
 
   switch (method) {

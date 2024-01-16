@@ -14,8 +14,92 @@ import { ItemNotFoundError } from '@/api/utils/errorUtils'
 const newsSubscriptionSchema = z.object({
   companyId: z.number().int().positive()
 })
+/**
+ * @swagger
+ * tags:
+ *   - name: newsSubscription
+ * /api/newsSubscription:
+ *   post:
+ *     tags:
+ *       - newsSubscription
+ *     summary: Manage a news subscription
+ *     description: Creates or deletes a news subscription for a user based on a flag. If the flag is 'true', it creates a subscription; otherwise, it deletes an existing subscription.
+ *     parameters:
+ *       - in: query
+ *         name: subscribe
+ *         required: false
+ *         schema:
+ *           type: string
+ *           enum: ['true', 'false']
+ *         description: Flag indicating whether to create ('true') or delete ('false') a subscription.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               companyId:
+ *                 type: integer
+ *             required:
+ *               - companyId
+ *     responses:
+ *       201:
+ *         description: Successfully created a new news subscription.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/NewsSubscription'
+ *       200:
+ *         description: News subscription successfully deleted.
+ *       400:
+ *         description: Invalid request parameters or news subscription not found for deletion.
+ *       404:
+ *         description: News subscription not found for deletion.
+ *       500:
+ *         description: Internal Server Error.
+ *
+ *   get:
+ *     tags:
+ *       - newsSubscription
+ *     summary: Retrieve news subscriptions by user ID
+ *     description: Fetches news subscriptions associated with a given user ID.
+ *     responses:
+ *       200:
+ *         description: Successfully retrieved a list of subscribed companies for the user.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Company'
+ *       400:
+ *         description: No subscribed companies found.
+ *       404:
+ *         description: User not found.
+ *       500:
+ *         description: Internal Server Error.
+ * components:
+ *   schemas:
+ *     NewsSubscription:
+ *       type: object
+ *       required:
+ *         - userId
+ *         - companyId
+ *         - createdAt
+ *         - modifiedAt
+ *       properties:
+ *         userId:
+ *           type: integer
+ *         companyId:
+ *           type: integer
+ *         createdAt:
+ *           type: string
+ *         modifiedAt:
+ *           type: string
+ */
 
-const handler = async (req: NextApiRequest, res: NextApiResponse, user: User) => {
+export const handler = async (req: NextApiRequest, res: NextApiResponse, user: User) => {
   const { method } = req
   const { companyId } = newsSubscriptionSchema.parse(req.body)
   const userId = user.id

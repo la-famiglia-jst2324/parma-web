@@ -7,8 +7,87 @@ import {
 } from '@/api/db/services/notificationChannelService'
 
 import { ItemNotFoundError } from '@/api/utils/errorUtils'
+/**
+ * @swagger
+ * /api/notificationChannel/channelId:
+ *   get:
+ *     tags:
+ *       - channel
+ *     summary: Retrieve a notification channel by ID
+ *     description: Fetches details of a specific notification channel based on the provided channel ID.
+ *     parameters:
+ *       - in: query
+ *         name: channelId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Successfully retrieved the notification channel.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/NotificationChannel'
+ *       400:
+ *         description: No NotificationChannel found for the provided ID.
+ *       404:
+ *         description: NotificationChannel not found.
+ *       500:
+ *         description: Internal Server Error.
+ *
+ *   put:
+ *     tags:
+ *       - channel
+ *     summary: Update a notification channel
+ *     description: Updates the details of an existing notification channel based on the provided channel ID.
+ *     parameters:
+ *       - in: query
+ *         name: channelId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               channelType:
+ *                 type: string
+ *               destination:
+ *                 type: string
+ *               apiKey:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Successfully updated the notification channel.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/NotificationChannel'
+ *       500:
+ *         description: Internal Server Error.
+ *
+ *   delete:
+ *     tags:
+ *       - channel
+ *     summary: Delete a notification channel
+ *     description: Deletes a specific notification channel based on the provided channel ID.
+ *     parameters:
+ *       - in: query
+ *         name: channelId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: NotificationChannel successfully deleted.
+ *       500:
+ *         description: Internal Server Error.
+ */
 
-export default async (req: NextApiRequest, res: NextApiResponse) => {
+export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const { method } = req
   const { channelId } = req.query
 
@@ -46,3 +125,5 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       break
   }
 }
+
+export default handler // No auth

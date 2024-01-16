@@ -37,8 +37,148 @@ interface MetricDataSourceMappingType {
   metricId: number
   dataSourceId: number
 }
+/**
+ * @swagger
+ * /api/analytics/configurations:
+ *   post:
+ *     tags:
+ *       - analytics
+ *     summary: Create a new user customization
+ *     description: This endpoint allows the creation of a new user customization with specified company and metric IDs.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - name
+ *               - companyIds
+ *               - metricIds
+ *             properties:
+ *               name:
+ *                 type: string
+ *               companyIds:
+ *                 type: array
+ *                 items:
+ *                   type: integer
+ *               metricIds:
+ *                 type: array
+ *                 items:
+ *                   type: integer
+ *     responses:
+ *       201:
+ *         description: Successfully created the user customization.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/UserCustomization'
+ *       400:
+ *         description: Bad request, validation error.
+ *       500:
+ *         description: Internal server error.
+ *
+ *   get:
+ *     tags:
+ *       - analytics
+ *     summary: Retrieve all user customizations
+ *     description: Fetches all user customizations for the logged-in user.
+ *     responses:
+ *       200:
+ *         description: An array of user customizations.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: integer
+ *                   userId:
+ *                     type: integer
+ *                   name:
+ *                     type: string
+ *                   companyIds:
+ *                     type: array
+ *                     items:
+ *                       type: integer
+ *                   metrics:
+ *                     type: array
+ *                     items:
+ *                       type: object
+ *                       properties:
+ *                         metricId:
+ *                           type: integer
+ *                         dataSourceId:
+ *                           type: integer
+ *       500:
+ *         description: Internal server error.
+ *
+ * components:
+ *   schemas:
+ *     UserCompanyCustomization:
+ *       type: object
+ *       required:
+ *         - id
+ *         - customizationId
+ *         - companyId
+ *         - createdAt
+ *         - modifiedAt
+ *       properties:
+ *         id:
+ *           type: integer
+ *         customizationId:
+ *           type: integer
+ *         companyId:
+ *           type: integer
+ *         createdAt:
+ *           type: string
+ *         modifiedAt:
+ *           type: string
+ *
+ *     UserCustomization:
+ *       type: object
+ *       required:
+ *         - id
+ *         - name
+ *         - userId
+ *         - createdAt
+ *         - modifiedAt
+ *       properties:
+ *         id:
+ *           type: integer
+ *         name:
+ *           type: string
+ *         userId:
+ *           type: integer
+ *         createdAt:
+ *           type: string
+ *         modifiedAt:
+ *           type: string
+ *
+ *     UserMetricCustomization:
+ *       type: object
+ *       required:
+ *         - id
+ *         - customizationId
+ *         - sourceMeasurementId
+ *         - createdAt
+ *         - modifiedAt
+ *       properties:
+ *         id:
+ *           type: integer
+ *         customizationId:
+ *           type: integer
+ *         sourceMeasurementId:
+ *           type: integer
+ *         createdAt:
+ *           type: string
+ *         modifiedAt:
+ *           type: string
+ */
 
-const handler = async (req: NextApiRequest, res: NextApiResponse, user: User) => {
+export const handler = async (req: NextApiRequest, res: NextApiResponse, user: User) => {
   const { method } = req
   const userId = user.id
   switch (method) {

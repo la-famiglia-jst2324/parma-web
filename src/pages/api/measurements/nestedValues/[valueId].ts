@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 
 import { getNestedValueByID } from '@/api/db/services/nestedValueService'
 
-export default async (req: NextApiRequest, res: NextApiResponse) => {
+export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const { method } = req
   const { valueId } = req.query
 
@@ -13,7 +13,6 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         if (value) res.status(200).json(value)
         else res.status(400).json({ error: 'No Measurement Value found' })
       } catch (error) {
-        console.error(error)
         res.status(500).json({ error: 'Internal Server Error' })
       }
       break
@@ -23,3 +22,5 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       break
   }
 }
+
+export default handler // No auth

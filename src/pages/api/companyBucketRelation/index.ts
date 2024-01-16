@@ -8,7 +8,11 @@ import {
   removeCompanyFromBucket,
   checkCompanyBucketMembershipExistence
 } from '@/api/db/services/companyBucketMembershipService'
-import { createCompanySubscription, deleteCompanySubscription } from '@/api/db/services/companySubscriptionService'
+import {
+  createCompanySubscription,
+  deleteCompanySubscription,
+  getUserCompanySubscriptions
+} from '@/api/db/services/companySubscriptionService'
 import { getCompanyByID } from '@/api/db/services/companyService'
 import { getBucketById } from '@/api/db/services/bucketService'
 import { ItemNotFoundError } from '@/api/utils/errorUtils'
@@ -48,8 +52,124 @@ const membershipGetSchema = z.object({
     })
     .transform((val) => (val === undefined ? undefined : parseInt(val, 10)))
 })
+/**
+ * @swagger
+ * tags:
+ *   - name: companyBucketRelation
+ * /api/companyBucketRelation:
+ *   get:
+ *     tags:
+ *       - companyBucketRelation
+ *     summary: Retrieve companies or buckets based on a bucket or company ID
+ *     description: Fetches companies for a given bucket ID or buckets for a given company ID.
+ *     parameters:
+ *       - in: query
+ *         name: bucketId
+ *         required: false
+ *         schema:
+ *           type: integer
+ *       - in: query
+ *         name: companyId
+ *         required: false
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Successfully retrieved companies or buckets.
+ *       400:
+ *         description: Invalid arguments.
+ *       404:
+ *         description: No Companies or Buckets found.
+ *       500:
+ *         description: Internal Server Error.
+ *
+ *   post:
+ *     tags:
+ *       - companyBucketRelation
+ *     summary: Create a membership between a company and a bucket
+ *     description: Adds a company to a bucket and subscribes the user to the company.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: array
+ *             items:
+ *               type: object
+ *               required:
+ *                 - bucketId
+ *                 - companyId
+ *               properties:
+ *                 bucketId:
+ *                   type: integer
+ *                 companyId:
+ *                   type: integer
+ *     responses:
+ *       200:
+ *         description: Membership already exists.
+ *       201:
+ *         description: Successfully created a new membership and subscribed user to the company.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/CompanyBucketMembership'
+ *       400:
+ *         description: Invalid request parameters.
+ *       404:
+ *         description: Company or Bucket not found.
+ *       500:
+ *         description: Internal Server Error.
+ *
+ *   delete:
+ *     tags:
+ *       - companyBucketRelation
+ *     summary: Remove a membership between a company and a bucket
+ *     description: Removes a company from a bucket and unsubscribes the user from the company.
+ *     parameters:
+ *       - in: query
+ *         name: bucketId
+ *         schema:
+ *           type: integer
+ *         required: true
+ *       - in: query
+ *         name: companyId
+ *         schema:
+ *           type: array
+ *           items:
+ *             type: integer
+ *         required: true
+ *     responses:
+ *       200:
+ *         description: Company removed from bucket successfully.
+ *       400:
+ *         description: Invalid request parameters.
+ *       404:
+ *         description: Company or Bucket not found.
+ *       500:
+ *         description: Internal Server Error.
+ * components:
+ *   schemas:
+ *     CompanyBucketMembership:
+ *       type: object
+ *       required:
+ *         - companyId
+ *         - bucketId
+ *         - createdAt
+ *         - modifiedAt
+ *       properties:
+ *         companyId:
+ *           type: integer
+ *         bucketId:
+ *           type: integer
+ *         createdAt:
+ *           type: string
+ *         modifiedAt:
+ *           type: string
+ */
 
-const handler = async (req: NextApiRequest, res: NextApiResponse, user: User) => {
+export const handler = async (req: NextApiRequest, res: NextApiResponse, user: User) => {
   const { method } = req
   const userId = user.id
 
@@ -100,8 +220,17 @@ const handler = async (req: NextApiRequest, res: NextApiResponse, user: User) =>
               if (existingMembership) return { existingMembership }
 
               const membership = await addCompanyToBucket(parsedData.companyId, parsedData.bucketId)
-              await createCompanySubscription({ userId, companyId: parsedData.companyId })
 
+              try {
+                await getUserCompanySubscriptions(userId, parsedData.companyId)
+              } catch (error) {
+                // Handle the case where the subscription does not exist
+                if (error instanceof Error && error.message.startsWith('User does not have a subscription')) {
+                  await createCompanySubscription({ userId, companyId: parsedData.companyId })
+                } else {
+                  throw error
+                }
+              }
               return { membership }
             } catch (error) {
               if (error instanceof ZodError) return { error: formatZodErrors(error) }
@@ -121,10 +250,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse, user: User) =>
           const companyIds = re.map((item) => item?.companyId).filter((id) => id !== undefined)
 
           for (const element of companyIds) {
-            if (typeof element === 'number') {
-              const company = await getCompanyByID(element)
-              companies.push(company)
-            }
+            const company = await getCompanyByID(Number.parseInt(`${element}`))
+            companies.push(company)
           }
           res.status(201).json(companies)
         }

@@ -3,7 +3,70 @@ import type { User } from '@prisma/client'
 import { updateUser, getUserById } from '@/api/db/services/userService'
 import { ItemNotFoundError } from '@/api/utils/errorUtils'
 import { withAuthValidation } from '@/api/middleware/auth'
-const handler = async (req: NextApiRequest, res: NextApiResponse, user: User) => {
+
+/**
+ * @swagger
+ * tags:
+ *   - name: user
+ * /api/profile:
+ *   put:
+ *     tags:
+ *       - user
+ *     summary: Update user information
+ *     description: Updates the information of an existing user based on their user ID.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *               role:
+ *                 type: string
+ *               profilePicture:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Successfully updated the user's information.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/User'
+ *       404:
+ *         description: User not found.
+ *       500:
+ *         description: Internal Server Error.
+ * components:
+ *   schemas:
+ *     User:
+ *       type: object
+ *       required:
+ *         - id
+ *         - authId
+ *         - name
+ *         - role
+ *         - createdAt
+ *         - modifiedAt
+ *       properties:
+ *         id:
+ *           type: integer
+ *         authId:
+ *           type: string
+ *         name:
+ *           type: string
+ *         profilePicture:
+ *           type: string
+ *         role:
+ *           type: string
+ *         createdAt:
+ *           type: string
+ *         modifiedAt:
+ *           type: string
+ */
+
+export const handler = async (req: NextApiRequest, res: NextApiResponse, user: User) => {
   const { method } = req
   const userId = user.id
 

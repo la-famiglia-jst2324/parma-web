@@ -3,8 +3,83 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import { getNotificationById, updateNotification, deleteNotification } from '@/api/db/services/notificationService'
 
 import { ItemNotFoundError } from '@/api/utils/errorUtils'
+/**
+ * @swagger
+ * /api/notification/notificationId:
+ *   get:
+ *     tags:
+ *       - notification
+ *     summary: Retrieve a notification by ID
+ *     description: Fetches details of a specific notification based on the provided notification ID.
+ *     parameters:
+ *       - in: query
+ *         name: notificationId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Successfully retrieved the notification.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Notification'
+ *       400:
+ *         description: No Notification found for the provided ID.
+ *       404:
+ *         description: Notification not found.
+ *       500:
+ *         description: Internal Server Error.
+ *
+ *   put:
+ *     tags:
+ *       - notification
+ *     summary: Update a notification
+ *     description: Updates the details of an existing notification based on the provided ID.
+ *     parameters:
+ *       - in: query
+ *         name: notificationId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               message:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Successfully updated the notification.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Notification'
+ *       500:
+ *         description: Internal Server Error.
+ *
+ *   delete:
+ *     tags:
+ *       - notification
+ *     summary: Delete a notification
+ *     description: Deletes a specific notification based on the provided ID.
+ *     parameters:
+ *       - in: query
+ *         name: notificationId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Notification successfully deleted.
+ *       500:
+ *         description: Internal Server Error.
+ */
 
-export default async (req: NextApiRequest, res: NextApiResponse) => {
+export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const { method } = req
   const { notificationId } = req.query
 
@@ -42,3 +117,5 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       break
   }
 }
+
+export default handler // No auth

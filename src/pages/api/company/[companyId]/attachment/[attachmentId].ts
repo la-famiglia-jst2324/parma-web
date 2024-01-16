@@ -22,7 +22,7 @@ const companyAttachmentQuerySchema = z.object({
     .transform((val: string) => parseInt(val, 10))
 })
 
-const handler = async (req: NextApiRequest, res: NextApiResponse) => {
+export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const query = companyAttachmentQuerySchema.parse(req.query)
 
   const { method } = req

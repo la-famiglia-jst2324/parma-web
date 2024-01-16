@@ -1,8 +1,8 @@
 import fs from 'fs'
 import type formidable from 'formidable'
-import admin from 'firebase-admin'
 import type { FileType } from '@prisma/client'
 import { v4 as UUID } from 'uuid'
+import admin from '@/api/firebase/main'
 
 const uploadFileToFirebase = async (
   incomingFile: formidable.File,
@@ -12,7 +12,7 @@ const uploadFileToFirebase = async (
 ) => {
   return new Promise<{ fileDest: string; fileName: string; fileType: FileType }>((resolve, reject) => {
     const bucket = admin.storage().bucket()
-    const fileDest = fileDestPrefix + `${fileName}-${Date.now()}.${fileExtension.toLowerCase()}`
+    const fileDest = fileDestPrefix + `${fileName.toLowerCase()}-${Date.now()}.${fileExtension.toLowerCase()}`
     fileExtension = fileExtension.toUpperCase()
     const blob = bucket.file(fileDest)
     const uuid = UUID()

@@ -93,6 +93,7 @@ const AnalyticsPage: React.FC = () => {
             measurementId={graphData.metric || ''}
             companiesArray={graphData.companies}
             measurementName={metricName || ''}
+            datepickerValue={null}
           />
         ) : (
           <p className="ml-4">Please select companies and a metric to compare.</p>

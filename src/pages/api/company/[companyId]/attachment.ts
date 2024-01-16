@@ -23,7 +23,7 @@ export const config = {
   }
 }
 
-const handler = async (req: NextApiRequest, res: NextApiResponse, user: User) => {
+export const handler = async (req: NextApiRequest, res: NextApiResponse, user: User) => {
   const query = companyAttachmentQuerySchema.parse(req.query)
 
   const { method } = req
@@ -34,7 +34,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse, user: User) =>
       try {
         const existingCompany = await getCompanyByID(Number(companyId))
         if (existingCompany) {
-          const fileDestPrefix = `Company/${companyId}/`
+          const fileDestPrefix = `company/${companyId}/`
           const { incomingFile, name, type } = await fileValidation(req)
           const { fileDest, fileName, fileType } = await uploadFileToFirebase(incomingFile, type, name, fileDestPrefix)
           // create attachment entry in db

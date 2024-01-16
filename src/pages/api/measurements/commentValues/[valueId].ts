@@ -2,7 +2,53 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 
 import { getCommentValueByID } from '@/api/db/services/commentValueService'
 
-export default async (req: NextApiRequest, res: NextApiResponse) => {
+/**
+ * @swagger
+ * tags:
+ *   - name: measurementValue
+ * /api/commentValues/valueId:
+ *   get:
+ *     tags:
+ *       - measurementValue
+ *     summary: Retrieve comment value by value ID
+ *     description: Fetches comment value associated with a given value ID.
+ *     responses:
+ *       200:
+ *         description: Successfully retrieved comment value
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/CommentValue'
+ *       400:
+ *         description: No comment value found.
+ *       500:
+ *         description: Internal Server Error.
+ * components:
+ *   schemas:
+ *     CommentValue:
+ *       type: object
+ *       required:
+ *         - id
+ *         - companyMeasurementId
+ *         - value
+ *         - timestamp
+ *         - createdAt
+ *         - modifiedAt
+ *       properties:
+ *         id:
+ *           type: integer
+ *         companyMeasurementId:
+ *           type: integer
+ *         value:
+ *           type: string
+ *         timestamp:
+ *           type: string
+ *         createdAt:
+ *           type: string
+ *         modifiedAt:
+ *           type: string
+ */
+export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const { method } = req
   const { valueId } = req.query
 
@@ -22,3 +68,5 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       break
   }
 }
+
+export default handler // No auth

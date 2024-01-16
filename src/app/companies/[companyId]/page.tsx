@@ -3,10 +3,10 @@
 import type { ChangeEvent } from 'react'
 import React, { useState, useEffect } from 'react'
 import { ArrowUpTrayIcon } from '@heroicons/react/20/solid'
-import { CheckCircle2Icon, FileDownIcon } from 'lucide-react'
+import { CheckCircle2Icon, FileDownIcon, Loader2Icon, RefreshCcw } from 'lucide-react'
+import { LineChart, SearchSelect, SearchSelectItem } from '@tremor/react'
 import type { CompanyData } from '@/types/companies'
 import CompanyAttachment from '@/components/companies/CompanyAttachment'
-import PerformancePanel from '@/components/companies/PerformancePanel'
 import { MainLayoutWrapper } from '@/components/layout/MainLayout'
 import {
   getSubscribedCompanies,
@@ -26,6 +26,8 @@ import { CardTitle, CardHeader, CardContent, Card, CardDescription } from '@/com
 import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
 import ConfigureDatasourcesModal from '@/components/companies/ConfigureDatasoursesModal'
+import { getAnalyticsDataForCompany, getMeasurementsForCompany } from '@/services/measurement/measurementService'
+import { getDataSourcesByCompanyId } from '@/services/datasource/datasourceService'
 
 interface SubscriptionResponse {
   addedBy: number
@@ -47,6 +49,36 @@ interface Attachment {
   modifiedAt: string
 }
 
+interface CompanyDataSource {
+  id: number
+  sourceName: string
+  isActive: boolean
+  frequency: string
+  healthStatus: string
+  description: null | string
+  createdAt: string
+  modifiedAt: string
+  version: string
+  maxRunSeconds: number
+  invocationEndpoint: string
+  additionalParams: null | string
+}
+
+interface CompanyMeasurement {
+  id: number
+  createdAt: string
+  measurementName: string
+  modifiedAt: string
+  parentMeasurementId: number | null
+  sourceModuleId: number
+  type: string
+}
+
+interface DataItem {
+  date: string
+  [key: string]: number | string
+}
+
 const CompanyPage = ({ params: { companyId } }: { params: { companyId: string } }) => {
   const [companyData, setCompanyData] = useState<CompanyData>({
     name: '',
@@ -56,6 +88,13 @@ const CompanyPage = ({ params: { companyId } }: { params: { companyId: string } 
   const [isSubscribed, setIsSubscribed] = useState(false)
   const [uploadAttachment, setUploadAttachment] = useState<Blob | string>('')
   const { toast } = useToast()
+
+  const [companyDataSources, setCompanyDataSources] = useState<CompanyDataSource[]>([])
+  const [companyMeasurements, setCompanyMeasurements] = useState<CompanyMeasurement[]>([])
+  const [datasource, setDatasource] = useState<string>('')
+  const [measurement, setMeasurement] = useState<string>('')
+  const [graphData, setGraphData] = useState<DataItem[]>([])
+  const [uploadLoading, setUploadLoading] = useState<boolean>(false)
 
   useEffect(() => {
     const fetchData = async () => {
@@ -101,7 +140,8 @@ const CompanyPage = ({ params: { companyId } }: { params: { companyId: string } 
   const handleExport = async (name: string) => {
     try {
       const exportDataResponse = await getExportData(companyId)
-      const exportBlob = new Blob([exportDataResponse], { type: 'text/plain' })
+      const jsonString = JSON.stringify(exportDataResponse, null, 2)
+      const exportBlob = new Blob([jsonString], { type: 'application/json' })
       const exportURL = window.URL.createObjectURL(exportBlob)
       const downloadLink = document.createElement('a')
       downloadLink.href = exportURL
@@ -188,6 +228,7 @@ const CompanyPage = ({ params: { companyId } }: { params: { companyId: string } 
   }
 
   const handleUpload = async () => {
+    setUploadLoading(true)
     try {
       const data = new FormData()
       data.append('file', uploadAttachment)
@@ -202,6 +243,7 @@ const CompanyPage = ({ params: { companyId } }: { params: { companyId: string } 
     } catch (error) {
       console.error('Error uploading the file:', error)
     }
+    setUploadLoading(false)
     setUploadAttachment('')
   }
 
@@ -209,6 +251,55 @@ const CompanyPage = ({ params: { companyId } }: { params: { companyId: string } 
     if (event.target.files && event.target.files[0]) {
       const i = event.target.files[0]
       setUploadAttachment(i)
+    }
+  }
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const data = await getDataSourcesByCompanyId(companyId)
+        setCompanyDataSources(data)
+      } catch (error) {
+        console.error('Failed to fetch data sources:', error)
+      }
+    }
+
+    fetchData()
+  }, [companyId])
+
+  const handleDatasourceChange = async (value: string) => {
+    setDatasource(value)
+    const dataSourceId = value
+    try {
+      if (dataSourceId) {
+        const data = await getMeasurementsForCompany(dataSourceId, companyId)
+        setCompanyMeasurements(data)
+      }
+    } catch (error) {
+      console.error('Failed to get the measurement data', error)
+    }
+  }
+
+  const handleMeasurementChange = (value: string) => {
+    setMeasurement(value)
+    handleGetMeasurementData()
+  }
+
+  const handleGetMeasurementData = async () => {
+    try {
+      const data = await getAnalyticsDataForCompany(measurement, companyId)
+      setGraphData(data)
+    } catch (error) {
+      console.error('Failed to get the measurement data', error)
+    }
+  }
+
+  const handleRefetchDatasources = async () => {
+    try {
+      const data = await getDataSourcesByCompanyId(companyId)
+      setCompanyDataSources(data)
+    } catch (error) {
+      console.error('Failed to fetch data sources:', error)
     }
   }
 
@@ -236,7 +327,41 @@ const CompanyPage = ({ params: { companyId } }: { params: { companyId: string } 
           </div>
         </div>
       </div>
-      <PerformancePanel companyId={companyId} companyName={companyData?.name} />
+      <div className="my-4 flex w-full flex-col">
+        <div className="mb-3 flex w-full flex-row space-x-3">
+          <SearchSelect onValueChange={handleDatasourceChange} placeholder={'Select datasources'}>
+            {companyDataSources?.map((datasource: CompanyDataSource, index) => (
+              <SearchSelectItem key={index} value={String(datasource.id)}>
+                {datasource.sourceName}
+              </SearchSelectItem>
+            ))}
+          </SearchSelect>
+          <SearchSelect
+            onValueChange={handleMeasurementChange}
+            placeholder={'Select measurement'}
+            disabled={datasource === ''}
+          >
+            {companyMeasurements?.map((measurement, index) => (
+              <SearchSelectItem key={index} value={String(measurement.id)}>
+                {measurement.measurementName}
+              </SearchSelectItem>
+            ))}
+          </SearchSelect>
+          <Button variant="secondary" onClick={handleRefetchDatasources}>
+            <RefreshCcw className="h-4 w-4" />
+          </Button>
+        </div>
+        <Card>
+          <LineChart
+            className="mt-6"
+            data={graphData}
+            index="date"
+            categories={[companyData?.name]}
+            colors={['emerald']}
+            yAxisWidth={40}
+          />
+        </Card>
+      </div>
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
         <section className="mb-8">
           <Card>
@@ -268,12 +393,21 @@ const CompanyPage = ({ params: { companyId } }: { params: { companyId: string } 
                     <Label htmlFor="picture">Choose file</Label>
                     <Input id="picture" type="file" name="attachment" onChange={uploadToClient} />
                   </div>
-                  <Button onClick={handleUpload} disabled={uploadAttachment === ''}>
-                    <ArrowUpTrayIcon className="h-4 w-4" />
-                  </Button>
+                  {uploadLoading === false ? (
+                    <Button onClick={handleUpload} disabled={uploadAttachment === ''}>
+                      <ArrowUpTrayIcon className="h-4 w-4" />
+                    </Button>
+                  ) : (
+                    <>
+                      <Button disabled>
+                        <Loader2Icon className="mr-2 h-4 w-4 animate-spin" />
+                        Please wait
+                      </Button>
+                    </>
+                  )}
                 </div>
               </div>
-              <div className="my-2 flex flex-wrap space-x-2">
+              <div className="my-2 flex flex-wrap">
                 {companyAttachments.length > 0
                   ? companyAttachments?.map((attachment) => (
                       <CompanyAttachment

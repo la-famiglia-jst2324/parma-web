@@ -51,6 +51,7 @@ model Company {
   newsSubscription          NewsSubscription[]
   userCompanyCustomizations UserCompanyCustomization[]
   companySubscription       CompanySubscription[]
+  news                      News[]
 
   @@map("company")
 }
@@ -90,7 +91,7 @@ model NotificationChannel {
   id          Int         @id @default(autoincrement())
   channelType ChannelType @map("channel_type")
   destination String
-  secretId      String? @map("secret_id")
+  secretId    String?     @map("secret_id")
   createdAt   DateTime    @default(now()) @map("created_at")
   modifiedAt  DateTime    @updatedAt @map("modified_at")
 
@@ -101,11 +102,11 @@ model NotificationChannel {
 }
 
 model NotificationSubscription {
-  userId     Int      @map("user_id")
-  channelId  Int      @map("channel_id")
+  userId         Int            @map("user_id")
+  channelId      Int            @map("channel_id")
   channelPurpose ChannelPurpose @map("channel_purpose")
-  createdAt  DateTime @default(now()) @map("created_at")
-  modifiedAt DateTime @updatedAt @map("modified_at")
+  createdAt      DateTime       @default(now()) @map("created_at")
+  modifiedAt     DateTime       @updatedAt @map("modified_at")
 
   // Relation fields
   user    User                @relation("UserToNotificationSubscription", fields: [userId], references: [id], onDelete: Cascade)
@@ -133,18 +134,18 @@ model CompanyAttachment {
 }
 
 model DataSource {
-  id                     Int          @id @default(autoincrement())
-  sourceName             String       @map("source_name")
-  isActive               Boolean      @map("is_active")
-  frequency              Frequency    @map("frequency")
-  healthStatus           HealthStatus @map("health_status")
-  description            String?
-  createdAt              DateTime     @default(now()) @map("created_at")
-  modifiedAt             DateTime     @updatedAt @map("modified_at")
-  maxRunSeconds          Int          @default(300) @map("max_run_seconds")
-  version                String       @default("1.0")
-  invocationEndpoint     String       @default("") @map("invocation_endpoint")
-  additionalParams       Json?        @map("additional_params")
+  id                 Int          @id @default(autoincrement())
+  sourceName         String       @map("source_name")
+  isActive           Boolean      @map("is_active")
+  frequency          Frequency    @map("frequency")
+  healthStatus       HealthStatus @map("health_status")
+  description        String?
+  createdAt          DateTime     @default(now()) @map("created_at")
+  modifiedAt         DateTime     @updatedAt @map("modified_at")
+  maxRunSeconds      Int          @default(300) @map("max_run_seconds")
+  version            String       @default("1.0")
+  invocationEndpoint String       @default("") @map("invocation_endpoint")
+  additionalParams   Json?        @map("additional_params")
 
   // Relations
   companyDataSource                  CompanyDataSource[]
@@ -152,6 +153,7 @@ model DataSource {
   sourceMeasurements                 SourceMeasurement[]
   userImportantMeasurementPreference UserImportantMeasurementPreference[]
   scheduledTasks                     ScheduledTask[]
+  news                               News[]
 
   @@map("data_source")
 }
@@ -163,7 +165,7 @@ model ScheduledTask {
   scheduledAt   DateTime     @default(now()) @map("scheduled_at")
   startedAt     DateTime?    @map("started_at")
   endedAt       DateTime?    @map("ended_at")
-  maxRunSeconds          Int @default(300) @map("max_run_seconds")
+  maxRunSeconds Int          @default(300) @map("max_run_seconds")
   resultSummary String?      @map("result_summary")
   status        TaskStatus   @default(PENDING)
   attempts      Int          @default(0)
@@ -175,6 +177,7 @@ model ScheduledTask {
 }
 
 model CompanyDataSource {
+  id                 Int          @id @default(autoincrement()) @map("id")
   dataSourceId       Int          @map("data_source_id")
   companyId          Int          @map("company_id")
   isDataSourceActive Boolean      @map("is_data_source_active")
@@ -183,10 +186,11 @@ model CompanyDataSource {
   modifiedAt         DateTime     @updatedAt @map("modified_at")
 
   // Relations
-  dataSources DataSource @relation(fields: [dataSourceId], references: [id], onDelete: Cascade)
-  companies   Company    @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  dataSources                  DataSource                    @relation(fields: [dataSourceId], references: [id], onDelete: Cascade)
+  companies                    Company                       @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  CompanyDataSourceIdentifiers CompanyDataSourceIdentifier[]
 
-  @@id([dataSourceId, companyId])
+  @@unique([dataSourceId, companyId])
   @@map("company_data_source")
 }
 
@@ -220,6 +224,57 @@ model Notification {
   @@map("notification")
 }
 
+model NotificationRules {
+  ruleId                Int      @id @default(autoincrement()) @map("rule_id")
+  ruleName              String   @map("rule_name")
+  sourceMeasurementId   Int      @map("source_measurement_id")
+  threshold             Float    @map("threshold")
+  aggregationMethod     String?  @map("aggregation_method")
+  numAggregationEntries Int?     @map("num_aggregation_entries")
+  notificationMessage   String?  @map("notification_message")
+  createdAt             DateTime @default(now()) @map("created_at")
+  modifiedAt            DateTime @updatedAt @map("modified_at")
+
+  // relations
+  sourceMeasurement SourceMeasurement @relation(fields: [sourceMeasurementId], references: [id], onDelete: Cascade)
+
+  @@map("notification_rules")
+}
+
+model News {
+  id            Int      @id @default(autoincrement())
+  message       String   @map("message")
+  companyId     Int      @map("company_id")
+  dataSourceId  Int      @map("data_source_id")
+  triggerFactor String?  @map("trigger_factor")
+  title         String?  @map("title")
+  timestamp     DateTime
+  createdAt     DateTime @default(now()) @map("created_at")
+  modifiedAt    DateTime @updatedAt @map("modified_at")
+  sourceMeasurementId Int @map("source_measurement_id")
+
+  // Relations
+  company    Company    @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  dataSource DataSource @relation(fields: [dataSourceId], references: [id])
+  sourceMeasurement SourceMeasurement @relation(fields: [sourceMeasurementId], references: [id])
+
+  @@map("news")
+}
+
+model NewsSubscription {
+  userId     Int      @map("user_id")
+  companyId  Int      @map("company_id")
+  createdAt  DateTime @default(now()) @map("created_at")
+  modifiedAt DateTime @updatedAt @map("modified_at")
+
+  // relations
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  @@id([userId, companyId])
+  @@map("news_subscription")
+}
+
 model SourceMeasurement {
   id                  Int      @id @default(autoincrement())
   sourceModuleId      Int      @map("source_module_id")
@@ -235,6 +290,8 @@ model SourceMeasurement {
   userMetricCustomization   UserMetricCustomization[]
   parentSourceMeasurement   SourceMeasurement?         @relation(name: "ParentChild", fields: [parentMeasurementId], references: [id], onDelete: Cascade)
   childSourceMeasurements   SourceMeasurement[]        @relation("ParentChild")
+  NotificationRules         NotificationRules[]
+  news                      News[]
 
   @@map("source_measurement")
 }
@@ -254,9 +311,9 @@ model CompanySourceMeasurement {
   measurementCommentValues   MeasurementCommentValue[]
   measurementParagraphValues MeasurementParagraphValue[]
   measurementLinkValues      MeasurementLinkValue[]
-  measurementImageValues      MeasurementImageValue[]
+  measurementImageValues     MeasurementImageValue[]
   measurementDateValues      MeasurementDateValue[]
-  measurementNestedValues      MeasurementNestedValue[]
+  measurementNestedValues    MeasurementNestedValue[]
 
   @@map("company_source_measurement")
 }
@@ -416,20 +473,6 @@ model UserImportantMeasurementPreference {
   @@map("user_important_measurement_preference")
 }
 
-model NewsSubscription {
-  userId     Int      @map("user_id")
-  companyId  Int      @map("company_id")
-  createdAt  DateTime @default(now()) @map("created_at")
-  modifiedAt DateTime @updatedAt @map("modified_at")
-
-  // relations
-  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
-
-  @@id([userId, companyId])
-  @@map("news_subscription")
-}
-
 model UserCustomization {
   id         Int      @id @default(autoincrement())
   name       String
@@ -485,6 +528,21 @@ model CompanySubscription {
 
   @@id([userId, companyId])
   @@map("company_subscription")
+}
+
+model CompanyDataSourceIdentifier {
+  id                  Int            @id @default(autoincrement())
+  companyDataSourceId Int            @map("company_data_source_id")
+  identifierKey       String         @map("identifier_key")
+  identifierType      IdentifierType @map("identifier_type")
+  property            String
+  value               String
+  validity            DateTime
+
+  // Relation fields
+  companyDataSource CompanyDataSource @relation(fields: [companyDataSourceId], references: [id], onDelete: Cascade)
+
+  @@map("company_data_source_identifier")
 }
 
 // -------------------------------------- ENUMS ----------------------------------------
@@ -555,4 +613,11 @@ enum ScheduleType {
   REGULAR
 
   @@map("schedule_type")
+}
+
+enum IdentifierType {
+  AUTOMATICALLY_DISCOVERED
+  MANUALLY_ADDED
+
+  @@map("identifier_type")
 }

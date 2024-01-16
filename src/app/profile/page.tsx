@@ -9,9 +9,9 @@ import profilePic from '@/../../public/Default_pfp.jpg'
 import { FormContent } from '@/components/FormContent'
 import { MainLayoutWrapper } from '@/components/layout/MainLayout'
 import { AuthContext, authResetPassword } from '@/lib/firebase/auth'
-import ProfileImageModal from '@/components/profile/ProfileImageModal'
 import { getUserAttachment, putUserAttachment, putUsername } from '@/services/user/userService'
 import { toast } from '@/components/ui/use-toast'
+import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog'
 
 const ProfilePage: React.FC = () => {
   const user = useContext(AuthContext)
@@ -54,14 +54,7 @@ const ProfilePage: React.FC = () => {
   }, [])
   const userMail = user === 'loading' ? null : user?.email
   const userFullName = user === 'loading' ? null : user?.displayName
-  const [isModalOpen, setIsModalOpen] = useState(false)
 
-  const handleImageClick = () => {
-    setIsModalOpen(true)
-  }
-  const closeModal = () => {
-    setIsModalOpen(false)
-  }
   const handleSubmit = async () => {
     let timeoutId: NodeJS.Timeout | null = null
     try {
@@ -108,14 +101,14 @@ const ProfilePage: React.FC = () => {
       console.log('value:', response.profilePicture)
       setUserPhotoURL(response.profilePicture)
       toast({
-        title: `Attachment uploaded successfully`,
-        description: 'You have successfully uploaded an attachment',
+        title: `Upload successful`,
+        description: 'your profile picture is successfully uploaded',
         duration: 5000
       })
     } catch (error) {
-      console.error('Error uploading the file:', error)
+      console.error('Error uploading the profile picture:', error)
       toast({
-        title: `Error uploading the file`,
+        title: `Error uploading the profile picture`,
         description: 'Please upload file in jpg format only',
         duration: 5000
       })
@@ -129,17 +122,26 @@ const ProfilePage: React.FC = () => {
       <div className="flex justify-center">
         <div className="m-2 ml-10 flex-col pt-12 ">
           <div className="flex justify-center">
-            <Image
-              className="mb-5 block h-[180px] w-[180px] rounded-full transition duration-500 ease-in hover:cursor-pointer hover:shadow-[0_0_15px_15px_rgba(63,55,201,0.5)] hover:delay-75"
-              src={userPhotoURL || profilePic}
-              width={500}
-              height={500}
-              alt="Profile"
-              onClick={handleImageClick}
-            />
-            {isModalOpen && (
-              <ProfileImageModal src={userPhotoURL?.toString() || profilePic} alt="Profile" onClose={closeModal} />
-            )}
+            <Dialog>
+              <DialogTrigger asChild>
+                <Image
+                  className="mb-5 block h-[180px] w-[180px] rounded-full transition duration-500 ease-in hover:cursor-pointer hover:shadow-[0_0_15px_15px_rgba(63,55,201,0.5)] hover:delay-75"
+                  src={userPhotoURL || profilePic}
+                  width={500}
+                  height={500}
+                  alt="Profile"
+                />
+              </DialogTrigger>
+              <DialogContent>
+                <Image
+                  src={userPhotoURL?.toString() || profilePic}
+                  alt={'Profile'}
+                  width={510}
+                  height={400}
+                  className="rounded"
+                />
+              </DialogContent>
+            </Dialog>
           </div>
 
           <div className="flex justify-center gap-1.5">

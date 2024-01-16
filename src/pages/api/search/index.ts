@@ -14,18 +14,18 @@ import { withAuthValidation } from '@/api/middleware/auth'
  *     parameters:
  *       - in: query
  *         name: name
- *         required: true
+ *         required: false
  *         schema:
  *           type: string
  *       - in: query
  *         name: page
- *         required: true
+ *         required: false
  *         schema:
  *           type: integer
  *           default: 1
  *       - in: query
  *         name: pageSize
- *         required: true
+ *         required: false
  *         schema:
  *           type: integer
  *           default: 10

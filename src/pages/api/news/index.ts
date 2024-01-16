@@ -172,6 +172,8 @@ export type NewsData = z.infer<typeof NewsSchema>
  *               type: integer
  *             totalCount:
  *               type: integer
+ *         bucketName:
+ *           type: string
  */
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const { method } = req

@@ -90,7 +90,7 @@ import { ItemNotFoundError } from '@/api/utils/errorUtils'
  *         companyId:
  *           type: integer
  */
-export default async (req: NextApiRequest, res: NextApiResponse) => {
+export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const { method } = req
 
   const { page = 1, pageSize = 10 } = req.query
@@ -125,3 +125,5 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       break
   }
 }
+
+export default handler // No auth

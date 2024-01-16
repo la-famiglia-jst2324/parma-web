@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 
 import { getIntValueByID } from '@/api/db/services/intValueService'
 
-export default async (req: NextApiRequest, res: NextApiResponse) => {
+export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const { method } = req
   const { valueId } = req.query
 
@@ -22,3 +22,5 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       break
   }
 }
+
+export default handler // No auth

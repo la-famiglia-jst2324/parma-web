@@ -52,7 +52,7 @@ import { ItemNotFoundError } from '@/api/utils/errorUtils'
  *           type: string
  */
 
-const handler = async (req: NextApiRequest, res: NextApiResponse, user: User) => {
+export const handler = async (req: NextApiRequest, res: NextApiResponse, user: User) => {
   const { method } = req
   const userId = user.id
   const { companyId } = req.query

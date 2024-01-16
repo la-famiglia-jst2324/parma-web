@@ -58,7 +58,7 @@ const NewsSchema = z.object({
 
 export type NewsData = z.infer<typeof NewsSchema>
 
-const handler = async (req: NextApiRequest, res: NextApiResponse) => {
+export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const { method } = req
 
   switch (method) {

@@ -9,6 +9,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
+
 interface CompanyAttachmentProps {
   fileId: string
   fileType: string
@@ -35,10 +36,10 @@ const CompanyAttachment: React.FC<CompanyAttachmentProps> = ({ fileId, fileType,
   }
 
   return (
-    <Card>
+    <Card className="m-0.5">
       <CardHeader>
-        <div className="flex max-w-[300px] items-center space-x-4">
-          <CardTitle className="text-lg">{title}</CardTitle>
+        <div className="flex max-w-[150px] items-center space-x-2">
+          <CardTitle className="text-sm">{title}</CardTitle>
           <DropdownMenu>
             <DropdownMenuTrigger>
               <MoreHorizontalIcon className="h-6 w-6" />
@@ -57,7 +58,7 @@ const CompanyAttachment: React.FC<CompanyAttachmentProps> = ({ fileId, fileType,
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
-        <CardDescription>Filetype: {fileType}</CardDescription>
+        <CardDescription className="text-xs">Filetype: {fileType}</CardDescription>
       </CardHeader>
     </Card>
   )

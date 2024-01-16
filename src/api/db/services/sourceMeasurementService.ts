@@ -1,4 +1,5 @@
 import { prisma } from '../prisma/prismaClient'
+import { ItemNotFoundError } from '@/api/utils/errorUtils'
 
 const createSourceMeasurement = async (data: {
   sourceModuleId: number
@@ -27,7 +28,7 @@ const getSourceMeasurementByID = async (id: number) => {
       where: { id }
     })
     if (!measurement) {
-      throw new Error(`source measurement with ID ${id} not found.`)
+      throw new ItemNotFoundError(`source measurement with ID ${id} not found.`)
     }
     return measurement
   } catch (error) {

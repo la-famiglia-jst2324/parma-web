@@ -1,11 +1,10 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-
 import {
   getSourceMeasurementByID,
   updateSourceMeasurement,
-  deleteSourceMeasurement
+  deleteSourceMeasurement,
+  getChildMeasurementsByParentId
 } from '@/api/db/services/sourceMeasurementService'
-
 import { ItemNotFoundError } from '@/api/utils/errorUtils'
 /**
  * @swagger
@@ -97,9 +96,11 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     case 'GET':
       try {
         const measurement = await getSourceMeasurementByID(Number(measurementId))
-        if (measurement) res.status(200).json(measurement)
-        else res.status(400).json({ error: 'No Data Source Measurement found' })
+        const child = await getChildMeasurementsByParentId(Number(measurementId))
+        const result = [measurement, ...child].filter(Boolean)
+        if (result) res.status(200).json(result)
       } catch (error) {
+        if (error instanceof ItemNotFoundError) res.status(404).json({ error: error.message })
         res.status(500).json({ error: 'Internal Server Error' })
       }
       break

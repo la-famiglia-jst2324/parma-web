@@ -6,19 +6,15 @@ import { MainLayoutWrapper } from '@/components/layout/MainLayout'
 import { HeaderComponent } from '@/components/datasources/DatasourcePageHeader'
 import { ButtonGroup } from '@/components/datasources/ButtonGroup'
 import { TabComponent } from '@/components/datasources/DatasourceTabComponent'
-import { useModal } from '@/components/datasources/hooks/useModal'
 
 function DatasourcePage({ params: { id } }: { params: { id: string } }) {
   const [data, setData] = useState<DataSource>()
-  const disableModal = useModal()
-  const deleteModal = useModal()
-  const editModal = useModal()
   const [sourceName, setName] = useState<string>('')
   const [description, setDescription] = useState<string>('')
   const [invocationEndpoint, setInvocationEndpoint] = useState<string>('')
   const [, setStatus] = useState<boolean>(false)
   const [isLoading, setIsLoading] = useState<boolean>(true)
-
+  console.log(sourceName, description, invocationEndpoint)
   useEffect(() => {
     getDatasourceById(id)
       .then((datasource) => {
@@ -46,24 +42,6 @@ function DatasourcePage({ params: { id } }: { params: { id: string } }) {
     )
   }
 
-  const handleDisableButtonClick = () => {
-    disableModal.openModal()
-  }
-
-  const handleDeleteButtonClick = async () => {
-    deleteModal.openModal()
-  }
-
-  const handleEditButtonClick = async () => {
-    editModal.openModal()
-  }
-
-  const handleClose = () => {
-    disableModal.closeModal()
-    deleteModal.closeModal()
-    editModal.closeModal()
-  }
-
   const handleSave = async (
     newName: string,
     newDescription: string,
@@ -83,21 +61,14 @@ function DatasourcePage({ params: { id } }: { params: { id: string } }) {
         setDescription(newDescription)
         setInvocationEndpoint(newInvocationEndpoint)
         setStatus(newStatus)
-        handleClose()
       }
     } catch (error) {
       console.error('Failed to update datasource:', error)
     }
   }
 
-  const handleEnableButtonClick = async () => {
-    handleSave(sourceName, description, invocationEndpoint, true).catch((error) => {
-      console.error('An error occurred:', error)
-    })
-  }
-
   return (
-    <main className="m-4 ml-9 flex h-[68em] flex-col items-start justify-start space-y-4" role="main">
+    <div>
       <div className="flex items-center justify-between ">
         <div>
           <HeaderComponent data={data} />
@@ -108,22 +79,15 @@ function DatasourcePage({ params: { id } }: { params: { id: string } }) {
               handleSave(updates.newName, updates.newDescription, updates.newUrl, updates.newStatus)
             }
             data={data}
-            handleDisableButtonClick={handleDisableButtonClick}
-            handleDeleteButtonClick={handleDeleteButtonClick}
-            handleEnableButtonClick={handleEnableButtonClick}
-            handleEditButtonClick={handleEditButtonClick}
-            disableModal={disableModal}
-            deleteModal={deleteModal}
-            editModal={editModal}
           />
         </div>
       </div>
       <div className="flex flex-col items-start justify-start space-y-4">
-        <div className="flex flex-col items-start justify-start space-y-4 font-semibold text-gray-500">DESCRIPTION</div>
+        <div className="flex flex-col items-start justify-start font-semibold text-gray-500">DESCRIPTION</div>
         <p className="mb-1 text-base text-gray-700">{data.description}</p>
       </div>
       <TabComponent sourceId={data.id.toString()} />
-    </main>
+    </div>
   )
 }
 

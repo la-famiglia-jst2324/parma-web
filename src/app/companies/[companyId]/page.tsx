@@ -74,6 +74,11 @@ interface CompanyMeasurement {
   type: string
 }
 
+interface DataItem {
+  date: string
+  [key: string]: number | string
+}
+
 const CompanyPage = ({ params: { companyId } }: { params: { companyId: string } }) => {
   const [companyData, setCompanyData] = useState<CompanyData>({
     name: '',
@@ -88,8 +93,7 @@ const CompanyPage = ({ params: { companyId } }: { params: { companyId: string } 
   const [companyMeasurements, setCompanyMeasurements] = useState<CompanyMeasurement[]>([])
   const [datasource, setDatasource] = useState<string>('')
   const [measurement, setMeasurement] = useState<string>('')
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const [graphData, setGraphData] = useState<any[]>([])
+  const [graphData, setGraphData] = useState<DataItem[]>([])
   const [uploadLoading, setUploadLoading] = useState<boolean>(false)
 
   useEffect(() => {
@@ -276,6 +280,7 @@ const CompanyPage = ({ params: { companyId } }: { params: { companyId: string } 
 
   const handleMeasurementChange = (value: string) => {
     setMeasurement(value)
+    handleGetMeasurementData()
   }
 
   const handleGetMeasurementData = async () => {
@@ -340,9 +345,6 @@ const CompanyPage = ({ params: { companyId } }: { params: { companyId: string } 
               </SearchSelectItem>
             ))}
           </SearchSelect>
-          <Button onClick={handleGetMeasurementData} variant={'secondary'}>
-            Show Data
-          </Button>
           <Button variant="secondary" onClick={handleRefetchDatasources}>
             <RefreshCcw className="h-4 w-4" />
           </Button>
@@ -358,7 +360,6 @@ const CompanyPage = ({ params: { companyId } }: { params: { companyId: string } 
           />
         </Card>
       </div>
-      {/* <PerformancePanel companyId={companyId} companyName={companyData?.name} /> */}
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
         <section className="mb-8">
           <Card>

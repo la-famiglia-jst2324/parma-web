@@ -29,10 +29,10 @@ const config = {
   coverageThreshold: {
     global: {
       "functions": 0,  // we don't enforce coverage on lines currently
-      "lines": 40
+      "lines": 45
     }
   },
-  coverageReporters: ["json-summary"]
+  coverageReporters: ["json-summary", 'html']
 }
 
 export default createJestConfig(config)

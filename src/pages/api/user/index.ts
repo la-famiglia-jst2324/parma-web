@@ -93,7 +93,7 @@ import { withAuthValidation } from '@/api/middleware/auth'
  *         description: Internal Server Error.
  */
 
-const handler = async (req: NextApiRequest, res: NextApiResponse, user: User) => {
+export const handler = async (req: NextApiRequest, res: NextApiResponse, user: User) => {
   const { method } = req
   const userId = user.id
   switch (method) {

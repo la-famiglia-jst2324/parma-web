@@ -66,7 +66,7 @@ import { withAuthValidation } from '@/api/middleware/auth'
  *           type: string
  */
 
-const handler = async (req: NextApiRequest, res: NextApiResponse, user: User) => {
+export const handler = async (req: NextApiRequest, res: NextApiResponse, user: User) => {
   const { method } = req
   const userId = user.id
 

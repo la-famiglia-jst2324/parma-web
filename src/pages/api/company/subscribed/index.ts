@@ -101,7 +101,7 @@ const companySubscriptionSchema = z.object({
  *           type: string
  */
 
-const handler = async (req: NextApiRequest, res: NextApiResponse, user: User) => {
+export const handler = async (req: NextApiRequest, res: NextApiResponse, user: User) => {
   const { method } = req
   const userId = user.id
   const flag = req.query.subscribe

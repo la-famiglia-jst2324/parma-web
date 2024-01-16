@@ -1,8 +1,8 @@
 import fs from 'fs'
 import type formidable from 'formidable'
-import admin from 'firebase-admin'
 import type { FileType } from '@prisma/client'
 import { v4 as UUID } from 'uuid'
+import admin from '@/api/firebase/main'
 
 const uploadFileToFirebase = async (
   incomingFile: formidable.File,

@@ -10,7 +10,7 @@ import {
   getAllCompanyDataSourceIdentifiers
 } from '@/api/db/services/companyDataSourceIdentifierService'
 
-const handler = async (req: NextApiRequest, res: NextApiResponse) => {
+export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const { method } = req
   const { id, companyDataSourceId, page = '1', pageSize = '10' } = req.query
 

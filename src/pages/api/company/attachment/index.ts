@@ -4,7 +4,7 @@ import { getAllAttachmentsForCompany, createAttachment } from '@/api/db/services
 import { ItemNotFoundError } from '@/api/utils/errorUtils'
 import { withAuthValidation } from '@/api/middleware/auth'
 
-const handler = async (req: NextApiRequest, res: NextApiResponse, user: User) => {
+export const handler = async (req: NextApiRequest, res: NextApiResponse, user: User) => {
   const { method } = req
   const companyId = parseInt(req.query.companyId as string, 10)
   const userId = user.id

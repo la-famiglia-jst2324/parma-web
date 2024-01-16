@@ -26,6 +26,7 @@ const updateDataSourceSchema = z.object({
     .optional()
     .refine((val) => !val || val.trim() !== '', { message: 'Invocation endpoint cannot be empty.' })
 })
+
 /**
  * @swagger
  * /api/dataSources/dataSourceId:
@@ -58,9 +59,70 @@ const updateDataSourceSchema = z.object({
  *         description: No relation found or no data source measurements found.
  *       500:
  *         description: Internal Server Error.
+ *
+ *   put:
+ *     tags:
+ *       - dataSource
+ *     summary: Update a data source
+ *     description: Updates the details of an existing data source based on the provided ID.
+ *     parameters:
+ *       - in: query
+ *         name: dataSourceId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               sourceName:
+ *                 type: string
+ *               isActive:
+ *                 type: boolean
+ *               frequency:
+ *                 type: string
+ *               healthStatus:
+ *                 type: string
+ *               invocationEndpoint:
+ *                 type: string
+ *               description:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Successfully updated the data source.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/DataSource'
+ *       400:
+ *         description: Validation error or no Data Source found.
+ *       404:
+ *         description: Data Source not found.
+ *       500:
+ *         description: Internal Server Error.
+ *
+ *   delete:
+ *     tags:
+ *       - dataSource
+ *     summary: Delete a data source
+ *     description: Deletes a specific data source based on the provided ID.
+ *     parameters:
+ *       - in: query
+ *         name: dataSourceId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Data Source successfully deleted.
+ *       500:
+ *         description: Internal Server Error.
  * components:
  *   schemas:
- *     SourceMeasurement:
+ *     MeasurementWithCompanyId:
  *       type: object
  *       required:
  *         - id
@@ -88,6 +150,7 @@ const updateDataSourceSchema = z.object({
  *         modifiedAt:
  *           type: string
  */
+
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const { method } = req
   const { dataSourceId } = req.query

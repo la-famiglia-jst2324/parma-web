@@ -1,5 +1,5 @@
 import { createMocks } from 'node-mocks-http'
-import handler from '@/pages/api/reports/[reportId]'
+import { handler } from '@/pages/api/reports/[reportId]'
 import { getReportById, deleteReport, updateReport } from '@/api/db/services/reportService'
 jest.mock('@/api/db/services/reportService')
 

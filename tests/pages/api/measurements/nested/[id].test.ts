@@ -1,5 +1,5 @@
 import { createMocks } from 'node-mocks-http'
-import handler from '@/pages/api/measurements/nested/[id]'
+import { handler } from '@/pages/api/measurements/nested/[id]'
 import {
   getChildMeasurementsByParentId,
   updateParentMeasurementId,

@@ -1,12 +1,12 @@
 import { createMocks } from 'node-mocks-http'
-import handler from '@/pages/api/user/[userId]'
+import { handler } from '@/pages/api/user/[userId]'
 import { getUserById, updateUser, deleteUser } from '@/api/db/services/userService'
 jest.mock('@/api/db/services/userService')
 const mockUser = {
   id: 1,
   authId: 'AAAAAdfw',
   name: 'ZL',
-  profilePicture: 'pic',
+  profilePicture: '',
   role: 'USER',
   createdAt: '2023-12-01T15:22:29.146Z',
   modifiedAt: '2023-12-01T15:22:29.146Z'

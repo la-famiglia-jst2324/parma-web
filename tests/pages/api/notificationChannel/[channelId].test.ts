@@ -1,5 +1,5 @@
 import { createMocks } from 'node-mocks-http'
-import handler from '@/pages/api/notificationChannel/[channelId]'
+import { handler } from '@/pages/api/notificationChannel/[channelId]'
 import {
   deleteNotificationChannel,
   getNotificationChannelById,

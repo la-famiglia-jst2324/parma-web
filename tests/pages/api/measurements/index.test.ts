@@ -1,6 +1,6 @@
 import { createMocks } from 'node-mocks-http'
 import type { NextApiRequest, NextApiResponse } from 'next'
-import handler from '@/pages/api/measurements'
+import { handler } from '@/pages/api/measurements'
 import { createDataSource } from '@/api/db/services/dataSourceService'
 import { createSourceMeasurement, getAllSourceMeasurements } from '@/api/db/services/sourceMeasurementService'
 import { getCompanySourceMeasurementByCompanyId } from '@/api/db/services/companySourceMeasurementService'

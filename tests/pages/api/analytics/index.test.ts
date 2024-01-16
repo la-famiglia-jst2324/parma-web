@@ -1,7 +1,7 @@
 import { createMocks } from 'node-mocks-http'
 import type { User } from '@prisma/client'
 import type { NextApiRequest, NextApiResponse } from 'next'
-import handler from '@/pages/api/analytics/index'
+import { handler } from '@/pages/api/analytics/index'
 import { getValueByMeasurementIdCompanyId } from '@/api/db/services/companySourceMeasurementService'
 import { ItemNotFoundError } from '@/api/utils/errorUtils'
 
@@ -14,7 +14,7 @@ jest.mock('@/api/middleware/auth', () => ({
   })
 }))
 
-describe('Your API Handler', () => {
+describe('Get measurement value', () => {
   afterEach(() => {
     jest.resetAllMocks()
   })

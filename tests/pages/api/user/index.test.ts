@@ -1,60 +1,39 @@
 import { createMocks } from 'node-mocks-http'
-import type { NextApiRequest, NextApiResponse } from 'next'
 import type { User } from '@prisma/client'
-import handler from '@/pages/api/user/index'
+import { randomUserDummy } from '@tests/data/dummy/user'
+import { handler } from '@/pages/api/user/index'
 import { createUser, getAllUsers, getUserById, updateUser } from '@/api/db/services/userService'
 jest.mock('@/api/db/services/userService')
-jest.mock('@/api/middleware/auth', () => ({
-  withAuthValidation: jest.fn().mockImplementation((handler) => {
-    return async (req: NextApiRequest, res: NextApiResponse, user: User) => {
-      return handler(req, res, user)
-    }
-  })
-}))
-const mockUser: User = {
-  id: 1,
+const mockUserIn: User = {
   authId: 'AAAAAdfw',
   name: 'ZL',
-  profilePicture: 'pic',
-  role: 'USER',
+  profilePicture: '',
+  role: 'USER'
+}
+const mockUser: User = {
+  ...mockUserIn,
+  id: 1,
   createdAt: new Date(),
   modifiedAt: new Date()
 }
-const users = {
-  users: [
-    {
-      id: 1,
-      authId: 'AAAAAdfw',
-      name: 'ZL',
-      profilePicture: 'pic',
-      role: 'USER',
-      createdAt: new Date(),
-      modifiedAt: new Date()
-    },
-    {
-      id: 2,
-      authId: 'AAAAAdadfw',
-      name: 'zl',
-      profilePicture: 'pict',
-      role: 'USER',
-      createdAt: new Date(),
-      modifiedAt: new Date()
-    }
-  ]
-}
+const users = [
+  randomUserDummy({ managedFields: true }),
+  randomUserDummy({ managedFields: true }),
+  randomUserDummy({ managedFields: true })
+]
 describe('User API', () => {
   afterEach(() => {
     jest.resetAllMocks()
   })
 
   test('GET return all users', async () => {
-    getAllUsers.mockResolvedValue(users)
+    await getAllUsers.mockResolvedValue(users)
     const { req, res } = createMocks({
       method: 'GET'
     })
     await handler(req, res, mockUser)
-    // expect(res._getStatusCode()).toBe(200)
-    // expect(JSON.parse(res._getData())).toEqual(users)
+    expect(res._getStatusCode()).toBe(200)
+    expect(JSON.parse(res._getData())).toEqual(users)
   })
 
   test('POST creates a new user', async () => {
@@ -65,7 +44,7 @@ describe('User API', () => {
       body: {
         authId: 'AAAAAdfw',
         name: 'ZL',
-        profilePicture: 'pic',
+        profilePicture: '',
         role: 'USER'
       }
     })
@@ -74,8 +53,8 @@ describe('User API', () => {
   })
 
   test('PUT update a user profile', async () => {
-    const existingUser = getUserById.mockResolvedValueOnce(mockUser)
-    updateUser.mockResolvedValueOnce(existingUser)
+    getUserById.mockResolvedValueOnce(mockUser)
+    updateUser.mockResolvedValueOnce(mockUser)
     const { req, res } = createMocks({
       method: 'PUT'
     })

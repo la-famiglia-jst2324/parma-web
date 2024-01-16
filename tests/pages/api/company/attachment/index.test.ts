@@ -1,7 +1,7 @@
 import { createMocks } from 'node-mocks-http'
 import type { User } from '@prisma/client'
 import type { NextApiRequest, NextApiResponse } from 'next'
-import handler from '@/pages/api/company/attachment/index'
+import { handler } from '@/pages/api/company/attachment/index'
 import { getAllAttachmentsForCompany, createAttachment } from '@/api/db/services/attachmentService'
 import { ItemNotFoundError } from '@/api/utils/errorUtils'
 jest.mock('@/api/db/services/attachmentService')

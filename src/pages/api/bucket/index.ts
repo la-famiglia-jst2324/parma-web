@@ -116,10 +116,9 @@ import { withAuthValidation } from '@/api/middleware/auth'
  *         modifiedAt:
  *           type: string
  */
-const handler = async (req: NextApiRequest, res: NextApiResponse, user: User) => {
+export const handler = async (req: NextApiRequest, res: NextApiResponse, user: User) => {
   const { method } = req
   const bucketName = req.query.name
-  const userId = user.id
   const { page, pageSize } = req.query
 
   switch (method) {
@@ -146,7 +145,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse, user: User) =>
     case 'POST':
       try {
         // Create a new bucket
-        const newBucket = await createBucket({ ownerId: userId, ...req.body })
+        const newBucket = await createBucket({ ownerId: user.id, ...req.body })
         if (newBucket) {
           res.status(201).json(newBucket)
         } else res.status(400).json({ error: 'Invalid request parameters' })

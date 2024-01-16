@@ -1,5 +1,5 @@
 import { createMocks } from 'node-mocks-http'
-import handler from '@/pages/api/notificationChannel'
+import { handler } from '@/pages/api/notificationChannel'
 import { createNotificationChannel } from '@/api/db/services/notificationChannelService'
 jest.mock('@/api/db/services/notificationChannelService')
 

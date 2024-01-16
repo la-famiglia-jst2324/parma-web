@@ -1,5 +1,5 @@
 import { createMocks } from 'node-mocks-http'
-import handler from '@/pages/api/measurements/commentValues/[valueId]'
+import { handler } from '@/pages/api/measurements/commentValues/[valueId]'
 import { getCommentValueByID } from '@/api/db/services/commentValueService'
 jest.mock('@/api/db/services/commentValueService')
 

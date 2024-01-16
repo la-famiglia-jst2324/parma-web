@@ -1,5 +1,5 @@
 import { createMocks } from 'node-mocks-http'
-import handler from '@/pages/api/notification/[notificationId]'
+import { handler } from '@/pages/api/notification/[notificationId]'
 import { getNotificationById, deleteNotification, updateNotification } from '@/api/db/services/notificationService'
 import { ItemNotFoundError } from '@/api/utils/errorUtils'
 jest.mock('@/api/db/services/notificationService')

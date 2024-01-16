@@ -1,7 +1,7 @@
 import { createMocks } from 'node-mocks-http'
 import type { User } from '@prisma/client'
 import type { NextApiRequest, NextApiResponse } from 'next'
-import handler from '@/pages/api/company/subscribed/index'
+import { handler } from '@/pages/api/company/subscribed/index'
 import {
   createCompanySubscription,
   deleteCompanySubscription,

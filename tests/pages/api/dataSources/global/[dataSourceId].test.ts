@@ -1,5 +1,5 @@
 import { createMocks } from 'node-mocks-http'
-import handler from '@/pages/api/dataSources/global/[dataSourceId]'
+import { handler } from '@/pages/api/dataSources/global/[dataSourceId]'
 import { getDataSourceByID, updateDataSource } from '@/api/db/services/dataSourceService'
 jest.mock('@/api/db/services/dataSourceService')
 

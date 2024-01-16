@@ -1,7 +1,6 @@
 import { createMocks } from 'node-mocks-http'
 import type { User } from '@prisma/client'
-import type { NextApiRequest, NextApiResponse } from 'next'
-import handler from '@/pages/api/companyBucketRelation'
+import { handler } from '@/pages/api/companyBucketRelation'
 import {
   getBucketsByCompanyId,
   getCompaniesByBucketId,
@@ -15,13 +14,6 @@ import { ItemNotFoundError } from '@/api/utils/errorUtils'
 jest.mock('@/api/db/services/companyBucketMembershipService')
 jest.mock('@/api/db/services/companyService')
 jest.mock('@/api/db/services/bucketService')
-jest.mock('@/api/middleware/auth', () => ({
-  withAuthValidation: jest.fn().mockImplementation((handler) => {
-    return async (req: NextApiRequest, res: NextApiResponse, user: User) => {
-      return handler(req, res, user)
-    }
-  })
-}))
 const mockUser: User = {
   id: 1,
   authId: 'AAAAAdfw',
@@ -49,9 +41,12 @@ const mockCompany = {
   createdAt: '2023-12-02T21:23:57.281Z',
   modifiedAt: '2023-12-02T21:23:57.281Z'
 }
+const mockMemberShipIn = {
+  companyId: '1',
+  bucketId: '1'
+}
 const mockMembership = {
-  companyId: 1,
-  bucketId: 1,
+  ...mockMemberShipIn,
   createdAt: '2023-12-03T21:23:57.281Z',
   modifiedAt: '2023-12-03T21:23:57.281Z'
 }
@@ -117,26 +112,23 @@ describe('Company Bucket Membership API', () => {
   test('POST creates a new membership', async () => {
     createCompany.mockResolvedValueOnce(mockCompany)
     createBucket.mockResolvedValueOnce(mockBucket)
+    getCompanyByID.mockResolvedValueOnce(mockMembership)
+    getCompanyByID.mockResolvedValueOnce(mockMembership)
+    getBucketById.mockResolvedValueOnce(mockBucket)
     const existingMembership = await checkCompanyBucketMembershipExistence.mockResolvedValueOnce(mockMembership)
     if (existingMembership) {
       const { req, res } = createMocks({
         method: 'POST',
-        query: {
-          companyId: '1',
-          bucketId: '1'
-        }
+        body: [mockMemberShipIn]
       })
       await handler(req, res, mockUser)
-      expect(res._getStatusCode()).toBe(200)
-      expect(JSON.parse(res._getData())).toEqual(mockMembership)
+      expect(res._getStatusCode()).toBe(201)
+      expect(JSON.parse(res._getData())).toEqual([mockMembership])
     } else {
       addCompanyToBucket.mockResolvedValueOnce(mockMembership)
       const { req, res } = createMocks({
         method: 'POST',
-        query: {
-          companyId: '1',
-          bucketId: '1'
-        }
+        body: [mockMemberShipIn]
       })
 
       await handler(req, res, mockUser)
@@ -148,7 +140,7 @@ describe('Company Bucket Membership API', () => {
 
     const { req, res } = createMocks({
       method: 'POST',
-      query: { companyId: 'non_existent_id', bucketId: '1' }
+      body: { companyId: 'non_existent_id', bucketId: '1' }
     })
 
     await handler(req, res, mockUser)
@@ -161,11 +153,10 @@ describe('Company Bucket Membership API', () => {
 
     const { req, res } = createMocks({
       method: 'POST',
-      query: { companyId: '1', bucketId: '1' }
+      body: [{ companyId: '1', bucketId: '1' }]
     })
 
     await handler(req, res, mockUser)
-
     expect(res._getStatusCode()).toBe(500)
     expect(JSON.parse(res._getData())).toEqual({ error: 'Internal Server Error' })
   })
@@ -174,12 +165,12 @@ describe('Company Bucket Membership API', () => {
 
     const { req, res } = createMocks({
       method: 'DELETE',
-      query: { companyId: 'non_existent_id', bucketId: '1' }
+      body: { companyId: 'non_existent_id', bucketId: '1' }
     })
 
     await handler(req, res, mockUser)
 
-    expect(res._getStatusCode()).toBe(400)
+    expect(res._getStatusCode()).toBe(404)
   })
   test('DELETE with server error returns 500', async () => {
     removeCompanyFromBucket.mockRejectedValueOnce(new Error('Internal Server Error'))

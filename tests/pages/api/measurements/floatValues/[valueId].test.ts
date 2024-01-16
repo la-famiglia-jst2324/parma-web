@@ -1,5 +1,5 @@
 import { createMocks } from 'node-mocks-http'
-import handler from '@/pages/api/measurements/floatValues/[valueId]'
+import { handler } from '@/pages/api/measurements/floatValues/[valueId]'
 import { getFloatValueByID } from '@/api/db/services/floatValueService'
 jest.mock('@/api/db/services/floatValueService')
 

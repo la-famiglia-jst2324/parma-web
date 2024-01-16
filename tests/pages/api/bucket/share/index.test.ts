@@ -1,10 +1,15 @@
 import { createMocks } from 'node-mocks-http'
-import handler from '@/pages/api/bucket/share/index'
+import { handler } from '@/pages/api/bucket/share/index'
 import { createBucketAccess } from '@/api/db/services/bucketAccessService'
 
 jest.mock('@/api/db/services/bucketAccessService')
 
-const mockAccess = {
+const mockAccessIn = {
+  bucketId: 1,
+  inviteeId: 1,
+  permission: 'VIEWER'
+}
+const mockAccessResult = {
   bucketId: 1,
   inviteeId: 1,
   permission: 'VIEWER',
@@ -17,27 +22,22 @@ describe('Bucket Share API', () => {
   })
 
   test('POST creates a new data source', async () => {
-    createBucketAccess.mockResolvedValueOnce(mockAccess)
+    createBucketAccess.mockResolvedValueOnce(mockAccessResult)
 
     const { req, res } = createMocks({
       method: 'POST',
-      body: {
-        bucketId: 1,
-        inviteeId: 1,
-        permission: 'VIEWER',
-        modifiedAt: '2023-12-02T21:23:57.281Z'
-      }
+      body: [mockAccessIn]
     })
     await handler(req, res)
     expect(res._getStatusCode()).toBe(201)
-    expect(JSON.parse(res._getData())).toEqual(mockAccess)
+    expect(JSON.parse(res._getData())).toEqual([mockAccessResult])
   })
   test('POST with invalid parameters returns 400', async () => {
     createBucketAccess.mockResolvedValueOnce(null) // Simulate failure due to invalid parameters
 
     const { req, res } = createMocks({
       method: 'POST',
-      body: { permission: 'VIEWER' },
+      body: [{ permission: 'VIEWER' }],
       query: { id: '1' }
     })
 
@@ -52,12 +52,7 @@ describe('Bucket Share API', () => {
 
     const { req, res } = createMocks({
       method: 'POST',
-      body: {
-        bucketId: 1,
-        inviteeId: 1,
-        permission: 'VIEWER',
-        modifiedAt: '2023-12-02T21:23:57.281Z'
-      },
+      body: [mockAccessIn],
       query: { id: '1' }
     })
 

@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import { searchCompaniesAndBuckets } from '@/api/db/services/searchService'
 import { withAuthValidation } from '@/api/middleware/auth'
 
-const handler = async (req: NextApiRequest, res: NextApiResponse) => {
+export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const { method } = req
 
   switch (method) {

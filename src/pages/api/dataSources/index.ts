@@ -140,7 +140,7 @@ const frequencyMapping: { [key: string]: Frequency | undefined } = {
  *           type: string
  */
 
-export default async (req: NextApiRequest, res: NextApiResponse) => {
+export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const { method } = req
 
   switch (method) {
@@ -211,3 +211,5 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       break
   }
 }
+
+export default handler // No auth

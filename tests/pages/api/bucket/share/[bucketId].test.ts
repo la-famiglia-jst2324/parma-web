@@ -1,5 +1,5 @@
 import { createMocks } from 'node-mocks-http'
-import handler from '@/pages/api/bucket/share/[bucketId]'
+import { handler } from '@/pages/api/bucket/share/[bucketId]'
 import { getInviteesByBucketId, updateBucketAccess, deleteBucketAccess } from '@/api/db/services/bucketAccessService'
 
 jest.mock('@/api/db/services/bucketAccessService')

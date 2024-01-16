@@ -61,7 +61,7 @@ const newsSourceId = Number(newsSources[0].id)
  *           type: string
  */
 
-export default async (req: NextApiRequest, res: NextApiResponse) => {
+export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const { method } = req
   const companyIds = req.query.companyIds
 
@@ -89,3 +89,5 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       break
   }
 }
+
+export default handler // No auth

@@ -30,7 +30,7 @@ import { getMeasurementsBySourceId } from '@/api/db/services/sourceMeasurementSe
  *         description: Internal Server Error.
  */
 
-export default async (req: NextApiRequest, res: NextApiResponse) => {
+export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const { method } = req
   const { sourceModuleId } = req.query
   switch (method) {
@@ -48,3 +48,5 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       break
   }
 }
+
+export default handler // No auth

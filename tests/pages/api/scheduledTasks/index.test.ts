@@ -1,5 +1,5 @@
 import { createMocks } from 'node-mocks-http'
-import handler from '@/pages/api/scheduledTasks'
+import { handler } from '@/pages/api/scheduledTasks'
 import { createScheduledTask, getAllScheduledTasks } from '@/api/db/services/scheduledTaskService'
 
 jest.mock('@/api/db/services/scheduledTaskService')

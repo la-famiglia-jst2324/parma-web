@@ -1,5 +1,5 @@
 import { createMocks } from 'node-mocks-http'
-import handler from '@/pages/api/measurements/filterBySource/[sourceModuleId]'
+import { handler } from '@/pages/api/measurements/filterBySource/[sourceModuleId]'
 import { getMeasurementsBySourceId } from '@/api/db/services/sourceMeasurementService'
 jest.mock('@/api/db/services/sourceMeasurementService')
 

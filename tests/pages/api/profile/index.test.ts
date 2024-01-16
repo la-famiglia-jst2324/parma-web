@@ -1,7 +1,7 @@
 import { createMocks } from 'node-mocks-http'
 import type { NextApiRequest, NextApiResponse } from 'next'
 import type { User } from '@prisma/client'
-import handler from '@/pages/api/profile'
+import { handler } from '@/pages/api/profile'
 import { updateUser, getUserById } from '@/api/db/services/userService'
 jest.mock('@/api/db/services/userService')
 jest.mock('@/api/middleware/auth', () => ({

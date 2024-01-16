@@ -1,5 +1,5 @@
 import { createMocks } from 'node-mocks-http'
-import handler from '@/pages/api/company/[companyId]'
+import { handler } from '@/pages/api/company/[companyId]'
 import { getCompanyByID, deleteCompany, updateCompany } from '@/api/db/services/companyService'
 import { ItemNotFoundError } from '@/api/utils/errorUtils'
 

@@ -1,5 +1,5 @@
 import { createMocks } from 'node-mocks-http'
-import handler from '@/pages/api/company/attachment/[attachmentId]'
+import { handler } from '@/pages/api/company/attachment/[attachmentId]'
 import { getAttachmentByID, deleteAttachment } from '@/api/db/services/attachmentService'
 import { ItemNotFoundError } from '@/api/utils/errorUtils'
 jest.mock('@/api/db/services/attachmentService')

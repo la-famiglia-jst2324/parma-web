@@ -1,5 +1,5 @@
 import { createMocks } from 'node-mocks-http'
-import handler from '@/pages/api/companyDataSourceRelation'
+import { handler } from '@/pages/api/companyDataSourceRelation'
 import {
   createCompanyDataSource,
   deleteCompanyDataSource,

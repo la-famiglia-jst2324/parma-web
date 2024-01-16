@@ -1,5 +1,5 @@
 import { createMocks } from 'node-mocks-http'
-import handler from '@/pages/api/measurements/nestedValues/[valueId]'
+import { handler } from '@/pages/api/measurements/nestedValues/[valueId]'
 import { getNestedValueByID } from '@/api/db/services/nestedValueService'
 jest.mock('@/api/db/services/nestedValueService')
 

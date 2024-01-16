@@ -1,19 +1,14 @@
 import { createMocks } from 'node-mocks-http'
-import handler from '@/pages/api/bucket/[bucketId]'
+import { randomBucketDummy } from '@tests/data/dummy/bucket'
+import { randomDbUserDummy } from '@tests/data/dummy/user'
+import { handler } from '@/pages/api/bucket/[bucketId]'
 import { getBucketById, deleteBucket, updateBucket } from '@/api/db/services/bucketService'
 import { ItemNotFoundError } from '@/api/utils/errorUtils'
 
 jest.mock('@/api/db/services/bucketService')
 
-const mockBucket = {
-  id: 1,
-  title: 'bucket1',
-  description: 'bucket1 description',
-  ownerId: 1,
-  isPublic: true,
-  createdAt: '2023-12-02T21:23:57.281Z',
-  modifiedAt: '2023-12-02T21:23:57.281Z'
-}
+const mockDbUser = randomDbUserDummy()
+const mockBucket = randomBucketDummy({ managedFields: false, ownerId: mockDbUser.id })
 
 describe('BucketId API', () => {
   afterEach(() => {
@@ -90,13 +85,7 @@ describe('BucketId API', () => {
     const { req, res } = createMocks({
       method: 'PUT',
       query: { bucketId: 'non_existent_id' },
-      body: {
-        title: 'bucket1',
-        description: 'bucket1 description',
-        ownerId: 1,
-        isPublic: true,
-        modifiedAt: '2023-12-02T21:23:57.281Z'
-      } // Valid bucket data
+      body: randomBucketDummy({ ownerId: 1 })
     })
 
     await handler(req, res)
@@ -106,9 +95,7 @@ describe('BucketId API', () => {
   })
 
   test('PUT with server error during update returns 500', async () => {
-    getBucketById.mockResolvedValueOnce({
-      /* existing bucket data */
-    })
+    getBucketById.mockResolvedValueOnce({})
     updateBucket.mockRejectedValueOnce(new Error('Failed to update bucket'))
 
     const { req, res } = createMocks({

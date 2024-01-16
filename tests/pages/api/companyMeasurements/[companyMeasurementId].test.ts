@@ -1,5 +1,5 @@
 import { createMocks } from 'node-mocks-http'
-import handler from '@/pages/api/companyMeasurements/[companyMeasurementId]'
+import { handler } from '@/pages/api/companyMeasurements/[companyMeasurementId]'
 import {
   getCompanySourceMeasurementByID,
   updateCompanySourceMeasurement,

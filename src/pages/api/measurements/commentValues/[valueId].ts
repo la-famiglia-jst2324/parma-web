@@ -48,7 +48,7 @@ import { getCommentValueByID } from '@/api/db/services/commentValueService'
  *         modifiedAt:
  *           type: string
  */
-export default async (req: NextApiRequest, res: NextApiResponse) => {
+export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const { method } = req
   const { valueId } = req.query
 
@@ -68,3 +68,5 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       break
   }
 }
+
+export default handler // No auth

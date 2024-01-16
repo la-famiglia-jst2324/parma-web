@@ -1,10 +1,10 @@
 'use client'
 import React, { useState, useEffect } from 'react'
-import { Badge } from '@tremor/react'
 import { useRouter } from 'next/navigation'
 import type { DataSource } from '@prisma/client'
+import { Badge } from '@tremor/react'
 import Pagination from './TablePagination'
-
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 interface TableProps {
   initialData: DataSource[]
   pagination: {
@@ -27,30 +27,30 @@ const DatasourceTable: React.FC<TableProps> = ({ initialData, pagination, onPage
 
   return (
     <>
-      <table className="w-full divide-y divide-gray-200 border border-gray-200">
-        <thead>
-          <tr>
-            <th className="whitespace-nowrap px-6 py-3 text-left">Datasource Name</th>
-            <th className="whitespace-nowrap px-6 py-3 text-left">Description</th>
-            <th className="w-44 whitespace-nowrap px-6 py-3 text-left">Status</th>
-          </tr>
-        </thead>
-        <tbody>
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead className="font-bold">Name</TableHead>
+            <TableHead className="font-bold">Description</TableHead>
+            <TableHead className="font-bold">Status</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
           {data.map((datasource) => (
-            <tr
+            <TableRow
               key={datasource.id}
               onClick={() => router.push(`/datasources/${datasource.id}`)}
               className="cursor-pointer"
             >
-              <td className="px-6 py-3">{datasource.sourceName}</td>
-              <td className="px-6 py-3">{datasource.description}</td>
-              <td className="px-6 py-3">
+              <TableCell>{datasource.sourceName}</TableCell>
+              <TableCell>{datasource.description}</TableCell>
+              <TableCell>
                 {datasource.isActive ? <Badge color="blue">Active</Badge> : <Badge color="red">Inactive</Badge>}
-              </td>
-            </tr>
+              </TableCell>
+            </TableRow>
           ))}
-        </tbody>
-      </table>
+        </TableBody>
+      </Table>
       <Pagination
         totalItems={pagination.totalCount}
         currentPage={pagination.currentPage}

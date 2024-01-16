@@ -101,7 +101,7 @@ import { withAuthValidation } from '@/api/middleware/auth'
  *         modifiedAt:
  *           type: string
  */
-const handler = async (req: NextApiRequest, res: NextApiResponse) => {
+export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const { method } = req
   const { measurementId, companies, startDate, endDate } = req.query
   const companiesArray = Array.isArray(companies) ? companies.map((company) => Number(company)) : [Number(companies)]

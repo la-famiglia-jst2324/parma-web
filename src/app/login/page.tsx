@@ -19,7 +19,6 @@ export default function LoginPage() {
     setState: React.Dispatch<React.SetStateAction<string>>
   ) => {
     setState(event.target.value)
-    console.log(event.target.value)
   }
 
   const handleSubmit = async () => {

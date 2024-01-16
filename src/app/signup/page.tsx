@@ -21,7 +21,6 @@ export default function SignupPage() {
     setState: React.Dispatch<React.SetStateAction<string>>
   ) => {
     setState(event.target.value)
-    console.log(event.target.value)
   }
 
   const handleSubmit = async (): Promise<void> => {
@@ -158,60 +157,5 @@ export default function SignupPage() {
         </div>
       </div>
     </div>
-
-    // <div className="flex h-screen items-center justify-center px-4">
-    //   <div>
-    //     <h2 className="mb-3 text-5xl font-bold">Signup</h2>
-    //     <p className="mb-3 text-base">Please enter your details to create an account</p>
-
-    //     <div className="py-5">
-    //       <div className="mb-3">
-    //         <label htmlFor="email" className="block text-sm font-bold text-gray-600">
-    //           Name
-    //         </label>
-    //         <Input
-    //           onChange={(e) => handleInputChange(e, setName)}
-
-    //         />
-    //       </div>
-    //       <div className="mb-3">
-    //         <label htmlFor="email" className="block text-sm font-bold text-gray-600">
-    //           Email
-    //         </label>
-    //         <Input
-    //           type="email"
-    //           onChange={(e) => handleInputChange(e, setEmail)}
-
-    //         />
-    //       </div>
-    //       <div className="mb-3">
-    //         <label htmlFor="password" className="block text-sm font-bold text-gray-600">
-    //           Password
-    //         </label>
-    //         <Input
-    //           type="password"
-    //           onChange={(e) => handleInputChange(e, setPassword)}
-
-    //         />
-    //       </div>
-    //       <div className="mb-3">
-    //         <label htmlFor="password" className="block text-sm font-bold text-gray-600">
-    //           Confirm Password
-    //         </label>
-    //         <Input
-    //           type="password"
-    //           onChange={(e) => handleInputChange(e, setConfirm)}
-
-    //         />
-    //       </div>
-    //     </div>
-
-    //     <Button onClick={handleSubmit} size="lg" className="w-full" variant="primary">
-    //       Signup
-    //     </Button>
-
-    //     <GoogleAuthButton />
-    //   </div>
-    // </div>
   )
 }

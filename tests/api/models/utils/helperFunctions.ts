@@ -16,7 +16,7 @@ export async function createUser(name: string = 'Used in Tests') {
 export async function createCompany(userId: number) {
   return await prisma.company.create({
     data: {
-      name: 'User in Tests',
+      name: 'Company in Tests',
       addedBy: userId
     }
   })
@@ -34,7 +34,7 @@ export async function createBucket(userId: number) {
 export async function createDataSource() {
   return await prisma.dataSource.create({
     data: {
-      sourceName: 'Test Source',
+      sourceName: 'Test Source a',
       isActive: true,
       frequency: 'DAILY',
       healthStatus: 'UP',

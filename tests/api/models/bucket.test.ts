@@ -1,5 +1,12 @@
 import { PrismaClient } from '@prisma/client'
-import { createUser, createCompany, deleteUser, deleteCompany, createBucket } from './utils/helperFunctions'
+import {
+  createUser,
+  createCompany,
+  deleteUser,
+  deleteCompany,
+  createBucket,
+  deleteBucket
+} from './utils/helperFunctions'
 
 const prisma = new PrismaClient()
 
@@ -88,6 +95,7 @@ describe('BucketAccess Model Tests', () => {
 
   // Clean up after all tests
   afterAll(async () => {
+    await deleteBucket(bucketId)
     await deleteUser(bucketOwnerId)
     await deleteUser(inviteeId)
 

@@ -6,8 +6,8 @@
 [![Deploy](https://github.com/la-famiglia-jst2324/parma-web/actions/workflows/release.yml/badge.svg?event=push)](https://staging.parma.software)
 [![Major Tag](https://github.com/la-famiglia-jst2324/parma-web/actions/workflows/tag-major.yml/badge.svg)](https://github.com/la-famiglia-jst2324/parma-web/actions/workflows/tag-major.yml)
 
-![Functions](https://img.shields.io/badge/functions-22.54%25-red.svg?style=flat)
-![Lines](https://img.shields.io/badge/lines-34.43%25-red.svg?style=flat)
+![Functions](https://img.shields.io/badge/functions-15.25%25-red.svg?style=flat)
+![Lines](https://img.shields.io/badge/lines-13.86%25-red.svg?style=flat)
 
 ParmaAI webstack including frontend and REST API backend.
 
@@ -119,10 +119,12 @@ The following steps will get you started with the project.
    make test  # runs jest and typescript-coverage-report
    ```
 
-8. Environment Variables Other Than Database
+8. Environment Variables Other Than Database URL
+
    ```bash
    export PARMA_ANALYTICS_BASE_URL=http://127.0.0.1:8000
    ```
+
 9. Optional: Run a production build (used in the CI pipeline)
 
    ```bash
@@ -144,6 +146,15 @@ Follow the steps below to update your local database with recent changes
    ```bash
     pnpm prisma migrate dev
    ```
+
+## Database Population
+
+If you want to populate your database, run the following commands, under the root directory, in order:
+
+```bash
+tsc src/api/db/populate.ts
+node src/api/db/populate.js
+```
 
 ## PR workflow
 
@@ -208,7 +219,7 @@ Core libraries that this project uses:
 - if next-fetch is not enough: [axios](https://www.npmjs.com/package/axios)
 - if we need a dedicated auth library: [next-auth](https://www.npmjs.com/package/next-auth) or [passport](https://www.npmjs.com/package/passport)
 
-## Deployment
+## Deployment Concept
 
 This project is deployed on [Vercel](https://vercel.com/) in @robinholzi's peronsal account.
 As the hobby (free) plan enough for now, we will stick to it for the time being.

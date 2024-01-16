@@ -110,7 +110,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       try {
         const relation = await getValueByMeasurementIdCompanyId(Number(measurementId), companiesArray)
         const dateCompanyMap: Record<string, Record<string, number>> = {}
-        const valueType = relation[0].sourceMeasurement.type.toLowerCase()
+        const valueType = relation[0].sourceMeasurement.type
         relation.forEach((data) => {
           switch (valueType.toLowerCase()) {
             case 'int':

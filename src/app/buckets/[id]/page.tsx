@@ -8,8 +8,6 @@ import { Button } from '@/components/ui/button'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { GoBackButton } from '@/components/GoBackButton'
 import EditBucketModal from '@/components/buckets/EditBucketModal'
-import { Popup } from '@/components/Popup'
-import { PopupType } from '@/types/popup'
 import DeleteBucketModal from '@/components/buckets/DeleteBucketModal'
 import BucketFunctions from '@/app/services/bucket.service'
 import type { ShareBucketProps } from '@/components/buckets/ShareBucketModal'
@@ -17,6 +15,7 @@ import ShareBucketModal from '@/components/buckets/ShareBucketModal'
 import { MainLayoutWrapper } from '@/components/layout/MainLayout'
 import BucketGraph from '@/components/buckets/bucketGraph'
 import AddCompaniesToBucket from '@/components/buckets/addCompanies'
+import { useToast } from '@/components/ui/use-toast'
 
 const initialBucketValue = {
   id: 0,
@@ -32,11 +31,10 @@ const BucketPage = ({ params: { id } }: { params: { id: string } }) => {
   const router = useRouter()
   const [bucket, setBucket] = useState<Bucket>(initialBucketValue)
   const [bucketCompanies, setBucketCompanies] = useState<Company[]>()
-  const [showSuccess, setShowSuccess] = useState(false)
-  const [showError, setShowError] = useState(false)
-  const [popupText, setPopupText] = useState('')
   const [editCompanies, setEditCompanies] = useState(false)
   const [selectedCompanies, setSelectedCompanies] = useState<number[]>([])
+  const { toast } = useToast()
+
   useEffect(() => {
     BucketFunctions.getBucketById(+id)
       .then((data) => {
@@ -67,19 +65,24 @@ const BucketPage = ({ params: { id } }: { params: { id: string } }) => {
       .then((res) => {
         if (res) {
           setBucket(res)
-          setShowSuccess(true)
-          setTimeout(() => setShowSuccess(false), 3000)
-          setPopupText('Bucket is updated successfully')
+          toast({
+            title: 'Success',
+            description: 'Bucket is updated successfully'
+          })
         } else {
-          setShowError(true)
-          setTimeout(() => setShowError(false), 3000)
-          setPopupText('Failed to update bucket')
+          toast({
+            title: 'Error',
+            description: 'Failed to update bucket',
+            variant: 'destructive'
+          })
         }
       })
       .catch((e) => {
-        setShowError(true)
-        setTimeout(() => setShowError(false), 3000)
-        setPopupText(e)
+        toast({
+          title: 'Error',
+          description: e,
+          variant: 'destructive'
+        })
       })
   }
 
@@ -87,18 +90,19 @@ const BucketPage = ({ params: { id } }: { params: { id: string } }) => {
     BucketFunctions.deleteBucket(+id)
       .then((res) => {
         if (res) {
-          setPopupText('Bucket is deleted successfully')
-          setShowSuccess(true)
-          setTimeout(() => {
-            setShowSuccess(false)
-            router.push('/buckets')
-          }, 1500)
+          toast({
+            title: 'Success',
+            description: 'Bucket is deleted successfully'
+          })
+          router.push('/')
         }
       })
-      .catch((error) => {
-        setPopupText(error)
-        setShowError(true)
-        setTimeout(() => setShowError(false), 3000)
+      .catch(() => {
+        toast({
+          title: 'Error',
+          description: 'Failed to delete bucket',
+          variant: 'destructive'
+        })
       })
   }
 
@@ -106,19 +110,18 @@ const BucketPage = ({ params: { id } }: { params: { id: string } }) => {
     BucketFunctions.shareBucket(shareUsersList)
       .then((res) => {
         if (res) {
-          setPopupText('Bucket is shared successfully')
-          setShowSuccess(true)
-          setTimeout(() => {
-            setShowSuccess(false)
-          }, 3000)
+          toast({
+            title: 'Success',
+            description: 'Bucket is shared successfully'
+          })
         }
       })
-      .catch((e) => {
-        setPopupText(e)
-        setShowError(true)
-        setTimeout(() => {
-          setShowError(false)
-        }, 3000)
+      .catch(() => {
+        toast({
+          title: 'Error',
+          description: 'Failed to share the bucket',
+          variant: 'destructive'
+        })
       })
   }
 
@@ -128,19 +131,18 @@ const BucketPage = ({ params: { id } }: { params: { id: string } }) => {
         if (res) {
           const filteredCompanies = bucketCompanies?.filter((company) => !res.includes(company.id))
           setBucketCompanies(filteredCompanies)
-          setPopupText('Companies are deleted successfully')
-          setShowSuccess(true)
-          setTimeout(() => {
-            setShowSuccess(false)
-          }, 3000)
+          toast({
+            title: 'Success',
+            description: 'Companies are deleted successfully'
+          })
         }
       })
-      .catch((e) => {
-        setPopupText(e)
-        setShowError(true)
-        setTimeout(() => {
-          setShowError(false)
-        }, 3000)
+      .catch(() => {
+        toast({
+          title: 'Error',
+          description: 'Failed to  delete companies from bucket',
+          variant: 'destructive'
+        })
       })
   }
 
@@ -157,19 +159,18 @@ const BucketPage = ({ params: { id } }: { params: { id: string } }) => {
             }
             return undefined
           })
-          setPopupText('Companies are added successfully')
-          setShowSuccess(true)
-          setTimeout(() => {
-            setShowSuccess(false)
-          }, 3000)
+          toast({
+            title: 'Success',
+            description: 'Companies are added successfully'
+          })
         }
       })
-      .catch((e) => {
-        setPopupText(e)
-        setShowError(true)
-        setTimeout(() => {
-          setShowError(false)
-        }, 3000)
+      .catch(() => {
+        toast({
+          title: 'Error',
+          description: 'Failed to add companies to bucket',
+          variant: 'destructive'
+        })
       })
   }
   return (
@@ -281,8 +282,6 @@ const BucketPage = ({ params: { id } }: { params: { id: string } }) => {
           <div className="ml-8 mt-4 text-gray-400">This bucket does not have any companies.</div>
         )}
       </div>
-      {showSuccess && <Popup text={popupText} title="Success" popupType={PopupType.SUCCESS}></Popup>}
-      {showError && <Popup text={popupText} title="Error" popupType={PopupType.ERROR}></Popup>}
     </main>
   )
 }

@@ -4,14 +4,12 @@ import { CheckBadgeIcon } from '@heroicons/react/20/solid'
 import type { Bucket, Company } from '@prisma/client'
 import { MultiSelect, MultiSelectItem } from '@tremor/react'
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
 import { DialogHeader, DialogFooter } from '../ui/dialog'
-import { Popup } from '../Popup'
 import { Input } from '../ui/input'
 import { Label } from '../ui/label'
 import { Textarea } from '../ui/textarea'
 import { Switch } from '../ui/switch'
-import { PopupType } from '@/types/popup'
+import { useToast } from '../ui/use-toast'
 import BucketFunctions from '@/app/services/bucket.service'
 
 import {
@@ -29,10 +27,9 @@ const CreateBucket = () => {
   const [description, setDescription] = useState('')
   const [isPublic, setIsPublic] = useState(true)
   const [selectedCompanies, setSelectedCompanies] = useState<string[]>([])
-  const [showSuccess, setShowSuccess] = useState(false)
-  const [showError, setShowError] = useState(false)
-  const router = useRouter()
   const [allCompaniesPaginated, setCompaniesPaginated] = useState([])
+
+  const { toast } = useToast()
 
   const createBucket = async () => {
     const bucket = {
@@ -53,15 +50,17 @@ const CreateBucket = () => {
             .then((data) => console.log(data))
             .catch((e) => console.log(e))
         }
-        setShowSuccess(true)
-        setTimeout(() => {
-          router.push('/buckets')
-          setShowSuccess(false)
-        }, 1500) // Remove it from the screen
+        toast({
+          title: 'Success',
+          description: 'Bucket created successfully'
+        })
       })
       .catch((error) => {
-        setShowError(true)
-        setTimeout(() => setShowError(false), 1500) // Remove it from the screen
+        toast({
+          title: 'Error',
+          description: 'Failed to create bucket',
+          variant: 'destructive'
+        })
         console.error('Error:', error)
       })
   }
@@ -132,10 +131,6 @@ const CreateBucket = () => {
               </div>
             </form>
           </div>
-          {showSuccess && (
-            <Popup text="Bucket created successfully" title="Success" popupType={PopupType.SUCCESS}></Popup>
-          )}
-          {showError && <Popup text="Bucket creation failed" title="Error" popupType={PopupType.ERROR}></Popup>}
         </div>
         <DialogFooter>
           <DialogClose asChild>

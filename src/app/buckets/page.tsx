@@ -92,11 +92,11 @@ const Buckets = () => {
 
   return (
     <main className="m-4 flex h-[68em] flex-row items-start justify-start space-x-4" role="main">
-      <div className="m-4 rounded-md bg-white p-8">
+      <div className="m-4 rounded-md p-8">
         <div className="flex items-center justify-between pb-8">
           <h1 className="text-3xl font-semibold">My Buckets</h1>
           <Button>
-            <Link href={'/buckets/add-bucket'} className="flex items-center gap-0.5 text-white">
+            <Link href={'/buckets/add-bucket'} className="flex items-center gap-0.5 ">
               <PlusCircleIcon className="mr-2 h-5 w-5" />
               Create new bucket
             </Link>

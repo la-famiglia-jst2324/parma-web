@@ -1,16 +1,30 @@
 import React, { useState, useEffect, useContext } from 'react'
-import { AreaChart, DateRangePicker } from '@tremor/react'
+import type { DateRangePickerValue } from '@tremor/react'
+import { AreaChart } from '@tremor/react'
 import { AuthContext, getAuthToken } from '@/lib/firebase/auth'
 import extractCategories from '@/utils/extractCategories'
 
-async function getAnalyticsData(measurementId: string, companiesArray: string[], idToken: string) {
+interface DataItem {
+  date: string
+  [key: string]: number | string
+}
+
+async function getAnalyticsData(
+  measurementId: string,
+  companiesArray: string[],
+  idToken: string,
+  datePickerValue: DateRangePickerValue | null
+) {
   const companiesQuery = companiesArray.map((companyId) => `companies=${companyId}`).join('&')
-  const response = await fetch(`/api/analytics?measurementId=${measurementId}&${companiesQuery}`, {
-    method: 'GET',
-    headers: {
-      Authorization: idToken
+  const response = await fetch(
+    `/api/analytics?measurementId=${measurementId}&${companiesQuery}&startDate=${datePickerValue?.from}&endDate=${datePickerValue?.to}`,
+    {
+      method: 'GET',
+      headers: {
+        Authorization: idToken
+      }
     }
-  })
+  )
 
   if (!response.ok) {
     console.error('Response status:', response.status)
@@ -24,39 +38,54 @@ interface GraphChartProps {
   measurementId: string
   measurementName: string
   companiesArray: string[]
+  datepickerValue: DateRangePickerValue | null
 }
 
-const GraphChart: React.FC<GraphChartProps> = ({ measurementId, measurementName, companiesArray }) => {
-  const [analyticsData, setAnalyticsData] = useState([])
+const GraphChart: React.FC<GraphChartProps> = ({ measurementId, measurementName, companiesArray, datepickerValue }) => {
+  const [analyticsData, setAnalyticsData] = useState<DataItem[]>([])
   const user = useContext(AuthContext)
 
   useEffect(() => {
     const fetchAnalyticsData = async () => {
       const token = await getAuthToken(user)
       if (!token) return
-      const data = await getAnalyticsData(measurementId, companiesArray, token)
-      setAnalyticsData(data)
+      const data = await getAnalyticsData(measurementId, companiesArray, token, datepickerValue)
+      const groupedArray: DataItem[] = []
+
+      data.forEach((item: DataItem) => {
+        const existingItem = groupedArray.find((groupedItem) => groupedItem.date === item.date)
+
+        if (existingItem) {
+          // Merge the values if the date already exists in the grouped array
+          Object.keys(item).forEach((key) => {
+            if (key !== 'date') {
+              existingItem[key] = (+existingItem[key] || 0) + +item[key]
+            }
+          })
+        } else {
+          // Add a new entry if the date doesn't exist in the grouped array
+          groupedArray.push({ ...item })
+        }
+      })
+
+      console.log(groupedArray)
+      setAnalyticsData(groupedArray)
     }
     fetchAnalyticsData()
-  }, [user, measurementId, companiesArray])
+  }, [user, measurementId, companiesArray, datepickerValue])
 
-  console.log('Analytics data:', analyticsData)
   const categories = extractCategories(analyticsData)
-
   return (
     <div className="mt-2 w-full">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="ml-2 text-lg font-semibold text-gray-700">{measurementName}</h1>
-        </div>
-        <DateRangePicker />
+      <div>
+        <h1 className="ml-2 text-lg font-semibold text-gray-700">{measurementName}</h1>
       </div>
       <AreaChart
         className="mt-2 h-72 w-full"
         data={analyticsData}
         index="date"
         categories={categories}
-        colors={['indigo', 'cyan', 'pink']}
+        colors={['indigo', 'cyan', 'pink', 'blue', 'red', 'yellow', 'green', 'purple', 'orange', 'gray']}
       />
     </div>
   )

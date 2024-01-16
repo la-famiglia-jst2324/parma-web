@@ -6,14 +6,9 @@ const useBuckets = () => {
   const [buckets, setBuckets] = useState<Bucket[]>([])
 
   useEffect(() => {
-    BucketFunctions.getAllBuckets(1)
+    BucketFunctions.getMyOwnBuckets()
       .then((res) => {
-        if (Array.isArray(res.buckets)) {
-          const uniqueBuckets = Array.from(new Set(res.buckets.map((bucket: Bucket) => bucket))) as Bucket[]
-          setBuckets(uniqueBuckets)
-        } else {
-          console.error('Expected an array but received', res)
-        }
+        setBuckets(res)
       })
       .catch((error) => {
         console.error('Failed to fetch buckets', error)

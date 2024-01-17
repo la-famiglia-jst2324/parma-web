@@ -22,7 +22,7 @@ const GoogleAuthButton = () => {
   return (
     <Button onClick={handleLogin}>
       <Image src="/google.svg" alt="Google logo" width={24} height={24} />
-      <span className="ml-4">Authenticate With Google</span>
+      <span className="ml-4">Authenticate with Google</span>
     </Button>
   )
 }

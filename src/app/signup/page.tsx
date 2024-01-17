@@ -112,7 +112,7 @@ export default function SignupPage() {
 
   return (
     <div className="flex h-screen items-center justify-center lg:p-8">
-      <div className="space-y-6 sm:w-[350px]">
+      <div className="space-y-6 sm:w-[350px] md:h-3/4">
         <div className="flex flex-col space-y-2 text-center">
           <h1 className="text-3xl font-bold tracking-tight">Create Your Account</h1>
           <p className="text-sm text-muted-foreground">Enter following details to create an account</p>

@@ -105,7 +105,7 @@ import { addCompanyDataSourceRelationshipForCompany } from '@/api/db/services/co
  *           type: string
  */
 
-const handler = async (req: NextApiRequest, res: NextApiResponse, user: User) => {
+export const handler = async (req: NextApiRequest, res: NextApiResponse, user: User) => {
   const { method } = req
   const userId = user.id
   const companyName = req.query.name
@@ -116,7 +116,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse, user: User) =>
       try {
         // Gets a company
         if (companyName) {
-          console.log(companyName)
           const company = await getCompanyByName(
             String(companyName),
             parseInt(page as string),

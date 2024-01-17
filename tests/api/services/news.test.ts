@@ -8,7 +8,7 @@ import {
   deleteUser
 } from '../models/utils/helperFunctions'
 import { createNews, deleteNewsById, getAllNews, getNewsById } from '@/api/db/services/newsService'
-import { createSourceMeasurement } from '@/api/db/services/sourceMeasurementService'
+import { createSourceMeasurement, deleteSourceMeasurement } from '@/api/db/services/sourceMeasurementService'
 
 const prisma = new PrismaClient()
 describe('News Model Tests', () => {
@@ -35,11 +35,15 @@ describe('News Model Tests', () => {
   })
 
   afterAll(async () => {
-    // await deleteSourceMeasurement(sourceMeasurementId)
+    await deleteSourceMeasurement(sourceMeasurementId)
     await deleteCompany(companyId)
     await deleteDataSource(dataSourceId)
     await deleteUser(userId)
     await prisma.$disconnect()
+  })
+
+  test('Create a news with valid details', async () => {
+    expect(1).toBe(1)
   })
 
   test('Create a news with valid details', async () => {

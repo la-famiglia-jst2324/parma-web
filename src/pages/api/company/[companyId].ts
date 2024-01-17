@@ -86,7 +86,7 @@ import { ItemNotFoundError } from '@/api/utils/errorUtils'
  *         description: Method Not Allowed.
  */
 
-export default async (req: NextApiRequest, res: NextApiResponse) => {
+export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const { method } = req
   const { companyId } = req.query
 
@@ -138,3 +138,5 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       break
   }
 }
+
+export default handler // No auth

@@ -59,7 +59,7 @@ const customizaitonDeleteQuerySchema = z.object({
  *                   type: string
  */
 
-const handler = async (req: NextApiRequest, res: NextApiResponse) => {
+export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const { method } = req
   try {
     switch (method) {

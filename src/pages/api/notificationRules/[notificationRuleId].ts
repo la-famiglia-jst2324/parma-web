@@ -19,7 +19,7 @@ const notificationRuleIdtQuerySchema = z.object({
     .transform((val: string) => parseInt(val, 10))
 })
 
-const handler = async (req: NextApiRequest, res: NextApiResponse) => {
+export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const query = notificationRuleIdtQuerySchema.parse(req.query)
 
   const { method } = req

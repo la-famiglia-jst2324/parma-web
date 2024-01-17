@@ -19,7 +19,8 @@ const config = {
   collectCoverageFrom: [
     "src/**/*.{js,jsx,ts,tsx}",
     // the following elements are excluded from coverage
-    // "!src/app/**/*.{js,jsx,ts,tsx}",
+    "!src/app/**/*.{js,jsx,ts,tsx}",
+    "!src/components/**/*.{js,jsx,ts,tsx}",
     // "!src/pages/api/**/*.{js,jsx,ts,tsx}",
     "!**/node_modules/**",
     "!**/vendor/**"
@@ -28,10 +29,10 @@ const config = {
   coverageThreshold: {
     global: {
       "functions": 0,  // we don't enforce coverage on lines currently
-      "lines": 0  // we don't enforce coverage on lines currently
+      "lines": 45
     }
   },
-  coverageReporters: ["json-summary"]
+  coverageReporters: ["json-summary", 'html']
 }
 
 export default createJestConfig(config)

@@ -135,3 +135,47 @@ export async function getScheduledTasks(dataSourceId: string) {
       console.error('Error:', error)
     })
 }
+
+export async function createNewDatasource(dataSource: {
+  sourceName: string
+  isActive: boolean
+  frequency: 'HOURLY' | 'DAILY' | 'WEEKLY' | 'MONTHLY'
+  healthStatus: string
+  modifiedAt: string
+  invocationEndpoint: string
+  description: string
+}) {
+  try {
+    const res = await fetch('/api/dataSources', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(dataSource)
+    })
+    if (!res.ok) {
+      console.log('Response status:', res.status)
+      throw new Error('HTTP response was not OK')
+    }
+    const json = await res.json()
+    return json
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+export async function deleteDatasource(id: string) {
+  try {
+    const res = await fetch(`/api/dataSources/${id}`, {
+      method: 'DELETE',
+      cache: 'no-cache'
+    })
+    if (!res.ok) {
+      throw new Error('HTTP response was not OK')
+    }
+    const json = await res.json()
+    return json
+  } catch (error) {
+    console.log('An error has occurred: ', error)
+  }
+}

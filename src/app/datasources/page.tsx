@@ -1,12 +1,10 @@
 'use client'
 import React, { useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation'
 import type { DataSource } from '@prisma/client'
-import Table from '../../components/Datasources/Table'
-import CustomButton from '@/components/BlueButton'
+import Table from '../../components/datasources/Table'
 import { getDataSourcesPagination as getDatasources } from '@/services/datasource/datasourceService'
-import { MainLayoutWrapper } from '@/components/Layout/MainLayout'
-
+import { MainLayoutWrapper } from '@/components/layout/MainLayout'
+import CreateDatasource from '@/components/datasources/CreateDatasource'
 function DatasourcesPage() {
   const [data, setData] = useState<DataSource[] | null>(null)
   const [pagination, setPagination] = useState({ currentPage: 1, pageSize: 10, totalPages: 0, totalCount: 0 })
@@ -30,43 +28,32 @@ function DatasourcesPage() {
     setPagination((prevState) => ({ ...prevState, pageSize: newSize }))
   }
 
-  const router = useRouter()
-  const navigateToCreate = () => {
-    router.push('/datasources/add-datasource')
-  }
-
   return (
     <>
-      <main className="m-4 flex h-[68em] flex-row items-start justify-start space-x-4" role="main">
-        <div className="relative m-5 flex min-h-screen w-auto flex-col justify-start rounded-md bg-white shadow-lg">
-          <div className="flex items-center justify-between p-6">
-            <div className="mb-4 flex items-center justify-start space-x-4">
-              <h1 className="m-4 text-4xl text-black">Datasources</h1>
-            </div>
-            <div className="m-5">
-              <CustomButton text="Create Datasource" onClick={navigateToCreate} />
-            </div>
-          </div>
-          <div className="mb-8 px-6">
-            <div className="mx-auto overflow-auto rounded-lg border-0 bg-white shadow-md">
-              <div className="w-full">
-                {data ? (
-                  <Table
-                    initialData={data}
-                    pagination={pagination}
-                    onPageChange={handlePageChange}
-                    onItemsPerPageChange={handleItemsPerPageChange}
-                  />
-                ) : (
-                  <p className="text-lg font-bold text-gray-700">
-                    No datasources available yet. Start by creating one.
-                  </p>
-                )}
-              </div>
-            </div>
+      <div className="flex items-center justify-between p-6">
+        <div className="mb-4 flex items-center justify-start space-x-4">
+          <h1 className="m-4 text-4xl text-white">Datasources</h1>
+        </div>
+        <div className="m-5">
+          <CreateDatasource />
+        </div>
+      </div>
+      <div className="mb-8 px-6">
+        <div className="mx-auto overflow-auto rounded-lg border-0 shadow-md">
+          <div className="w-full">
+            {data ? (
+              <Table
+                initialData={data}
+                pagination={pagination}
+                onPageChange={handlePageChange}
+                onItemsPerPageChange={handleItemsPerPageChange}
+              />
+            ) : (
+              <p className="text-lg font-bold text-gray-300">No datasources available yet. Start by creating one.</p>
+            )}
           </div>
         </div>
-      </main>
+      </div>
     </>
   )
 }

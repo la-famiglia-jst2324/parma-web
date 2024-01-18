@@ -1,42 +1,11 @@
-import type { Bucket } from '@prisma/client'
 import type { ShareBucketProps } from '@/components/buckets/ShareBucketModal'
-import fetchWithAuth from '@/utils/fetchWithAuth'
-
-async function getAllBucketsNoPagination(idToken: string): Promise<Bucket[]> {
-  try {
-    const res = await fetch(`/api/bucket`, {
-      method: 'GET',
-      cache: 'no-cache',
-      headers: {
-        Authorization: idToken
-      }
-    })
-
-    if (!res.ok) {
-      console.log('Response status:', res.status)
-      throw new Error('HTTP response was not OK')
-    }
-    const json = await res.json()
-    return json
-  } catch (error) {
-    console.log('An error has occurred: ', error)
-    return []
-  }
-}
+import fetchClient from '@/services/fetchClient'
 
 const getAllBuckets = async (page: number, name?: string) => {
   try {
     const url = name ? `/api/bucket?page=1&pageSize=10&name=${name}` : `/api/bucket?page=${page}&pageSize=10`
-    const res = await fetchWithAuth(url, {
-      method: 'GET',
-      cache: 'no-cache'
-    })
-    if (!res.ok) {
-      console.log('Response status:', res.status)
-      throw new Error('HTTP response was not OK')
-    }
-    const json = await res.json()
-    return json
+    const res = await fetchClient.get(url)
+    return res.data
   } catch (error) {
     console.log('An error has occurred: ', error)
   }
@@ -44,20 +13,8 @@ const getAllBuckets = async (page: number, name?: string) => {
 
 const createBucket = async (body: { title: string; description?: string; isPublic: boolean }) => {
   try {
-    const res = await fetchWithAuth('/api/bucket', {
-      method: 'POST',
-      cache: 'no-cache',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(body)
-    })
-    if (!res.ok) {
-      console.log('Response status:', res.status)
-      throw new Error('HTTP response was not OK')
-    }
-    const json = await res.json()
-    return json
+    const res = await fetchClient.post('/api/bucket', body)
+    return res.data
   } catch (error) {
     console.log('An error has occurred: ', error)
   }
@@ -65,39 +22,17 @@ const createBucket = async (body: { title: string; description?: string; isPubli
 
 const deleteBucket = async (id: number) => {
   try {
-    const res = await fetchWithAuth(`/api/bucket/${id}`, {
-      method: 'DELETE',
-      cache: 'no-cache'
-    })
-    if (!res.ok) {
-      console.log('Response status:', res.status)
-      throw new Error('HTTP response was not OK')
-    }
-    const json = await res.json()
-    return json
+    const res = await fetchClient.delete(`/api/bucket/${id}`)
+    return res.data
   } catch (error) {
     console.log('An error has occurred: ', error)
   }
 }
 
-const addCompaniesToBucket = async (bucketId: number, selectedCompanies: string[]) => {
+const addCompaniesToBucket = async (bucketCompanies: { bucketId: string; companyId: string }[]) => {
   try {
-    const res = await fetchWithAuth(
-      `/api/companyBucketRelation?bucketId=${bucketId}&companyId=${+selectedCompanies[0]}`,
-      {
-        method: 'POST',
-        cache: 'no-cache',
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      }
-    )
-    if (!res.ok) {
-      console.log('Response status:', res.status)
-      throw new Error('HTTP response was not OK')
-    }
-    const json = await res.json()
-    return json
+    const res = await fetchClient.post(`/api/companyBucketRelation`, bucketCompanies)
+    return res.data
   } catch (error) {
     console.log('An error has occurred: ', error)
   }
@@ -105,17 +40,8 @@ const addCompaniesToBucket = async (bucketId: number, selectedCompanies: string[
 
 const getAllCompanies = async () => {
   try {
-    const res = await fetchWithAuth('/api/company', {
-      method: 'GET',
-      cache: 'no-cache'
-    })
-    if (!res.ok) {
-      console.log('Response status:', res.status)
-      throw new Error('HTTP response was not OK')
-    }
-    const json = await res.json()
-    console.log(json)
-    return json
+    const res = await fetchClient.get('/api/company')
+    return res.data
   } catch (error) {
     console.log('An error has occurred: ', error)
   }
@@ -123,31 +49,18 @@ const getAllCompanies = async () => {
 
 const getBucketById = async (id: number) => {
   try {
-    const res = await fetchWithAuth(`/api/bucket/${id}`, {
-      method: 'GET',
-      cache: 'no-cache'
-    })
-    if (!res.ok) {
-      console.log('Response status:', res.status)
-      throw new Error('HTTP response was not OK')
-    }
-    const json = await res.json()
-    return json
-  } catch (e) {}
+    const res = await fetchClient.get(`/api/bucket/${id}`)
+    return res.data
+  } catch (e) {
+    console.log(e)
+    throw e
+  }
 }
 
 const getCompaniesForBucket = async (bucketId: number) => {
   try {
-    const res = await fetchWithAuth(`/api/companyBucketRelation?bucketId=${bucketId}`, {
-      method: 'GET',
-      cache: 'no-cache'
-    })
-    if (!res.ok) {
-      console.log('Response status:', res.status)
-      throw new Error('HTTP response was not OK')
-    }
-    const json = await res.json()
-    return json
+    const res = await fetchClient.get(`/api/companyBucketRelation?bucketId=${bucketId}`)
+    return res.data
   } catch (e) {
     return e
   }
@@ -155,54 +68,22 @@ const getCompaniesForBucket = async (bucketId: number) => {
 
 const updateBucket = async (title: string, description: string | null, id: number, isPublic: boolean) => {
   try {
-    const res = await fetchWithAuth(`/api/bucket/${id}`, {
-      method: 'PUT',
-      cache: 'no-cache',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ title, description, isPublic })
-    })
-    if (!res.ok) {
-      console.log('Response status:', res.status)
-      throw new Error('HTTP response was not OK')
-    }
-    const json = await res.json()
-    return json
+    const res = await fetchClient.put(`/api/bucket/${id}`, { title, description, isPublic })
+    return res.data
   } catch (e) {}
 }
 
 const getUsersForBucketAccess = async () => {
   try {
-    const res = await fetchWithAuth(`/api/user`, {
-      method: 'GET',
-      cache: 'no-cache'
-    })
-    if (!res.ok) {
-      console.log('Response status:', res.status)
-      throw new Error('HTTP response was not OK')
-    }
-    const json = await res.json()
-    return json
+    const res = await fetchClient.get(`/api/user`)
+    return res.data
   } catch (e) {}
 }
 
-const shareBucket = async (body: ShareBucketProps) => {
+const shareBucket = async (body: ShareBucketProps[]) => {
   try {
-    const res = await fetchWithAuth(`/api/bucket/share?bucketId=${body.bucketId}`, {
-      method: 'POST',
-      cache: 'no-cache',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(body)
-    })
-    if (!res.ok) {
-      console.log('Response status:', res.status)
-      throw new Error('HTTP response was not OK')
-    }
-    const json = await res.json()
-    return json
+    const res = await fetchClient.post(`/api/bucket/share`, body)
+    return res.data
   } catch (error) {
     console.log('An error has occurred: ', error)
   }
@@ -210,19 +91,29 @@ const shareBucket = async (body: ShareBucketProps) => {
 
 const getInvitees = async (bucketId: number) => {
   try {
-    const res = await fetchWithAuth(`/api/bucket/share/${bucketId}`, {
-      method: 'GET',
-      cache: 'no-cache'
-    })
-    if (!res.ok) {
-      console.log('Response status:', res.status)
-      throw new Error('HTTP response was not OK')
-    }
-    const json = await res.json()
-    return json
+    const res = await fetchClient.get(`/api/bucket/share/${bucketId}`)
+    return res.data
   } catch (error) {
     console.log('An error has occurred: ', error)
   }
+}
+
+const getMyOwnBuckets = async () => {
+  try {
+    const response = await fetchClient.get(`/api/bucket/own`)
+    return response.data
+  } catch (error) {
+    console.log('An error has occurred: ', error)
+    throw error
+  }
+}
+
+const deleteCompaniesFromBucket = async (bucketId: number, companies: number[]) => {
+  try {
+    const companiesQuery = companies.map((companyId) => `companyId=${companyId}`).join('&')
+    const response = await fetchClient.delete(`/api/companyBucketRelation?bucketId=${bucketId}&${companiesQuery}`)
+    return response.data
+  } catch (e) {}
 }
 
 export default {
@@ -237,5 +128,6 @@ export default {
   shareBucket,
   getInvitees,
   getAllBuckets,
-  getAllBucketsNoPagination
+  getMyOwnBuckets,
+  deleteCompaniesFromBucket
 }

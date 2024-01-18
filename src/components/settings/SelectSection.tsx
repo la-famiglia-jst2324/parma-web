@@ -1,4 +1,3 @@
-// SelectSection.tsx
 import React, { useState } from 'react'
 import { MultiSelect, MultiSelectItem, Select, SelectItem } from '@tremor/react' // Assuming you have these components
 

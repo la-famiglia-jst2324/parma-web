@@ -80,9 +80,7 @@ const CreateBucket = () => {
   return (
     <Dialog>
       <DialogTrigger asChild onClick={getCompanies}>
-        {/* <Button className="mr-2 flex items-center gap-2 border-blue-600 bg-transparent text-blue-600" variant="outline"> */}
         <Plus className="cursor-pointer" />
-        {/* </Button> */}
       </DialogTrigger>
       <DialogContent className="m-2 sm:max-w-[500px]">
         <DialogHeader>

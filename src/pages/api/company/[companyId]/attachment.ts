@@ -23,7 +23,7 @@ export const config = {
   }
 }
 
-const handler = async (req: NextApiRequest, res: NextApiResponse, user: User) => {
+export const handler = async (req: NextApiRequest, res: NextApiResponse, user: User) => {
   const query = companyAttachmentQuerySchema.parse(req.query)
 
   const { method } = req

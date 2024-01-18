@@ -7,7 +7,7 @@ type ResponseData = {
   message: string
 }
 
-const handler = async (req: NextApiRequest, res: NextApiResponse<ResponseData>, user: User) => {
+export const handler = async (req: NextApiRequest, res: NextApiResponse<ResponseData>, user: User) => {
   res.status(200).json({ message: `Authorized to do this action! Welcome ${user.name}!` })
 }
 

@@ -8,6 +8,9 @@ import useBuckets from './hooks/useBuckets'
 import { Button } from './ui/button'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Separator } from '@/components/ui/separator'
+
+import CreateBucket from './buckets/createBucket'
+
 interface SidebarLinkProps {
   href: string
   icon?: React.ElementType
@@ -61,8 +64,10 @@ const Sidebar: React.FC = () => {
           </div>
           {/* Buckets */}
           <div className="mb-8">
-            <SidebarLink href="/buckets" icon={FolderIcon} text="Buckets" />
-
+            <div className="flex items-center justify-between">
+              <SidebarLink href="/buckets" icon={FolderIcon} text="Buckets" />
+              <CreateBucket></CreateBucket>
+            </div>
             <div className="ml-6">
               <ScrollArea className="mt-2 h-24 w-full">
                 <div className="pl-2">

@@ -222,6 +222,9 @@ const getNewsById = async (id: number) => {
     }
     return news
   } catch (error) {
+    if (error instanceof ItemNotFoundError) {
+      throw error
+    }
     console.error('Error getting a news by ID:', error)
     throw error
   }

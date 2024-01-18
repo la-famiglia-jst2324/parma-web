@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import { getAttachmentByID, deleteAttachment } from '@/api/db/services/attachmentService'
 import { ItemNotFoundError } from '@/api/utils/errorUtils'
 
-export default async (req: NextApiRequest, res: NextApiResponse) => {
+export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const { method } = req
   const { attachmentId } = req.query
 
@@ -39,3 +39,5 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       break
   }
 }
+
+export default handler // No auth

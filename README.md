@@ -9,6 +9,7 @@
 ![Functions](https://img.shields.io/badge/functions-14.35%25-red.svg?style=flat)
 ![Lines](https://img.shields.io/badge/lines-13.3%25-red.svg?style=flat)
 
+
 ParmaAI webstack including frontend and REST API backend.
 
 [![Screenshot](./docs/images/landing_page.png)](https://parma.software)
@@ -151,7 +152,7 @@ Follow the steps below to update your local database with recent changes
 
 If you want to populate your database, run the following commands, under the root directory, in order:
 
-```
+```bash
 tsc src/api/db/populate.ts
 node src/api/db/populate.js
 ```
@@ -219,7 +220,7 @@ Core libraries that this project uses:
 - if next-fetch is not enough: [axios](https://www.npmjs.com/package/axios)
 - if we need a dedicated auth library: [next-auth](https://www.npmjs.com/package/next-auth) or [passport](https://www.npmjs.com/package/passport)
 
-## Deployment
+## Deployment Concept
 
 This project is deployed on [Vercel](https://vercel.com/) in @robinholzi's peronsal account.
 As the hobby (free) plan enough for now, we will stick to it for the time being.

@@ -8,14 +8,14 @@ import { Button } from '@/components/ui/button'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { GoBackButton } from '@/components/GoBackButton'
 import EditBucketModal from '@/components/buckets/EditBucketModal'
-import { Popup } from '@/components/Popup'
-import { PopupType } from '@/types/popup'
 import DeleteBucketModal from '@/components/buckets/DeleteBucketModal'
 import BucketFunctions from '@/app/services/bucket.service'
 import type { ShareBucketProps } from '@/components/buckets/ShareBucketModal'
 import ShareBucketModal from '@/components/buckets/ShareBucketModal'
 import { MainLayoutWrapper } from '@/components/layout/MainLayout'
 import BucketGraph from '@/components/buckets/bucketGraph'
+import AddCompaniesToBucket from '@/components/buckets/addCompanies'
+import { useToast } from '@/components/ui/use-toast'
 
 const initialBucketValue = {
   id: 0,
@@ -31,11 +31,10 @@ const BucketPage = ({ params: { id } }: { params: { id: string } }) => {
   const router = useRouter()
   const [bucket, setBucket] = useState<Bucket>(initialBucketValue)
   const [bucketCompanies, setBucketCompanies] = useState<Company[]>()
-  const [showSuccess, setShowSuccess] = useState(false)
-  const [showError, setShowError] = useState(false)
-  const [popupText, setPopupText] = useState('')
   const [editCompanies, setEditCompanies] = useState(false)
   const [selectedCompanies, setSelectedCompanies] = useState<number[]>([])
+  const { toast } = useToast()
+
   useEffect(() => {
     BucketFunctions.getBucketById(+id)
       .then((data) => {
@@ -66,19 +65,24 @@ const BucketPage = ({ params: { id } }: { params: { id: string } }) => {
       .then((res) => {
         if (res) {
           setBucket(res)
-          setShowSuccess(true)
-          setTimeout(() => setShowSuccess(false), 3000)
-          setPopupText('Bucket is updated successfully')
+          toast({
+            title: 'Success',
+            description: 'Bucket is updated successfully'
+          })
         } else {
-          setShowError(true)
-          setTimeout(() => setShowError(false), 3000)
-          setPopupText('Failed to update bucket')
+          toast({
+            title: 'Error',
+            description: 'Failed to update bucket',
+            variant: 'destructive'
+          })
         }
       })
       .catch((e) => {
-        setShowError(true)
-        setTimeout(() => setShowError(false), 3000)
-        setPopupText(e)
+        toast({
+          title: 'Error',
+          description: e,
+          variant: 'destructive'
+        })
       })
   }
 
@@ -86,45 +90,88 @@ const BucketPage = ({ params: { id } }: { params: { id: string } }) => {
     BucketFunctions.deleteBucket(+id)
       .then((res) => {
         if (res) {
-          setPopupText('Bucket is deleted successfully')
-          setShowSuccess(true)
-          setTimeout(() => {
-            setShowSuccess(false)
-            router.push('/buckets')
-          }, 1500)
+          toast({
+            title: 'Success',
+            description: 'Bucket is deleted successfully'
+          })
+          router.push('/')
         }
       })
-      .catch((error) => {
-        setPopupText(error)
-        setShowError(true)
-        setTimeout(() => setShowError(false), 3000)
+      .catch(() => {
+        toast({
+          title: 'Error',
+          description: 'Failed to delete bucket',
+          variant: 'destructive'
+        })
       })
   }
 
   const onHandleShare = (shareUsersList: ShareBucketProps[]) => {
-    shareUsersList.forEach((user) => {
-      BucketFunctions.shareBucket(user)
-        .then((res) => {
-          if (res) {
-            setPopupText('Bucket is shared successfully')
-            setShowSuccess(true)
-            setTimeout(() => {
-              setShowSuccess(false)
-            }, 3000)
-          }
+    BucketFunctions.shareBucket(shareUsersList)
+      .then((res) => {
+        if (res) {
+          toast({
+            title: 'Success',
+            description: 'Bucket is shared successfully'
+          })
+        }
+      })
+      .catch(() => {
+        toast({
+          title: 'Error',
+          description: 'Failed to share the bucket',
+          variant: 'destructive'
         })
-        .catch((e) => {
-          setPopupText(e)
-          setShowError(true)
-          setTimeout(() => {
-            setShowError(false)
-          }, 3000)
-        })
-    })
+      })
   }
 
   const removeCompanies = () => {
-    console.log(selectedCompanies)
+    BucketFunctions.deleteCompaniesFromBucket(+id, selectedCompanies)
+      .then((res) => {
+        if (res) {
+          const filteredCompanies = bucketCompanies?.filter((company) => !res.includes(company.id))
+          setBucketCompanies(filteredCompanies)
+          toast({
+            title: 'Success',
+            description: 'Companies are deleted successfully'
+          })
+        }
+      })
+      .catch(() => {
+        toast({
+          title: 'Error',
+          description: 'Failed to  delete companies from bucket',
+          variant: 'destructive'
+        })
+      })
+  }
+
+  const addCompaniesToBucket = (companies: string[]) => {
+    const updatedCompanies = companies.map((c) => {
+      return { bucketId: id, companyId: c }
+    })
+    BucketFunctions.addCompaniesToBucket(updatedCompanies)
+      .then((res) => {
+        if (res) {
+          setBucketCompanies((oldValue) => {
+            if (oldValue) {
+              return [...oldValue, ...res]
+            }
+            return undefined
+          })
+          toast({
+            title: 'Success',
+            description: 'Companies are added successfully'
+          })
+        }
+      })
+      .catch(() => {
+        toast({
+          title: 'Error',
+          description: 'Failed to add companies to bucket',
+          variant: 'destructive'
+        })
+      })
   }
   return (
     <main className="m-4 flex h-screen flex-row items-start justify-start space-x-4" role="main">
@@ -163,49 +210,46 @@ const BucketPage = ({ params: { id } }: { params: { id: string } }) => {
         <div className="mb-12">
           <BucketGraph companies={bucketCompanies}></BucketGraph>
         </div>
-        <div className="ml-8 flex items-center justify-between">
-          <h1 className="mb-8 text-2xl font-bold">All companies in this bucket</h1>
-          <div className="flex flex-row items-center gap-4">
-            {!editCompanies && (
-              <Button
-                className="mr-2 flex items-center border-gray-500"
-                variant="outline"
-                color="gray"
-                onClick={() => setEditCompanies(true)}
-              >
-                Edit Companies
-              </Button>
-            )}
-            {editCompanies && (
-              <Button
-                className="mr-2 flex items-center gap-2 border-blue-600 bg-transparent text-blue-600"
-                variant="outline"
-              >
-                Add New Companies
-              </Button>
-            )}
-            {editCompanies && (
-              <Button
-                className="mr-2 flex items-center border-gray-500"
-                variant="destructive"
-                color="gray"
-                onClick={removeCompanies}
-              >
-                Remove Companies
-              </Button>
-            )}
-            {editCompanies && (
-              <Button
-                className="mr-2 flex items-center border-gray-500"
-                variant="outline"
-                color="gray"
-                onClick={() => setEditCompanies(false)}
-              >
-                Cancel
-              </Button>
-            )}
+        {bucketCompanies && bucketCompanies.length > 0 && (
+          <div className="ml-8 flex items-center justify-between">
+            <h1 className="mb-8 text-2xl font-bold">All companies in this bucket</h1>
+            <div className="flex flex-row items-center gap-4">
+              {!editCompanies && (
+                <Button
+                  className="mr-2 flex items-center border-gray-500"
+                  variant="outline"
+                  color="gray"
+                  onClick={() => setEditCompanies(true)}
+                >
+                  Edit Companies
+                </Button>
+              )}
+              {editCompanies && (
+                <AddCompaniesToBucket handleSave={(val) => addCompaniesToBucket(val)}></AddCompaniesToBucket>
+              )}
+              {editCompanies && (
+                <Button
+                  className="mr-2 flex items-center gap-2 border-red-600 bg-transparent text-red-600"
+                  variant="outline"
+                  color="gray"
+                  onClick={removeCompanies}
+                >
+                  Remove Companies
+                </Button>
+              )}
+              {editCompanies && (
+                <Button
+                  className="mr-2 flex items-center border-gray-500"
+                  variant="outline"
+                  color="gray"
+                  onClick={() => setEditCompanies(false)}
+                >
+                  Cancel
+                </Button>
+              )}
+            </div>
           </div>
-        </div>
+        )}
 
         {bucketCompanies && bucketCompanies.length > 0 && (
           <Table className="ml-8">
@@ -238,8 +282,6 @@ const BucketPage = ({ params: { id } }: { params: { id: string } }) => {
           <div className="ml-8 mt-4 text-gray-400">This bucket does not have any companies.</div>
         )}
       </div>
-      {showSuccess && <Popup text={popupText} title="Success" popupType={PopupType.SUCCESS}></Popup>}
-      {showError && <Popup text={popupText} title="Error" popupType={PopupType.ERROR}></Popup>}
     </main>
   )
 }

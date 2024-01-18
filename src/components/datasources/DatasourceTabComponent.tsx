@@ -1,8 +1,6 @@
-import { Tab, TabGroup, TabList, TabPanel, TabPanels } from '@tremor/react'
-import { BuildingOffice2Icon, PresentationChartLineIcon, ShieldCheckIcon } from '@heroicons/react/20/solid'
 import { CompaniesTable } from './CompaniesTable'
 import ScheduledTasksTable from './ScheduledTasks'
-import SourceHealthComponent from './SourceHealthComponent'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 
 export const NoData: React.FC = () => (
   <div className="flex flex-col items-center justify-center">
@@ -17,26 +15,19 @@ interface TabComponentProps {
 
 export const TabComponent: React.FC<TabComponentProps> = ({ sourceId }) => {
   return (
-    <TabGroup>
-      <TabList className="mt-8" variant="solid">
-        <Tab icon={BuildingOffice2Icon}>Companies Monitored</Tab>
-        <Tab icon={ShieldCheckIcon}>Datasource Health</Tab>
-        <Tab icon={PresentationChartLineIcon}>Scheduled Tasks</Tab>
-      </TabList>
-      <TabPanels>
-        {/* Companies Monitored */}
-        <TabPanel>
-          <CompaniesTable datasourceId={sourceId} />
-        </TabPanel>
-        {/* Source Health */}
-        <TabPanel>
-          <SourceHealthComponent datasourceId={sourceId} />
-        </TabPanel>
-        {/* Scheduled Tasks */}
-        <TabPanel>
-          <ScheduledTasksTable datasourceId={sourceId} />
-        </TabPanel>
-      </TabPanels>
-    </TabGroup>
+    <Tabs>
+      <TabsList>
+        <TabsTrigger value="Companies Monitored">Companies Monitored</TabsTrigger>
+        <TabsTrigger value="Scheduled Tasks">Scheduled Tasks</TabsTrigger>
+      </TabsList>
+      {/* Companies Monitored */}
+      <TabsContent value="Companies Monitored">
+        <CompaniesTable datasourceId={sourceId} />
+      </TabsContent>
+      {/* Scheduled Tasks */}
+      <TabsContent value="Scheduled Tasks">
+        <ScheduledTasksTable datasourceId={sourceId} />
+      </TabsContent>
+    </Tabs>
   )
 }

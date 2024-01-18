@@ -62,7 +62,7 @@ import { getScheduledTaskByDatasourceID } from '@/api/db/services/scheduledTaskS
  *           type: string
  */
 
-export default async (req: NextApiRequest, res: NextApiResponse) => {
+export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const { method } = req
   const { dataSourceId } = req.query
 
@@ -82,3 +82,5 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       break
   }
 }
+
+export default handler // No auth

@@ -101,7 +101,7 @@ import { withAuthValidation } from '@/api/middleware/auth'
  *         modifiedAt:
  *           type: string
  */
-const handler = async (req: NextApiRequest, res: NextApiResponse) => {
+export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const { method } = req
   const { measurementId, companies, startDate, endDate } = req.query
   const companiesArray = Array.isArray(companies) ? companies.map((company) => Number(company)) : [Number(companies)]
@@ -112,7 +112,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         const dateCompanyMap: Record<string, Record<string, number>> = {}
         const valueType = relation[0].sourceMeasurement.type
         relation.forEach((data) => {
-          switch (valueType) {
+          switch (valueType.toLowerCase()) {
             case 'int':
               data.measurementIntValues.forEach((measurement) => {
                 const date = new Date(measurement.timestamp).toLocaleDateString('en-US')

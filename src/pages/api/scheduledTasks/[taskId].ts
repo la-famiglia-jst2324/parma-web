@@ -90,7 +90,7 @@ import { getScheduledTaskByID, updateScheduledTask, deleteScheduledTask } from '
  *         description: Internal Server Error.
  */
 
-export default async (req: NextApiRequest, res: NextApiResponse) => {
+export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const { method } = req
   const { taskId } = req.query
 
@@ -128,3 +128,5 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       break
   }
 }
+
+export default handler // No auth

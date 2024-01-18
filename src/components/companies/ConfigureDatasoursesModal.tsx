@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Link2Icon, PencilIcon } from 'lucide-react'
+import { Link2Icon, MoveDownRight, MoveUpRight, PencilIcon } from 'lucide-react'
 import { MultiSelect, MultiSelectItem } from '@tremor/react'
 import { useToast } from '../ui/use-toast'
 import {
@@ -124,7 +124,7 @@ const ConfigureDatasourcesModal: React.FC<ConfigureDatasourcesModalProps> = ({ c
           Configure Datasources
         </Button>
       </DialogTrigger>
-      <DialogContent className={'max-h-screen overflow-y-scroll lg:max-w-screen-lg'}>
+      <DialogContent className="flex h-1/2 flex-col">
         <DialogHeader>
           <DialogTitle>Link/Unlink data sources with this company</DialogTitle>
           <DialogDescription>
@@ -148,29 +148,16 @@ const ConfigureDatasourcesModal: React.FC<ConfigureDatasourcesModalProps> = ({ c
             </Button>
           </div>
         </div>
-        {/* <div className="flex flex-wrap">
-          {companyDataSources?.map((datasource: CompanyDataSource, index) => (
-            <div key={index} className="p-1">
-              <DatasourceHealth
-                dataSourceId={String(datasource.id)}
-                dataSourceName={datasource.sourceName}
-                isDataSourceActive={datasource.isActive}
-                handleUnlinkDataSource={handleUnlinkDataSource}
-              />
-            </div>
-          ))}
-        </div> */}
         <Table>
           <TableHeader>
             <TableRow>
               <TableHead className="w-[100px]">Datasource</TableHead>
               <TableHead>Status</TableHead>
-              <TableHead>Active</TableHead>
               <TableHead>Frequency</TableHead>
               <TableHead>Action</TableHead>
             </TableRow>
           </TableHeader>
-          <TableBody>
+          <TableBody className="max-h-96 items-start overflow-y-auto">
             {companyDataSources.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={5} className="text-center">
@@ -181,8 +168,13 @@ const ConfigureDatasourcesModal: React.FC<ConfigureDatasourcesModalProps> = ({ c
               companyDataSources.map((dataSource) => (
                 <TableRow key={dataSource.id}>
                   <TableCell className="font-medium">{dataSource.sourceName}</TableCell>
-                  <TableCell>{dataSource.healthStatus}</TableCell>
-                  <TableCell>{dataSource.isActive === true ? 'YES' : 'NO'}</TableCell>
+                  <TableCell>
+                    {dataSource.healthStatus === 'UP' ? (
+                      <MoveUpRight className="text-lime-700" />
+                    ) : (
+                      <MoveDownRight className="text-red-700" />
+                    )}
+                  </TableCell>
                   <TableCell>{dataSource.frequency}</TableCell>
                   <TableCell>
                     <Button

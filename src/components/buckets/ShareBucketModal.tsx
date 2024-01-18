@@ -1,9 +1,11 @@
 'use client'
 
-import { SearchSelect, SearchSelectItem, Select, SelectItem } from '@tremor/react'
+import { SearchSelect, SearchSelectItem } from '@tremor/react'
 import { useEffect, useState } from 'react'
 import { $Enums, type User } from '@prisma/client'
-import { Share2 } from 'lucide-react'
+import { Share2, Pencil, Check, Trash2, X } from 'lucide-react'
+import { useToast } from '../ui/use-toast'
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import BucketFunctions from '@/app/services/bucket.service'
 import { Button } from '@/components/ui/button'
 import {
@@ -34,6 +36,7 @@ interface Invitee {
   inviteeId: number
   permission: string
   user: User
+  isEdit?: boolean
 }
 const initialValue: User[] = [
   {
@@ -53,6 +56,8 @@ const ShareBucketModal: React.FC<ShareBucketModalProps> = ({ handleShare, id }) 
   const [listToPost, setListToPost] = useState<ShareBucketProps[]>([])
   const [invitees, setInvitees] = useState<Invitee[]>([])
 
+  const { toast } = useToast()
+
   useEffect(() => {
     BucketFunctions.getUsersForBucketAccess()
       .then((res: User[]) => setUsers(res))
@@ -61,7 +66,12 @@ const ShareBucketModal: React.FC<ShareBucketModalProps> = ({ handleShare, id }) 
 
   const getInvitees = () => {
     BucketFunctions.getInvitees(+id)
-      .then((res) => setInvitees(res))
+      .then((res) => {
+        res.map((item: Invitee[]) => {
+          return { ...item, isEdit: false }
+        })
+        setInvitees(res)
+      })
       .catch((err) => console.log(err))
   }
 
@@ -96,6 +106,72 @@ const ShareBucketModal: React.FC<ShareBucketModalProps> = ({ handleShare, id }) 
     ])
   }
 
+  const handleEditInviteeClick = (invitee: Invitee) => {
+    setInvitees((prev) =>
+      prev.map((item) => {
+        if (item.inviteeId === invitee.inviteeId) {
+          return { ...item, isEdit: !invitee.isEdit }
+        }
+        return item
+      })
+    )
+  }
+
+  const changeInvitePermission = (val: string, invitee: Invitee) => {
+    setInvitees((prev) =>
+      prev.map((item) => {
+        if (item.inviteeId === invitee.inviteeId) {
+          return { ...item, permission: val }
+        }
+        return item
+      })
+    )
+  }
+
+  const updateInvitee = (invitee: Invitee) => {
+    BucketFunctions.updateInvitee(+id, invitee.inviteeId, invitee.permission)
+      .then((res) => {
+        setInvitees((prev) =>
+          prev.map((item) => {
+            if (item.inviteeId === res.inviteeId) {
+              return { ...item, permission: res.permission }
+            }
+            return item
+          })
+        )
+        toast({
+          title: 'Success',
+          description: 'Invitee is updated successfully'
+        })
+      })
+      .catch(() => {
+        toast({
+          title: 'Error',
+          description: 'Failed to update invitee',
+          variant: 'destructive'
+        })
+      })
+  }
+
+  const deleteInvitee = (inviteeId: number) => {
+    BucketFunctions.deleteInvitee(+id, inviteeId)
+      .then((res) => {
+        if (res) {
+          setInvitees((prev) => prev.filter((item) => item.inviteeId !== inviteeId))
+        }
+        toast({
+          title: 'Success',
+          description: 'Invitee is deleted successfully'
+        })
+      })
+      .catch(() => {
+        toast({
+          title: 'Error',
+          description: 'Failed to delete invitee',
+          variant: 'destructive'
+        })
+      })
+  }
   const onShareBucket = () => {
     setInvitees([])
     setUsersToShare([])
@@ -113,7 +189,7 @@ const ShareBucketModal: React.FC<ShareBucketModalProps> = ({ handleShare, id }) 
             Share
           </Button>
         </DialogTrigger>
-        <DialogContent className="m-2 sm:max-w-[440px]">
+        <DialogContent className="m-2 sm:max-w-[500px]">
           <DialogHeader>
             <DialogTitle>Share this bucket</DialogTitle>
             <DialogDescription>
@@ -134,21 +210,24 @@ const ShareBucketModal: React.FC<ShareBucketModalProps> = ({ handleShare, id }) 
               </SearchSelect>
             </div>
 
-            <div className="mt-8 h-[200px] max-h-[400px] overflow-auto">
+            <div className="mt-8 h-[200px] max-h-[400px] overflow-auto pr-2 pt-2">
               {usersToShare.map((user) => (
                 <div className="mb-4 flex flex-row items-center justify-between" key={user.id}>
                   {user.name}
-                  <Select
-                    placeholder="Permission"
-                    className="w-1/2"
-                    onValueChange={(val) => prepareUserListToShare(user, val)}
-                  >
-                    <SelectItem key={'MODERATOR'} value="MODERATOR">
-                      MODERATOR
-                    </SelectItem>
-                    <SelectItem key={'VIEWER'} value="VIEWER">
-                      VIEWER
-                    </SelectItem>
+                  <Select onValueChange={(val) => prepareUserListToShare(user, val)}>
+                    <SelectTrigger className="w-[180px]">
+                      <SelectValue placeholder="Permission" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        <SelectItem key={'MODERATOR'} value="MODERATOR">
+                          MODERATOR
+                        </SelectItem>
+                        <SelectItem key={'VIEWER'} value="VIEWER">
+                          VIEWER
+                        </SelectItem>
+                      </SelectGroup>
+                    </SelectContent>
                   </Select>
                 </div>
               ))}
@@ -159,7 +238,50 @@ const ShareBucketModal: React.FC<ShareBucketModalProps> = ({ handleShare, id }) 
                   {invitees.map((invitee) => (
                     <div className="mb-4 flex flex-row items-center justify-between" key={invitee.user.id}>
                       {invitee.user.name}
-                      <p>{invitee.permission}</p>
+                      <div className="flex w-2/3 flex-row items-center justify-end gap-2">
+                        <Select
+                          value={invitee.permission}
+                          onValueChange={(val) => changeInvitePermission(val, invitee)}
+                          disabled={!invitee.isEdit}
+                        >
+                          <SelectTrigger className="w-[180px]">
+                            <SelectValue placeholder="Permission" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectGroup>
+                              <SelectItem key={'MODERATOR'} value="MODERATOR">
+                                MODERATOR
+                              </SelectItem>
+                              <SelectItem key={'VIEWER'} value="VIEWER">
+                                VIEWER
+                              </SelectItem>
+                            </SelectGroup>
+                          </SelectContent>
+                        </Select>
+                        {invitee.isEdit ? (
+                          <div className="flex w-16 flex-row gap-2">
+                            <Check
+                              color="green"
+                              className="cursor-pointer"
+                              onClick={() => {
+                                updateInvitee(invitee)
+                                handleEditInviteeClick(invitee)
+                              }}
+                            />
+                            <Trash2
+                              color="red"
+                              className="cursor-pointer"
+                              onClick={() => {
+                                deleteInvitee(invitee.inviteeId)
+                                handleEditInviteeClick(invitee)
+                              }}
+                            />
+                            <X className="cursor-pointer" onClick={() => handleEditInviteeClick(invitee)} />
+                          </div>
+                        ) : (
+                          <Pencil className="h-4 w-16 cursor-pointer" onClick={() => handleEditInviteeClick(invitee)} />
+                        )}
+                      </div>
                     </div>
                   ))}
                 </div>

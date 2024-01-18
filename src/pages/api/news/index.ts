@@ -57,8 +57,125 @@ const NewsSchema = z.object({
 })
 
 export type NewsData = z.infer<typeof NewsSchema>
-
-export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
+/**
+ * @swagger
+ * tags:
+ *   - name: news
+ * /api/news:
+ *   get:
+ *     tags:
+ *       - news
+ *     summary: Retrieves news items
+ *     description: This endpoint allows you to retrieve news items, optionally filtered by company ID, bucket ID, and date range. Pagination is supported.
+ *     parameters:
+ *       - in: query
+ *         name: page
+ *         required: true
+ *         schema:
+ *           type: integer
+ *       - in: query
+ *         name: pageSize
+ *         required: true
+ *         schema:
+ *           type: integer
+ *       - in: query
+ *         name: companyId
+ *         required: false
+ *         schema:
+ *           type: integer
+ *       - in: query
+ *         name: bucketId
+ *         required: false
+ *         schema:
+ *           type: integer
+ *       - in: query
+ *         name: startDate
+ *         required: false
+ *         schema:
+ *           type: string
+ *           format: date
+ *       - in: query
+ *         name: endDate
+ *         required: false
+ *         schema:
+ *           type: string
+ *           format: date
+ *     responses:
+ *       200:
+ *         description: A list of news items.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/NewsResponse'
+ *       400:
+ *         description: No page and pageSize provided.
+ *       404:
+ *         description: No news items are found.
+ *       500:
+ *         description: Internal Server Error.
+ * components:
+ *   schemas:
+ *     NewsItemReturn:
+ *       type: object
+ *       required:
+ *         - id
+ *         - companyId
+ *         - title
+ *         - description
+ *         - companyName
+ *         - dataSourceName
+ *         - notificationDate
+ *         - timestamp
+ *         - triggerFactor
+ *       properties:
+ *         id:
+ *           type: string
+ *         companyId:
+ *           type: string
+ *         title:
+ *           type: string
+ *           nullable: true
+ *         description:
+ *           type: string
+ *         companyName:
+ *           type: string
+ *         dataSourceName:
+ *           type: string
+ *         notificationDate:
+ *           type: string
+ *         timestamp:
+ *           type: string
+ *           format: date-time
+ *         bucketName:
+ *           type: string
+ *         triggerFactor:
+ *           type: string
+ *           nullable: true
+ *
+ *     NewsResponse:
+ *       type: object
+ *       properties:
+ *         newsItems:
+ *           type: array
+ *           items:
+ *             $ref: '#/components/schemas/NewsItemReturn'
+ *         pagination:
+ *           type: object
+ *           properties:
+ *             currentPage:
+ *               type: integer
+ *             pageSize:
+ *               type: integer
+ *             totalPages:
+ *               type: integer
+ *             totalCount:
+ *               type: integer
+ *         bucketName:
+ *           type: string
+ */
+const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const { method } = req
 
   switch (method) {

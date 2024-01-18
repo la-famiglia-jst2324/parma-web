@@ -1,8 +1,67 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { searchCompaniesAndBuckets } from '@/api/db/services/searchService'
 import { withAuthValidation } from '@/api/middleware/auth'
-
-export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
+/**
+ * @swagger
+ * tags:
+ *   - name: search
+ * /api/search:
+ *   get:
+ *     tags:
+ *       - search
+ *     summary: Retrieves buckets and companies.
+ *     description: Search companies and buckets by name. Support pagination.
+ *     parameters:
+ *       - in: query
+ *         name: name
+ *         required: false
+ *         schema:
+ *           type: string
+ *       - in: query
+ *         name: page
+ *         required: false
+ *         schema:
+ *           type: integer
+ *           default: 1
+ *       - in: query
+ *         name: pageSize
+ *         required: false
+ *         schema:
+ *           type: integer
+ *           default: 10
+ *     responses:
+ *       200:
+ *         description: Successfully Retrieve buckets and companies.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/CompanyBucketSearchResult'
+ *       500:
+ *         description: Internal Server Error.
+ * components:
+ *   schemas:
+ *     CompanyBucketSearchResult:
+ *       type: object
+ *       properties:
+ *         data:
+ *           type: array
+ *           items:
+ *             oneOf:
+ *               - $ref: '#/components/schemas/Company'
+ *               - $ref: '#/components/schemas/Bucket'
+ *         pagination:
+ *           type: object
+ *           properties:
+ *             currentPage:
+ *               type: integer
+ *             pageSize:
+ *               type: integer
+ *             totalPages:
+ *               type: integer
+ *             totalCount:
+ *               type: integer
+ */
+const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const { method } = req
 
   switch (method) {

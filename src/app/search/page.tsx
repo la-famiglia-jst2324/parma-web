@@ -14,7 +14,7 @@ const SearchPage: React.FC = () => {
   useEffect(() => {
     const fetchSearchedData = async () => {
       try {
-        const searchedData = await getSearchData(searchTerm, pagination.currentPage, pagination.pageSize)
+        const searchedData = await getSearchData(searchTerm)
         setSearchData(searchedData)
         setPagination(searchedData.pagination)
         setHasSearched(true)

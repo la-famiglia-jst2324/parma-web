@@ -1,7 +1,9 @@
 import React from 'react'
-import DataTable from './SearchResultsTable'
+// import DataTable from './SearchResultsTable'
+import { columns } from './Columns'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Separator } from '@/components/ui/separator'
+import { DataTable } from '@/components/DataTable/DataTable'
 
 interface SearchItem {
   id: number
@@ -31,16 +33,10 @@ interface SearchTabsProps {
   onItemsPerPageChange: (newSize: number) => void
 }
 
-const SearchTabs: React.FC<SearchTabsProps> = ({
-  searchData,
-  searchTerm,
-  hasSearched,
-  onPageChange,
-  onItemsPerPageChange
-}) => {
+const SearchTabs: React.FC<SearchTabsProps> = ({ searchData, searchTerm, hasSearched }) => {
   const bucketData = Object.values(searchData?.data || {}).filter((item: SearchItem) => item.type === 'bucket')
   const companiesData = Object.values(searchData?.data || {}).filter((item: SearchItem) => item.type === 'company')
-  const pagination = searchData?.pagination || { currentPage: 1, totalCount: 0, totalPages: 0, pageSize: 0 }
+  // const pagination = searchData?.pagination || { currentPage: 1, totalCount: 0, totalPages: 0, pageSize: 0 }
 
   return (
     <Tabs defaultValue="all">
@@ -54,12 +50,7 @@ const SearchTabs: React.FC<SearchTabsProps> = ({
         <TabsContent value="all">
           {hasSearched && Array.isArray(searchData?.data) && searchData.data.length > 0 ? (
             <div>
-              <DataTable
-                onItemsPerPageChange={onItemsPerPageChange}
-                onPageChange={onPageChange}
-                pagination={pagination}
-                data={searchData.data}
-              />
+              <DataTable columns={columns} data={searchData.data} />
             </div>
           ) : hasSearched ? (
             <p className="flex items-center justify-center text-center text-white">
@@ -70,12 +61,7 @@ const SearchTabs: React.FC<SearchTabsProps> = ({
         <TabsContent value="buckets">
           {hasSearched && Array.isArray(bucketData) && bucketData.length > 0 ? (
             <div>
-              <DataTable
-                onItemsPerPageChange={onItemsPerPageChange}
-                onPageChange={onPageChange}
-                pagination={pagination}
-                data={bucketData}
-              />
+              <DataTable columns={columns} data={bucketData} />
             </div>
           ) : hasSearched ? (
             <p className="flex items-center justify-center text-center text-white">
@@ -86,12 +72,7 @@ const SearchTabs: React.FC<SearchTabsProps> = ({
         <TabsContent value="companies">
           {hasSearched && Array.isArray(companiesData) && companiesData.length > 0 ? (
             <div>
-              <DataTable
-                onItemsPerPageChange={onItemsPerPageChange}
-                onPageChange={onPageChange}
-                pagination={pagination}
-                data={companiesData}
-              />
+              <DataTable columns={columns} data={companiesData} />
             </div>
           ) : hasSearched ? (
             <p className="flex items-center justify-center text-center text-white">

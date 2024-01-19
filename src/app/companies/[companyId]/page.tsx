@@ -2,16 +2,12 @@
 
 import type { ChangeEvent } from 'react'
 import React, { useState, useEffect } from 'react'
-import type { CalloutProps } from '@tremor/react'
-import { Tab, TabGroup, TabList, TabPanel, TabPanels, Button } from '@tremor/react'
-import { UserGroupIcon, UserIcon, CheckCircleIcon, ArrowUpTrayIcon } from '@heroicons/react/20/solid'
+import { ArrowUpTrayIcon } from '@heroicons/react/20/solid'
+import { CheckCircle2Icon, FileDownIcon, Loader2Icon, RefreshCcw } from 'lucide-react'
+import { LineChart, SearchSelect, SearchSelectItem } from '@tremor/react'
 import type { CompanyData } from '@/types/companies'
-import GoBackButton from '@/components/Companies/GoBackButton'
-import CompanyPopup from '@/components/Companies/CompanyPopup'
-import CompanyAttachment from '@/components/Companies/CompanyAttachment'
-import DataSourcesPanel from '@/components/Companies/DataSourcesPanel'
-import PerformancePanel from '@/components/Companies/PerformancePanel'
-import { MainLayoutWrapper } from '@/components/Layout/MainLayout'
+import CompanyAttachment from '@/components/companies/CompanyAttachment'
+import { MainLayoutWrapper } from '@/components/layout/MainLayout'
 import {
   getSubscribedCompanies,
   postCompanySubscription,
@@ -23,13 +19,15 @@ import {
   getExportData,
   editCompany
 } from '@/services/company/companyService'
-import EditInformationModal from '@/components/Companies/EditCompanyModal'
-
-interface PopupContents {
-  title: string
-  color: CalloutProps['color']
-  description: string
-}
+import EditCompanyModal from '@/components/companies/EditCompanyModal'
+import { useToast } from '@/components/ui/use-toast'
+import { Button } from '@/components/ui/button'
+import { CardTitle, CardHeader, CardContent, Card, CardDescription } from '@/components/ui/card'
+import { Label } from '@/components/ui/label'
+import { Input } from '@/components/ui/input'
+import ConfigureDatasourcesModal from '@/components/companies/ConfigureDatasoursesModal'
+import { getAnalyticsDataForCompany, getMeasurementsForCompany } from '@/services/measurement/measurementService'
+import { getDataSourcesByCompanyId } from '@/services/datasource/datasourceService'
 
 interface SubscriptionResponse {
   addedBy: number
@@ -51,6 +49,36 @@ interface Attachment {
   modifiedAt: string
 }
 
+interface CompanyDataSource {
+  id: number
+  sourceName: string
+  isActive: boolean
+  frequency: string
+  healthStatus: string
+  description: null | string
+  createdAt: string
+  modifiedAt: string
+  version: string
+  maxRunSeconds: number
+  invocationEndpoint: string
+  additionalParams: null | string
+}
+
+interface CompanyMeasurement {
+  id: number
+  createdAt: string
+  measurementName: string
+  modifiedAt: string
+  parentMeasurementId: number | null
+  sourceModuleId: number
+  type: string
+}
+
+interface DataItem {
+  date: string
+  [key: string]: number | string
+}
+
 const CompanyPage = ({ params: { companyId } }: { params: { companyId: string } }) => {
   const [companyData, setCompanyData] = useState<CompanyData>({
     name: '',
@@ -58,14 +86,15 @@ const CompanyPage = ({ params: { companyId } }: { params: { companyId: string } 
   })
   const [companyAttachments, setCompanyAttachments] = useState<Attachment[]>([])
   const [isSubscribed, setIsSubscribed] = useState(false)
-  const [showPopup, setShowPopup] = useState(false)
-  const [editModal, setEditModal] = useState(false)
   const [uploadAttachment, setUploadAttachment] = useState<Blob | string>('')
-  const [popupContents, setPopupContents] = useState<PopupContents>({
-    title: '',
-    color: 'teal',
-    description: ''
-  })
+  const { toast } = useToast()
+
+  const [companyDataSources, setCompanyDataSources] = useState<CompanyDataSource[]>([])
+  const [companyMeasurements, setCompanyMeasurements] = useState<CompanyMeasurement[]>([])
+  const [datasource, setDatasource] = useState<string>('')
+  const [measurement, setMeasurement] = useState<string>('')
+  const [graphData, setGraphData] = useState<DataItem[]>([])
+  const [uploadLoading, setUploadLoading] = useState<boolean>(false)
 
   useEffect(() => {
     const fetchData = async () => {
@@ -108,21 +137,11 @@ const CompanyPage = ({ params: { companyId } }: { params: { companyId: string } 
     fetchData()
   }, [companyId])
 
-  useEffect(() => {
-    if (showPopup) {
-      const timerId = setTimeout(() => {
-        setShowPopup(false)
-      }, 5000)
-
-      return () => clearTimeout(timerId)
-    }
-    return () => {}
-  }, [showPopup])
-
   const handleExport = async (name: string) => {
     try {
       const exportDataResponse = await getExportData(companyId)
-      const exportBlob = new Blob([exportDataResponse], { type: 'text/plain' })
+      const jsonString = JSON.stringify(exportDataResponse, null, 2)
+      const exportBlob = new Blob([jsonString], { type: 'application/json' })
       const exportURL = window.URL.createObjectURL(exportBlob)
       const downloadLink = document.createElement('a')
       downloadLink.href = exportURL
@@ -138,21 +157,17 @@ const CompanyPage = ({ params: { companyId } }: { params: { companyId: string } 
     try {
       await postCompanySubscription(companyId, subscribeValue)
       setIsSubscribed(subscribeValue)
-      setPopupContents({
-        title: `Company ${name} subscribed successfully`,
-        color: 'teal',
+      toast({
+        title: `Company ${companyData.name} subscribed successfully`,
         description:
           'You have successfully subscribed to this company. You will now receive information about this company on your dashboard. You can always unsubscribe by pressing the subscribed button at the top'
       })
-      setShowPopup(true)
     } catch (error) {
       console.error('Error subscribing:', error)
-      setPopupContents({
-        title: `Unable to subscribe to ${name}`,
-        color: 'red',
+      toast({
+        title: `Unable to subscribe to ${companyData.name}`,
         description: 'An error occurred while subscribing to this company! Please try again'
       })
-      setShowPopup(true)
     }
   }
 
@@ -161,12 +176,10 @@ const CompanyPage = ({ params: { companyId } }: { params: { companyId: string } 
     try {
       await postCompanySubscription(companyId, subscribeValue)
       setIsSubscribed(subscribeValue)
-      setPopupContents({
-        title: `Company ${name} unsubscribed successfully`,
-        color: 'teal',
+      toast({
+        title: `Company ${companyData.name} unsubscribed successfully`,
         description: 'You have successfully unsubscribed to this company'
       })
-      setShowPopup(true)
     } catch (error) {
       console.error('Error unsubscribing:', error)
     }
@@ -177,20 +190,16 @@ const CompanyPage = ({ params: { companyId } }: { params: { companyId: string } 
       await editCompany(companyId, name, description)
       const data = await getCompanyData(companyId)
       setCompanyData(data)
-      setPopupContents({
-        title: `Company ${name} edited successfully`,
-        color: 'teal',
+      toast({
+        title: `Company ${companyData.name} edited successfully`,
         description: 'You have successfully edited this company'
       })
-      setShowPopup(true)
     } catch (error) {
       console.error('Error in editing the company:', error)
-      setPopupContents({
+      toast({
         title: `Unable to edit ${name}`,
-        color: 'red',
         description: 'An error occurred while editing this company! Please try again'
       })
-      setShowPopup(true)
     }
   }
 
@@ -200,12 +209,10 @@ const CompanyPage = ({ params: { companyId } }: { params: { companyId: string } 
       const data = await getCompanyAttachments(companyId)
       const returnData = data || []
       setCompanyAttachments(returnData)
-      setPopupContents({
+      toast({
         title: `Attachment deleted successfully`,
-        color: 'teal',
         description: 'You have successfully deleted an attachment'
       })
-      setShowPopup(true)
     } catch (error) {
       console.error('Error delete the attachment:', error)
     }
@@ -221,6 +228,7 @@ const CompanyPage = ({ params: { companyId } }: { params: { companyId: string } 
   }
 
   const handleUpload = async () => {
+    setUploadLoading(true)
     try {
       const data = new FormData()
       data.append('file', uploadAttachment)
@@ -228,15 +236,14 @@ const CompanyPage = ({ params: { companyId } }: { params: { companyId: string } 
       const data1 = await getCompanyAttachments(companyId)
       const returnData = data1 || []
       setCompanyAttachments(returnData)
-      setPopupContents({
+      toast({
         title: `Attachment uploaded successfully`,
-        color: 'teal',
         description: 'You have successfully uploaded an attachment'
       })
-      setShowPopup(true)
     } catch (error) {
       console.error('Error uploading the file:', error)
     }
+    setUploadLoading(false)
     setUploadAttachment('')
   }
 
@@ -247,94 +254,177 @@ const CompanyPage = ({ params: { companyId } }: { params: { companyId: string } 
     }
   }
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const data = await getDataSourcesByCompanyId(companyId)
+        setCompanyDataSources(data)
+      } catch (error) {
+        console.error('Failed to fetch data sources:', error)
+      }
+    }
+
+    fetchData()
+  }, [companyId])
+
+  const handleDatasourceChange = async (value: string) => {
+    setDatasource(value)
+    const dataSourceId = value
+    try {
+      if (dataSourceId) {
+        const data = await getMeasurementsForCompany(dataSourceId, companyId)
+        setCompanyMeasurements(data)
+      }
+    } catch (error) {
+      console.error('Failed to get the measurement data', error)
+    }
+  }
+
+  const handleMeasurementChange = (value: string) => {
+    setMeasurement(value)
+    handleGetMeasurementData()
+  }
+
+  const handleGetMeasurementData = async () => {
+    try {
+      const data = await getAnalyticsDataForCompany(measurement, companyId)
+      setGraphData(data)
+    } catch (error) {
+      console.error('Failed to get the measurement data', error)
+    }
+  }
+
+  const handleRefetchDatasources = async () => {
+    try {
+      const data = await getDataSourcesByCompanyId(companyId)
+      setCompanyDataSources(data)
+    } catch (error) {
+      console.error('Failed to fetch data sources:', error)
+    }
+  }
+
   return (
-    <main
-      className="m-4 flex h-[68em] min-h-[calc(100vh-90px)] flex-row items-start justify-start space-x-4"
-      role="main"
-    >
-      <div className="mb-3 flex w-full items-center justify-between space-x-4">
+    <main role="main">
+      <div className="mb-6 flex w-full justify-between px-2">
         <div className="flex items-center">
-          <div className="pl-2">
-            <GoBackButton />
-          </div>
-          <h1 className="py-2 pl-4 text-4xl font-bold">{companyData?.name}</h1>
+          <h1 className="text-3xl font-bold">{companyData?.name}</h1>
         </div>
         <div className="flex">
           <div className="flex items-center space-x-3">
             {isSubscribed ? (
-              <Button icon={CheckCircleIcon} onClick={handleUnsubscribe}>
+              <Button variant="outline" onClick={handleUnsubscribe}>
+                <CheckCircle2Icon className="mr-2 h-4 w-4" />
                 Subscribed
               </Button>
             ) : (
               <Button onClick={handleSubscribe}>Subscribe</Button>
             )}
             <Button variant="secondary" onClick={() => handleExport(companyData?.name)}>
+              <FileDownIcon className="mr-2 h-4 w-4" />
               Export Data
             </Button>
-            <Button variant="secondary" onClick={() => setEditModal(true)}>
-              Edit Company
-            </Button>
+            <ConfigureDatasourcesModal companyId={companyId} />
           </div>
         </div>
       </div>
-      <div className="flex w-full flex-col pl-10 pr-2">
-        <p className="mb-4 overflow-hidden text-sm text-gray-700">{companyData?.description}</p>
-        <div className="mt-4">
-          <div className="flex items-center">
-            <input type="file" className="text-sm text-stone-500" name="attachment" onChange={uploadToClient} />
-          </div>
-          <div className="pt-2">
-            <Button icon={ArrowUpTrayIcon} onClick={handleUpload} disabled={uploadAttachment === ''}>
-              Upload File
-            </Button>
-          </div>
-          <div className="flex space-x-4 py-4">
-            {companyAttachments.length > 0 ? (
-              companyAttachments?.map((attachment) => (
-                <CompanyAttachment
-                  key={attachment?.id}
-                  fileId={String(attachment?.id)}
-                  fileType={attachment.fileType}
-                  title={attachment.title}
-                  onDelete={handleDelete}
-                  onDownload={handleDownload}
+      <div className="my-4 flex w-full flex-col">
+        <div className="mb-3 flex w-full flex-row space-x-3">
+          <SearchSelect onValueChange={handleDatasourceChange} placeholder={'Select datasources'}>
+            {companyDataSources?.map((datasource: CompanyDataSource, index) => (
+              <SearchSelectItem key={index} value={String(datasource.id)}>
+                {datasource.sourceName}
+              </SearchSelectItem>
+            ))}
+          </SearchSelect>
+          <SearchSelect
+            onValueChange={handleMeasurementChange}
+            placeholder={'Select measurement'}
+            disabled={datasource === ''}
+          >
+            {companyMeasurements?.map((measurement, index) => (
+              <SearchSelectItem key={index} value={String(measurement.id)}>
+                {measurement.measurementName}
+              </SearchSelectItem>
+            ))}
+          </SearchSelect>
+          <Button variant="secondary" onClick={handleRefetchDatasources}>
+            <RefreshCcw className="h-4 w-4" />
+          </Button>
+        </div>
+        <Card>
+          <LineChart
+            className="mt-6"
+            data={graphData}
+            index="date"
+            categories={[companyData?.name]}
+            colors={['emerald']}
+            yAxisWidth={40}
+          />
+        </Card>
+      </div>
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+        <section className="mb-8">
+          <Card>
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <CardTitle className="text-xl">Description</CardTitle>
+                <EditCompanyModal
+                  companyName={companyData?.name}
+                  companyDescription={companyData?.description}
+                  handleSave={handleEditCompany}
                 />
-              ))
-            ) : (
-              <p>No attachments for this company</p>
-            )}
-          </div>
-        </div>
-
-        <TabGroup>
-          <TabList className="mt-8" variant="solid">
-            <Tab icon={UserGroupIcon}>Data Sources</Tab>
-            <Tab icon={UserIcon}>Performance</Tab>
-          </TabList>
-          <TabPanels>
-            <TabPanel>
-              <DataSourcesPanel companyId={companyId} setShowPopup={setShowPopup} setPopupContents={setPopupContents} />
-            </TabPanel>
-            <TabPanel>
-              <PerformancePanel companyId={companyId} companyName={companyData?.name} />
-            </TabPanel>
-          </TabPanels>
-        </TabGroup>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <p className="mb-4 text-sm">{companyData?.description}</p>
+            </CardContent>
+          </Card>
+        </section>
+        <section className="mb-8">
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-xl">User Attached Data</CardTitle>
+              <CardDescription>You can attach pdf, jpg and png files to this company</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div>
+                <div className="flex items-end space-x-2">
+                  <div className="grid w-full max-w-sm items-center gap-1.5">
+                    <Label htmlFor="picture">Choose file</Label>
+                    <Input id="picture" type="file" name="attachment" onChange={uploadToClient} />
+                  </div>
+                  {uploadLoading === false ? (
+                    <Button onClick={handleUpload} disabled={uploadAttachment === ''}>
+                      <ArrowUpTrayIcon className="h-4 w-4" />
+                    </Button>
+                  ) : (
+                    <>
+                      <Button disabled>
+                        <Loader2Icon className="mr-2 h-4 w-4 animate-spin" />
+                        Please wait
+                      </Button>
+                    </>
+                  )}
+                </div>
+              </div>
+              <div className="my-2 flex flex-wrap">
+                {companyAttachments.length > 0
+                  ? companyAttachments?.map((attachment) => (
+                      <CompanyAttachment
+                        key={attachment?.id}
+                        fileId={String(attachment?.id)}
+                        fileType={attachment.fileType}
+                        title={attachment.title}
+                        onDelete={handleDelete}
+                        onDownload={handleDownload}
+                      />
+                    ))
+                  : null}
+              </div>
+            </CardContent>
+          </Card>
+        </section>
       </div>
-      <CompanyPopup
-        title={popupContents.title}
-        icon={CheckCircleIcon}
-        color={popupContents.color}
-        description={popupContents.description}
-        showPopup={showPopup}
-      />
-      <EditInformationModal
-        isOpen={editModal}
-        handleClose={() => setEditModal(false)}
-        companyName={companyData?.name}
-        companyDescription={companyData?.description}
-        handleSave={handleEditCompany}
-      />
     </main>
   )
 }

@@ -31,7 +31,7 @@ import { getDataSourceByName } from '@/api/db/services/dataSourceService'
  *         description: Internal Server Error.
  */
 
-export default async (req: NextApiRequest, res: NextApiResponse) => {
+export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const { method } = req
   const name = req.query.name
 
@@ -50,3 +50,5 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       break
   }
 }
+
+export default handler // No auth

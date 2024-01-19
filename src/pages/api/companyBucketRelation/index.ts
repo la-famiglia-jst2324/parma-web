@@ -169,7 +169,7 @@ const membershipGetSchema = z.object({
  *           type: string
  */
 
-const handler = async (req: NextApiRequest, res: NextApiResponse, user: User) => {
+export const handler = async (req: NextApiRequest, res: NextApiResponse, user: User) => {
   const { method } = req
   const userId = user.id
 
@@ -250,10 +250,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse, user: User) =>
           const companyIds = re.map((item) => item?.companyId).filter((id) => id !== undefined)
 
           for (const element of companyIds) {
-            if (typeof element === 'number') {
-              const company = await getCompanyByID(element)
-              companies.push(company)
-            }
+            const company = await getCompanyByID(Number.parseInt(`${element}`))
+            companies.push(company)
           }
           res.status(201).json(companies)
         }

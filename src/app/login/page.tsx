@@ -6,7 +6,7 @@ import { useState } from 'react'
 import type firebase from 'firebase/app'
 import GoogleAuthButton from '@/components/GoogleAuthButton'
 import { authLogin } from '@/lib/firebase/auth'
-import ErrorInfo from '@/components/Authentication/ErrorInfo'
+import ErrorInfo from '@/components/authentication/ErrorInfo'
 
 export default function LoginPage() {
   const [loading, setLoading] = useState<boolean>(false)
@@ -63,7 +63,7 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="flex h-screen items-center justify-center bg-white">
+    <div className="flex h-screen items-center justify-center">
       <div>
         <h2 className="mb-4 text-6xl font-bold">Login</h2>
         <p className="mb-4">Please enter your login details to sign in</p>

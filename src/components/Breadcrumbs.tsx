@@ -1,36 +1,29 @@
 'use client'
+import React from 'react'
+
 import { usePathname } from 'next/navigation'
 import Link from 'next/link'
 
 const Breadcrumbs = () => {
-  const pathname = usePathname()
-  const pathNames = (pathname ?? '/').split('/').filter((path) => path)
-
-  const formatBreadcrumb = (string: string) => {
-    return string.replace(/-/g, ' ').replace(/^[a-z]/, (letter) => letter.toUpperCase())
-  }
-
-  const currentPageName = pathname === '/' ? 'Dashboard' : ''
+  const paths = usePathname()
+  const pathNames = paths ? paths.split('/').filter((path) => path) : []
 
   return (
-    <div>
-      <h1 className="text-lg font-semibold">{currentPageName}</h1>
-      <div className="flex flex-row space-x-2 text-sm text-gray-500">
-        {pathNames.flatMap((value, index) => {
-          const last = index === pathNames.length - 1
-          const first = index === 0
-          const to = `/${pathNames.slice(0, index + 1).join('/')}`
-
-          return last
-            ? [<span key={to}>{formatBreadcrumb(value)}</span>]
-            : [
-                <Link href={to} key={to} className={`${first ? 'font-semibold text-black' : ''} hover:underline`}>
-                  {formatBreadcrumb(value)}
-                </Link>,
-                <span key={to + index}> / </span>
-              ]
+    <div className="px-2 text-white">
+      <ul className="flex">
+        {pathNames.map((link, index) => {
+          const href = `/${pathNames.slice(0, index + 1).join('/')}`
+          const itemLink = link[0].toUpperCase() + link.slice(1, link.length)
+          return (
+            <React.Fragment key={index}>
+              <li className="mx-2 font-medium hover:underline">
+                <Link href={href}>{itemLink}</Link>
+              </li>
+              {pathNames.length !== index + 1 && <span> | </span>}
+            </React.Fragment>
+          )
         })}
-      </div>
+      </ul>
     </div>
   )
 }

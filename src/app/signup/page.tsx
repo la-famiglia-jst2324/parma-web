@@ -6,8 +6,8 @@ import { TextInput, Button } from '@tremor/react'
 import type firebase from 'firebase/app'
 import GoogleAuthButton from '@/components/GoogleAuthButton'
 import { authSignup } from '@/lib/firebase/auth'
-import ErrorInfo from '@/components/Authentication/ErrorInfo'
-import SuccessInfo from '@/components/Authentication/SuccessInfo'
+import ErrorInfo from '@/components/authentication/ErrorInfo'
+import SuccessInfo from '@/components/authentication/SuccessInfo'
 
 export default function SignupPage() {
   const [loading, setLoading] = useState<boolean>(false)
@@ -75,7 +75,7 @@ export default function SignupPage() {
   }
 
   return (
-    <div className="flex h-screen items-center justify-center bg-white px-4">
+    <div className="flex h-screen items-center justify-center px-4">
       <div>
         <h2 className="mb-3 text-5xl font-bold">Signup</h2>
         <p className="mb-3 text-base">Please enter your details to create an account</p>

@@ -8,7 +8,7 @@ import GoogleAuthButton from '@/components/GoogleAuthButton'
 import { authSignup } from '@/lib/firebase/auth'
 import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
-import { toast } from '@/components/ui/use-toast'
+import { ShowToast } from '@/components/ShowToast'
 
 export default function SignupPage() {
   const [name, setName] = useState<string>('')
@@ -28,20 +28,12 @@ export default function SignupPage() {
     try {
       // Further form validation
       if (!name || !email || !password || !confirm) {
-        toast({
-          title: 'All fields are required',
-          description: 'Please fill out all fields',
-          duration: 5000
-        })
+        ShowToast('All fields are required', 'Please fill out all fields', 'destructive')
         return
       }
 
       if (password !== confirm) {
-        toast({
-          title: 'Passwords do not match',
-          description: 'Please make sure your passwords match',
-          duration: 5000
-        })
+        ShowToast('Passwords do not match', 'Please try again', 'destructive')
         return
       }
 
@@ -50,63 +42,37 @@ export default function SignupPage() {
 
       // Attempt signup
       try {
-        console.log('signup')
-
         await authSignup(name, email, password)
         console.log('done')
 
         clearTimeout(timeoutId)
-        toast({
-          title: 'Your account has been created successfully. Please check your email to verify your account.',
-          description: 'Please check your email to verify your account.',
-          duration: 5000
-        })
+        ShowToast('Account created successfully', 'Please check your email to verify your account')
       } catch (signupError) {
         clearTimeout(timeoutId)
         // Handle specific signup errors
         if (signupError instanceof Error) {
           const errorCode = (signupError as firebase.FirebaseError).code
           if (errorCode === 'auth/email-already-in-use') {
-            toast({
-              title: 'Email already in use.',
-              description: 'Please use a different email address or try to log in.',
-              duration: 5000
-            })
+            ShowToast('Email already in use', 'Please use a different email address or try logging in', 'destructive')
           } else if (errorCode === 'auth/weak-password') {
-            toast({
-              title:
-                'Password is too weak. It must be at least 8 characters long and include a mix of letters, numbers, and symbols.',
-              description: 'Please try again',
-              duration: 5000
-            })
+            ShowToast(
+              'Password is too weak',
+              'It must be at least 8 characters long and include a mix of letters, numbers, and symbols.',
+              'destructive'
+            )
           } else if (errorCode === 'auth/invalid-email') {
-            toast({
-              title: 'Invalid email address',
-              description: 'Please provide a valid email address.',
-              duration: 5000
-            })
+            ShowToast('Invalid email address', 'Please provide a valid email address.', 'destructive')
           } else {
-            toast({
-              title: 'Login failed.',
-              description: 'Please try again',
-              duration: 5000
-            })
+            ShowToast('Signup failed', 'Please try again later.', 'destructive')
           }
         } else {
-          toast({
-            title: 'Signup failed.',
-            description: 'Please try again',
-            duration: 5000
-          })
+          ShowToast('Signup failed', 'Please try again later.', 'destructive')
         }
       }
     } catch (error) {
       // Handle general errors
-      toast({
-        title: error instanceof Error ? error.message : 'Something went wrong.',
-        description: 'Please try again',
-        duration: 5000
-      })
+      console.error('Error signing up:', error)
+      ShowToast('Signup failed', error instanceof Error ? error.message : 'Something went wrong.', 'destructive')
     }
   }
 

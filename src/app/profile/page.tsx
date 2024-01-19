@@ -9,13 +9,13 @@ import { FormContent } from '@/components/FormContent'
 import { MainLayoutWrapper } from '@/components/layout/MainLayout'
 import { AuthContext, authResetPassword } from '@/lib/firebase/auth'
 import { getUserAttachment, putUserAttachment, putUsername } from '@/services/user/userService'
-import { toast } from '@/components/ui/use-toast'
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog'
-
+import { ShowToast } from '@/components/ShowToast'
 const ProfilePage: React.FC = () => {
   const user = useContext(AuthContext)
   const [fullName, setFullName] = useState('')
   const [userPhotoURL, setUserPhotoURL] = useState<string | null>('')
+
   const saveProfileData = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     try {
@@ -27,16 +27,10 @@ const ProfilePage: React.FC = () => {
       }
       const data = await response.json()
       console.log('Profile updated successfully:', data)
-      toast({
-        title: `Profile updated successfully`,
-        description: 'You have successfully updated your profile'
-      })
+      ShowToast('Profile updated successfully', 'You have successfully updated your profile')
     } catch (error) {
       console.error('Error updating profile:', error)
-      toast({
-        title: `Error updating profile`,
-        description: 'Please try again'
-      })
+      ShowToast('Error updating profile', 'Please try again', 'destructive')
     }
   }
   useEffect(() => {
@@ -64,18 +58,10 @@ const ProfilePage: React.FC = () => {
       await authResetPassword(userMail)
       clearTimeout(timeoutId)
       timeoutId = null
-      toast({
-        title: `We have sent instructions on your given email to reset your password.`,
-        description: 'Please check your email',
-        duration: 5000
-      })
+      ShowToast('We have sent instructions on your given email to reset your password.', 'Please check your email')
     } catch (error) {
       console.error('Error resetting password:', error)
-      toast({
-        title: `Error resetting password`,
-        description: 'Please try again',
-        duration: 5000
-      })
+      ShowToast('Error resetting password', 'Please try again', 'destructive')
     } finally {
       if (timeoutId) {
         clearTimeout(timeoutId)
@@ -99,18 +85,10 @@ const ProfilePage: React.FC = () => {
       const response = await putUserAttachment(data)
       console.log('value:', response.profilePicture)
       setUserPhotoURL(response.profilePicture)
-      toast({
-        title: `Upload successful`,
-        description: 'your profile picture is successfully uploaded',
-        duration: 5000
-      })
+      ShowToast('Upload successful', 'your profile picture is successfully uploaded')
     } catch (error) {
       console.error('Error uploading the profile picture:', error)
-      toast({
-        title: `Error uploading the profile picture`,
-        description: 'Please upload file in jpg format only',
-        duration: 5000
-      })
+      ShowToast('Error uploading the profile picture', 'Please upload file in jpg format only', 'destructive')
     }
     setUploadAttachment('')
   }

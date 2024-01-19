@@ -6,7 +6,7 @@ import type firebase from 'firebase/app'
 import { Button } from '@/components/ui/button'
 import GoogleAuthButton from '@/components/GoogleAuthButton'
 import { authLogin } from '@/lib/firebase/auth'
-import { toast } from '@/components/ui/use-toast'
+import { ShowToast } from '@/components/ShowToast'
 import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
 
@@ -25,21 +25,13 @@ export default function LoginPage() {
     try {
       // Further form validation
       if (!email || !password) {
-        toast({
-          title: 'All fields are required',
-          description: 'Please fill out all fields',
-          duration: 5000
-        })
+        ShowToast('All fields are required', 'Please fill out all fields', 'destructive')
         return
       }
 
       // Add timeout
       const timeoutId = setTimeout(() => {
-        toast({
-          title: 'Login is taking too long',
-          description: 'Please try again later',
-          duration: 5000
-        })
+        ShowToast('Login is taking too long', 'Please try again later', 'destructive')
       }, 10000)
 
       try {
@@ -53,44 +45,21 @@ export default function LoginPage() {
         if (loginError instanceof Error) {
           const errorCode = (loginError as firebase.FirebaseError).code
           if (errorCode === 'auth/invalid-credential' || errorCode === 'auth/user-not-found') {
-            toast({
-              title: 'Login failed',
-              description: 'Invalid email or password',
-              duration: 5000
-            })
+            ShowToast('Login failed', 'Invalid email or password', 'destructive')
           } else if (errorCode === 'auth/invalid-email') {
-            toast({
-              title: 'Login failed',
-              description: 'Invalid email or password',
-              duration: 5000
-            })
+            ShowToast('Login failed', 'Invalid email or password', 'destructive')
           } else if (errorCode === 'auth/too-many-requests') {
-            toast({
-              title: 'Login failed',
-              description: 'Too many requests. Please try again later.'
-            })
+            ShowToast('Login failed', 'Too many requests. Please try again later.', 'destructive')
           } else {
-            toast({
-              title: 'Login failed',
-              description: 'Please try again later.',
-              duration: 5000
-            })
+            ShowToast('Login failed', 'Please try again later.', 'destructive')
           }
         } else {
-          toast({
-            title: 'Login failed',
-            description: 'Please try again later.',
-            duration: 5000
-          })
+          ShowToast('Login failed', 'Please try again later.', 'destructive')
         }
       }
     } catch (error) {
-      // Handle general errors
-      toast({
-        title: 'Login failed',
-        description: error instanceof Error ? error.message : 'Something went wrong.',
-        duration: 5000
-      })
+      console.error('Error logging in:', error)
+      ShowToast('Login failed', error instanceof Error ? error.message : 'Something went wrong.', 'destructive')
     }
   }
 

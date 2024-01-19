@@ -73,19 +73,21 @@ export async function editDatasource(
   }
 ) {
   try {
-    const res = await fetchClient.put(`/api/dataSources/${id}`, updates)
-    return res.data
+    const response = await fetchClient.put(`/api/dataSources/${id}`, updates)
+    return response.data
   } catch (error) {
     console.log('An error has occurred: ', error)
+    throw error
   }
 }
 
 export async function getDatasourceById(id: string) {
   try {
-    const res = await fetchClient.get(`/api/dataSources/${id}`)
-    return res.data
+    const response = await fetchClient.get(`/api/dataSources/${id}`)
+    return response.data
   } catch (error) {
     console.log('An error has occurred: ', error)
+    throw error
   }
 }
 

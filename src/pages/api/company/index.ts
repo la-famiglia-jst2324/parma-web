@@ -8,7 +8,6 @@ import {
 } from '@/api/db/services/companyService'
 import { ItemNotFoundError } from '@/api/utils/errorUtils'
 import { withAuthValidation } from '@/api/middleware/auth'
-import { addCompanyDataSourceRelationshipForCompany } from '@/api/db/services/companyDataSourceService'
 /**
  * @swagger
  * tags:
@@ -140,9 +139,8 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse, user: U
     case 'POST':
       try {
         // Create a new company.
+        // New company data source relationships will be added for this company with all existing data sources. 
         const newCompany = await createCompany({ ...req.body, addedBy: userId })
-        // Register the new company in th company data source relationship.
-        await addCompanyDataSourceRelationshipForCompany(newCompany.id)
         if (newCompany) {
           res.status(201).json(newCompany)
         } else res.status(400).json({ error: 'Invalid request parameters' })

@@ -64,7 +64,10 @@ const Sidebar: React.FC = () => {
           {/* Buckets */}
           <div className="mb-8">
             <div className="flex items-center justify-between">
-              <SidebarLink href="/buckets" icon={FolderIcon} text="Buckets" />
+              <div className="ml-2 flex items-center rounded text-base">
+                <FolderIcon className={`mr-2 h-4 w-4 text-gray-500`} />
+                <p className="text-base font-medium text-gray-300">Buckets</p>
+              </div>
               <CreateBucket></CreateBucket>
             </div>
             <div className="ml-6">
@@ -92,7 +95,10 @@ const Sidebar: React.FC = () => {
           </div>
           {/* Companies */}
           <div className="mb-8">
-            <SidebarLink href="/companies" icon={BuildingOffice2Icon} text="Companies" />
+            <div className="ml-2 flex items-center rounded text-base">
+              <BuildingOffice2Icon className={`mr-2 h-4 w-4 text-gray-500`} />
+              <p className="text-base font-medium text-gray-300">Companies</p>
+            </div>
             <div className="ml-6">
               <ScrollArea className="mt-2 h-24 w-full">
                 <div className="pl-2">

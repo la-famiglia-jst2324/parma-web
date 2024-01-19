@@ -51,15 +51,8 @@ export async function getDataSources() {
 
 export async function getDataSourcesPagination(page: number, size: number) {
   try {
-    const res = await fetch(`/api/dataSources?page=${page}&size=${size}`, {
-      method: 'GET',
-      cache: 'no-cache'
-    })
-    if (!res.ok) {
-      console.log('Response status:', res.status)
-      throw new Error('HTTP response was not OK')
-    }
-    const json = await res.json()
+    const res = await fetchClient.get(`/api/dataSources?page=${page}&size=${size}`)
+    const json = await res.data
     return {
       datasources: json.datasources,
       pagination: json.pagination
@@ -99,16 +92,10 @@ export async function getDatasourceById(id: string) {
 }
 
 export async function getScheduledTasks(dataSourceId: string) {
-  return fetch(`/api/dataSources/scheduledTasks/${dataSourceId}`, { method: 'GET' })
+  return fetchClient
+    .get(`/api/dataSources/scheduledTasks/${dataSourceId}`)
     .then((response) => {
-      if (!response.ok) {
-        if (response.status === 400) {
-          console.log('No companies linked to this datasource!')
-        }
-        console.log(`HTTP error! status: ${response.status}`)
-        return null
-      }
-      return response.json()
+      return response.data
     })
     .then((data) => {
       console.log(data)
@@ -129,19 +116,8 @@ export async function createNewDatasource(dataSource: {
   description: string
 }) {
   try {
-    const res = await fetch('/api/dataSources', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(dataSource)
-    })
-    if (!res.ok) {
-      console.log('Response status:', res.status)
-      throw new Error('HTTP response was not OK')
-    }
-    const json = await res.json()
-    return json
+    const res = await fetchClient.post('/api/dataSources', dataSource)
+    return res.data
   } catch (error) {
     console.error(error)
   }
@@ -149,15 +125,8 @@ export async function createNewDatasource(dataSource: {
 
 export async function deleteDatasource(id: string) {
   try {
-    const res = await fetch(`/api/dataSources/${id}`, {
-      method: 'DELETE',
-      cache: 'no-cache'
-    })
-    if (!res.ok) {
-      throw new Error('HTTP response was not OK')
-    }
-    const json = await res.json()
-    return json
+    const res = await fetchClient.delete(`/api/dataSources/${id}`)
+    return res.data
   } catch (error) {
     console.log('An error has occurred: ', error)
   }

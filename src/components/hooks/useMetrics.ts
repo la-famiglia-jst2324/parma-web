@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import type { SourceMeasurement } from '@prisma/client'
-import { getMeasurements } from 'src/app/api/measurements'
-import { getMeasurementsForCompanies } from '@/services/measurement/measurementService'
+import { getMeasurements, getMeasurementsForCompanies } from '@/services/measurement/measurementService'
 
 const useMeasurements = () => {
   const [measurements, setMeasurements] = useState<SourceMeasurement[]>([])

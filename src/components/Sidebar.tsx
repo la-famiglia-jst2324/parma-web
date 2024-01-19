@@ -88,9 +88,6 @@ const Sidebar: React.FC = () => {
                   ))}
                 </div>
               </ScrollArea>
-              {/* {buckets.slice(0, 3).map((bucket) => (
-                <SidebarLink key={bucket.id} href={`/buckets/${bucket.id}`} text={bucket.title} />
-              ))} */}
             </div>
           </div>
           {/* Companies */}
@@ -117,9 +114,6 @@ const Sidebar: React.FC = () => {
                   ))}
                 </div>
               </ScrollArea>
-              {/* {companies.slice(0, 3).map((company) => (
-                <SidebarLink key={company.id} href={`/companies/${company.id}`} text={company.name} />
-              ))} */}
             </div>
           </div>
         </div>

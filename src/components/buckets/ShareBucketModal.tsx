@@ -194,11 +194,13 @@ const ShareBucketModal: React.FC<ShareBucketModalProps> = ({ handleShare, id }) 
             <DialogTitle>Share this bucket</DialogTitle>
             <DialogDescription>
               Only private buckets can be shared with others. Please make the bucket private if you want to share it
-              with other people. People can already search public buckets
+              with other people. People can already search public buckets.
             </DialogDescription>
           </DialogHeader>
           <div>
-            <p className="mb-4 text-lg text-gray-400">Search for emails to whom you want to share this bucket with</p>
+            <p className="mb-4 text-sm text-muted-foreground">
+              Search for user names to whom you want to share this bucket with.
+            </p>
 
             <div className="flex flex-row items-center gap-4">
               <SearchSelect onValueChange={(val) => addUserToShareList(val)}>
@@ -221,10 +223,10 @@ const ShareBucketModal: React.FC<ShareBucketModalProps> = ({ handleShare, id }) 
                     <SelectContent>
                       <SelectGroup>
                         <SelectItem key={'MODERATOR'} value="MODERATOR">
-                          MODERATOR
+                          Moderator
                         </SelectItem>
                         <SelectItem key={'VIEWER'} value="VIEWER">
-                          VIEWER
+                          Viewer
                         </SelectItem>
                       </SelectGroup>
                     </SelectContent>
@@ -250,10 +252,10 @@ const ShareBucketModal: React.FC<ShareBucketModalProps> = ({ handleShare, id }) 
                           <SelectContent>
                             <SelectGroup>
                               <SelectItem key={'MODERATOR'} value="MODERATOR">
-                                MODERATOR
+                                Moderator
                               </SelectItem>
                               <SelectItem key={'VIEWER'} value="VIEWER">
-                                VIEWER
+                                Viewer
                               </SelectItem>
                             </SelectGroup>
                           </SelectContent>

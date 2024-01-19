@@ -1,16 +1,24 @@
 'use client'
 import React, { useEffect, useState } from 'react'
 import type { Company } from '@prisma/client'
-import type { DateRangePickerValue } from '@tremor/react'
-import { DateRangePicker } from '@tremor/react'
+import { CalendarIcon } from 'lucide-react'
+import { format, subDays } from 'date-fns'
+import type { DateRange } from 'react-day-picker'
+import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover'
+import { Button } from '../ui/button'
+import { Calendar } from '../ui/calendar'
 import GraphChart from '@/components/analytics/Graph'
 import { useMeasurementsCompanies } from '@/components/hooks/useMetrics'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { cn } from '@/utils/utils'
 
 function BucketGraph({ companies }: { companies: Company[] | undefined }) {
   const [selectedCompanies, setSelectedCompanies] = useState<string[]>([])
   const [selectedMetric, setSelectedMetric] = useState<string>('')
-  const [datePickerValue, setDatePickerValue] = useState<DateRangePickerValue>()
+  const [datePickerValue, setDatePickerValue] = useState<DateRange | undefined>({
+    from: subDays(new Date(), 7),
+    to: new Date()
+  })
   const [graphData, setGraphData] = useState<{
     companies: string[]
     metric: string
@@ -30,8 +38,9 @@ function BucketGraph({ companies }: { companies: Company[] | undefined }) {
 
   const metrics = useMeasurementsCompanies(selectedCompanies)
 
-  const changeDatePicker = (value: DateRangePickerValue) => {
-    if (value.from && value.to) {
+  const changeDatePicker = (value: DateRange | undefined) => {
+    console.log(value)
+    if (value?.from && value?.to) {
       setDatePickerValue(value)
     }
   }
@@ -87,7 +96,45 @@ function BucketGraph({ companies }: { companies: Company[] | undefined }) {
                       )}
                     </SelectContent>
                   </Select>
-                  <DateRangePicker onValueChange={(value) => changeDatePicker(value)} />
+                  {/* <DateRangePicker onValueChange={(value) => changeDatePicker(value)} /> */}
+
+                  <div className={cn('grid gap-2')}>
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <Button
+                          id="date"
+                          variant={'outline'}
+                          className={cn(
+                            'w-[300px] justify-start text-left font-normal',
+                            !datePickerValue && 'text-muted-foreground'
+                          )}
+                        >
+                          <CalendarIcon className="mr-2 h-4 w-4" />
+                          {datePickerValue?.from ? (
+                            datePickerValue.to ? (
+                              <>
+                                {format(datePickerValue.from, 'LLL dd, y')} - {format(datePickerValue.to, 'LLL dd, y')}
+                              </>
+                            ) : (
+                              format(datePickerValue.from, 'LLL dd, y')
+                            )
+                          ) : (
+                            <span>Pick a date</span>
+                          )}
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-auto p-0" align="start">
+                        <Calendar
+                          initialFocus
+                          mode="range"
+                          defaultMonth={datePickerValue?.from}
+                          selected={datePickerValue}
+                          onSelect={(val) => changeDatePicker(val)}
+                          numberOfMonths={2}
+                        />
+                      </PopoverContent>
+                    </Popover>
+                  </div>
                 </div>
               </div>
             </div>

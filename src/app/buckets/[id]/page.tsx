@@ -179,7 +179,7 @@ const BucketPage = ({ params: { id } }: { params: { id: string } }) => {
         <div className="mb-4 flex items-center justify-between">
           <div className="mb-3 flex items-start justify-start space-x-4">
             <div className="mt-1">
-              <GoBackButton url="/buckets"></GoBackButton>
+              <GoBackButton url="/"></GoBackButton>
             </div>
             <div className="flex flex-col">
               <h1 className="text-2xl font-bold">{bucket.title}</h1>
@@ -203,7 +203,7 @@ const BucketPage = ({ params: { id } }: { params: { id: string } }) => {
           </div>
         </div>
         <div className="mb-12 ml-8">
-          <div className="pb-4 font-semibold uppercase text-gray-500">Description</div>
+          <div className="mb-2 text-2xl font-semibold text-gray-700">Description</div>
           <p className="mb-4">{bucket.description}</p>
         </div>
 
@@ -225,7 +225,10 @@ const BucketPage = ({ params: { id } }: { params: { id: string } }) => {
                 </Button>
               )}
               {editCompanies && (
-                <AddCompaniesToBucket handleSave={(val) => addCompaniesToBucket(val)}></AddCompaniesToBucket>
+                <AddCompaniesToBucket
+                  bucketCompanies={bucketCompanies}
+                  handleSave={(val) => addCompaniesToBucket(val)}
+                ></AddCompaniesToBucket>
               )}
               {editCompanies && (
                 <Button
@@ -279,7 +282,13 @@ const BucketPage = ({ params: { id } }: { params: { id: string } }) => {
         )}
 
         {bucketCompanies && !(bucketCompanies.length > 0) && (
-          <div className="ml-8 mt-4 text-gray-400">This bucket does not have any companies.</div>
+          <div className="flex items-center justify-between">
+            <div className="ml-8 mt-4 text-gray-400">This bucket does not have any companies.</div>
+            <AddCompaniesToBucket
+              bucketCompanies={bucketCompanies}
+              handleSave={(val) => addCompaniesToBucket(val)}
+            ></AddCompaniesToBucket>
+          </div>
         )}
       </div>
     </main>

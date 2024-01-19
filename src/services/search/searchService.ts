@@ -1,11 +1,11 @@
 import fetchClient from '@/services/fetchClient'
 
-export async function getSearchData(name?: string, page: number = 1, pageSize: number = 10) {
+export async function getSearchData(name?: string, page?: number, pageSize?: number) {
   try {
     const queryParams = new URLSearchParams({
       ...(name && { name }),
-      page: page.toString(),
-      pageSize: pageSize.toString()
+      ...(page && { page: page.toString() }),
+      ...(pageSize && { pageSize: pageSize.toString() })
     })
 
     const response = await fetchClient.get(`/api/search?${queryParams.toString()}`)

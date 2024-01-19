@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useContext, useState } from 'react'
+import React, { useState } from 'react'
 import { Select, SelectItem } from '@tremor/react'
 import { Frequency } from '@prisma/client'
 import { PlusSquareIcon } from 'lucide-react'
@@ -20,16 +20,13 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { createNewDatasource } from '@/services/datasource/datasourceService'
-import { AuthContext, getAuthToken } from '@/lib/firebase/auth'
 
-const CreateDatasource: React.FC = async () => {
+const CreateDatasource: React.FC = () => {
   const [name, setName] = useState<string>('')
   const [url, setUrl] = useState<string>('')
   const [description, setDescription] = useState<string>('')
   const [frequency, setFrequency] = useState<string>('')
   const { toast } = useToast()
-  const user = useContext(AuthContext)
-  const token = await getAuthToken(user)
 
   async function createDatasource(
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
@@ -79,8 +76,7 @@ const CreateDatasource: React.FC = async () => {
       description
     }
     try {
-      const response = await createNewDatasource(dataSource, token || '')
-      console.log(response)
+      const response = await createNewDatasource(dataSource)
 
       if (response.ok) {
         toast({
@@ -103,7 +99,6 @@ const CreateDatasource: React.FC = async () => {
     setState: React.Dispatch<React.SetStateAction<string>>
   ) => {
     setState(event.target.value)
-    console.log(event.target.value)
   }
 
   return (

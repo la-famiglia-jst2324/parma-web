@@ -100,16 +100,9 @@ export async function editDatasource(
 
 export async function getDatasourceById(id: string) {
   try {
-    const res = await fetch(`/api/dataSources/${id}`, {
-      method: 'GET',
-      cache: 'no-store'
-    })
-    if (!res.ok) {
-      console.log('Response status:', res.status)
-      throw new Error('HTTP response was not OK')
-    }
-    const json = await res.json()
-    return json
+    const res = await fetchClient(`/api/dataSources/${id}`)
+
+    return res.data
   } catch (error) {
     console.log('An error has occurred: ', error)
   }
@@ -136,20 +129,25 @@ export async function getScheduledTasks(dataSourceId: string) {
     })
 }
 
-export async function createNewDatasource(dataSource: {
-  sourceName: string
-  isActive: boolean
-  frequency: 'HOURLY' | 'DAILY' | 'WEEKLY' | 'MONTHLY'
-  healthStatus: string
-  modifiedAt: string
-  invocationEndpoint: string
-  description: string
-}) {
+export async function createNewDatasource(
+  dataSource: {
+    sourceName: string
+    isActive: boolean
+    frequency: 'HOURLY' | 'DAILY' | 'WEEKLY' | 'MONTHLY'
+    healthStatus: string
+    modifiedAt: string
+    invocationEndpoint: string
+    description: string
+  },
+  token: string
+) {
   try {
+    if (!token) return
     const res = await fetch('/api/dataSources', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        Authorization: token
       },
       body: JSON.stringify(dataSource)
     })

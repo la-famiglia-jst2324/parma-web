@@ -1,8 +1,22 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import type { SourceMeasurement } from '@prisma/client'
-import { createSourceMeasurement, getAllSourceMeasurements } from '@/api/db/services/sourceMeasurementService'
+import {
+  createSourceMeasurement,
+  getAllSourceMeasurements,
+  getMeasurementWithAllNestedChildByID
+} from '@/api/db/services/sourceMeasurementService'
 import { getCompanySourceMeasurementByCompanyId } from '@/api/db/services/companySourceMeasurementService'
 import { withAuthValidation } from '@/api/middleware/auth'
+interface SourceMeasurementWithChild {
+  id: number
+  sourceModuleId: number
+  type: string
+  measurementName: string
+  parentMeasurementId: number | null
+  createdAt: Date
+  modifiedAt: Date
+  childSourceMeasurements: SourceMeasurement[]
+}
 /**
  * @swagger
  * tags:
@@ -11,7 +25,7 @@ import { withAuthValidation } from '@/api/middleware/auth'
  *   get:
  *     tags:
  *       - sourceMeasurement
- *     summary: Retrieve common source measurements (intersection) of a list of company IDs
+ *     summary: Retrieve common source measurements (intersection) and its child measurements of a list of company IDs
  *     description: Fetches source measurements associated with given company IDs. Can handle multiple company IDs.
  *     parameters:
  *       - in: query
@@ -104,6 +118,7 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   switch (method) {
     case 'GET':
       try {
+        let measurementWithChildren: SourceMeasurementWithChild[] = []
         if (companyIds && companiesArray.length > 1) {
           const relation = await getCompanySourceMeasurementByCompanyId(companiesArray)
           const sourceMeasurementMap: { [key: number]: number } = {}
@@ -126,12 +141,15 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
               }
             }
           }
-          if (result.length > 0) res.status(200).json(result)
+          measurementWithChildren = await getMeasurementsWithChildren(result)
+          if (result.length > 0) res.status(200).json(measurementWithChildren)
           else res.status(400).json({ error: 'No relation found' })
         } else if (companyIds && companiesArray.length === 1) {
           const relation = await getCompanySourceMeasurementByCompanyId(companiesArray)
-          if (relation) res.status(200).json(relation.map((item) => item.sourceMeasurement))
-          else res.status(400).json({ error: 'No relation found' })
+          if (relation) {
+            const measurements = relation.map((item) => item.sourceMeasurement)
+            res.status(200).json(await getMeasurementsWithChildren(measurements))
+          } else res.status(400).json({ error: 'No relation found' })
         } else {
           const measurements = await getAllSourceMeasurements()
           if (measurements.length > 0) res.status(200).json(measurements)
@@ -159,3 +177,13 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 }
 export default withAuthValidation(handler)
+
+// Function to get measurement with all nested children
+async function getMeasurementsWithChildren(measurements: SourceMeasurement[]) {
+  const measurementsWithChildren: SourceMeasurementWithChild[] = []
+  for (const measurement of measurements) {
+    const withChild = await getMeasurementWithAllNestedChildByID(measurement.id)
+    measurementsWithChildren.push(withChild)
+  }
+  return measurementsWithChildren
+}

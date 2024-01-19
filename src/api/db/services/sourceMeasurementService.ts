@@ -37,6 +37,32 @@ const getSourceMeasurementByID = async (id: number) => {
   }
 }
 
+const getMeasurementWithAllNestedChildByID = async (id: number) => {
+  try {
+    const measurement = await prisma.sourceMeasurement.findUnique({
+      where: { id },
+      include: {
+        childSourceMeasurements: true
+      }
+    })
+
+    if (!measurement) {
+      throw new ItemNotFoundError(`Source measurement with ID ${id} not found.`)
+    }
+
+    if (measurement.childSourceMeasurements && measurement.childSourceMeasurements.length > 0) {
+      const childMeasurements = await Promise.all(
+        measurement.childSourceMeasurements.map((child) => getMeasurementWithAllNestedChildByID(child.id))
+      )
+      measurement.childSourceMeasurements = childMeasurements
+    }
+    return measurement
+  } catch (error) {
+    console.error('Error getting the source measurement by ID:', error)
+    throw error
+  }
+}
+
 // get all measurements of a data source
 const getMeasurementsBySourceId = async (sourceModuleId: number) => {
   try {
@@ -218,5 +244,6 @@ export {
   updateParentMeasurementId,
   deleteSourceMeasurement,
   getMeasurementsOfCompaniesBySourceId,
-  getMeasurementsByCompanyIdSourceId
+  getMeasurementsByCompanyIdSourceId,
+  getMeasurementWithAllNestedChildByID
 }

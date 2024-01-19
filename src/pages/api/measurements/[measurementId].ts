@@ -3,7 +3,7 @@ import {
   getSourceMeasurementByID,
   updateSourceMeasurement,
   deleteSourceMeasurement,
-  getChildMeasurementsByParentId
+  getMeasurementWithAllNestedChildByID
 } from '@/api/db/services/sourceMeasurementService'
 import { ItemNotFoundError } from '@/api/utils/errorUtils'
 /**
@@ -12,7 +12,7 @@ import { ItemNotFoundError } from '@/api/utils/errorUtils'
  *   get:
  *     tags:
  *       - sourceMeasurement
- *     summary: Retrieve a source measurement by ID
+ *     summary: Retrieve a source measurement and all its nested measurements by ID
  *     description: Fetches details of a specific source measurement based on the provided ID.
  *     parameters:
  *       - in: query
@@ -95,10 +95,8 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   switch (method) {
     case 'GET':
       try {
-        const measurement = await getSourceMeasurementByID(Number(measurementId))
-        const child = await getChildMeasurementsByParentId(Number(measurementId))
-        const result = [measurement, ...child].filter(Boolean)
-        if (result) res.status(200).json(result)
+        const measurement = await getMeasurementWithAllNestedChildByID(Number(measurementId))
+        if (measurement) res.status(200).json(measurement)
       } catch (error) {
         if (error instanceof ItemNotFoundError) res.status(404).json({ error: error.message })
         res.status(500).json({ error: 'Internal Server Error' })

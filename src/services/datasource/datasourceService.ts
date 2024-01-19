@@ -163,3 +163,19 @@ export async function createNewDatasource(dataSource: {
     console.error(error)
   }
 }
+
+export async function deleteDatasource(id: string) {
+  try {
+    const res = await fetch(`/api/dataSources/${id}`, {
+      method: 'DELETE',
+      cache: 'no-cache'
+    })
+    if (!res.ok) {
+      throw new Error('HTTP response was not OK')
+    }
+    const json = await res.json()
+    return json
+  } catch (error) {
+    console.log('An error has occurred: ', error)
+  }
+}

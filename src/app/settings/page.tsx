@@ -3,14 +3,11 @@
 import type { FormEvent } from 'react'
 import React, { useState } from 'react'
 import { ChannelType } from '@prisma/client'
-// import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import SelectSection from '@/components/settings/SelectSection'
 import ApiKeyConfiguration from '@/components/settings/ApiKeyConfiguration'
 import { MainLayoutWrapper } from '@/components/layout/MainLayout'
 import { Input } from '@/components/ui/input'
-// import useCompanies from '@/components/hooks/useCompanies'
-// import {user} from '@/pages/api/user/[userId]'
 
 function SettingsPage() {
   const [selectedChannels, setSelectedChannels] = useState<string[]>([])
@@ -73,11 +70,7 @@ function SettingsPage() {
         <div
           className="p-5 pl-8"
           // onSubmit={saveChanges}
-        >
-          {/* <Button className="rounded bg-indigo-700 px-4 py-2 font-bold text-white hover:bg-blue-700 focus:outline-none">
-            Save changes
-          </Button> */}
-        </div>
+        ></div>
         <div className="w-full rounded-b border-b border-gray-200 p-2"></div>
 
         <div className="p-8">

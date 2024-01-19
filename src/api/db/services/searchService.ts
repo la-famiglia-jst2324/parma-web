@@ -32,6 +32,10 @@ const searchCompaniesAndBuckets = async (searchString: string, page: number, pag
       ...buckets.map((b) => ({ ...b, name: b.title, type: 'bucket' }))
     ].sort((a, b) => a.name.localeCompare(b.name))
 
+    if (!page || !pageSize) {
+      return combined
+    }
+
     // Apply pagination
     const skip = (page - 1) * pageSize
     const paginatedResults = combined.slice(skip, skip + pageSize)

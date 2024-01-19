@@ -7,7 +7,7 @@
 [![Major Tag](https://github.com/la-famiglia-jst2324/parma-web/actions/workflows/tag-major.yml/badge.svg)](https://github.com/la-famiglia-jst2324/parma-web/actions/workflows/tag-major.yml)
 
 ![Functions](https://img.shields.io/badge/functions-44.78%25-red.svg?style=flat)
-![Lines](https://img.shields.io/badge/lines-46.25%25-red.svg?style=flat)
+![Lines](https://img.shields.io/badge/lines-46.55%25-red.svg?style=flat)
 
 ParmaAI webstack including frontend and REST API backend.
 

@@ -8,10 +8,14 @@ export type SearchItem = {
   name: string
   description: string
   type: string
-  // subscribed: boolean
 }
 
 export const columns: ColumnDef<SearchItem>[] = [
+  {
+    accessorKey: 'id',
+    header: 'id',
+    cell: ({ row }) => <div className="capitalize">{row.getValue('id')}</div>
+  },
   {
     accessorKey: 'name',
     header: ({ column }) => {
@@ -24,10 +28,18 @@ export const columns: ColumnDef<SearchItem>[] = [
     }
   },
   {
+    accessorKey: 'description',
+    header: 'Description'
+  },
+  {
     accessorKey: 'type',
     header: ({ column }) => {
       return (
-        <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+          className="flex items-center justify-center"
+        >
           Type
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
@@ -36,27 +48,10 @@ export const columns: ColumnDef<SearchItem>[] = [
     cell: ({ row }) => {
       const type = row.getValue('type') as string
       return (
-        <div className="flex items-center">
+        <div className="">
           <Badge>{type}</Badge>
         </div>
       )
     }
-  },
-  {
-    accessorKey: 'description',
-    header: 'Description'
   }
-  // {
-  //     accessorKey: 'subscribed',
-  //     header: () => <div className="text-right">Amount</div>,
-  //     cell: ({ row }) => {
-  //         const amount = parseFloat(row.getValue("amount"))
-  //         const formatted = new Intl.NumberFormat("en-US", {
-  //             style: "currency",
-  //             currency: "USD",
-  //         }).format(amount)
-
-  //         return <div className="text-right font-medium">{formatted}</div>
-  //     },
-  // },
 ]

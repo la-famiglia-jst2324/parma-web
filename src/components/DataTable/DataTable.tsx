@@ -8,6 +8,7 @@ import {
   getSortedRowModel,
   useReactTable
 } from '@tanstack/react-table'
+import { useRouter } from 'next/navigation'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { Button } from '@/components/ui/button'
 
@@ -31,6 +32,8 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
     }
   })
 
+  const router = useRouter()
+
   return (
     <div className="rounded-md border">
       <Table>
@@ -50,7 +53,16 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
         <TableBody>
           {table.getRowModel().rows?.length ? (
             table.getRowModel().rows.map((row) => (
-              <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'}>
+              <TableRow
+                key={`${row.getValue('id')}-${row.getValue('type')}`}
+                data-state={row.getIsSelected() && 'selected'}
+                onClick={() => {
+                  const id = row.getValue('id') as number
+                  const type = row.getValue('type') as string
+                  router.push(`/${type === 'bucket' ? 'buckets' : 'companies'}/${id}`)
+                }}
+                className="cursor-pointer"
+              >
                 {row.getVisibleCells().map((cell) => (
                   <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
                 ))}
@@ -65,11 +77,7 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
           )}
         </TableBody>
       </Table>
-      <div className="flex items-center justify-end space-x-2 py-4">
-        <div className="flex-1 text-sm text-muted-foreground">
-          {table.getFilteredSelectedRowModel().rows.length} of {table.getFilteredRowModel().rows.length} row(s)
-          selected.
-        </div>
+      <div className="mr-10 flex items-center justify-end space-x-2 py-4">
         <div className="space-x-2">
           <Button
             variant="outline"

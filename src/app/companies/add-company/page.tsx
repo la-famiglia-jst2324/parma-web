@@ -6,10 +6,10 @@ import type { CalloutProps } from '@tremor/react'
 import { CheckCircleIcon } from '@heroicons/react/20/solid'
 import { useRouter } from 'next/navigation'
 import { FormContent } from '@/components/FormContent'
-import GoBackButton from '@/components/Companies/GoBackButton'
-import { MainLayoutWrapper } from '@/components/Layout/MainLayout'
+import GoBackButton from '@/components/companies/GoBackButton'
+import { MainLayoutWrapper } from '@/components/layout/MainLayout'
 import CustomButton from '@/components/BlueButton'
-import CompanyPopup from '@/components/Companies/CompanyPopup'
+import CompanyPopup from '@/components/companies/CompanyPopup'
 import { postCompany } from '@/services/company/companyService'
 
 interface PopupContents {

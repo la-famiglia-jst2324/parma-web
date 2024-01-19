@@ -1,12 +1,22 @@
 'use client'
 
-import { Button, SearchSelect, SearchSelectItem, Select, SelectItem } from '@tremor/react'
+import { SearchSelect, SearchSelectItem, Select, SelectItem } from '@tremor/react'
 import { useEffect, useState } from 'react'
 import { $Enums, type User } from '@prisma/client'
+import { Share2 } from 'lucide-react'
 import BucketFunctions from '@/app/services/bucket.service'
-
+import { Button } from '@/components/ui/button'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogClose
+} from '@/components/ui/dialog'
 interface ShareBucketModalProps {
-  handleClose: () => void
   handleShare: (shareUsersList: ShareBucketProps[]) => void
   id: string
 }
@@ -37,7 +47,7 @@ const initialValue: User[] = [
   }
 ]
 
-const ShareBucketModal: React.FC<ShareBucketModalProps> = ({ handleClose, handleShare, id }) => {
+const ShareBucketModal: React.FC<ShareBucketModalProps> = ({ handleShare, id }) => {
   const [users, setUsers] = useState<User[]>(initialValue)
   const [usersToShare, setUsersToShare] = useState<User[]>([])
   const [listToPost, setListToPost] = useState<ShareBucketProps[]>([])
@@ -47,11 +57,13 @@ const ShareBucketModal: React.FC<ShareBucketModalProps> = ({ handleClose, handle
     BucketFunctions.getUsersForBucketAccess()
       .then((res: User[]) => setUsers(res))
       .catch((err) => console.log(err))
+  }, [])
 
+  const getInvitees = () => {
     BucketFunctions.getInvitees(+id)
       .then((res) => setInvitees(res))
       .catch((err) => console.log(err))
-  }, [id])
+  }
 
   const addUserToShareList = (userId: string) => {
     const user = users.find((user) => user.id === +userId)
@@ -85,34 +97,30 @@ const ShareBucketModal: React.FC<ShareBucketModalProps> = ({ handleClose, handle
   }
 
   const onShareBucket = () => {
+    setInvitees([])
+    setUsersToShare([])
     handleShare(listToPost)
   }
   return (
-    <div className="fixed inset-0 z-10 flex items-center justify-center overflow-y-auto">
-      {/* Background overlay */}
-      <div className="fixed inset-0 bg-black opacity-50" aria-hidden="true"></div>
-      {/* Modal */}
-      <div className="relative overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:align-middle">
-        {/* Close button */}
-        <Button className="absolute right-0 top-0 m-3" variant="light" onClick={handleClose}>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            className="h-6 w-6 text-gray-600"
+    <div>
+      <Dialog>
+        <DialogTrigger asChild onClick={getInvitees}>
+          <Button
+            className="mr-2 flex items-center gap-2 border-blue-600 bg-transparent text-blue-600"
+            variant="outline"
           >
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-          </svg>
-        </Button>
-        <div className="h-[500px] overflow-auto px-4 py-5 sm:p-6 sm:pb-5">
-          <h3 className="text-lg font-semibold leading-6 text-gray-900">Share this bucket</h3>
-          <div className="mb-4 mt-2">
-            <p className="text-sm text-gray-400">
+            <Share2 />
+            Share
+          </Button>
+        </DialogTrigger>
+        <DialogContent className="m-2 sm:max-w-[440px]">
+          <DialogHeader>
+            <DialogTitle>Share this bucket</DialogTitle>
+            <DialogDescription>
               Only private buckets can be shared with others. Please make the bucket private if you want to share it
               with other people. People can already search public buckets
-            </p>
-          </div>
+            </DialogDescription>
+          </DialogHeader>
           <div>
             <p className="mb-4 text-lg text-gray-400">Search for emails to whom you want to share this bucket with</p>
 
@@ -126,7 +134,7 @@ const ShareBucketModal: React.FC<ShareBucketModalProps> = ({ handleClose, handle
               </SearchSelect>
             </div>
 
-            <div className="mt-8">
+            <div className="mt-8 h-[200px] max-h-[400px] overflow-auto">
               {usersToShare.map((user) => (
                 <div className="mb-4 flex flex-row items-center justify-between" key={user.id}>
                   {user.name}
@@ -145,7 +153,7 @@ const ShareBucketModal: React.FC<ShareBucketModalProps> = ({ handleClose, handle
                 </div>
               ))}
 
-              {invitees.length > 0 && (
+              {invitees?.length > 0 && (
                 <div>
                   <h2 className="mb-3 text-lg font-semibold">Invitees</h2>
                   {invitees.map((invitee) => (
@@ -158,18 +166,21 @@ const ShareBucketModal: React.FC<ShareBucketModalProps> = ({ handleClose, handle
               )}
             </div>
           </div>
-        </div>
-        <div className="px-4 py-5 sm:p-6 sm:pb-5">
-          <div className="flex gap-2 px-4 py-3 sm:flex-row-reverse sm:px-5">
-            <Button className="mt-2" onClick={onShareBucket}>
-              Share
-            </Button>
-            <Button className="mt-2" variant="secondary" onClick={handleClose}>
-              Cancel
-            </Button>
-          </div>
-        </div>
-      </div>
+          <DialogFooter>
+            <DialogClose asChild>
+              <Button type="submit" className="mt-2" onClick={onShareBucket}>
+                Share
+              </Button>
+            </DialogClose>
+
+            <DialogClose asChild>
+              <Button type="submit" className="mt-2" variant="secondary" onClick={() => setUsersToShare([])}>
+                Cancel
+              </Button>
+            </DialogClose>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }

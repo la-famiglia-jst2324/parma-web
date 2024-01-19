@@ -1,4 +1,6 @@
 import React from 'react'
+import { Input } from './ui/input'
+import { Textarea } from './ui/textarea'
 
 interface FormContentProps {
   id: string
@@ -22,13 +24,12 @@ export const FormContent: React.FC<FormContentProps> = ({
   readonly
 }) => {
   return (
-    <div className="mb-4 flex flex-col">
+    <div className="mb-4 flex-col justify-center">
       <label className="mb-2 block text-sm font-bold text-gray-700" htmlFor={id}>
         {label}
       </label>
       {type === 'input' ? (
-        <input
-          className="w-full appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow focus:outline-none"
+        <Input
           type="text"
           id={id}
           name={name}
@@ -38,14 +39,7 @@ export const FormContent: React.FC<FormContentProps> = ({
           readOnly={readonly}
         />
       ) : (
-        <textarea
-          className="w-full appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow focus:outline-none"
-          id={id}
-          name={name}
-          placeholder={`${placeholder.toLowerCase()}`}
-          value={value}
-          onChange={onChange}
-        />
+        <Textarea id={id} name={name} placeholder={`${placeholder.toLowerCase()}`} value={value} onChange={onChange} />
       )}
     </div>
   )

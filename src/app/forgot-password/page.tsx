@@ -3,9 +3,9 @@
 import React, { useState } from 'react'
 import Link from 'next/link'
 import { TextInput, Button } from '@tremor/react'
-import ErrorInfo from '@/components/Authentication/ErrorInfo'
+import ErrorInfo from '@/components/authentication/ErrorInfo'
 import { authResetPassword } from '@/lib/firebase/auth'
-import SuccessInfo from '@/components/Authentication/SuccessInfo'
+import SuccessInfo from '@/components/authentication/SuccessInfo'
 
 export default function ForgotPasswordPage() {
   const [loading, setLoading] = useState(false)
@@ -49,7 +49,7 @@ export default function ForgotPasswordPage() {
   }
 
   return (
-    <div className="flex h-screen items-center justify-center bg-white">
+    <div className="flex h-screen items-center justify-center">
       <div>
         <h2 className="mb-4 text-4xl font-bold">Forgot your Password?</h2>
         <p className="mb-4">

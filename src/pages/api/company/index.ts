@@ -114,24 +114,21 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse, user: U
   switch (method) {
     case 'GET':
       try {
+        let companies
         // Gets a company
         if (companyName) {
-          const company = await getCompanyByName(
+          companies = await getCompanyByName(
             String(companyName),
             parseInt(page as string),
             parseInt(pageSize as string)
           )
-          if (company) res.status(200).json(company)
-          else res.status(400).json({ error: 'No Companies found' })
         } else if (page && pageSize) {
-          const companies = await getAllCompanies(parseInt(page as string), parseInt(pageSize as string))
-          if (companies) res.status(200).json(companies)
-          else res.status(400).json({ error: 'No Companies found' })
+          companies = await getAllCompanies(parseInt(page as string), parseInt(pageSize as string))
         } else {
-          const companies = await getAllCompaniesWithoutPagination()
-          if (companies) res.status(200).json(companies)
-          else res.status(400).json({ error: 'No Companies found' })
+          companies = await getAllCompaniesWithoutPagination()
         }
+        if (companies) res.status(200).json(companies)
+        else res.status(400).json({ error: 'No Companies found' })
       } catch (error) {
         if (error instanceof ItemNotFoundError) res.status(404).json({ error: error.message })
         else res.status(500).json({ error: 'Internal Server Error' })

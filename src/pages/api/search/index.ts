@@ -63,16 +63,17 @@ import { withAuthValidation } from '@/api/middleware/auth'
  */
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const { method } = req
+  const { name, page, pageSize } = req.query
 
   switch (method) {
     case 'GET':
       try {
-        const { name, page, pageSize } = req.query
         const searchString: string = (name as string) ?? ''
-        const pageNumber = Number(page) || 1
-        const pageSizeNumber = Number(pageSize) || 10
-
-        const result = await searchCompaniesAndBuckets(searchString, pageNumber, pageSizeNumber)
+        const result = await searchCompaniesAndBuckets(
+          searchString,
+          parseInt(page as string),
+          parseInt(pageSize as string)
+        )
         res.status(200).json(result)
       } catch (error) {
         console.error('Error searching companies and buckets:', error)

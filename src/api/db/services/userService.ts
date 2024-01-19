@@ -91,11 +91,14 @@ const updateUser = async (
     profilePicture?: string
   }
 ) => {
+  console.log('!', data)
   try {
     const user = await prisma.user.update({
       where: { id },
       data: {
-        ...data
+        name: data?.name || undefined,
+        role: data?.role || undefined,
+        profilePicture: data?.profilePicture || undefined
       }
     })
     return user

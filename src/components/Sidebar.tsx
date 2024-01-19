@@ -6,10 +6,9 @@ import UserNav from './UserNav'
 import useCompanies from './hooks/useCompanies'
 import useBuckets from './hooks/useBuckets'
 import { Button } from './ui/button'
+import CreateBucket from './buckets/createBucket'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Separator } from '@/components/ui/separator'
-
-import CreateBucket from './buckets/createBucket'
 
 interface SidebarLinkProps {
   href: string

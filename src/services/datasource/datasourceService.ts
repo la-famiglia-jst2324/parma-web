@@ -80,38 +80,21 @@ export async function editDatasource(
   }
 ) {
   try {
-    const res = await fetch(`/api/dataSources/${id}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(updates)
-    })
-    if (!res.ok) {
-      console.log('Response status:', res.status)
-      throw new Error('HTTP response was not OK')
-    }
-    const json = await res.json()
-    return json
+    const response = await fetchClient.put(`/api/dataSources/${id}`, updates)
+    return response.data
   } catch (error) {
     console.log('An error has occurred: ', error)
+    throw error
   }
 }
 
 export async function getDatasourceById(id: string) {
   try {
-    const res = await fetch(`/api/dataSources/${id}`, {
-      method: 'GET',
-      cache: 'no-store'
-    })
-    if (!res.ok) {
-      console.log('Response status:', res.status)
-      throw new Error('HTTP response was not OK')
-    }
-    const json = await res.json()
-    return json
+    const response = await fetchClient.get(`/api/dataSources/${id}`)
+    return response.data
   } catch (error) {
     console.log('An error has occurred: ', error)
+    throw error
   }
 }
 

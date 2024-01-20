@@ -50,10 +50,8 @@ function SettingsPage() {
                   <h4 className="flex">Provide email address where you want to receive reports and notifications</h4>
                 </div>
                 <div className="absolute right-8 flex w-56 justify-center">
-                  <Button
-                    className="rounded bg-indigo-700 px-4 py-2 font-bold text-white hover:bg-blue-700 focus:outline-none"
-                    // onClick={saveChanges}
-                  >
+                  <Button>
+                    {/* onClick={saveChanges} */}
                     Save Changes
                   </Button>
                 </div>
@@ -84,17 +82,6 @@ function SettingsPage() {
 
           <ApiKeyConfiguration serviceName="Affinity" onConfigure={handleConfigureAffinity} />
           <Input className="w-50 ml-1 mt-2 rounded bg-slate-800" placeholder="Enter Your API Key" color=""></Input>
-        </div>
-
-        <div className="w-full rounded-b border-b border-gray-200 p-2"></div>
-
-        <div className="flex p-8">
-          <h2 className="pt-4 text-xl font-bold">Delete Account</h2>
-          <div className=" absolute right-8 w-[180px] pt-2 ">
-            <Button className="rounded bg-red-700 font-bold text-white hover:bg-red-600 focus:outline-none">
-              Delete Account
-            </Button>
-          </div>
         </div>
       </div>
     </main>

@@ -1,5 +1,7 @@
 import { PrismaClient } from '@prisma/client'
 import { createCompany, createUser, deleteCompany, deleteUser } from './utils/helperFunctions'
+import { fetchCrmCompanies } from '@/api/db/services/companyService'
+import fetchMock from 'jest-fetch-mock';
 
 const prisma = new PrismaClient()
 
@@ -150,3 +152,44 @@ describe('CompanyAttachment Model Tests', () => {
     expect(deletedAttachment).toBeNull()
   })
 })
+
+describe('fetchCrmCompanies', () => {
+  let mockedfetchCrmCompanies: jest.Mock;
+  let userId: number
+  beforeAll(async () => {
+    const user = await createUser()
+    userId = user.id
+    await prisma.$connect()
+  })
+
+  afterAll(async () => {
+    await deleteUser(userId)
+    await prisma.$disconnect()
+  })
+
+  beforeEach(() => {
+    jest.resetModules();
+    fetchMock.resetMocks();
+    mockedfetchCrmCompanies = jest.fn();
+    jest.mock('@/api/db/services/companyService', () => ({
+      mockedfetchCrmCompanies,
+    }));
+  });
+
+  it('fetches CRM companies successfully', async () => {
+    const result = await fetchCrmCompanies(userId);
+    expect(result).toBeTruthy();
+  });
+
+  it('throws an error when the environment variable is not defined', async () => {
+    let envVariable = process.env.PARMA_ANALYTICS_BASE_URL
+    process.env.PARMA_ANALYTICS_BASE_URL = ''; 
+    await expect(fetchCrmCompanies(userId)).rejects.toThrow('PARMA_ANALYTICS_URL is not defined in the environment.');
+    process.env.PARMA_ANALYTICS_BASE_URL = envVariable
+  });
+
+  it('throws an error when the fetch operation fails', async () => {
+    mockedfetchCrmCompanies.mockRejectedValue(new Error('Fetch failed'));
+    await expect(mockedfetchCrmCompanies()).rejects.toThrow('Fetch failed');
+  });
+});

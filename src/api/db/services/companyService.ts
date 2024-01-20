@@ -143,6 +143,35 @@ const deleteCompany = async (id: number) => {
   }
 }
 
+/**
+ * Calls the endpoint in parma-analytics that triggers fetching CRM companies 
+ * @returns message containing the changes.
+ */
+const fetchCrmCompanies = async(userId: number) => {
+  let analyticsUrl = process.env.PARMA_ANALYTICS_BASE_URL
+  if (!analyticsUrl) {
+    throw new Error('PARMA_ANALYTICS_URL is not defined in the environment.')
+  }
+  analyticsUrl = analyticsUrl.endsWith('/') ? analyticsUrl.substring(0, analyticsUrl.length - 1) : analyticsUrl
+  // send a request to parma-analytics to trigger fetching crm-companies
+  const crmCompaniesURL = new URL('/crm-companies', analyticsUrl)
+
+  const crmCompaniesResponse = await fetch(crmCompaniesURL.href, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(`userId: ${userId}`), 
+  });
+  // Check the triggering's response
+  if (!crmCompaniesResponse.ok) {
+    throw new Error('Fetching new companies from the CRM failed.')
+  }
+  
+  const newCompaniesData = await crmCompaniesResponse.json()
+  return newCompaniesData
+}
+
 export {
   createCompany,
   getCompanyByID,
@@ -150,5 +179,6 @@ export {
   getAllCompanies,
   getAllCompaniesWithoutPagination,
   updateCompany,
-  deleteCompany
+  deleteCompany,
+  fetchCrmCompanies
 }

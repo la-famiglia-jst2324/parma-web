@@ -9,12 +9,12 @@ import { TabComponent } from '@/components/datasources/DatasourceTabComponent'
 
 function DatasourcePage({ params: { id } }: { params: { id: string } }) {
   const [data, setData] = useState<DataSource>()
-  const [sourceName, setName] = useState<string>('')
-  const [description, setDescription] = useState<string>('')
-  const [invocationEndpoint, setInvocationEndpoint] = useState<string>('')
+  const [, setName] = useState<string>('')
+  const [, setDescription] = useState<string>('')
+  const [, setInvocationEndpoint] = useState<string>('')
   const [, setStatus] = useState<boolean>(false)
   const [isLoading, setIsLoading] = useState<boolean>(true)
-  console.log(sourceName, description, invocationEndpoint)
+
   useEffect(() => {
     getDatasourceById(id)
       .then((datasource) => {

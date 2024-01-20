@@ -30,7 +30,6 @@ export const FormContent: React.FC<FormContentProps> = ({
       </label>
       {type === 'input' ? (
         <Input
-          className="ml-1 mt-2 w-96 appearance-none rounded border bg-slate-800 leading-tight shadow focus:text-white focus:outline-none"
           type="text"
           id={id}
           name={name}
@@ -40,14 +39,7 @@ export const FormContent: React.FC<FormContentProps> = ({
           readOnly={readonly}
         />
       ) : (
-        <Textarea
-          className="w-full appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow focus:outline-none"
-          id={id}
-          name={name}
-          placeholder={`${placeholder.toLowerCase()}`}
-          value={value}
-          onChange={onChange}
-        />
+        <Textarea id={id} name={name} placeholder={`${placeholder.toLowerCase()}`} value={value} onChange={onChange} />
       )}
     </div>
   )

@@ -77,7 +77,6 @@ const CreateDatasource: React.FC = () => {
     }
     try {
       const response = await createNewDatasource(dataSource)
-      console.log(response)
 
       if (response.ok) {
         toast({
@@ -100,7 +99,6 @@ const CreateDatasource: React.FC = () => {
     setState: React.Dispatch<React.SetStateAction<string>>
   ) => {
     setState(event.target.value)
-    console.log(event.target.value)
   }
 
   return (

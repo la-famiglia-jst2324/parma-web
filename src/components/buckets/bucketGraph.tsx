@@ -44,25 +44,6 @@ function BucketGraph({ companies }: { companies: Company[] | undefined }) {
             <h1 className="mx-4 mb-2 text-2xl font-semibold text-gray-700">Compare</h1>
             <div className="flex justify-between">
               <div className="ml-2 flex space-x-4">
-                {/* <div className="w-1/2"> */}
-                {/* <MultiSelect
-                  placeholder="Companies"
-                  onValueChange={(selectedNames) => {
-                    setSelectedCompanies(selectedNames)
-                  }}
-                  value={selectedCompanies}
-                >
-                  {companies && companies.length > 0 ? (
-                    companies.map((company, index) => (
-                      <MultiSelectItem key={index} value={company.id.toString()}>
-                        {company.name}
-                      </MultiSelectItem>
-                    ))
-                  ) : (
-                    <div className="px-2 py-1 text-sm text-slate-600">No companies available</div>
-                  )}
-                </MultiSelect> */}
-                {/* </div> */}
                 <div className="flex w-1/2 flex-row gap-4">
                   <Select
                     onValueChange={(selectedName) => {

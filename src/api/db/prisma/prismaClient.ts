@@ -8,7 +8,7 @@ async function createTrigger() {
       FROM pg_trigger
       WHERE tgname = 'company_inserted';
     `
-  
+
     const createCompanyFunctionSQL = `
       CREATE OR REPLACE FUNCTION add_company_data_source_relationship() RETURNS TRIGGER AS $$
       BEGIN
@@ -18,19 +18,19 @@ async function createTrigger() {
       END;
       $$ LANGUAGE plpgsql;
     `
-  
+
     const createCompanyTriggerSQL = `
       CREATE TRIGGER company_inserted
       AFTER INSERT ON company
       FOR EACH ROW EXECUTE FUNCTION add_company_data_source_relationship();
     `
-  
+
     const checkDataSourceTriggerExistsSQL = `
       SELECT 1
       FROM pg_trigger
       WHERE tgname = 'data_source_inserted';
     `
-  
+
     const createDataSourceFunctionSQL = `
       CREATE OR REPLACE FUNCTION add_data_source_company_relationship() RETURNS TRIGGER AS $$
       BEGIN
@@ -40,16 +40,16 @@ async function createTrigger() {
       END;
       $$ LANGUAGE plpgsql;
     `
-  
+
     const createDataSourceTriggerSQL = `
       CREATE TRIGGER data_source_inserted
       AFTER INSERT ON data_source
       FOR EACH ROW EXECUTE FUNCTION add_data_source_company_relationship();
     `
-  
+
     try {
       const companyTriggerExists: object[] = await prisma.$queryRawUnsafe(checkCompanyTriggerExistsSQL)
-  
+
       if (companyTriggerExists.length === 0) {
         await prisma.$executeRawUnsafe(createCompanyFunctionSQL)
         await prisma.$executeRawUnsafe(createCompanyTriggerSQL)
@@ -57,9 +57,9 @@ async function createTrigger() {
       } else {
         console.log('Company trigger already exists')
       }
-  
+
       const dataSourceTriggerExists: object[] = await prisma.$queryRawUnsafe(checkDataSourceTriggerExistsSQL)
-  
+
       if (dataSourceTriggerExists.length === 0) {
         await prisma.$executeRawUnsafe(createDataSourceFunctionSQL)
         await prisma.$executeRawUnsafe(createDataSourceTriggerSQL)
@@ -71,5 +71,7 @@ async function createTrigger() {
       console.error('Error creating triggers:', error)
     }
   }
-  
-createTrigger()
+
+if (process.env.NODE_ENV !== 'test') {
+  createTrigger();
+}

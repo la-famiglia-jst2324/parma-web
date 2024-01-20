@@ -160,7 +160,7 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     case 'POST':
       try {
         // Create a new data source.
-        // New company data source relationships will be added for this data source with all existing companies. 
+        // New company data source relationships will be added for this data source with all existing companies.
         const newDataSource = await createDataSource(req.body)
 
         let analyticsUrl = process.env.PARMA_ANALYTICS_BASE_URL

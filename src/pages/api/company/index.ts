@@ -136,7 +136,7 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse, user: U
     case 'POST':
       try {
         // Create a new company.
-        // New company data source relationships will be added for this company with all existing data sources. 
+        // New company data source relationships will be added for this company with all existing data sources.
         const newCompany = await createCompany({ ...req.body, addedBy: userId })
         if (newCompany) {
           res.status(201).json(newCompany)

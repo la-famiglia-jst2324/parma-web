@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
+import type { User } from '@prisma/client'
 import { fetchCrmCompanies } from '@/api/db/services/companyService' // replace with your actual service file
-import { User } from '@prisma/client'
 import { withAuthValidation } from '@/api/middleware/auth'
 
 /**

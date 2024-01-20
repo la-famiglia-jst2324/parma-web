@@ -14,7 +14,7 @@ export const columns: ColumnDef<SearchItem>[] = [
   {
     accessorKey: 'id',
     header: 'id',
-    cell: ({ row }) => <div className="capitalize">{row.getValue('id')}</div>
+    cell: ({ row }) => <div className="w-10 capitalize">{row.getValue('id')}</div>
   },
   {
     accessorKey: 'name',
@@ -25,11 +25,13 @@ export const columns: ColumnDef<SearchItem>[] = [
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       )
-    }
+    },
+    cell: ({ row }) => <div className="w-36">{row.getValue('name')}</div>
   },
   {
     accessorKey: 'description',
-    header: 'Description'
+    header: 'Description',
+    cell: ({ row }) => <div className="w-72">{row.getValue('description')}</div>
   },
   {
     accessorKey: 'type',
@@ -48,8 +50,8 @@ export const columns: ColumnDef<SearchItem>[] = [
     cell: ({ row }) => {
       const type = row.getValue('type') as string
       return (
-        <div className="">
-          <Badge>{type}</Badge>
+        <div className="w-10">
+          <Badge className="flex h-6 w-20 items-center justify-center">{type}</Badge>
         </div>
       )
     }

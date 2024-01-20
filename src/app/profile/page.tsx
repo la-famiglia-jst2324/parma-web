@@ -1,5 +1,4 @@
 'use client'
-
 import type { ChangeEvent } from 'react'
 import React, { useContext, useEffect, useState } from 'react'
 import Image from 'next/image'
@@ -9,14 +8,14 @@ import profilePic from '@/../../public/Default_pfp.jpg'
 import { FormContent } from '@/components/FormContent'
 import { MainLayoutWrapper } from '@/components/layout/MainLayout'
 import { AuthContext, authResetPassword } from '@/lib/firebase/auth'
-import ProfileImageModal from '@/components/profile/ProfileImageModal'
 import { getUserAttachment, putUserAttachment, putUsername } from '@/services/user/userService'
-import { toast } from '@/components/ui/use-toast'
-
+import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog'
+import { ShowToast } from '@/components/ShowToast'
 const ProfilePage: React.FC = () => {
   const user = useContext(AuthContext)
   const [fullName, setFullName] = useState('')
   const [userPhotoURL, setUserPhotoURL] = useState<string | null>('')
+
   const saveProfileData = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     try {
@@ -28,16 +27,10 @@ const ProfilePage: React.FC = () => {
       }
       const data = await response.json()
       console.log('Profile updated successfully:', data)
-      toast({
-        title: `Profile updated successfully`,
-        description: 'You have successfully updated your profile'
-      })
+      ShowToast('Profile updated successfully', 'You have successfully updated your profile')
     } catch (error) {
       console.error('Error updating profile:', error)
-      toast({
-        title: `Error updating profile`,
-        description: 'Please try again'
-      })
+      ShowToast('Error updating profile', 'Please try again', 'destructive')
     }
   }
   useEffect(() => {
@@ -54,14 +47,7 @@ const ProfilePage: React.FC = () => {
   }, [])
   const userMail = user === 'loading' ? null : user?.email
   const userFullName = user === 'loading' ? null : user?.displayName
-  const [isModalOpen, setIsModalOpen] = useState(false)
 
-  const handleImageClick = () => {
-    setIsModalOpen(true)
-  }
-  const closeModal = () => {
-    setIsModalOpen(false)
-  }
   const handleSubmit = async () => {
     let timeoutId: NodeJS.Timeout | null = null
     try {
@@ -72,18 +58,10 @@ const ProfilePage: React.FC = () => {
       await authResetPassword(userMail)
       clearTimeout(timeoutId)
       timeoutId = null
-      toast({
-        title: `We have sent instructions on your given email to reset your password.`,
-        description: 'Please check your email',
-        duration: 5000
-      })
+      ShowToast('We have sent instructions on your given email to reset your password.', 'Please check your email')
     } catch (error) {
       console.error('Error resetting password:', error)
-      toast({
-        title: `Error resetting password`,
-        description: 'Please try again',
-        duration: 5000
-      })
+      ShowToast('Error resetting password', 'Please try again', 'destructive')
     } finally {
       if (timeoutId) {
         clearTimeout(timeoutId)
@@ -107,18 +85,10 @@ const ProfilePage: React.FC = () => {
       const response = await putUserAttachment(data)
       console.log('value:', response.profilePicture)
       setUserPhotoURL(response.profilePicture)
-      toast({
-        title: `Attachment uploaded successfully`,
-        description: 'You have successfully uploaded an attachment',
-        duration: 5000
-      })
+      ShowToast('Upload successful', 'your profile picture is successfully uploaded')
     } catch (error) {
-      console.error('Error uploading the file:', error)
-      toast({
-        title: `Error uploading the file`,
-        description: 'Please upload file in jpg format only',
-        duration: 5000
-      })
+      console.error('Error uploading the profile picture:', error)
+      ShowToast('Error uploading the profile picture', 'Please upload file in jpg format only', 'destructive')
     }
     setUploadAttachment('')
   }
@@ -129,17 +99,26 @@ const ProfilePage: React.FC = () => {
       <div className="flex justify-center">
         <div className="m-2 ml-10 flex-col pt-12 ">
           <div className="flex justify-center">
-            <Image
-              className="mb-5 block h-[180px] w-[180px] rounded-full transition duration-500 ease-in hover:cursor-pointer hover:shadow-[0_0_15px_15px_rgba(63,55,201,0.5)] hover:delay-75"
-              src={userPhotoURL || profilePic}
-              width={500}
-              height={500}
-              alt="Profile"
-              onClick={handleImageClick}
-            />
-            {isModalOpen && (
-              <ProfileImageModal src={userPhotoURL?.toString() || profilePic} alt="Profile" onClose={closeModal} />
-            )}
+            <Dialog>
+              <DialogTrigger asChild>
+                <Image
+                  className="mb-5 block h-[180px] w-[180px] rounded-full transition duration-500 ease-in hover:cursor-pointer hover:shadow-[0_0_15px_15px_rgba(63,55,201,0.5)] hover:delay-75"
+                  src={userPhotoURL || profilePic}
+                  width={500}
+                  height={500}
+                  alt="Profile"
+                />
+              </DialogTrigger>
+              <DialogContent>
+                <Image
+                  src={userPhotoURL?.toString() || profilePic}
+                  alt={'Profile'}
+                  width={510}
+                  height={400}
+                  className="rounded"
+                />
+              </DialogContent>
+            </Dialog>
           </div>
 
           <div className="flex justify-center gap-1.5">

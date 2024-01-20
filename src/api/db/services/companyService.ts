@@ -161,7 +161,7 @@ const fetchCrmCompanies = async (userId: number) => {
     headers: {
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify(`userId: ${userId}`)
+    body: JSON.stringify(`user_id: ${userId}`)
   })
   // Check the triggering's response
   if (!crmCompaniesResponse.ok) {

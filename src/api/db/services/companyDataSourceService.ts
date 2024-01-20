@@ -102,7 +102,6 @@ const updateCompanyDataSource = async (
   }
 ) => {
   try {
-    console.log(updateData)
     return await prisma.companyDataSource.update({
       where: {
         dataSourceId_companyId: {

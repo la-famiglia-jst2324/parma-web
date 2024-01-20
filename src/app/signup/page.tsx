@@ -2,144 +2,125 @@
 
 import React, { useState } from 'react'
 import Link from 'next/link'
-import { TextInput, Button } from '@tremor/react'
 import type firebase from 'firebase/app'
+import { Button } from '@/components/ui/button'
 import GoogleAuthButton from '@/components/GoogleAuthButton'
 import { authSignup } from '@/lib/firebase/auth'
-import ErrorInfo from '@/components/Authentication/ErrorInfo'
-import SuccessInfo from '@/components/Authentication/SuccessInfo'
+import { Label } from '@/components/ui/label'
+import { Input } from '@/components/ui/input'
+import { ShowToast } from '@/components/ShowToast'
 
 export default function SignupPage() {
-  const [loading, setLoading] = useState<boolean>(false)
   const [name, setName] = useState<string>('')
   const [email, setEmail] = useState<string>('')
   const [password, setPassword] = useState<string>('')
   const [confirm, setConfirm] = useState<string>('')
-  const [error, setError] = useState<string>('')
-  const [success, setSuccess] = useState<string>('')
+
+  const handleInputChange = (
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+    setState: React.Dispatch<React.SetStateAction<string>>
+  ) => {
+    setState(event.target.value)
+  }
 
   const handleSubmit = async (): Promise<void> => {
-    setLoading(true)
+    console.log(name, email, password, confirm)
     try {
-      setError('')
-
       // Further form validation
       if (!name || !email || !password || !confirm) {
-        setError('All fields are required')
+        ShowToast('All fields are required', 'Please fill out all fields', 'destructive')
         return
       }
 
       if (password !== confirm) {
-        setError('Passwords do not match')
+        ShowToast('Passwords do not match', 'Please try again', 'destructive')
         return
       }
 
       // Add timeout for server response
-      const timeoutId = setTimeout(() => {
-        setError('Your request could not be processed. Please try again.')
-        setLoading(false)
-      }, 10000)
+      const timeoutId = setTimeout(() => {}, 10000)
 
       // Attempt signup
       try {
         await authSignup(name, email, password)
+        console.log('done')
+
         clearTimeout(timeoutId)
-        // Handle successful signup, redirect to the login page
-        setSuccess('Your account has been created successfully. Please check your email to verify your account.')
+        ShowToast('Account created successfully', 'Please check your email to verify your account')
       } catch (signupError) {
         clearTimeout(timeoutId)
         // Handle specific signup errors
         if (signupError instanceof Error) {
           const errorCode = (signupError as firebase.FirebaseError).code
           if (errorCode === 'auth/email-already-in-use') {
-            setError('The provided email is already in use. Please use a different email address.')
+            ShowToast('Email already in use', 'Please use a different email address or try logging in', 'destructive')
           } else if (errorCode === 'auth/weak-password') {
-            setError(
-              'Password is too weak. It must be at least 8 characters long and include a mix of letters, numbers, and symbols.'
+            ShowToast(
+              'Password is too weak',
+              'It must be at least 8 characters long and include a mix of letters, numbers, and symbols.',
+              'destructive'
             )
           } else if (errorCode === 'auth/invalid-email') {
-            setError('The email address is not valid. Please provide a valid email address.')
+            ShowToast('Invalid email address', 'Please provide a valid email address.', 'destructive')
           } else {
-            setError('Login failed. Please try again.')
+            ShowToast('Signup failed', 'Please try again later.', 'destructive')
           }
         } else {
-          setError('Signup failed. Please try again.')
+          ShowToast('Signup failed', 'Please try again later.', 'destructive')
         }
       }
     } catch (error) {
       // Handle general errors
-      setError(error instanceof Error ? error.message : 'Something went wrong.')
-    } finally {
-      setLoading(false)
+      console.error('Error signing up:', error)
+      ShowToast('Signup failed', error instanceof Error ? error.message : 'Something went wrong.', 'destructive')
     }
   }
 
   return (
-    <div className="flex h-screen items-center justify-center bg-white px-4">
-      <div>
-        <h2 className="mb-3 text-5xl font-bold">Signup</h2>
-        <p className="mb-3 text-base">Please enter your details to create an account</p>
-
-        {success ? <SuccessInfo msg={success} /> : null}
-
-        {error ? <ErrorInfo msg={error} /> : null}
-
-        <div className="py-5">
-          <div className="mb-3">
-            <label htmlFor="email" className="block text-sm font-bold text-gray-600">
-              Name
-            </label>
-            <TextInput
-              onValueChange={(val: string) => {
-                setName(val)
-              }}
-            />
-          </div>
-          <div className="mb-3">
-            <label htmlFor="email" className="block text-sm font-bold text-gray-600">
-              Email
-            </label>
-            <TextInput
-              type="email"
-              onValueChange={(val: string) => {
-                setEmail(val)
-              }}
-            />
-          </div>
-          <div className="mb-3">
-            <label htmlFor="password" className="block text-sm font-bold text-gray-600">
-              Password
-            </label>
-            <TextInput
-              type="password"
-              onValueChange={(val) => {
-                setPassword(val)
-              }}
-            />
-          </div>
-          <div className="mb-3">
-            <label htmlFor="password" className="block text-sm font-bold text-gray-600">
-              Confirm Password
-            </label>
-            <TextInput
-              type="password"
-              onValueChange={(val) => {
-                setConfirm(val)
-              }}
-            />
-          </div>
+    <div className="flex h-screen items-center justify-center lg:p-8">
+      <div className="space-y-6 sm:w-[350px] md:h-3/4">
+        <div className="flex flex-col space-y-2 text-center">
+          <h1 className="text-3xl font-bold tracking-tight">Create Your Account</h1>
+          <p className="text-sm text-muted-foreground">Enter following details to create an account</p>
         </div>
+        <div className="grid gap-6">
+          <div className="grid gap-4">
+            <div className="grid gap-2">
+              <Label htmlFor="email">Name</Label>
+              <Input placeholder="Viet Le" onChange={(e) => handleInputChange(e, setName)} />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="email">Email</Label>
+              <Input placeholder="name@example.com" onChange={(e) => handleInputChange(e, setEmail)} />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="password">Password</Label>
+              <Input type="password" placeholder="********" onChange={(e) => handleInputChange(e, setPassword)} />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="password">Confirm Password</Label>
+              <Input type="password" placeholder="********" onChange={(e) => handleInputChange(e, setConfirm)} />
+            </div>
 
-        <Button onClick={() => handleSubmit()} loading={loading} size="lg" className="w-full" variant="primary">
-          Signup
-        </Button>
-        <p className="mt-2 text-base">
-          Already have an account?{' '}
-          <span className="font-bold underline">
-            <Link href="/login">Login now</Link>
-          </span>
-        </p>
-        <GoogleAuthButton />
+            <Button onClick={handleSubmit}>Sign Up</Button>
+            <div className="relative flex justify-center text-xs">
+              Already have an account?
+              <div className="ml-2 font-semibold underline">
+                <Link href="/login"> Login</Link>
+              </div>
+            </div>
+          </div>
+
+          <div className="relative">
+            <div className="absolute inset-0 flex items-center">
+              <span className="w-full border-t" />
+            </div>
+            <div className="relative flex justify-center text-xs uppercase">
+              <span className="bg-background px-2 text-muted-foreground">OR</span>
+            </div>
+          </div>
+          <GoogleAuthButton />
+        </div>
       </div>
     </div>
   )

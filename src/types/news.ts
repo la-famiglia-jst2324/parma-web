@@ -1,12 +1,12 @@
 type NewsItem = {
   id: number
   title: string
-  companyName: string
-  datasourceName: string
-  timestamp: string
+  companyId: string
   description: string
-  link: string
-  icon: string
+  companyName: string
+  dataSourceName: string
+  notificationDate: string
+  triggerFactor: string
 }
 
 export default NewsItem

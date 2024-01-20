@@ -2,46 +2,53 @@
 
 import React, { useState } from 'react'
 import Link from 'next/link'
-import { TextInput, Button } from '@tremor/react'
-import ErrorInfo from '@/components/Authentication/ErrorInfo'
+import { Button } from '@/components/ui/button'
 import { authResetPassword } from '@/lib/firebase/auth'
-import SuccessInfo from '@/components/Authentication/SuccessInfo'
+import { Label } from '@/components/ui/label'
+import { Input } from '@/components/ui/input'
+import { toast } from '@/components/ui/use-toast'
 
 export default function ForgotPasswordPage() {
-  const [loading, setLoading] = useState(false)
   const [email, setEmail] = useState('')
-  const [error, setError] = useState('')
-  const [success, setSuccess] = useState('')
 
   const handleSubmit = async () => {
-    setLoading(true)
-    setError('')
-    setSuccess('')
-
     let timeoutId: NodeJS.Timeout | null = null
 
     try {
       // further form validation
       if (!email) {
-        setError('Please enter your email.')
+        toast({
+          title: 'Please enter your email.',
+          description: 'Please enter your email.',
+          duration: 1000
+        })
         return
       }
 
       // Add timeout
       timeoutId = setTimeout(() => {
-        setError('Your request could not be processed. Please try again.')
-        setLoading(false)
+        toast({
+          title: 'Request is taking too long',
+          description: 'Please try again later',
+          duration: 5000
+        })
       }, 10000)
 
       await authResetPassword(email)
       clearTimeout(timeoutId)
       timeoutId = null
-      setError('')
-      setSuccess('We have sent instructions on your given email to reset your password.')
+      toast({
+        title: 'Password reset email sent',
+        description: 'Please check your email for further instructions.',
+        duration: 5000
+      })
     } catch (error) {
-      setError(error instanceof Error ? error.message : 'Something went wrong.')
+      toast({
+        title: 'Error resetting password',
+        description: 'Please try again',
+        duration: 5000
+      })
     } finally {
-      setLoading(false)
       if (timeoutId) {
         clearTimeout(timeoutId)
       }
@@ -49,45 +56,29 @@ export default function ForgotPasswordPage() {
   }
 
   return (
-    <div className="flex h-screen items-center justify-center bg-white">
-      <div>
-        <h2 className="mb-4 text-4xl font-bold">Forgot your Password?</h2>
-        <p className="mb-4">
-          Please enter your email address and we will send you <br /> instructions to reset your password
-        </p>
+    <div className="flex h-screen items-center justify-center lg:p-8">
+      <div className="space-y-6 sm:w-[350px]">
+        <div className="flex flex-col space-y-2 text-center">
+          <h1 className="text-3xl font-bold tracking-tight">Reset your Password</h1>
+          <p className="text-sm text-muted-foreground">
+            Enter your email address and we will send you instructions to reset your password.
+          </p>
+        </div>
+        <div className="grid gap-6">
+          <div className="grid gap-4">
+            <div className="grid gap-2">
+              <Label htmlFor="email">Email</Label>
+              <Input placeholder="name@example.com" onChange={(e) => setEmail(e.target.value)} />
+            </div>
 
-        {error ? (
-          <div className="mt-5">
-            <ErrorInfo msg={error} />
-          </div>
-        ) : null}
-        {success ? (
-          <div className="mt-5">
-            <SuccessInfo msg={success} />
-          </div>
-        ) : null}
-
-        <div className="py-6">
-          <div className="mb-4">
-            <label htmlFor="email" className="block text-sm font-bold text-gray-600">
-              Email
-            </label>
-            <TextInput
-              type="email"
-              onValueChange={(val) => {
-                setEmail(val)
-              }}
-            />
+            <Button onClick={handleSubmit}>Request password reset</Button>
+            <div className="relative flex justify-center text-xs">
+              <div className="ml-2 font-semibold underline">
+                <Link href="/login">Back to Login</Link>
+              </div>
+            </div>
           </div>
         </div>
-        <Button onClick={() => handleSubmit()} loading={loading} size="xl" className="w-full" variant="primary">
-          Request reset link
-        </Button>
-        <p className="mt-4 text-center">
-          <Link className="font-bold underline" href="/login">
-            Back to Login
-          </Link>
-        </p>
       </div>
     </div>
   )

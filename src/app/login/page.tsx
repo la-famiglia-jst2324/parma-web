@@ -1,34 +1,37 @@
 'use client'
 
 import Link from 'next/link'
-import { TextInput, Button } from '@tremor/react'
 import { useState } from 'react'
 import type firebase from 'firebase/app'
+import { Button } from '@/components/ui/button'
 import GoogleAuthButton from '@/components/GoogleAuthButton'
 import { authLogin } from '@/lib/firebase/auth'
-import ErrorInfo from '@/components/Authentication/ErrorInfo'
+import { ShowToast } from '@/components/ShowToast'
+import { Label } from '@/components/ui/label'
+import { Input } from '@/components/ui/input'
 
 export default function LoginPage() {
-  const [loading, setLoading] = useState<boolean>(false)
   const [email, setEmail] = useState<string>('')
   const [password, setPassword] = useState<string>('')
-  const [error, setError] = useState<string>('')
+
+  const handleInputChange = (
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+    setState: React.Dispatch<React.SetStateAction<string>>
+  ) => {
+    setState(event.target.value)
+  }
 
   const handleSubmit = async () => {
-    setLoading(true)
     try {
-      setError('')
-
       // Further form validation
       if (!email || !password) {
-        setError('All fields are required')
+        ShowToast('All fields are required', 'Please fill out all fields', 'destructive')
         return
       }
 
       // Add timeout
       const timeoutId = setTimeout(() => {
-        setError('Your request could not be processed. Please try again.')
-        setLoading(false)
+        ShowToast('Login is taking too long', 'Please try again later', 'destructive')
       }, 10000)
 
       try {
@@ -42,74 +45,64 @@ export default function LoginPage() {
         if (loginError instanceof Error) {
           const errorCode = (loginError as firebase.FirebaseError).code
           if (errorCode === 'auth/invalid-credential' || errorCode === 'auth/user-not-found') {
-            setError('Email or password is incorrect. Please try again.')
+            ShowToast('Login failed', 'Invalid email or password', 'destructive')
           } else if (errorCode === 'auth/invalid-email') {
-            setError('The email address is not valid. Please provide a valid email address.')
+            ShowToast('Login failed', 'Invalid email or password', 'destructive')
           } else if (errorCode === 'auth/too-many-requests') {
-            setError('Too many requests. Please try again later.')
+            ShowToast('Login failed', 'Too many requests. Please try again later.', 'destructive')
           } else {
-            setError('Login failed. Please try again.')
+            ShowToast('Login failed', 'Please try again later.', 'destructive')
           }
         } else {
-          setError('Login failed. Please try again.')
+          ShowToast('Login failed', 'Please try again later.', 'destructive')
         }
       }
     } catch (error) {
-      // Handle general errors
-      setError(error instanceof Error ? error.message : 'Something went wrong.')
-    } finally {
-      setLoading(false)
+      console.error('Error logging in:', error)
+      ShowToast('Login failed', error instanceof Error ? error.message : 'Something went wrong.', 'destructive')
     }
   }
 
   return (
-    <div className="flex h-screen items-center justify-center bg-white">
-      <div>
-        <h2 className="mb-4 text-6xl font-bold">Login</h2>
-        <p className="mb-4">Please enter your login details to sign in</p>
-
-        {error ? <ErrorInfo msg={error} /> : null}
-
-        <div className="py-6">
-          <div className="mb-4">
-            <label htmlFor="email" className="block text-sm font-bold text-gray-600">
-              Email
-            </label>
-            <TextInput
-              type="email"
-              onValueChange={(val: string) => {
-                setEmail(val)
-              }}
-            />
-          </div>
-          <div className="mb-4">
-            <label htmlFor="password" className="block text-sm font-bold text-gray-600">
-              Password
-            </label>
-            <TextInput
-              type="password"
-              onValueChange={(val: string) => {
-                setPassword(val)
-              }}
-            />
-          </div>
-          <div className="mb-4 flex items-center justify-between">
-            <Link href="/forgot-password" className="font-bold hover:underline">
-              Forgot password?
-            </Link>
-          </div>
+    <div className="flex h-screen items-center justify-center lg:p-8">
+      <div className="space-y-6 sm:w-[350px]">
+        <div className="flex flex-col space-y-2 text-center">
+          <h1 className="text-3xl font-bold tracking-tight">Login</h1>
+          <p className="text-sm text-muted-foreground">Please enter your login details to continue</p>
         </div>
+        <div className="grid gap-6">
+          <div className="grid gap-4">
+            <div className="grid gap-2">
+              <Label htmlFor="email">Email</Label>
+              <Input placeholder="name@example.com" onChange={(e) => handleInputChange(e, setEmail)} />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="password">Password</Label>
+              <Input type="password" placeholder="********" onChange={(e) => handleInputChange(e, setPassword)} />
+            </div>
+            <div className="text-xs font-semibold underline">
+              <Link href="/forgot-password"> Forgot password?</Link>
+            </div>
 
-        <Button onClick={() => handleSubmit()} loading={loading} size="xl" className="w-full" variant="primary">
-          Login
-        </Button>
-        <p className="mt-4">
-          Don't have an account?{' '}
-          <span className="font-bold underline">
-            <Link href="/signup">Create a free account</Link>
-          </span>
-        </p>
-        <GoogleAuthButton />
+            <Button onClick={handleSubmit}>Login</Button>
+            <div className="relative flex justify-center text-xs">
+              Don't have an account?
+              <div className="ml-2 font-semibold underline">
+                <Link href="/signup"> Sign up</Link>
+              </div>
+            </div>
+          </div>
+
+          <div className="relative">
+            <div className="absolute inset-0 flex items-center">
+              <span className="w-full border-t" />
+            </div>
+            <div className="relative flex justify-center text-xs uppercase">
+              <span className="bg-background px-2 text-muted-foreground">OR</span>
+            </div>
+          </div>
+          <GoogleAuthButton />
+        </div>
       </div>
     </div>
   )

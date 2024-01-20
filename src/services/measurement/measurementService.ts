@@ -40,3 +40,13 @@ export async function getMeasurementsForCompanies(companiesArray: string[]) {
     return []
   }
 }
+
+export async function getMeasurementsForCompany(dataSourceId: string, companyId: string) {
+  try {
+    const response = await fetchClient.get(`/api/dataSources/${dataSourceId}/?companyId=${companyId}`)
+    return response.data
+  } catch (error) {
+    console.log('An error has occurred: ', error)
+    return []
+  }
+}

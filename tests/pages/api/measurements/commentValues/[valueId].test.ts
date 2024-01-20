@@ -9,7 +9,8 @@ const value = {
   value: 'abc',
   timestamp: new Date(),
   createdAt: new Date(),
-  modifiedAt: new Date()
+  modifiedAt: new Date(),
+  sentimentScore: 5
 }
 describe('comment value API', () => {
   afterEach(() => {

@@ -201,6 +201,15 @@ erDiagram
         datetime created_at
         datetime modified_at
     }
+    measurement_comment_value {
+        id measurement_value_id PK
+        id company_measurement_id FK
+        string value
+        int sentiment_score
+        datetime timestamp
+        datetime created_at
+        datetime modified_at
+    }
     news {
         int id PK
         int company_id FK

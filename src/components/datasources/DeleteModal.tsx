@@ -15,6 +15,8 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger
 } from '@/components/ui/alert-dialog'
+import { deleteDatasource } from '@/services/datasource/datasourceService'
+
 interface DeleteModalProps {
   id: string
 }
@@ -22,27 +24,10 @@ interface DeleteModalProps {
 const DeleteModal: React.FC<DeleteModalProps> = ({ id }) => {
   const router = useRouter()
 
-  async function deleteDatasource(id: string) {
-    try {
-      const res = await fetch(`/api/dataSources/${id}`, {
-        method: 'DELETE',
-        cache: 'no-cache'
-      })
-      if (!res.ok) {
-        console.log('Response status:', res.status)
-        throw new Error('HTTP response was not OK')
-      }
-      const json = await res.json()
-      router.push('/datasources')
-      return json
-    } catch (error) {
-      console.log('An error has occurred: ', error)
-    }
-  }
-
   const handleDelete = async () => {
     try {
       await deleteDatasource(id)
+      router.push('/datasources')
     } catch (error) {
       console.error('Failed to delete datasource:', error)
       toast({

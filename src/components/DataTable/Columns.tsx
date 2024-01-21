@@ -31,7 +31,7 @@ export const columns: ColumnDef<SearchItem>[] = [
   {
     accessorKey: 'description',
     header: 'Description',
-    cell: ({ row }) => <div className="w-72">{row.getValue('description')}</div>
+    cell: ({ row }) => <div className="w-96">{row.getValue('description')}</div>
   },
   {
     accessorKey: 'type',

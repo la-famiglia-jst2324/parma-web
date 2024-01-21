@@ -1,6 +1,6 @@
-import ModalComponent from './DisableModal'
-import DeleteModal from './DeleteModal'
-import EditInformationModal from './EditInformationModal'
+import ModalComponent from './Modals/DisableModal'
+import DeleteModal from './Modals/DeleteModal'
+import EditInformationModal from './Modals/EditInformationModal'
 interface DataProps {
   sourceName: string
   description: string | null

@@ -2,8 +2,8 @@
 import React from 'react'
 import { useRouter } from 'next/navigation'
 import { TrashIcon } from '@heroicons/react/20/solid'
-import { toast } from '../ui/use-toast'
-import { Button } from '../ui/button'
+import { toast } from '../../ui/use-toast'
+import { Button } from '../../ui/button'
 import {
   AlertDialog,
   AlertDialogAction,

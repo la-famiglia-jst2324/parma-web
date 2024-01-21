@@ -52,22 +52,38 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
         </TableHeader>
         <TableBody>
           {table.getRowModel().rows?.length ? (
-            table.getRowModel().rows.map((row) => (
-              <TableRow
-                key={`${row.getValue('id')}-${row.getValue('type')}`}
-                data-state={row.getIsSelected() && 'selected'}
-                onClick={() => {
-                  const id = row.getValue('id') as number
-                  const type = row.getValue('type') as string
-                  router.push(`/${type === 'bucket' ? 'buckets' : 'companies'}/${id}`)
-                }}
-                className="cursor-pointer"
-              >
-                {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
-                ))}
-              </TableRow>
-            ))
+            table.getRowModel().rows.map((row) => {
+              const id = row.getValue('id') as number
+              const type = row.getValue('type') as string
+              const key = type ? `${id}-${type}` : `${id}`
+
+              return (
+                <TableRow
+                  key={key}
+                  data-state={row.getIsSelected() && 'selected'}
+                  onClick={() => {
+                    let path
+                    switch (type) {
+                      case 'bucket':
+                        path = 'buckets'
+                        break
+                      case 'company':
+                        path = 'companies'
+                        break
+                      default:
+                        path = 'datasources'
+                        break
+                    }
+                    router.push(`/${path}/${id}`)
+                  }}
+                  className="cursor-pointer"
+                >
+                  {row.getVisibleCells().map((cell) => (
+                    <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
+                  ))}
+                </TableRow>
+              )
+            })
           ) : (
             <TableRow>
               <TableCell colSpan={columns.length} className="h-24 text-center">

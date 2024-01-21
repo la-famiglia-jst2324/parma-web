@@ -54,6 +54,10 @@ function randomDate(start: Date, end: Date): Date {
 function randomInt(min: number, max: number): number {
   return Math.floor(Math.random() * (max - min + 1)) + min
 }
+// Function to generate a sentiment score for comment value
+function randomSentimentScore(): number {
+  return randomInt(1, 10)
+}
 
 function getRandomElement(arr) {
   return arr[Math.floor(Math.random() * arr.length)];
@@ -177,7 +181,7 @@ async function main() {
   // Create Companies and relate to user
   const companies: Company[] = []
   for (let i = 0; i < 20; i++) {
-    if ( i < 5) {
+    if (i < 5) {
       companies.push(
         await prisma.company.create({
           data: {
@@ -384,14 +388,15 @@ async function main() {
   }
 
   // Define possible values for type and measurementName
-  const possibleTypes = ['Int', 'Int', 'Int', 'Float', 'Paragraph', 'Text'] // Add more as needed
+  const possibleTypes = ['Int', 'Int', 'Int', 'Float', 'Paragraph', 'Text', 'Comment'] // Add more as needed
   const possibleMeasurementNames = [
     '# of Employees',
     '# of Stars',
     '# of followers',
     'Monthly Revenue',
     'Review',
-    'Event'
+    'Event',
+    'User Comments'
   ] // Add more as needed
 
   // Create SourceMeasurements for each data source
@@ -407,12 +412,31 @@ async function main() {
             type: possibleTypes[random], // Random type
             measurementName: possibleMeasurementNames[random] // Random measurement name
             // parentMeasurementId: null or some logic if you're handling hierarchy
+
             // createdAt and modifiedAt will be set automatically
           }
         })
       )
     }
   }
+  // After creating all SourceMeasurements, optionally assign a parentMeasurementId to some of them
+  for (const measurement of sourceMeasurements) {
+    // Decide randomly whether to assign a parentMeasurementId or not
+    if (Math.random() < 0.5) { // Adjust the probability as needed
+      // Select a random SourceMeasurement's id as the parentMeasurementId
+      const randomParentIndex = Math.floor(Math.random() * sourceMeasurements.length)
+      const parentMeasurementId = sourceMeasurements[randomParentIndex].id
+
+      // Make sure not to assign a measurement as its own parent
+      if (parentMeasurementId !== measurement.id) {
+        await prisma.sourceMeasurement.update({
+          where: { id: measurement.id },
+          data: { parentMeasurementId }
+        })
+      }
+    }
+  }
+
 
   // Create CompanySourceMeasurements for each company for some source measurements
   const companySourceMeasurements: CompanySourceMeasurement[] = []
@@ -465,6 +489,16 @@ async function main() {
           companyMeasurementId: csm.companyMeasurementId,
           value: `Sample paragraph value for measurement ${csm.companyMeasurementId}`,
           timestamp: randomDate(startDate, endDate) // Random timestamp within the fixed range
+          // createdAt and modifiedAt will be set automatically
+        }
+      })
+      //
+      await prisma.measurementCommentValue.create({
+        data: {
+          companyMeasurementId: csm.companyMeasurementId,
+          value: `Sample comment value for measurement ${csm.companyMeasurementId}`,
+          timestamp: randomDate(startDate, endDate), // Random timestamp within the fixed range
+          sentimentScore: randomSentimentScore()
           // createdAt and modifiedAt will be set automatically
         }
       })

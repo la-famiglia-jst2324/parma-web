@@ -83,11 +83,17 @@ describe('comment value Model Tests', () => {
   })
 
   test('Create a new comment value with valid details', async () => {
-    const commentValue = await createCommentValue({ companyMeasurementId, value: 'comment', timestamp: new Date() })
+    const commentValue = await createCommentValue({
+      companyMeasurementId,
+      value: 'comment',
+      timestamp: new Date(),
+      sentimentScore: 8
+    })
     commentValueId = commentValue.id
     expect(commentValue).toHaveProperty('id')
     expect(commentValue.companyMeasurementId).toBe(companyMeasurementId)
     expect(commentValue.value).toBe('comment')
+    expect(commentValue.sentimentScore).toBe(8)
   })
 
   test('Retrieve a comment value by ID', async () => {

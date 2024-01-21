@@ -1,7 +1,9 @@
-import React, { useState, useEffect } from 'react'
-import { Link2Icon, MoveDownRight, MoveUpRight, PencilIcon } from 'lucide-react'
+import React, { useState, useEffect, useContext } from 'react'
+import { ArrowDown, ArrowUp, Link2Icon, PencilIcon } from 'lucide-react'
 import { MultiSelect, MultiSelectItem } from '@tremor/react'
 import { useToast } from '../ui/use-toast'
+import type { CompanyContextProps } from '../CompanyContext'
+import { CompanyContext } from '../CompanyContext'
 import {
   Dialog,
   DialogClose,
@@ -42,24 +44,11 @@ interface CompanyDataSource {
 }
 
 const ConfigureDatasourcesModal: React.FC<ConfigureDatasourcesModalProps> = ({ companyId }) => {
-  const [companyDataSources, setCompanyDataSources] = useState<CompanyDataSource[]>([])
   const [allDataSources, setAllDataSources] = useState<CompanyDataSource[]>([])
   const [filteredDataSources, setFilteredDataSources] = useState<CompanyDataSource[]>([])
   const [selectedValues, setSelectedValues] = useState<string[]>([])
+  const { companyDatasources, setCompanyDatasources } = useContext(CompanyContext) as CompanyContextProps
   const { toast } = useToast()
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const data = await getDataSourcesByCompanyId(companyId)
-        setCompanyDataSources(data)
-      } catch (error) {
-        console.error('Failed to fetch data sources:', error)
-      }
-    }
-
-    fetchData()
-  }, [companyId])
 
   useEffect(() => {
     const fetchData = async () => {
@@ -75,15 +64,13 @@ const ConfigureDatasourcesModal: React.FC<ConfigureDatasourcesModalProps> = ({ c
   }, [])
 
   useEffect(() => {
-    if (allDataSources && companyDataSources) {
+    if (allDataSources && companyDatasources) {
       const filtered = allDataSources.filter((dataSource: CompanyDataSource) => {
-        return !companyDataSources.some(
-          (companyDataSource: CompanyDataSource) => companyDataSource?.id === dataSource?.id
-        )
+        return !companyDatasources.some((companyDataSource) => companyDataSource?.id === dataSource?.id)
       })
       setFilteredDataSources(filtered)
     }
-  }, [allDataSources, companyDataSources])
+  }, [allDataSources, companyDatasources])
 
   const handleMultiSelectChange = (values: string[]) => {
     setSelectedValues(values)
@@ -94,7 +81,7 @@ const ConfigureDatasourcesModal: React.FC<ConfigureDatasourcesModalProps> = ({ c
     const alldatasource = await getDataSources()
     setAllDataSources(alldatasource)
     const companydatasources = await getDataSourcesByCompanyId(companyId)
-    setCompanyDataSources(companydatasources)
+    setCompanyDatasources(companydatasources)
     toast({
       title: `Datasource unlinked successfully`,
       description: 'You have successfully unlinked a datasource from this company'
@@ -109,7 +96,7 @@ const ConfigureDatasourcesModal: React.FC<ConfigureDatasourcesModalProps> = ({ c
     const alldatasource = await getDataSources()
     setAllDataSources(alldatasource)
     const companydatasources = await getDataSourcesByCompanyId(companyId)
-    setCompanyDataSources(companydatasources)
+    setCompanyDatasources(companydatasources)
     toast({
       title: `Datasource/s linked successfully`,
       description: 'You have successfully added a datasource to the company'
@@ -124,7 +111,7 @@ const ConfigureDatasourcesModal: React.FC<ConfigureDatasourcesModalProps> = ({ c
           Configure Datasources
         </Button>
       </DialogTrigger>
-      <DialogContent className="flex h-1/2 flex-col">
+      <DialogContent className="flex h-3/5 flex-col">
         <DialogHeader>
           <DialogTitle>Link/Unlink data sources with this company</DialogTitle>
           <DialogDescription>
@@ -158,24 +145,26 @@ const ConfigureDatasourcesModal: React.FC<ConfigureDatasourcesModalProps> = ({ c
             </TableRow>
           </TableHeader>
           <TableBody className="max-h-96 items-start overflow-y-auto">
-            {companyDataSources.length === 0 ? (
+            {companyDatasources.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={5} className="text-center">
                   No data sources linked to this company
                 </TableCell>
               </TableRow>
             ) : (
-              companyDataSources.map((dataSource) => (
+              companyDatasources.map((dataSource) => (
                 <TableRow key={dataSource.id}>
                   <TableCell className="font-medium">{dataSource.sourceName}</TableCell>
                   <TableCell>
                     {dataSource.healthStatus === 'UP' ? (
-                      <MoveUpRight className="text-lime-700" />
+                      <ArrowUp className="text-lime-700" />
                     ) : (
-                      <MoveDownRight className="text-red-700" />
+                      <ArrowDown className="text-red-700" />
                     )}
                   </TableCell>
-                  <TableCell>{dataSource.frequency}</TableCell>
+                  <TableCell>
+                    {dataSource.frequency.charAt(0).toUpperCase() + dataSource.frequency.slice(1).toLowerCase()}
+                  </TableCell>
                   <TableCell>
                     <Button
                       variant="outline"

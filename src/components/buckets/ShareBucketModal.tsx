@@ -1,10 +1,11 @@
 'use client'
 
-import { SearchSelect, SearchSelectItem } from '@tremor/react'
 import { useEffect, useState } from 'react'
 import { $Enums, type User } from '@prisma/client'
-import { Share2, Pencil, Check, Trash2, X } from 'lucide-react'
+import { Share2, Pencil, Check, Trash2, X, CheckIcon, ChevronDown } from 'lucide-react'
 import { useToast } from '../ui/use-toast'
+import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover'
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from '../ui/command'
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import BucketFunctions from '@/app/services/bucket.service'
 import { Button } from '@/components/ui/button'
@@ -18,6 +19,7 @@ import {
   DialogTrigger,
   DialogClose
 } from '@/components/ui/dialog'
+import { cn } from '@/utils/utils'
 interface ShareBucketModalProps {
   handleShare: (shareUsersList: ShareBucketProps[]) => void
   id: string
@@ -55,7 +57,8 @@ const ShareBucketModal: React.FC<ShareBucketModalProps> = ({ handleShare, id }) 
   const [usersToShare, setUsersToShare] = useState<User[]>([])
   const [listToPost, setListToPost] = useState<ShareBucketProps[]>([])
   const [invitees, setInvitees] = useState<Invitee[]>([])
-
+  const [open, setOpen] = useState(false)
+  const [userValue, setUserValue] = useState('')
   const { toast } = useToast()
 
   useEffect(() => {
@@ -203,13 +206,41 @@ const ShareBucketModal: React.FC<ShareBucketModalProps> = ({ handleShare, id }) 
             </p>
 
             <div className="flex flex-row items-center gap-4">
-              <SearchSelect onValueChange={(val) => addUserToShareList(val)}>
-                {users?.map((user) => (
-                  <SearchSelectItem value={user.id + ''} key={user.id}>
-                    {user.name}
-                  </SearchSelectItem>
-                ))}
-              </SearchSelect>
+              <Popover open={open} onOpenChange={setOpen}>
+                <PopoverTrigger asChild>
+                  <Button variant="outline" role="combobox" aria-expanded={open} className="w-full justify-between">
+                    {userValue ? usersToShare.find((user) => +user.id === +userValue)?.name : 'Select users to share'}
+                    <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-[450px] p-0">
+                  <Command>
+                    <CommandInput placeholder="Select users..." className="h-9" />
+                    <CommandEmpty>No users found.</CommandEmpty>
+                    <CommandGroup>
+                      {users.map((user) => (
+                        <CommandItem
+                          key={user.id}
+                          value={user.id + ''}
+                          onSelect={(currentValue) => {
+                            addUserToShareList(currentValue)
+                            setUserValue(currentValue)
+                            setOpen(false)
+                          }}
+                        >
+                          {user.name}
+                          <CheckIcon
+                            className={cn(
+                              'ml-auto h-4 w-4',
+                              usersToShare.find((u) => (u.id === user.id ? 'opacity-100' : 'opacity-0'))
+                            )}
+                          />
+                        </CommandItem>
+                      ))}
+                    </CommandGroup>
+                  </Command>
+                </PopoverContent>
+              </Popover>
             </div>
 
             <div className="mt-8 h-[200px] max-h-[400px] overflow-auto pr-2 pt-2">
@@ -298,7 +329,15 @@ const ShareBucketModal: React.FC<ShareBucketModalProps> = ({ handleShare, id }) 
             </DialogClose>
 
             <DialogClose asChild>
-              <Button type="submit" className="mt-2" variant="secondary" onClick={() => setUsersToShare([])}>
+              <Button
+                type="submit"
+                className="mt-2"
+                variant="secondary"
+                onClick={() => {
+                  setUsersToShare([])
+                  setUserValue('')
+                }}
+              >
                 Cancel
               </Button>
             </DialogClose>

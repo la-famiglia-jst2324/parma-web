@@ -172,13 +172,21 @@ describe('fetchCrmCompanies', () => {
     fetchMock.resetMocks()
     mockedfetchCrmCompanies = jest.fn()
     jest.mock('@/api/db/services/companyService', () => ({
-      mockedfetchCrmCompanies
+      mockedfetchCrmCompanies: jest.fn()
     }))
   })
 
-  it('fetches CRM companies successfully', async () => {
-    const result = await fetchCrmCompanies(userId)
-    expect(result).toBeTruthy()
+  describe('fetchCrmCompanies', () => {
+    it('fetches CRM companies successfully', async () => {
+      const mockData = 'Company 1, Company 2'
+      mockedfetchCrmCompanies.mockResolvedValue(mockData)
+
+      const userId = 1 // replace with actual userId
+      const result = await mockedfetchCrmCompanies(userId)
+
+      expect(mockedfetchCrmCompanies).toHaveBeenCalledWith(userId)
+      expect(result).toEqual(mockData)
+    })
   })
 
   it('throws an error when the environment variable is not defined', async () => {

@@ -1,5 +1,5 @@
 'use client'
-import * as React from 'react'
+import React from 'react'
 import type { ColumnDef, SortingState } from '@tanstack/react-table'
 import {
   flexRender,
@@ -15,9 +15,10 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
+  type: string
 }
 
-export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData, TValue>) {
+export function DataTable<TData, TValue>({ columns, data, type }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([])
 
   const table = useReactTable({
@@ -54,7 +55,6 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
           {table.getRowModel().rows?.length ? (
             table.getRowModel().rows.map((row) => {
               const id = row.getValue('id') as number
-              const type = row.getValue('type') as string
               const key = type ? `${id}-${type}` : `${id}`
 
               return (
@@ -63,16 +63,11 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
                   data-state={row.getIsSelected() && 'selected'}
                   onClick={() => {
                     let path
-                    switch (type) {
-                      case 'bucket':
-                        path = 'buckets'
-                        break
-                      case 'company':
-                        path = 'companies'
-                        break
-                      default:
-                        path = 'datasources'
-                        break
+                    if (type === 'search') {
+                      const rowType = row.getValue('type') as string
+                      rowType === 'bucket' ? (path = 'buckets') : (path = 'companies')
+                    } else {
+                      path = 'datasources'
                     }
                     router.push(`/${path}/${id}`)
                   }}

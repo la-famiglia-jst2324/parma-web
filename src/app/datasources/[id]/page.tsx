@@ -6,6 +6,7 @@ import { MainLayoutWrapper } from '@/components/layout/MainLayout'
 import { HeaderComponent } from '@/components/datasources/DatasourcePageHeader'
 import { ButtonGroup } from '@/components/datasources/ButtonGroup'
 import { TabComponent } from '@/components/datasources/DatasourceTabComponent'
+import { GoBackButton } from '@/components/GoBackButton'
 
 function DatasourcePage({ params: { id } }: { params: { id: string } }) {
   const [data, setData] = useState<DataSource>()
@@ -68,26 +69,31 @@ function DatasourcePage({ params: { id } }: { params: { id: string } }) {
   }
 
   return (
-    <div>
-      <div className="flex items-center justify-between ">
-        <div>
-          <HeaderComponent data={data} />
+    <main role="main">
+      <div className="w-full">
+        <div className="mb-4 flex items-center justify-between">
+          <div className="mb-3 flex items-center justify-center space-x-4">
+            <div className="mt-1">
+              <GoBackButton url="/datasources" />
+            </div>
+            <HeaderComponent data={data} />
+          </div>
+          <div className="flex items-center justify-end">
+            <ButtonGroup
+              handleSave={(updates) =>
+                handleSave(updates.newName, updates.newDescription, updates.newUrl, updates.newStatus)
+              }
+              data={data}
+            />
+          </div>
         </div>
-        <div className="flex justify-end">
-          <ButtonGroup
-            handleSave={(updates) =>
-              handleSave(updates.newName, updates.newDescription, updates.newUrl, updates.newStatus)
-            }
-            data={data}
-          />
+        <div className="mb-12 ml-9">
+          <div className="pb-4 font-semibold uppercase text-gray-500">Description</div>
+          <p className="mb-4">{data.description}</p>
         </div>
+        <TabComponent sourceId={data.id.toString()} />
       </div>
-      <div className="flex flex-col items-start justify-start space-y-4">
-        <div className="flex flex-col items-start justify-start font-semibold text-gray-500">DESCRIPTION</div>
-        <p className="mb-1 text-base text-gray-700">{data.description}</p>
-      </div>
-      <TabComponent sourceId={data.id.toString()} />
-    </div>
+    </main>
   )
 }
 

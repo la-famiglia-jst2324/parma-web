@@ -1,6 +1,8 @@
+import { Button } from '../ui/button'
 import ModalComponent from './Modals/DisableModal'
 import DeleteModal from './Modals/DeleteModal'
 import EditInformationModal from './Modals/EditInformationModal'
+
 interface DataProps {
   sourceName: string
   description: string | null
@@ -28,6 +30,9 @@ export const ButtonGroup: React.FC<ButtonGroupProps> = ({ data, handleSave }) =>
         url={data.invocationEndpoint}
         handleSave={(updates) => handleSave({ ...updates, newStatus: data.isActive })}
       />
+      <Button className="text-green-500" variant="secondary">
+        Schedule
+      </Button>
       <ModalComponent
         sourceName={data.sourceName}
         description={data.description || ''}

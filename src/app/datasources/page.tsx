@@ -32,7 +32,7 @@ function DatasourcesPage() {
         <div className="mx-auto overflow-auto rounded-lg border-0 shadow-md">
           <div className="w-full">
             {data ? (
-              <DataTable columns={columns} data={data} />
+              <DataTable columns={columns} data={data} type="datasource" />
             ) : (
               <p className="text-lg font-bold text-gray-300">No datasources available yet. Start by creating one.</p>
             )}

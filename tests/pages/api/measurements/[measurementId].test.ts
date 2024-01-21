@@ -1,7 +1,6 @@
 import { createMocks } from 'node-mocks-http'
 import { handler } from '@/pages/api/measurements/[measurementId]'
 import {
-  getMeasurementWithAllNestedChildByID,
   getSourceMeasurementByID,
   updateSourceMeasurement,
   deleteSourceMeasurement
@@ -34,7 +33,7 @@ describe('measurement API', () => {
     jest.resetAllMocks()
   })
   test('GET returns a source measurement', async () => {
-    getMeasurementWithAllNestedChildByID.mockResolvedValueOnce(mockMeasurement)
+    getSourceMeasurementByID.mockResolvedValueOnce(mockMeasurement)
     const { req, res } = createMocks({
       method: 'GET',
       query: { measurementId: '1' }
@@ -45,9 +44,7 @@ describe('measurement API', () => {
   })
 
   test('GET with non-existent measurementId returns 404', async () => {
-    getMeasurementWithAllNestedChildByID.mockRejectedValueOnce(
-      new ItemNotFoundError('No Data Source Measurement found')
-    )
+    getSourceMeasurementByID.mockRejectedValueOnce(new ItemNotFoundError('No Data Source Measurement found'))
 
     const { req, res } = createMocks({
       method: 'GET',
@@ -61,7 +58,7 @@ describe('measurement API', () => {
   })
 
   test('GET with server error returns 500', async () => {
-    getMeasurementWithAllNestedChildByID.mockRejectedValueOnce(new Error('Internal Server Error'))
+    getSourceMeasurementByID.mockRejectedValueOnce(new Error('Internal Server Error'))
 
     const { req, res } = createMocks({
       method: 'GET',

@@ -2,8 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import {
   getSourceMeasurementByID,
   updateSourceMeasurement,
-  deleteSourceMeasurement,
-  getMeasurementWithAllNestedChildByID
+  deleteSourceMeasurement
 } from '@/api/db/services/sourceMeasurementService'
 import { ItemNotFoundError } from '@/api/utils/errorUtils'
 /**
@@ -12,7 +11,7 @@ import { ItemNotFoundError } from '@/api/utils/errorUtils'
  *   get:
  *     tags:
  *       - sourceMeasurement
- *     summary: Retrieve a source measurement and all its nested measurements by ID
+ *     summary: Retrieve a source measurement and its nested measurements by ID
  *     description: Fetches details of a specific source measurement based on the provided ID.
  *     parameters:
  *       - in: query
@@ -95,7 +94,7 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   switch (method) {
     case 'GET':
       try {
-        const measurement = await getMeasurementWithAllNestedChildByID(Number(measurementId))
+        const measurement = await getSourceMeasurementByID(Number(measurementId))
         if (measurement) res.status(200).json(measurement)
       } catch (error) {
         if (error instanceof ItemNotFoundError) res.status(404).json({ error: error.message })

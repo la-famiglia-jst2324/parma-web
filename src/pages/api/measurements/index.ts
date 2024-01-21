@@ -3,7 +3,7 @@ import type { SourceMeasurement } from '@prisma/client'
 import {
   createSourceMeasurement,
   getAllSourceMeasurements,
-  getMeasurementWithAllNestedChildByID
+  getSourceMeasurementByID
 } from '@/api/db/services/sourceMeasurementService'
 import { getCompanySourceMeasurementByCompanyId } from '@/api/db/services/companySourceMeasurementService'
 import { withAuthValidation } from '@/api/middleware/auth'
@@ -182,7 +182,7 @@ export default withAuthValidation(handler)
 async function getMeasurementsWithChildren(measurements: SourceMeasurement[]) {
   const measurementsWithChildren: SourceMeasurementWithChild[] = []
   for (const measurement of measurements) {
-    const withChild = await getMeasurementWithAllNestedChildByID(measurement.id)
+    const withChild = await getSourceMeasurementByID(measurement.id)
     measurementsWithChildren.push(withChild)
   }
   return measurementsWithChildren

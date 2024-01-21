@@ -101,15 +101,22 @@ import { withAuthValidation } from '@/api/middleware/auth'
  *         modifiedAt:
  *           type: string
  */
+
+interface CommentData {
+  value: string
+  sentimentScore: number | null
+}
 export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const { method } = req
   const { measurementId, companies, startDate, endDate } = req.query
+  type CompanyData = number | string | CommentData
+
   const companiesArray = Array.isArray(companies) ? companies.map((company) => Number(company)) : [Number(companies)]
   switch (method) {
     case 'GET':
       try {
         const relation = await getValueByMeasurementIdCompanyId(Number(measurementId), companiesArray)
-        const dateCompanyMap: Record<string, Record<string, number>> = {}
+        const dateCompanyMap: Record<string, Record<string, CompanyData>> = {}
         const valueType = relation[0].sourceMeasurement.type
         relation.forEach((data) => {
           switch (valueType.toLowerCase()) {
@@ -131,6 +138,19 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                   dateCompanyMap[date] = {}
                 }
                 dateCompanyMap[date][data.company.name] = measurement.value
+              })
+              break
+
+            case 'comment':
+              data.measurementCommentValues.forEach((measurement) => {
+                const date = new Date(measurement.timestamp).toLocaleDateString('en-US')
+                if (!dateCompanyMap[date]) {
+                  dateCompanyMap[date] = {}
+                }
+                dateCompanyMap[date][data.company.name] = {
+                  value: measurement.value,
+                  sentimentScore: measurement.sentimentScore
+                }
               })
               break
 

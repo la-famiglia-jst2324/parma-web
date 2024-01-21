@@ -1,11 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-
 import {
   getSourceMeasurementByID,
   updateSourceMeasurement,
   deleteSourceMeasurement
 } from '@/api/db/services/sourceMeasurementService'
-
 import { ItemNotFoundError } from '@/api/utils/errorUtils'
 /**
  * @swagger
@@ -13,7 +11,7 @@ import { ItemNotFoundError } from '@/api/utils/errorUtils'
  *   get:
  *     tags:
  *       - sourceMeasurement
- *     summary: Retrieve a source measurement by ID
+ *     summary: Retrieve a source measurement and its nested measurements by ID
  *     description: Fetches details of a specific source measurement based on the provided ID.
  *     parameters:
  *       - in: query
@@ -98,9 +96,9 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       try {
         const measurement = await getSourceMeasurementByID(Number(measurementId))
         if (measurement) res.status(200).json(measurement)
-        else res.status(400).json({ error: 'No Data Source Measurement found' })
       } catch (error) {
-        res.status(500).json({ error: 'Internal Server Error' })
+        if (error instanceof ItemNotFoundError) res.status(404).json({ error: error.message })
+        else res.status(500).json({ error: 'Internal Server Error' })
       }
       break
 

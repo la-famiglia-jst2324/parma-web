@@ -1,6 +1,6 @@
 import React from 'react'
 import { useRouter } from 'next/navigation'
-import { SearchIcon, Plus, Settings, User2Icon, Database } from 'lucide-react'
+import { SearchIcon, Plus, TrendingUpIcon, Settings, User2Icon, Database } from 'lucide-react'
 import {
   CommandDialog,
   CommandEmpty,
@@ -34,6 +34,10 @@ export function CommandInterface() {
       <CommandList>
         <CommandEmpty>No results found.</CommandEmpty>
         <CommandGroup heading="Suggestions">
+          <CommandItem>
+            <TrendingUpIcon className="mr-2" />
+            Trending News
+          </CommandItem>
           <CommandItem>
             <SearchIcon className="mr-2" />
             <span onClick={() => router.push('/search')}>Find buckets or companies</span>

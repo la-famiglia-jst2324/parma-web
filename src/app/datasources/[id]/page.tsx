@@ -7,6 +7,7 @@ import { HeaderComponent } from '@/components/datasources/DatasourcePageHeader'
 import { ButtonGroup } from '@/components/datasources/ButtonGroup'
 import { TabComponent } from '@/components/datasources/DatasourceTabComponent'
 import { GoBackButton } from '@/components/GoBackButton'
+import DescriptionCard from '@/components/datasources/Card'
 
 function DatasourcePage({ params: { id } }: { params: { id: string } }) {
   const [data, setData] = useState<DataSource>()
@@ -87,10 +88,12 @@ function DatasourcePage({ params: { id } }: { params: { id: string } }) {
             />
           </div>
         </div>
-        <div className="mb-12 ml-9">
-          <div className="pb-4 font-semibold uppercase text-gray-500">Description</div>
-          <p className="mb-4">{data.description}</p>
-        </div>
+        <DescriptionCard
+          data={data}
+          handleSave={(updates) =>
+            handleSave(updates.newName, updates.newDescription, updates.newUrl, updates.newStatus)
+          }
+        />
         <TabComponent sourceId={data.id.toString()} />
       </div>
     </main>

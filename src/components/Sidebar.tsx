@@ -2,6 +2,7 @@
 import Link from 'next/link'
 import { Squares2X2Icon, FolderIcon, MagnifyingGlassIcon } from '@heroicons/react/20/solid'
 import Image from 'next/image'
+import { Plus } from 'lucide-react'
 import UserNav from './UserNav'
 import useCompanies from './hooks/useCompanies'
 import useBuckets from './hooks/useBuckets'
@@ -69,7 +70,7 @@ const Sidebar: React.FC = () => {
                 <FolderIcon className={`mr-2 h-4 w-4 text-gray-500`} />
                 <p className="text-base font-medium text-gray-300">Buckets</p>
               </div>
-              <CreateBucket></CreateBucket>
+              <CreateBucket triggerButton={<Plus className="cursor-pointer" />} onClose={() => ({})} />
             </div>
             <div className="ml-6">
               <ScrollArea className="mt-2 h-24 w-full">
@@ -98,7 +99,7 @@ const Sidebar: React.FC = () => {
                 <FolderIcon className={`mr-2 h-4 w-4 text-gray-500`} />
                 <p className="text-base font-medium text-gray-300">Companies</p>
               </div>
-              <CreateCompanyModal />
+              <CreateCompanyModal triggerButton={<Plus className="cursor-pointer" />} onClose={() => ({})} />
             </div>
             <div className="ml-6">
               <ScrollArea className="mt-2 h-24 w-full">

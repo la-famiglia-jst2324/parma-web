@@ -1,5 +1,5 @@
 'use client'
-import { CheckCircle2, Plus } from 'lucide-react'
+import { CheckCircle2 } from 'lucide-react'
 import { useState } from 'react'
 import { DialogHeader, DialogFooter } from '../ui/dialog'
 import { Input } from '../ui/input'
@@ -18,7 +18,12 @@ import {
 import { Button } from '@/components/ui/button'
 import { postCompany } from '@/services/company/companyService'
 
-const CreateCompanyModal = () => {
+interface CreateCompanyProps {
+  triggerButton: React.ReactNode
+  onClose: () => void
+}
+
+const CreateCompanyModal: React.FC<CreateCompanyProps> = ({ triggerButton, onClose }) => {
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
 
@@ -43,9 +48,7 @@ const CreateCompanyModal = () => {
 
   return (
     <Dialog>
-      <DialogTrigger asChild>
-        <Plus className="cursor-pointer" />
-      </DialogTrigger>
+      <DialogTrigger asChild>{triggerButton}</DialogTrigger>
       <DialogContent className="m-2 sm:max-w-[500px]">
         <DialogHeader>
           <DialogTitle>Create Company</DialogTitle>
@@ -90,7 +93,7 @@ const CreateCompanyModal = () => {
             </Button>
           </DialogClose>
           <DialogClose asChild>
-            <Button type="submit" className="mt-2" variant="secondary">
+            <Button onClick={onClose} type="submit" className="mt-2" variant="secondary">
               Cancel
             </Button>
           </DialogClose>

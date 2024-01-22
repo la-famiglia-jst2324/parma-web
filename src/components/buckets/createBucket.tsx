@@ -1,5 +1,5 @@
 'use client'
-import { Plus } from 'lucide-react'
+
 import { CheckBadgeIcon } from '@heroicons/react/20/solid'
 import type { Bucket, Company } from '@prisma/client'
 import { MultiSelect, MultiSelectItem } from '@tremor/react'
@@ -11,7 +11,6 @@ import { Textarea } from '../ui/textarea'
 import { Switch } from '../ui/switch'
 import { useToast } from '../ui/use-toast'
 import BucketFunctions from '@/app/services/bucket.service'
-
 import {
   Dialog,
   DialogTrigger,
@@ -22,7 +21,12 @@ import {
 } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 
-const CreateBucket = () => {
+interface CreateBucketProps {
+  triggerButton: React.ReactNode
+  onClose: () => void
+}
+
+const CreateBucket: React.FC<CreateBucketProps> = ({ triggerButton, onClose }) => {
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
   const [isPublic, setIsPublic] = useState(true)
@@ -80,7 +84,7 @@ const CreateBucket = () => {
   return (
     <Dialog>
       <DialogTrigger asChild onClick={getCompanies}>
-        <Plus className="cursor-pointer" />
+        {triggerButton}
       </DialogTrigger>
       <DialogContent className="m-2 sm:max-w-[500px]">
         <DialogHeader>
@@ -141,7 +145,7 @@ const CreateBucket = () => {
           </DialogClose>
 
           <DialogClose asChild>
-            <Button type="submit" className="mt-2" variant="secondary">
+            <Button onClick={onClose} type="submit" className="mt-2" variant="secondary">
               Cancel
             </Button>
           </DialogClose>

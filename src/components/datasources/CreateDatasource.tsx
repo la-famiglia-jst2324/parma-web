@@ -2,7 +2,6 @@
 
 import React, { useState } from 'react'
 import { Frequency } from '@prisma/client'
-import { PlusSquareIcon } from 'lucide-react'
 import { useToast } from '@/components/ui/use-toast'
 import {
   Dialog,
@@ -15,13 +14,17 @@ import {
   DialogTrigger
 } from '@/components/ui/dialog'
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { createNewDatasource } from '@/services/datasource/datasourceService'
 
-const CreateDatasource: React.FC = () => {
+interface CreateDatasourceProps {
+  triggerButton: React.ReactNode
+  onClose: () => void
+}
+
+const CreateDatasource: React.FC<CreateDatasourceProps> = ({ triggerButton, onClose }) => {
   const [name, setName] = useState<string>('')
   const [url, setUrl] = useState<string>('')
   const [description, setDescription] = useState<string>('')
@@ -104,12 +107,7 @@ const CreateDatasource: React.FC = () => {
   return (
     <div>
       <Dialog>
-        <DialogTrigger asChild>
-          <Button variant="outline">
-            <PlusSquareIcon className="mr-2 h-4 w-4" />
-            Create
-          </Button>
-        </DialogTrigger>
+        <DialogTrigger asChild>{triggerButton}</DialogTrigger>
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Create New Datasource</DialogTitle>
@@ -153,7 +151,7 @@ const CreateDatasource: React.FC = () => {
           </div>
           <DialogFooter className="sm:justify-end">
             <DialogClose asChild>
-              <Button type="button" variant="outline">
+              <Button onClick={onClose} type="button" variant="outline">
                 Close
               </Button>
             </DialogClose>

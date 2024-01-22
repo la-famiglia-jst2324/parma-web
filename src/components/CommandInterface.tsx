@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { SearchIcon, Plus, TrendingUpIcon, Settings, User2Icon, Database } from 'lucide-react'
+import CreateBucket from './buckets/createBucket'
+import CreateCompanyModal from './companies/CreateCompanyModal'
 import {
   CommandDialog,
   CommandEmpty,
@@ -11,11 +13,13 @@ import {
   CommandSeparator,
   CommandShortcut
 } from '@/components/ui/command'
+import CreateDatasource from '@/components/datasources/CreateDatasource'
 
 export function CommandInterface() {
   const [open, setOpen] = useState(false)
-  // const [isCreateBucketOpen, setIsCreateBucketOpen] = useState(false);
-  // const [isCreateCompanyOpen, setIsCreateCompanyOpen] = useState(false);
+  const [, setCreateBucketOpen] = useState<boolean>(false)
+  const [, setCreateCompanyOpen] = useState<boolean>(false)
+  const [, setCreateDatasourceOpen] = useState<boolean>(false)
   const router = useRouter()
 
   React.useEffect(() => {
@@ -26,21 +30,15 @@ export function CommandInterface() {
       } else if (e.key === 's' && (e.metaKey || e.ctrlKey)) {
         e.preventDefault()
         router.push('/settings')
+      } else if (e.key === 'f' && (e.metaKey || e.ctrlKey)) {
+        e.preventDefault()
+        router.push('/search')
       } else if (e.key === 'p' && (e.metaKey || e.ctrlKey)) {
         e.preventDefault()
         router.push('/profile')
-      } else if (e.key === 'd' && (e.metaKey || e.ctrlKey)) {
+      } else if (e.key === 'o' && (e.metaKey || e.ctrlKey)) {
         e.preventDefault()
         router.push('/datasources')
-      } else if (e.key === 'n' && (e.metaKey || e.ctrlKey)) {
-        e.preventDefault()
-        router.push('/')
-      } else if (e.key === 'b' && (e.metaKey || e.ctrlKey)) {
-        e.preventDefault()
-        // open create buckets modal
-      } else if (e.key === 'c' && (e.metaKey || e.ctrlKey)) {
-        e.preventDefault()
-        // open create companies modal
       }
     }
     document.addEventListener('keydown', down)
@@ -56,40 +54,58 @@ export function CommandInterface() {
           <CommandItem>
             <TrendingUpIcon className="mr-2" />
             <span onClick={() => router.push('/')}>Trending News</span>
-            <CommandShortcut>⌘N</CommandShortcut>
           </CommandItem>
           <CommandItem>
             <SearchIcon className="mr-2" />
             <span onClick={() => router.push('/search')}>Find buckets or companies</span>
+            <CommandShortcut>⌘F</CommandShortcut>
           </CommandItem>
         </CommandGroup>
         <CommandSeparator />
         <CommandGroup heading="Buckets">
           <CommandItem>
-            <Plus className="mr-2" />
-            <span>Create Bucket</span>
-            <CommandShortcut>⌘B</CommandShortcut>
+            <CreateBucket
+              triggerButton={
+                <div className="flex items-center">
+                  <Plus className="mr-2 cursor-pointer" />
+                  <span>Create Bucket</span>
+                </div>
+              }
+              onClose={() => setCreateBucketOpen(false)}
+            />
           </CommandItem>
         </CommandGroup>
-        {/* {isCreateBucketOpen && <CreateBucket />} */}
         <CommandSeparator />
         <CommandGroup heading="Companies">
           <CommandItem>
-            <Plus className="mr-2" />
-            Create Company
-            <CommandShortcut>⌘C</CommandShortcut>
+            <CreateCompanyModal
+              triggerButton={
+                <div className="flex items-center">
+                  <Plus className="mr-2" />
+                  <span>Create Company</span>
+                </div>
+              }
+              onClose={() => setCreateCompanyOpen(false)}
+            />
           </CommandItem>
         </CommandGroup>
         <CommandSeparator />
         <CommandGroup heading="Datasources">
           <CommandItem>
-            <Plus className="mr-2" />
-            Create Datasource
+            <CreateDatasource
+              triggerButton={
+                <div className="flex items-center">
+                  <Plus className="mr-2" />
+                  <span>Create Datasource</span>
+                </div>
+              }
+              onClose={() => setCreateDatasourceOpen(false)}
+            />
           </CommandItem>
           <CommandItem>
             <Database className="mr-2" />
-            Open Datasources
-            <CommandShortcut>⌘D</CommandShortcut>
+            <span onClick={() => router.push('/settings')}>Open Datasources</span>
+            <CommandShortcut>⌘O</CommandShortcut>
           </CommandItem>
         </CommandGroup>
         <CommandSeparator />

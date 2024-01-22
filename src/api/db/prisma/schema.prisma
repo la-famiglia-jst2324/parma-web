@@ -367,6 +367,7 @@ model MeasurementCommentValue {
   timestamp            DateTime
   createdAt            DateTime @default(now()) @map("created_at")
   modifiedAt           DateTime @updatedAt @map("modified_at")
+  sentimentScore       Int?   @map("sentiment_score")
 
   // Relations
   companySourceMeasurement CompanySourceMeasurement @relation(fields: [companyMeasurementId], references: [companyMeasurementId], onDelete: Cascade)

@@ -54,7 +54,7 @@ const ConfigureDatasourcesModal: React.FC<ConfigureDatasourcesModalProps> = ({ c
     const fetchData = async () => {
       try {
         const data = await getDataSources()
-        setAllDataSources(data)
+        setAllDataSources(data.dataSources)
       } catch (error) {
         console.error('Error fetching data sources:', error)
       }
@@ -79,7 +79,7 @@ const ConfigureDatasourcesModal: React.FC<ConfigureDatasourcesModalProps> = ({ c
   const handleUnlinkDataSource = async (dataSourceId: string) => {
     await deleteCompanyDataSource(companyId, dataSourceId)
     const alldatasource = await getDataSources()
-    setAllDataSources(alldatasource)
+    setAllDataSources(alldatasource.dataSources)
     const companydatasources = await getDataSourcesByCompanyId(companyId)
     setCompanyDatasources(companydatasources)
     toast({
@@ -94,7 +94,7 @@ const ConfigureDatasourcesModal: React.FC<ConfigureDatasourcesModalProps> = ({ c
     )
     setSelectedValues([])
     const alldatasource = await getDataSources()
-    setAllDataSources(alldatasource)
+    setAllDataSources(alldatasource.dataSources)
     const companydatasources = await getDataSourcesByCompanyId(companyId)
     setCompanyDatasources(companydatasources)
     toast({

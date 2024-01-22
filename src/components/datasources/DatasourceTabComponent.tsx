@@ -15,7 +15,7 @@ interface TabComponentProps {
 
 export const TabComponent: React.FC<TabComponentProps> = ({ sourceId }) => {
   return (
-    <Tabs>
+    <Tabs defaultValue="Companies Monitored">
       <TabsList>
         <TabsTrigger value="Companies Monitored">Companies Monitored</TabsTrigger>
         <TabsTrigger value="Scheduled Tasks">Scheduled Tasks</TabsTrigger>

@@ -64,95 +64,95 @@ function getRandomElement(arr) {
 }
 
 const newsSamples = [
-    {
-        message: "Annual Financial Report Shows Average Revenue Growth of 7.5% Across Major Industries",
-        triggerFactor: "Average Revenue Growth",
-        title: "Industries See Average 7.5% Revenue Growth",
-        timestamp: new Date(2023, 3, 27, 20, 47, 14)
-    },
-    {
-        message: "Recent Market Analysis Reveals Record Low Investment in Startups This Quarter",
-        triggerFactor: "Minimum Investment Level",
-        title: "Startups Hit by Record Low Investment",
-        timestamp: new Date(2023, 2, 11, 20, 47, 14)
-    },
-    {
-        message: "Total Sales Across E-commerce Platforms Surge to $5 Billion in the Last Quarter",
-        title: "E-commerce Sales Hit $5 Billion Mark",
-        timestamp: new Date(2023, 7, 27, 20, 47, 14)
-    },
-    {
-        message: "Breakthrough in Renewable Energy Efficiency Opens New Opportunities for Sustainable Development",
-        triggerFactor: "Scientific Breakthrough",
-        title: "New Era in Green Energy",
-        timestamp: new Date(2023, 7, 9, 20, 47, 14)
-    },
-    {
-        message: "Global Fashion Brand Faces Supply Chain Disruption, Increasing Production and Distribution by %30",
-        triggerFactor: "%30",
-        title: "Fashion Industry Supply Woes",
-        timestamp: new Date(2023, 9, 14, 20, 47, 14)
-    },
-    {
-        message: "Pharmaceutical Company Releases New Vaccine, Marking a Major Step Forward in Medical Science",
-        triggerFactor: "Medical Advancement",
-        title: "Innovative Vaccine Hits the Market",
-        timestamp: new Date(2023, 9, 31, 20, 48, 38)
-    },
-    {
-        message: "Tech Startups Experience a Surge in Venture Capital Funding, Signaling Strong Market Confidence",
-        triggerFactor: "Investment Surge",
-        title: "Venture Capital Floods Tech Sector",
-        timestamp: new Date(2023, 8, 27, 20, 48, 38)
-    },
-    {
-        message: "Major Bank Announces New Digital Currency Initiative, Paving the Way for Future Financial Transactions",
-        triggerFactor: "Digital Currency Launch",
-        title: "Banking Sector Embraces Digital Currency",
-        timestamp: new Date(2023, 1, 11, 20, 48, 38)
-    },
-    {
-        message: "Global E-commerce Giant Expands to New Markets, Strengthening Its International Presence",
-        triggerFactor: "Market Expansion",
-        title: "E-commerce Expansion Announced",
-        timestamp: new Date(2023, 6, 23, 20, 48, 38)
-    },
-    {
-        message: "Airline Industry Faces Regulatory Changes That Could Alter the Future of Air Travel",
-        triggerFactor: "Regulatory Update",
-        title: "New Aviation Regulations Introduced",
-        timestamp: new Date(2023, 4, 8, 20, 48, 38)
-    },
-    {
-        message: "Major Security Breach at Leading Tech Firm Exposes Sensitive Data, Raising Concerns Over Digital Safety",
-        triggerFactor: "Security Incident",
-        title: "Tech Company Security Crisis",
-        timestamp: new Date(2023, 11, 4, 20, 48, 38)
-    },
-    {
-        message: "Automobile Manufacturer Recalls Latest Model Due to Safety Concerns, Affecting Thousands of Vehicles",
-        triggerFactor: "Product Recall",
-        title: "Auto Recall Shakes Industry",
-        timestamp: new Date(2023, 4, 16, 20, 48, 38)
-    },
-    {
-        message: "Biotech Firm Announces Major Strides in Gene Editing Technology, Potentially Transforming Medical Treatments",
-        triggerFactor: "Biotech Advancement",
-        title: "Gene Editing Breakthrough Announced",
-        timestamp: new Date(2023, 4, 24, 20, 48, 38)
-    },
-    {
-        message: "International Trade Deal Signed, Impacting Multiple Industries and Redefining Global Trade Relationships",
-        triggerFactor: "Trade Agreement",
-        title: "New Trade Deal Signed",
-        timestamp: new Date(2023, 9, 26, 20, 48, 38)
-    },
-    {
-        message: "Cutting-edge Robotics Company Unveils New Products, Setting a New Standard in the Robotics Industry",
-        triggerFactor: "Product Launch",
-        title: "Robotics Firm Reveals Future Tech",
-        timestamp: new Date(2023, 5, 21, 20, 48, 38)
-    }
+  {
+    message: "Annual Financial Report Shows Average Revenue Growth of 7.5% Across Major Industries",
+    triggerFactor: "Average Revenue Growth",
+    title: "Industries See Average 7.5% Revenue Growth",
+    timestamp: new Date(2023, 3, 27, 20, 47, 14)
+  },
+  {
+    message: "Recent Market Analysis Reveals Record Low Investment in Startups This Quarter",
+    triggerFactor: "Minimum Investment Level",
+    title: "Startups Hit by Record Low Investment",
+    timestamp: new Date(2023, 2, 11, 20, 47, 14)
+  },
+  {
+    message: "Total Sales Across E-commerce Platforms Surge to $5 Billion in the Last Quarter",
+    title: "E-commerce Sales Hit $5 Billion Mark",
+    timestamp: new Date(2023, 7, 27, 20, 47, 14)
+  },
+  {
+    message: "Breakthrough in Renewable Energy Efficiency Opens New Opportunities for Sustainable Development",
+    triggerFactor: "Scientific Breakthrough",
+    title: "New Era in Green Energy",
+    timestamp: new Date(2023, 7, 9, 20, 47, 14)
+  },
+  {
+    message: "Global Fashion Brand Faces Supply Chain Disruption, Increasing Production and Distribution by %30",
+    triggerFactor: "%30",
+    title: "Fashion Industry Supply Woes",
+    timestamp: new Date(2023, 9, 14, 20, 47, 14)
+  },
+  {
+    message: "Pharmaceutical Company Releases New Vaccine, Marking a Major Step Forward in Medical Science",
+    triggerFactor: "Medical Advancement",
+    title: "Innovative Vaccine Hits the Market",
+    timestamp: new Date(2023, 9, 31, 20, 48, 38)
+  },
+  {
+    message: "Tech Startups Experience a Surge in Venture Capital Funding, Signaling Strong Market Confidence",
+    triggerFactor: "Investment Surge",
+    title: "Venture Capital Floods Tech Sector",
+    timestamp: new Date(2023, 8, 27, 20, 48, 38)
+  },
+  {
+    message: "Major Bank Announces New Digital Currency Initiative, Paving the Way for Future Financial Transactions",
+    triggerFactor: "Digital Currency Launch",
+    title: "Banking Sector Embraces Digital Currency",
+    timestamp: new Date(2023, 1, 11, 20, 48, 38)
+  },
+  {
+    message: "Global E-commerce Giant Expands to New Markets, Strengthening Its International Presence",
+    triggerFactor: "Market Expansion",
+    title: "E-commerce Expansion Announced",
+    timestamp: new Date(2023, 6, 23, 20, 48, 38)
+  },
+  {
+    message: "Airline Industry Faces Regulatory Changes That Could Alter the Future of Air Travel",
+    triggerFactor: "Regulatory Update",
+    title: "New Aviation Regulations Introduced",
+    timestamp: new Date(2023, 4, 8, 20, 48, 38)
+  },
+  {
+    message: "Major Security Breach at Leading Tech Firm Exposes Sensitive Data, Raising Concerns Over Digital Safety",
+    triggerFactor: "Security Incident",
+    title: "Tech Company Security Crisis",
+    timestamp: new Date(2023, 11, 4, 20, 48, 38)
+  },
+  {
+    message: "Automobile Manufacturer Recalls Latest Model Due to Safety Concerns, Affecting Thousands of Vehicles",
+    triggerFactor: "Product Recall",
+    title: "Auto Recall Shakes Industry",
+    timestamp: new Date(2023, 4, 16, 20, 48, 38)
+  },
+  {
+    message: "Biotech Firm Announces Major Strides in Gene Editing Technology, Potentially Transforming Medical Treatments",
+    triggerFactor: "Biotech Advancement",
+    title: "Gene Editing Breakthrough Announced",
+    timestamp: new Date(2023, 4, 24, 20, 48, 38)
+  },
+  {
+    message: "International Trade Deal Signed, Impacting Multiple Industries and Redefining Global Trade Relationships",
+    triggerFactor: "Trade Agreement",
+    title: "New Trade Deal Signed",
+    timestamp: new Date(2023, 9, 26, 20, 48, 38)
+  },
+  {
+    message: "Cutting-edge Robotics Company Unveils New Products, Setting a New Standard in the Robotics Industry",
+    triggerFactor: "Product Launch",
+    title: "Robotics Firm Reveals Future Tech",
+    timestamp: new Date(2023, 5, 21, 20, 48, 38)
+  }
 ];
 
 
@@ -388,7 +388,7 @@ async function main() {
   }
 
   // Define possible values for type and measurementName
-  const possibleTypes = ['Int', 'Int', 'Int', 'Float', 'Paragraph', 'Text', 'Comment'] // Add more as needed
+  const possibleTypes = ['Int', 'Int', 'Int', 'Float', 'Paragraph', 'Text', 'Comment', 'Comment', 'Comment'] // Add more as needed
   const possibleMeasurementNames = [
     '# of Employees',
     '# of Stars',
@@ -396,7 +396,9 @@ async function main() {
     'Monthly Revenue',
     'Review',
     'Event',
-    'User Comments'
+    'User Comments',
+    'User Reviews',
+    'Customer Reviews',
   ] // Add more as needed
 
   // Create SourceMeasurements for each data source

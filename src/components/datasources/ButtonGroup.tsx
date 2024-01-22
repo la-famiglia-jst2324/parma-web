@@ -1,6 +1,7 @@
-import ModalComponent from './DisableModal'
-import DeleteModal from './DeleteModal'
-import EditInformationModal from './EditInformationModal'
+import { Button } from '../ui/button'
+import ModalComponent from './Modals/DisableModal'
+import DeleteModal from './Modals/DeleteModal'
+
 interface DataProps {
   sourceName: string
   description: string | null
@@ -22,12 +23,9 @@ interface ButtonGroupProps {
 export const ButtonGroup: React.FC<ButtonGroupProps> = ({ data, handleSave }) => {
   return (
     <div className="mr-8 flex items-center justify-end space-x-4">
-      <EditInformationModal
-        sourceName={data.sourceName}
-        description={data.description || ''}
-        url={data.invocationEndpoint}
-        handleSave={(updates) => handleSave({ ...updates, newStatus: data.isActive })}
-      />
+      <Button className="text-green-500" variant="secondary">
+        Schedule
+      </Button>
       <ModalComponent
         sourceName={data.sourceName}
         description={data.description || ''}

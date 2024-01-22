@@ -91,7 +91,7 @@ export const IdentifierModal: React.FC<IdentifierModalProps> = ({ companyId, dat
 
     try {
       const createdIdentifier = await createCompanyDataSourceIdentifier(newIdentifier)
-      setIdentifiers([...identifiers, createdIdentifier])
+      setIdentifiers(identifiers ? [...identifiers, createdIdentifier] : [createdIdentifier])
       toast({
         title: 'Identifier added successfully',
         description: 'You have successfully added an identifier'

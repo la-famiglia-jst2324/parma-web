@@ -534,7 +534,6 @@ model CompanySubscription {
 model CompanyDataSourceIdentifier {
   id                  Int            @id @default(autoincrement())
   companyDataSourceId Int            @map("company_data_source_id")
-  identifierKey       String         @map("identifier_key")
   identifierType      IdentifierType @map("identifier_type")
   property            String
   value               String

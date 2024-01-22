@@ -99,7 +99,7 @@ describe('CompanyDataSource Model Tests', () => {
   // Create CompanyDataSource Test
   test('Create a new CompanyDataSource with duplicate data', async () => {
     try {
-      const companyDataSource = await prisma.companyDataSource.create({
+      await prisma.companyDataSource.create({
         data: {
           companyId,
           dataSourceId,

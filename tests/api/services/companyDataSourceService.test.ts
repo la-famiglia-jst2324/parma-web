@@ -3,7 +3,6 @@ import { genRandomDummyAuthId } from '../utils/random'
 import { deleteDataSource } from '../models/utils/helperFunctions'
 import {
   createCompanyDataSource,
-  deleteCompanyDataSource,
   getCompaniesByDataSourceId,
   getDataSourcesByCompanyId
 } from '@/api/db/services/companyDataSourceService'

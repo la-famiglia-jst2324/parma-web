@@ -9,6 +9,7 @@ import useCompanies from './hooks/useCompanies'
 import useBuckets from './hooks/useBuckets'
 import { Button } from './ui/button'
 import CreateBucket from './buckets/createBucket'
+import CreateCompanyModal from './companies/CreateCompanyModal'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Separator } from '@/components/ui/separator'
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible'
@@ -135,6 +136,7 @@ const Sidebar: React.FC = () => {
                     )}
                   </Button>
                 </CollapsibleTrigger>
+                <CreateCompanyModal></CreateCompanyModal>
               </div>
               <CollapsibleContent>
                 <div className="ml-8">

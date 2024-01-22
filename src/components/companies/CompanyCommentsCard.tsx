@@ -1,8 +1,10 @@
-import React from 'react'
+import React, { useContext, useState, useEffect } from 'react'
 import { SearchSelect, SearchSelectItem } from '@tremor/react'
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card'
+import type { CompanyContextProps } from '../CompanyContext'
+import { CompanyContext } from '../CompanyContext'
 import CompanyCommentsCardItem from './CompanyCommentsCardItem'
-// import { getAnalyticsDataForCompany } from '@/services/measurement/measurementService';
+import { getAnalyticsDataForCompany } from '@/services/measurement/measurementService'
 
 interface CompanyMeasurement {
   id: number
@@ -20,40 +22,34 @@ interface CompanyCommentsCardProps {
   measurements: CompanyMeasurement[]
 }
 
-const getRandomTimestamp = () => {
-  const date = new Date()
-  return date.toISOString()
-}
-
-const getRandomSentimentScore = () => {
-  return Math.floor(Math.random() * 10)
-}
-
-const generateRandomData = () => {
-  const numberOfComments = 5
-
-  const data = Array.from({ length: numberOfComments }, (_, index) => ({
-    id: index + 1,
-    title: `Comment ${index + 1}`,
-    timestamp: getRandomTimestamp(),
-    sentimentScore: getRandomSentimentScore()
-  }))
-
-  return data
+interface Comment {
+  date: string
+  [key: string]:
+    | {
+        value: string
+        sentimentScore: number
+      }
+    | string
 }
 
 const CompanyCommentsCard: React.FC<CompanyCommentsCardProps> = ({ companyId, measurements }) => {
-  const randomData = generateRandomData()
-  console.log(companyId)
+  const [comments, setComments] = useState<Comment[]>([])
+  const { companyData } = useContext(CompanyContext) as CompanyContextProps
+  const companyName = companyData.name
+  const defaultMeasurement = String(measurements[0]?.id)
 
   const handleMeasurementChange = async (value: string) => {
-    console.log(value)
-    // try {
-    //   const data = await getAnalyticsDataForCompany(value, companyId)
-    // } catch (error) {
-    //   console.error('Failed to get the measurement data', error)
-    // }
+    try {
+      const data = await getAnalyticsDataForCompany(value, companyId)
+      setComments(data)
+    } catch (error) {
+      console.error('Failed to get the measurement data', error)
+    }
   }
+
+  useEffect(() => {
+    handleMeasurementChange(defaultMeasurement)
+  }, [defaultMeasurement, companyId])
 
   return (
     <Card>
@@ -65,8 +61,9 @@ const CompanyCommentsCard: React.FC<CompanyCommentsCardProps> = ({ companyId, me
             placeholder={'Select comment measurement'}
             className="w-96"
             enableClear={false}
+            value={defaultMeasurement}
           >
-            {measurements?.map((measurement, index) => (
+            {measurements.map((measurement, index) => (
               <SearchSelectItem key={index} value={String(measurement.id)}>
                 {measurement.measurementName}
               </SearchSelectItem>
@@ -75,14 +72,23 @@ const CompanyCommentsCard: React.FC<CompanyCommentsCardProps> = ({ companyId, me
         </div>
       </CardHeader>
       <CardContent>
-        {randomData.map((comment) => (
-          <CompanyCommentsCardItem
-            key={comment.id}
-            title={comment.title}
-            timestamp={comment.timestamp}
-            sentimentScore={comment.sentimentScore}
-          />
-        ))}
+        {comments.map((comment, index) => {
+          const commentData = comment[companyName]
+          let title = ''
+          let sentimentScore = 0
+          if (typeof commentData === 'object' && commentData !== null) {
+            title = (commentData as { value?: string }).value || ''
+            sentimentScore = (commentData as { sentimentScore?: number }).sentimentScore || 0
+          }
+          return (
+            <CompanyCommentsCardItem
+              key={index}
+              title={title}
+              timestamp={comment.date}
+              sentimentScore={sentimentScore}
+            />
+          )
+        })}
       </CardContent>
     </Card>
   )

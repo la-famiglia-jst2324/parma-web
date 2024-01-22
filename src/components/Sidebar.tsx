@@ -1,12 +1,13 @@
 'use client'
 import Link from 'next/link'
-import { Squares2X2Icon, FolderIcon, BuildingOffice2Icon, MagnifyingGlassIcon } from '@heroicons/react/20/solid'
+import { Squares2X2Icon, FolderIcon, MagnifyingGlassIcon } from '@heroicons/react/20/solid'
 import Image from 'next/image'
 import UserNav from './UserNav'
 import useCompanies from './hooks/useCompanies'
 import useBuckets from './hooks/useBuckets'
 import { Button } from './ui/button'
 import CreateBucket from './buckets/createBucket'
+import CreateCompanyModal from './companies/CreateCompanyModal'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Separator } from '@/components/ui/separator'
 
@@ -92,9 +93,12 @@ const Sidebar: React.FC = () => {
           </div>
           {/* Companies */}
           <div className="mb-8">
-            <div className="ml-2 flex items-center rounded text-base">
-              <BuildingOffice2Icon className={`mr-2 h-4 w-4 text-gray-500`} />
-              <p className="text-base font-medium text-gray-300">Companies</p>
+            <div className="flex items-center justify-between">
+              <div className="ml-2 flex items-center rounded text-base">
+                <FolderIcon className={`mr-2 h-4 w-4 text-gray-500`} />
+                <p className="text-base font-medium text-gray-300">Companies</p>
+              </div>
+              <CreateCompanyModal />
             </div>
             <div className="ml-6">
               <ScrollArea className="mt-2 h-24 w-full">
@@ -104,7 +108,7 @@ const Sidebar: React.FC = () => {
                       <div key={company.id}>
                         <SidebarLink
                           key={company.id}
-                          href={`/buckets/${company.id}`}
+                          href={`/companies/${company.id}`}
                           text={company.name}
                           size="text-sm text-slate-300"
                         />

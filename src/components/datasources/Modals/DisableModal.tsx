@@ -1,6 +1,6 @@
 import React from 'react'
 import { Power, PowerOff } from 'lucide-react'
-import { Button } from '../ui/button'
+import { Button } from '../../ui/button'
 import {
   AlertDialog,
   AlertDialogAction,

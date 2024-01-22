@@ -42,7 +42,7 @@ export async function deleteCompanyDataSource(companyId: string, dataSourceId: s
 export async function getDataSources() {
   try {
     const response = await fetchClient.get('/api/dataSources')
-    return response.data.datasources
+    return response.data
   } catch (error) {
     console.log('An error has occurred: ', error)
     throw error

@@ -43,7 +43,14 @@ export const IdentifierModal: React.FC<IdentifierModalProps> = ({ companyId, dat
         setCompanyDatasourceId(data[0].id)
 
         const identifierData = await getCompanyDataSourceIdentifiers(data[0].id)
-        setIdentifiers(identifierData)
+
+        if (!identifierData || identifierData.message === 'There is no identifier with the id you provide') {
+          console.error('No identifiers found')
+          // Handle the case when no identifiers are found
+          setIdentifiers([])
+        } else {
+          setIdentifiers(identifierData)
+        }
       } catch (error) {
         console.error('Failed to fetch identifiers:', error)
       }

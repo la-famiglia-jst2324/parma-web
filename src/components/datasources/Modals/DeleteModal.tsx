@@ -1,9 +1,10 @@
 'use client'
 import React from 'react'
 import { useRouter } from 'next/navigation'
-import { TrashIcon } from '@heroicons/react/20/solid'
-import { toast } from '../ui/use-toast'
-import { Button } from '../ui/button'
+import { Trash2 } from 'lucide-react'
+import { toast } from '../../ui/use-toast'
+import { Button } from '../../ui/button'
+
 import {
   AlertDialog,
   AlertDialogAction,
@@ -42,8 +43,13 @@ const DeleteModal: React.FC<DeleteModalProps> = ({ id }) => {
     <>
       <AlertDialog>
         <AlertDialogTrigger asChild>
-          <Button className="bg-red-800" variant="outline">
-            <TrashIcon className="h-4 w-4" />
+          <Button
+            variant="outline"
+            color="red"
+            className="mr-2 flex items-center gap-2 border-red-600 bg-transparent text-red-600"
+          >
+            <Trash2 />
+            Delete
           </Button>
         </AlertDialogTrigger>
         <AlertDialogContent>

@@ -22,31 +22,36 @@ import {
   editCompanyDataSourceIdentifier
 } from '@/services/datasource/datasourceService'
 import { Input } from '@/components/ui/input'
+import { getCompanyDataSourceId } from '@/services/company/companyService'
 
 interface IdentifierModalProps {
-  dataSourceId: string
+  companyId: string
+  datasourceId: string
 }
 
-export const IdentifierModal: React.FC<IdentifierModalProps> = ({ dataSourceId }) => {
+export const IdentifierModal: React.FC<IdentifierModalProps> = ({ companyId, datasourceId }) => {
+  const [companyDatasourceId, setCompanyDatasourceId] = useState('')
   const [identifiers, setIdentifiers] = useState<CompanyDataSourceIdentifier[]>([])
   const [identifierKey, setIdentifierKey] = useState('')
   const [property, setProperty] = useState('')
   const [value, setValue] = useState('')
-
   const { toast } = useToast()
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const data = await getCompanyDataSourceIdentifiers(dataSourceId)
-        setIdentifiers(data.data)
+        const data = await getCompanyDataSourceId(datasourceId, companyId)
+        setCompanyDatasourceId(data[0].id)
+
+        const identifierData = await getCompanyDataSourceIdentifiers(data[0].id)
+        setIdentifiers((prevIdentifiers) => [...prevIdentifiers, identifierData])
       } catch (error) {
         console.error('Failed to fetch identifiers:', error)
       }
     }
 
     fetchData()
-  }, [])
+  }, [companyId, datasourceId])
 
   async function deleteIdentifier(index: number) {
     try {
@@ -77,7 +82,7 @@ export const IdentifierModal: React.FC<IdentifierModalProps> = ({ dataSourceId }
 
   async function addIdentifier(identifierKey: string, property: string, value: string) {
     const newIdentifier = {
-      companyDataSourceId: parseInt(dataSourceId),
+      companyDataSourceId: parseInt(companyDatasourceId),
       identifierKey,
       identifierType: IdentifierType.MANUALLY_ADDED,
       property,
@@ -169,16 +174,18 @@ export const IdentifierModal: React.FC<IdentifierModalProps> = ({ dataSourceId }
             </TableHeader>
             <TableBody>
               {identifiers &&
-                identifiers.map((identifier, index) => (
-                  <IdentifierRow
-                    key={identifier.id}
-                    identifier={identifier}
-                    setIdentifier={(updatedIdentifier: CompanyDataSourceIdentifier) =>
-                      updateIdentifier(updatedIdentifier)
-                    }
-                    deleteIdentifier={() => deleteIdentifier(index)}
-                  />
-                ))}
+                identifiers
+                  .filter(Boolean)
+                  .map((identifier, index) => (
+                    <IdentifierRow
+                      key={identifier.id}
+                      identifier={identifier}
+                      setIdentifier={(updatedIdentifier: CompanyDataSourceIdentifier) =>
+                        updateIdentifier(updatedIdentifier)
+                      }
+                      deleteIdentifier={() => deleteIdentifier(index)}
+                    />
+                  ))}
             </TableBody>
           </Table>
         </div>

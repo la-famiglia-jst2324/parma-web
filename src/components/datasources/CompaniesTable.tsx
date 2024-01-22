@@ -4,27 +4,7 @@ import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { Table, TableHead, TableBody, TableRow, TableCell, TableHeader } from '../ui/table'
 import { IdentifierModal } from './Identifiers/IdentifierModal'
-
-async function getCompanies(dataSourceId: string) {
-  return fetch(`/api/companyDataSourceRelation?dataSourceId=${dataSourceId}`, { method: 'GET' })
-    .then((response) => {
-      if (!response.ok) {
-        if (response.status === 400) {
-          console.log('No companies linked to this datasource!')
-        }
-        console.log(`HTTP error! status: ${response.status}`)
-        return null
-      }
-      return response.json()
-    })
-    .then((data) => {
-      console.log(data)
-      return data
-    })
-    .catch((error) => {
-      console.error('Error:', error)
-    })
-}
+import { getCompaniesByDatasourceId } from '@/services/company/companyService'
 
 interface CompaniesTableProps {
   datasourceId: string
@@ -32,12 +12,11 @@ interface CompaniesTableProps {
 
 export const CompaniesTable = ({ datasourceId }: CompaniesTableProps) => {
   const [data, setData] = useState<Company[] | undefined>()
-
   const dataSourceId = datasourceId
   const router = useRouter()
 
   useEffect(() => {
-    getCompanies(dataSourceId)
+    getCompaniesByDatasourceId(dataSourceId)
       .then((companies) => {
         setData(companies)
       })
@@ -74,7 +53,7 @@ export const CompaniesTable = ({ datasourceId }: CompaniesTableProps) => {
               {company.description}
             </TableCell>
             <TableCell>
-              <IdentifierModal dataSourceId={dataSourceId} />
+              <IdentifierModal companyId={company.id.toString()} datasourceId={dataSourceId} />
             </TableCell>
           </TableRow>
         ))}

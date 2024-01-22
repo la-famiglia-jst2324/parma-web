@@ -6,7 +6,7 @@ import { getDataSources as getDatasources } from '@/services/datasource/datasour
 import { MainLayoutWrapper } from '@/components/layout/MainLayout'
 import CreateDatasource from '@/components/datasources/CreateDatasource'
 import { DataTable } from '@/components/DataTable/Table'
-import { columns } from '@/components/datasources/Columns'
+import { columns } from '@/components/datasources/Table/Columns'
 import { Button } from '@/components/ui/button'
 
 function DatasourcesPage() {

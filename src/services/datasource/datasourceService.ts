@@ -1,3 +1,4 @@
+import type { IdentifierType } from '@prisma/client'
 import fetchClient from '@/services/fetchClient'
 
 export async function getDataSourcesByCompanyId(companyId: string) {
@@ -126,6 +127,56 @@ export async function createNewDatasource(dataSource: {
 export async function deleteDatasource(id: string) {
   try {
     const res = await fetchClient.delete(`/api/dataSources/${id}`)
+    return res.data
+  } catch (error) {
+    console.log('An error has occurred: ', error)
+  }
+}
+
+export async function getCompanyDataSourceIdentifiers(companyDataSourceId: string) {
+  try {
+    const res = await fetchClient.get(`/api/companyDataSourceIdentifier?companyDataSourceId=${companyDataSourceId}`)
+    return res.data
+  } catch (error) {
+    console.log('An error has occurred: ', error)
+  }
+}
+
+export async function createCompanyDataSourceIdentifier(body: {
+  companyDataSourceId: number
+  identifierKey: string
+  identifierType: IdentifierType
+  property: string
+  value: string
+  validity: string
+}) {
+  try {
+    const res = await fetchClient.post(`/api/companyDataSourceIdentifier`, body)
+    return res.data
+  } catch (error) {
+    console.log('An error has occurred: ', error)
+  }
+}
+
+export async function editCompanyDataSourceIdentifier(body: {
+  companyDataSourceId: number
+  identifierKey: string
+  identifierType: IdentifierType
+  property: string
+  value: string
+  validity: Date
+}) {
+  try {
+    const res = await fetchClient.put(`/api/companyDataSourceIdentifier`, body)
+    return res.data
+  } catch (error) {
+    console.log('An error has occurred: ', error)
+  }
+}
+
+export async function deleteCompanyDataSourceIdentifierById(id: string) {
+  try {
+    const res = await fetchClient.delete(`/api/companyDataSourceIdentifier?id=${id}`)
     return res.data
   } catch (error) {
     console.log('An error has occurred: ', error)

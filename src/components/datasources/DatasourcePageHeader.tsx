@@ -13,8 +13,8 @@ export const HeaderComponent: React.FC<HeaderProps> = ({ data }) => (
     <h1 className="text-3xl font-bold"> {data.sourceName} </h1>
     <Badge
       className={`${
-        data.isActive ? 'bg-blue-500 text-blue-100 hover:bg-blue-700' : 'bg-red-500 text-red-100 hover:bg-red-700'
-      }`}
+        data.isActive ? 'bg-blue-700 text-blue-100 hover:bg-blue-800' : 'bg-red-700 text-red-100 hover:bg-red-800'
+      } `}
     >
       {data.isActive ? <WifiIcon className="mr-2 h-5 w-5" /> : <WifiOff className="mr-2 h-5 w-5" />}
       {data.isActive ? 'Active' : 'Inactive'}

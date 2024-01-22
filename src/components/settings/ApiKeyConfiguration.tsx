@@ -20,7 +20,12 @@ const ApiKeyConfiguration: React.FC<ApiKeyConfigurationProps> = ({ serviceName, 
             </h4>
           </div>
           <div className="absolute right-8 w-[180px] p-2">
-            <Button onClick={onConfigure}>Configure</Button>
+            <Button
+              className="rounded bg-indigo-700 px-4 py-2 font-bold text-white hover:bg-blue-700 focus:outline-none"
+              onClick={onConfigure}
+            >
+              Configure
+            </Button>
           </div>
         </div>
       </div>

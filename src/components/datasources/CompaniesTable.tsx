@@ -1,6 +1,8 @@
 'use client'
 import type { Company } from '@prisma/client'
 import React, { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
+import { Table, TableHead, TableBody, TableRow, TableCell, TableHeader } from '../ui/table'
 
 async function getCompanies(dataSourceId: string) {
   return fetch(`/api/companyDataSourceRelation?dataSourceId=${dataSourceId}`, { method: 'GET' })
@@ -31,6 +33,7 @@ export const CompaniesTable = ({ datasourceId }: CompaniesTableProps) => {
   const [data, setData] = useState<Company[] | undefined>()
 
   const dataSourceId = datasourceId
+  const router = useRouter()
 
   useEffect(() => {
     getCompanies(dataSourceId)
@@ -52,40 +55,25 @@ export const CompaniesTable = ({ datasourceId }: CompaniesTableProps) => {
   }
 
   return (
-    <div className="flex max-w-full flex-col rounded-lg bg-transparent p-6 shadow">
-      <div className="-my-2 sm:-mx-6 lg:-mx-8">
-        <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
-          <div className="overflow-hidden rounded-lg border-b border-gray-300 bg-white shadow-md">
-            <h1 className="mb-4 text-3xl font-semibold text-gray-700">Companies Monitored</h1>
-            <table className="min-w-full divide-y divide-gray-300">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th
-                    scope="col"
-                    className="px-6 py-3 text-left text-sm font-bold uppercase tracking-wider text-gray-600"
-                  >
-                    Name
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-6 py-3 text-left text-sm font-bold uppercase tracking-wider text-gray-600"
-                  >
-                    Description
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-200">
-                {data.map((company) => (
-                  <tr key={company.name} className="hover:bg-gray-50">
-                    <td className="whitespace-nowrap px-6 py-4 text-sm font-medium text-gray-700">{company.name}</td>
-                    <td className="break-words px-6 py-4 text-sm text-gray-700">{company.description}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-    </div>
+    <Table>
+      <TableHeader>
+        <TableRow>
+          <TableHead>Name</TableHead>
+          <TableHead>Description</TableHead>
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        {data.map((company) => (
+          <TableRow
+            key={company.name}
+            onClick={() => router.push(`/companies/${company.id}`)}
+            style={{ cursor: 'pointer' }}
+          >
+            <TableCell>{company.name}</TableCell>
+            <TableCell>{company.description}</TableCell>
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
   )
 }

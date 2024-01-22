@@ -1,10 +1,9 @@
 'use client'
 import Link from 'next/link'
 import { Squares2X2Icon, FolderIcon, BuildingOffice2Icon, MagnifyingGlassIcon } from '@heroicons/react/20/solid'
-import { ChevronRight, ChevronDown } from 'lucide-react'
+import { ChevronRight, ChevronDown, Plus } from 'lucide-react'
 import Image from 'next/image'
 import { useState } from 'react'
-import { Plus } from 'lucide-react'
 import UserNav from './UserNav'
 import useCompanies from './hooks/useCompanies'
 import useBuckets from './hooks/useBuckets'
@@ -93,7 +92,9 @@ const Sidebar: React.FC = () => {
                     )}
                   </Button>
                 </CollapsibleTrigger>
-                <CreateBucket triggerButton={<Plus className="cursor-pointer" />} />
+                <CreateBucket
+                  triggerButton={<Plus className="mr-2 h-4 w-4 cursor-pointer text-gray-500 hover:text-gray-200" />}
+                />
               </div>
               <CollapsibleContent>
                 <div className="ml-6">
@@ -125,7 +126,7 @@ const Sidebar: React.FC = () => {
                 <CollapsibleTrigger>
                   <Button
                     variant="ghost"
-                    className="groupn flex w-40 shrink-0 justify-start text-base  hover:text-white"
+                    className="group flex w-40 shrink-0 justify-start text-base  hover:text-white"
                     onClick={() => setClickCompany(!clickCompany)}
                   >
                     <BuildingOffice2Icon className="mr-2 h-4 w-6 text-gray-500 group-hover:text-gray-200" />
@@ -137,7 +138,9 @@ const Sidebar: React.FC = () => {
                     )}
                   </Button>
                 </CollapsibleTrigger>
-                <CreateBucket triggerButton={<Plus className="cursor-pointer" />} />
+                <CreateCompanyModal
+                  triggerButton={<Plus className="mr-2 h-4 w-4 cursor-pointer text-gray-500 hover:text-gray-200" />}
+                />
               </div>
               <CollapsibleContent>
                 <div className="ml-8">

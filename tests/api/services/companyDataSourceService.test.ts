@@ -1,4 +1,4 @@
-import { Frequency, HealthStatus, Prisma, PrismaClient, Role } from '@prisma/client'
+import { Frequency, HealthStatus, PrismaClient, Role } from '@prisma/client'
 import { genRandomDummyAuthId } from '../utils/random'
 import { deleteDataSource } from '../models/utils/helperFunctions'
 import {

@@ -3,6 +3,7 @@ import type { Company } from '@prisma/client'
 import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { Table, TableHead, TableBody, TableRow, TableCell, TableHeader } from '../ui/table'
+import { IdentifierModal } from './Identifiers/IdentifierModal'
 
 async function getCompanies(dataSourceId: string) {
   return fetch(`/api/companyDataSourceRelation?dataSourceId=${dataSourceId}`, { method: 'GET' })
@@ -60,17 +61,21 @@ export const CompaniesTable = ({ datasourceId }: CompaniesTableProps) => {
         <TableRow>
           <TableHead>Name</TableHead>
           <TableHead>Description</TableHead>
+          <TableHead>Configure Identifier</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
         {data.map((company) => (
-          <TableRow
-            key={company.name}
-            onClick={() => router.push(`/companies/${company.id}`)}
-            style={{ cursor: 'pointer' }}
-          >
-            <TableCell>{company.name}</TableCell>
-            <TableCell>{company.description}</TableCell>
+          <TableRow key={company.name}>
+            <TableCell onClick={() => router.push(`/companies/${company.id}`)} style={{ cursor: 'pointer' }}>
+              {company.name}
+            </TableCell>
+            <TableCell onClick={() => router.push(`/companies/${company.id}`)} style={{ cursor: 'pointer' }}>
+              {company.description}
+            </TableCell>
+            <TableCell>
+              <IdentifierModal dataSourceId={dataSourceId} />
+            </TableCell>
           </TableRow>
         ))}
       </TableBody>

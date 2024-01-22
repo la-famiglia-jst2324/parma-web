@@ -4,6 +4,7 @@ import { Squares2X2Icon, FolderIcon, BuildingOffice2Icon, MagnifyingGlassIcon } 
 import { ChevronRight, ChevronDown } from 'lucide-react'
 import Image from 'next/image'
 import { useState } from 'react'
+import { Plus } from 'lucide-react'
 import UserNav from './UserNav'
 import useCompanies from './hooks/useCompanies'
 import useBuckets from './hooks/useBuckets'
@@ -92,7 +93,7 @@ const Sidebar: React.FC = () => {
                     )}
                   </Button>
                 </CollapsibleTrigger>
-                <CreateBucket></CreateBucket>
+                <CreateBucket triggerButton={<Plus className="cursor-pointer" />} />
               </div>
               <CollapsibleContent>
                 <div className="ml-6">
@@ -136,7 +137,7 @@ const Sidebar: React.FC = () => {
                     )}
                   </Button>
                 </CollapsibleTrigger>
-                <CreateCompanyModal></CreateCompanyModal>
+                <CreateBucket triggerButton={<Plus className="cursor-pointer" />} />
               </div>
               <CollapsibleContent>
                 <div className="ml-8">

@@ -1,5 +1,5 @@
 'use client'
-import { PlusIcon } from 'lucide-react'
+
 import { CheckBadgeIcon } from '@heroicons/react/20/solid'
 import type { Bucket, Company } from '@prisma/client'
 import { MultiSelect, MultiSelectItem } from '@tremor/react'
@@ -11,7 +11,6 @@ import { Textarea } from '../ui/textarea'
 import { Switch } from '../ui/switch'
 import { useToast } from '../ui/use-toast'
 import BucketFunctions from '@/app/services/bucket.service'
-
 import {
   Dialog,
   DialogTrigger,
@@ -22,7 +21,11 @@ import {
 } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 
-const CreateBucket = () => {
+interface CreateBucketProps {
+  triggerButton: React.ReactNode
+}
+
+const CreateBucket: React.FC<CreateBucketProps> = ({ triggerButton }) => {
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
   const [isPublic, setIsPublic] = useState(true)
@@ -80,7 +83,7 @@ const CreateBucket = () => {
   return (
     <Dialog>
       <DialogTrigger asChild onClick={getCompanies}>
-        <PlusIcon className="mr-2 h-4 w-4 cursor-pointer text-gray-500 hover:text-gray-200" />
+        {triggerButton}
       </DialogTrigger>
       <DialogContent className="m-2 sm:max-w-[500px]">
         <DialogHeader>

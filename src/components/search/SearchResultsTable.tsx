@@ -1,6 +1,6 @@
 import React from 'react'
 import { useRouter } from 'next/navigation'
-import Pagination from '../datasources/TablePagination'
+import Pagination from '../datasources/Table/TablePagination'
 import { Table, TableBody, TableHeader, TableCell, TableHead, TableRow } from '@/components/ui/table'
 
 interface SearchItem {

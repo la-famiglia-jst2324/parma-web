@@ -1,9 +1,7 @@
 'use client'
 
 import React, { useState } from 'react'
-import { Select, SelectItem } from '@tremor/react'
 import { Frequency } from '@prisma/client'
-import { PlusSquareIcon } from 'lucide-react'
 import { useToast } from '@/components/ui/use-toast'
 import {
   Dialog,
@@ -15,13 +13,17 @@ import {
   DialogTitle,
   DialogTrigger
 } from '@/components/ui/dialog'
-
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { createNewDatasource } from '@/services/datasource/datasourceService'
 
-const CreateDatasource: React.FC = () => {
+interface CreateDatasourceProps {
+  triggerButton: React.ReactNode
+}
+
+const CreateDatasource: React.FC<CreateDatasourceProps> = ({ triggerButton }) => {
   const [name, setName] = useState<string>('')
   const [url, setUrl] = useState<string>('')
   const [description, setDescription] = useState<string>('')
@@ -104,12 +106,7 @@ const CreateDatasource: React.FC = () => {
   return (
     <div>
       <Dialog>
-        <DialogTrigger asChild>
-          <Button variant="outline">
-            <PlusSquareIcon className="mr-2 h-4 w-4" />
-            Create
-          </Button>
-        </DialogTrigger>
+        <DialogTrigger asChild>{triggerButton}</DialogTrigger>
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Create New Datasource</DialogTitle>
@@ -119,7 +116,7 @@ const CreateDatasource: React.FC = () => {
             <div className="space-y-1">
               <Input
                 id="name"
-                placeholder="Name..."
+                placeholder="Name"
                 value={name}
                 onChange={(event) => handleInputChange(event, setName)}
               />
@@ -128,7 +125,7 @@ const CreateDatasource: React.FC = () => {
               <Textarea
                 id="description"
                 value={description}
-                placeholder="Description..."
+                placeholder="Description"
                 onChange={(event) => handleInputChange(event, setDescription)}
               />
             </div>
@@ -136,11 +133,18 @@ const CreateDatasource: React.FC = () => {
               <Input id="url" value={url} onChange={(event) => handleInputChange(event, setUrl)} placeholder="URL" />
             </div>
             <div className="space-y-1">
-              <Select value={frequency} onValueChange={setFrequency} placeholder="Frequency">
-                <SelectItem value="HOURLY">Hourly</SelectItem>
-                <SelectItem value="DAILY">Daily</SelectItem>
-                <SelectItem value="WEEKLY">Weekly</SelectItem>
-                <SelectItem value="MONTHLY">Monthly</SelectItem>
+              <Select value={frequency} onValueChange={setFrequency}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Frequency" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectItem value="HOURLY">Hourly</SelectItem>
+                    <SelectItem value="DAILY">Daily</SelectItem>
+                    <SelectItem value="WEEKLY">Weekly</SelectItem>
+                    <SelectItem value="MONTHLY">Monthly</SelectItem>
+                  </SelectGroup>
+                </SelectContent>
               </Select>
             </div>
           </div>

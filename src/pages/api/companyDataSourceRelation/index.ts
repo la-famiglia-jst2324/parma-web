@@ -5,7 +5,8 @@ import {
   deleteCompanyDataSource,
   getCompaniesByDataSourceId,
   getDataSourcesByCompanyId,
-  updateCompanyDataSource
+  updateCompanyDataSource,
+  getCompanyDataSourceByIds
 } from '@/api/db/services/companyDataSourceService'
 
 import { ItemNotFoundError } from '@/api/utils/errorUtils'
@@ -17,7 +18,7 @@ import { ItemNotFoundError } from '@/api/utils/errorUtils'
  *   get:
  *     tags:
  *       - companyDataSourceRelation
- *     summary: Retrieve companies or data sources
+ *     summary: Retrieve companies or data sources or CompanyDataSourceRelation
  *     description: Fetches companies by a data source ID or data sources by a company ID. Only one ID should be provided at a time.
  *     parameters:
  *       - in: query
@@ -165,7 +166,11 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   switch (method) {
     case 'GET':
       try {
-        if (dataSourceId && companyId) res.status(400).json({ error: 'Invalid Arguments' })
+        if (dataSourceId && companyId) {
+          const companyDataSource = await getCompanyDataSourceByIds(dataSourceId, companyId)
+          if (companyDataSource) res.status(200).json(companyDataSource)
+          else res.status(400).json({ error: 'No CompanyDataSource found' })
+        }
         if (dataSourceId) {
           const companies = await getCompaniesByDataSourceId(dataSourceId)
           if (companies.length > 0) res.status(200).json(companies)

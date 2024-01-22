@@ -18,8 +18,7 @@ import { Table, TableBody, TableHead, TableHeader, TableRow } from '@/components
 import {
   deleteCompanyDataSourceIdentifierById as deleteIdentifierById,
   getCompanyDataSourceIdentifiers,
-  createCompanyDataSourceIdentifier,
-  editCompanyDataSourceIdentifier
+  createCompanyDataSourceIdentifier
 } from '@/services/datasource/datasourceService'
 import { Input } from '@/components/ui/input'
 import { getCompanyDataSourceId } from '@/services/company/companyService'
@@ -32,7 +31,7 @@ interface IdentifierModalProps {
 export const IdentifierModal: React.FC<IdentifierModalProps> = ({ companyId, datasourceId }) => {
   const [companyDatasourceId, setCompanyDatasourceId] = useState('')
   const [identifiers, setIdentifiers] = useState<CompanyDataSourceIdentifier[]>([])
-  const [identifierKey, setIdentifierKey] = useState('')
+  const [identifierKey] = useState('')
   const [property, setProperty] = useState('')
   const [value, setValue] = useState('')
   const { toast } = useToast()
@@ -44,7 +43,7 @@ export const IdentifierModal: React.FC<IdentifierModalProps> = ({ companyId, dat
         setCompanyDatasourceId(data[0].id)
 
         const identifierData = await getCompanyDataSourceIdentifiers(data[0].id)
-        setIdentifiers((prevIdentifiers) => [...prevIdentifiers, identifierData])
+        setIdentifiers(identifierData)
       } catch (error) {
         console.error('Failed to fetch identifiers:', error)
       }
@@ -106,50 +105,10 @@ export const IdentifierModal: React.FC<IdentifierModalProps> = ({ companyId, dat
     }
   }
 
-  async function updateIdentifier(updatedIdentifier: CompanyDataSourceIdentifier) {
-    try {
-      const updatedIdentifierFromServer = await editCompanyDataSourceIdentifier(updatedIdentifier)
-      setIdentifiers(
-        identifiers.map((identifier) =>
-          identifier.id === updatedIdentifierFromServer.id ? updatedIdentifierFromServer : identifier
-        )
-      )
-      toast({
-        title: 'Identifier updated successfully',
-        description: 'You have successfully updated an identifier'
-      })
-    } catch (error) {
-      console.error('Failed to update identifier', error)
-      toast({
-        title: 'Failed to update identifier',
-        description: 'An error occurred while trying to update the identifier'
-      })
-    }
-  }
-
   const handleInputChange =
     (setter: React.Dispatch<React.SetStateAction<string>>) => (event: React.ChangeEvent<HTMLInputElement>) => {
       setter(event.target.value)
     }
-
-  // const handleSubmit = async (event: React.FormEvent) => {
-  //     event.preventDefault();
-
-  //     try {
-  //         await Promise.all(identifiers.map((identifier) =>
-  //             identifier.id ? updateIdentifier(identifier) : null
-  //         ));
-  //         if (identifierKey && property && value) {
-  //             await addIdentifier(identifierKey, property, value);
-  //             setIdentifierKey('');
-  //             setProperty('');
-  //             setValue('');
-  //         }
-  //         // close the modal or show a success message
-  //     } catch (error) {
-  //         // handle the error
-  //     }
-  // };
 
   return (
     <Dialog>
@@ -165,7 +124,6 @@ export const IdentifierModal: React.FC<IdentifierModalProps> = ({ companyId, dat
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Identifier Key</TableHead>
                 <TableHead>Property</TableHead>
                 <TableHead>Value</TableHead>
                 <TableHead>Validity</TableHead>
@@ -180,9 +138,6 @@ export const IdentifierModal: React.FC<IdentifierModalProps> = ({ companyId, dat
                     <IdentifierRow
                       key={identifier.id}
                       identifier={identifier}
-                      setIdentifier={(updatedIdentifier: CompanyDataSourceIdentifier) =>
-                        updateIdentifier(updatedIdentifier)
-                      }
                       deleteIdentifier={() => deleteIdentifier(index)}
                     />
                   ))}
@@ -190,7 +145,6 @@ export const IdentifierModal: React.FC<IdentifierModalProps> = ({ companyId, dat
           </Table>
         </div>
         <DialogFooter>
-          <Input value={identifierKey} onChange={handleInputChange(setIdentifierKey)} placeholder="Identifier Key" />
           <Input value={property} onChange={handleInputChange(setProperty)} placeholder="Property" />
           <Input value={value} onChange={handleInputChange(setValue)} placeholder="Value" />
           <Button type="button" onClick={() => addIdentifier(identifierKey, property, value)}>

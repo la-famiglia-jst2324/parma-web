@@ -135,7 +135,7 @@ export async function deleteDatasource(id: string) {
 
 export async function getCompanyDataSourceIdentifiers(companyDataSourceId: string) {
   try {
-    const res = await fetchClient.get(`/api/companyDataSourceIdentifier?id=${companyDataSourceId}`)
+    const res = await fetchClient.get(`/api/companyDataSourceIdentifier?companyDataSourceId=${companyDataSourceId}`)
     return res.data
   } catch (error) {
     console.log('An error has occurred: ', error)

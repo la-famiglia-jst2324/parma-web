@@ -5,14 +5,12 @@ import { Button } from '@/components/ui/button'
 
 interface IdentifierRowProps {
   identifier: CompanyDataSourceIdentifier
-  setIdentifier: (updatedIdentifier: CompanyDataSourceIdentifier) => void
   deleteIdentifier: () => void
 }
 
 const IdentifierRow: React.FC<IdentifierRowProps> = ({ identifier, deleteIdentifier }) => {
   return (
     <TableRow>
-      <TableCell>{identifier.identifierKey}</TableCell>
       <TableCell>{identifier.property}</TableCell>
       <TableCell>{identifier.value}</TableCell>
       <TableCell>{new Date(identifier.validity).toLocaleDateString()}</TableCell>

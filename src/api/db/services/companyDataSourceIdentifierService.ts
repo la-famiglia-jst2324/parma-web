@@ -3,7 +3,6 @@ import { prisma } from '../prisma/prismaClient'
 
 const createCompanyDataSourceIdentifier = async (data: {
   companyDataSourceId: number
-  identifierKey: string
   identifierType: IdentifierType
   property: string
   value: string
@@ -76,7 +75,6 @@ const updateCompanyDataSourceIdentifier = async (
   id: number,
   data: {
     companyDataSourceId?: number
-    identifierKey?: string
     identifierType?: IdentifierType
     property?: string
     value?: string

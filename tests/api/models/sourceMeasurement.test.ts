@@ -419,7 +419,8 @@ describe('MeasurementCommentValue Model Tests', () => {
       data: {
         companyMeasurementId: companySourceMeasurementId,
         value: 'This is splendid',
-        timestamp: new Date()
+        timestamp: new Date(),
+        sentimentScore: 5
       }
     })
 
@@ -428,6 +429,7 @@ describe('MeasurementCommentValue Model Tests', () => {
     expect(commentValue).toHaveProperty('id')
     expect(commentValue.companyMeasurementId).toBe(companySourceMeasurementId)
     expect(commentValue.value).toBe('This is splendid')
+    expect(commentValue.sentimentScore).toBe(5)
   })
 
   test('Retrieve a MeasurementCommentValue', async () => {
@@ -439,15 +441,20 @@ describe('MeasurementCommentValue Model Tests', () => {
     expect(commentValue?.id).toBe(commentValueId)
     expect(commentValue?.companyMeasurementId).toBe(companySourceMeasurementId)
     expect(commentValue?.value).toBe('This is splendid')
+    expect(commentValue?.sentimentScore).toBe(5)
   })
 
   test('Update a MeasurementCommentValue', async () => {
     const updatedCommentValue = await prisma.measurementCommentValue.update({
       where: { id: commentValueId },
-      data: { value: 'It sucks' }
+      data: {
+        value: 'It sucks',
+        sentimentScore: 10
+      }
     })
 
     expect(updatedCommentValue.value).toBe('It sucks')
+    expect(updatedCommentValue.sentimentScore).toBe(10)
   })
 
   test('Delete a MeasurementCommentValue', async () => {

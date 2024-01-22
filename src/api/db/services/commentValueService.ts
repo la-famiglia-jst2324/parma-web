@@ -1,12 +1,18 @@
 import { prisma } from '../prisma/prismaClient'
 
-const createCommentValue = async (data: { companyMeasurementId: number; value: string; timestamp: Date }) => {
+const createCommentValue = async (data: {
+  companyMeasurementId: number
+  value: string
+  timestamp: Date
+  sentimentScore?: number
+}) => {
   try {
     return await prisma.measurementCommentValue.create({
       data: {
         companyMeasurementId: data.companyMeasurementId,
         value: data.value,
-        timestamp: data.timestamp
+        timestamp: data.timestamp,
+        sentimentScore: data.sentimentScore
       }
     })
   } catch (error) {
@@ -46,6 +52,7 @@ const updateCommentValue = async (
     companyMeasurementId: number
     value: string
     timestamp?: Date
+    sentimentScore?: number
   }
 ) => {
   try {

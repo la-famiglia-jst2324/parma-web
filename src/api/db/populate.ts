@@ -54,101 +54,105 @@ function randomDate(start: Date, end: Date): Date {
 function randomInt(min: number, max: number): number {
   return Math.floor(Math.random() * (max - min + 1)) + min
 }
+// Function to generate a sentiment score for comment value
+function randomSentimentScore(): number {
+  return randomInt(1, 10)
+}
 
 function getRandomElement(arr) {
   return arr[Math.floor(Math.random() * arr.length)];
 }
 
 const newsSamples = [
-    {
-        message: "Annual Financial Report Shows Average Revenue Growth of 7.5% Across Major Industries",
-        triggerFactor: "Average Revenue Growth",
-        title: "Industries See Average 7.5% Revenue Growth",
-        timestamp: new Date(2023, 3, 27, 20, 47, 14)
-    },
-    {
-        message: "Recent Market Analysis Reveals Record Low Investment in Startups This Quarter",
-        triggerFactor: "Minimum Investment Level",
-        title: "Startups Hit by Record Low Investment",
-        timestamp: new Date(2023, 2, 11, 20, 47, 14)
-    },
-    {
-        message: "Total Sales Across E-commerce Platforms Surge to $5 Billion in the Last Quarter",
-        title: "E-commerce Sales Hit $5 Billion Mark",
-        timestamp: new Date(2023, 7, 27, 20, 47, 14)
-    },
-    {
-        message: "Breakthrough in Renewable Energy Efficiency Opens New Opportunities for Sustainable Development",
-        triggerFactor: "Scientific Breakthrough",
-        title: "New Era in Green Energy",
-        timestamp: new Date(2023, 7, 9, 20, 47, 14)
-    },
-    {
-        message: "Global Fashion Brand Faces Supply Chain Disruption, Increasing Production and Distribution by %30",
-        triggerFactor: "%30",
-        title: "Fashion Industry Supply Woes",
-        timestamp: new Date(2023, 9, 14, 20, 47, 14)
-    },
-    {
-        message: "Pharmaceutical Company Releases New Vaccine, Marking a Major Step Forward in Medical Science",
-        triggerFactor: "Medical Advancement",
-        title: "Innovative Vaccine Hits the Market",
-        timestamp: new Date(2023, 9, 31, 20, 48, 38)
-    },
-    {
-        message: "Tech Startups Experience a Surge in Venture Capital Funding, Signaling Strong Market Confidence",
-        triggerFactor: "Investment Surge",
-        title: "Venture Capital Floods Tech Sector",
-        timestamp: new Date(2023, 8, 27, 20, 48, 38)
-    },
-    {
-        message: "Major Bank Announces New Digital Currency Initiative, Paving the Way for Future Financial Transactions",
-        triggerFactor: "Digital Currency Launch",
-        title: "Banking Sector Embraces Digital Currency",
-        timestamp: new Date(2023, 1, 11, 20, 48, 38)
-    },
-    {
-        message: "Global E-commerce Giant Expands to New Markets, Strengthening Its International Presence",
-        triggerFactor: "Market Expansion",
-        title: "E-commerce Expansion Announced",
-        timestamp: new Date(2023, 6, 23, 20, 48, 38)
-    },
-    {
-        message: "Airline Industry Faces Regulatory Changes That Could Alter the Future of Air Travel",
-        triggerFactor: "Regulatory Update",
-        title: "New Aviation Regulations Introduced",
-        timestamp: new Date(2023, 4, 8, 20, 48, 38)
-    },
-    {
-        message: "Major Security Breach at Leading Tech Firm Exposes Sensitive Data, Raising Concerns Over Digital Safety",
-        triggerFactor: "Security Incident",
-        title: "Tech Company Security Crisis",
-        timestamp: new Date(2023, 11, 4, 20, 48, 38)
-    },
-    {
-        message: "Automobile Manufacturer Recalls Latest Model Due to Safety Concerns, Affecting Thousands of Vehicles",
-        triggerFactor: "Product Recall",
-        title: "Auto Recall Shakes Industry",
-        timestamp: new Date(2023, 4, 16, 20, 48, 38)
-    },
-    {
-        message: "Biotech Firm Announces Major Strides in Gene Editing Technology, Potentially Transforming Medical Treatments",
-        triggerFactor: "Biotech Advancement",
-        title: "Gene Editing Breakthrough Announced",
-        timestamp: new Date(2023, 4, 24, 20, 48, 38)
-    },
-    {
-        message: "International Trade Deal Signed, Impacting Multiple Industries and Redefining Global Trade Relationships",
-        triggerFactor: "Trade Agreement",
-        title: "New Trade Deal Signed",
-        timestamp: new Date(2023, 9, 26, 20, 48, 38)
-    },
-    {
-        message: "Cutting-edge Robotics Company Unveils New Products, Setting a New Standard in the Robotics Industry",
-        triggerFactor: "Product Launch",
-        title: "Robotics Firm Reveals Future Tech",
-        timestamp: new Date(2023, 5, 21, 20, 48, 38)
-    }
+  {
+    message: "Annual Financial Report Shows Average Revenue Growth of 7.5% Across Major Industries",
+    triggerFactor: "Average Revenue Growth",
+    title: "Industries See Average 7.5% Revenue Growth",
+    timestamp: new Date(2023, 3, 27, 20, 47, 14)
+  },
+  {
+    message: "Recent Market Analysis Reveals Record Low Investment in Startups This Quarter",
+    triggerFactor: "Minimum Investment Level",
+    title: "Startups Hit by Record Low Investment",
+    timestamp: new Date(2023, 2, 11, 20, 47, 14)
+  },
+  {
+    message: "Total Sales Across E-commerce Platforms Surge to $5 Billion in the Last Quarter",
+    title: "E-commerce Sales Hit $5 Billion Mark",
+    timestamp: new Date(2023, 7, 27, 20, 47, 14)
+  },
+  {
+    message: "Breakthrough in Renewable Energy Efficiency Opens New Opportunities for Sustainable Development",
+    triggerFactor: "Scientific Breakthrough",
+    title: "New Era in Green Energy",
+    timestamp: new Date(2023, 7, 9, 20, 47, 14)
+  },
+  {
+    message: "Global Fashion Brand Faces Supply Chain Disruption, Increasing Production and Distribution by %30",
+    triggerFactor: "%30",
+    title: "Fashion Industry Supply Woes",
+    timestamp: new Date(2023, 9, 14, 20, 47, 14)
+  },
+  {
+    message: "Pharmaceutical Company Releases New Vaccine, Marking a Major Step Forward in Medical Science",
+    triggerFactor: "Medical Advancement",
+    title: "Innovative Vaccine Hits the Market",
+    timestamp: new Date(2023, 9, 31, 20, 48, 38)
+  },
+  {
+    message: "Tech Startups Experience a Surge in Venture Capital Funding, Signaling Strong Market Confidence",
+    triggerFactor: "Investment Surge",
+    title: "Venture Capital Floods Tech Sector",
+    timestamp: new Date(2023, 8, 27, 20, 48, 38)
+  },
+  {
+    message: "Major Bank Announces New Digital Currency Initiative, Paving the Way for Future Financial Transactions",
+    triggerFactor: "Digital Currency Launch",
+    title: "Banking Sector Embraces Digital Currency",
+    timestamp: new Date(2023, 1, 11, 20, 48, 38)
+  },
+  {
+    message: "Global E-commerce Giant Expands to New Markets, Strengthening Its International Presence",
+    triggerFactor: "Market Expansion",
+    title: "E-commerce Expansion Announced",
+    timestamp: new Date(2023, 6, 23, 20, 48, 38)
+  },
+  {
+    message: "Airline Industry Faces Regulatory Changes That Could Alter the Future of Air Travel",
+    triggerFactor: "Regulatory Update",
+    title: "New Aviation Regulations Introduced",
+    timestamp: new Date(2023, 4, 8, 20, 48, 38)
+  },
+  {
+    message: "Major Security Breach at Leading Tech Firm Exposes Sensitive Data, Raising Concerns Over Digital Safety",
+    triggerFactor: "Security Incident",
+    title: "Tech Company Security Crisis",
+    timestamp: new Date(2023, 11, 4, 20, 48, 38)
+  },
+  {
+    message: "Automobile Manufacturer Recalls Latest Model Due to Safety Concerns, Affecting Thousands of Vehicles",
+    triggerFactor: "Product Recall",
+    title: "Auto Recall Shakes Industry",
+    timestamp: new Date(2023, 4, 16, 20, 48, 38)
+  },
+  {
+    message: "Biotech Firm Announces Major Strides in Gene Editing Technology, Potentially Transforming Medical Treatments",
+    triggerFactor: "Biotech Advancement",
+    title: "Gene Editing Breakthrough Announced",
+    timestamp: new Date(2023, 4, 24, 20, 48, 38)
+  },
+  {
+    message: "International Trade Deal Signed, Impacting Multiple Industries and Redefining Global Trade Relationships",
+    triggerFactor: "Trade Agreement",
+    title: "New Trade Deal Signed",
+    timestamp: new Date(2023, 9, 26, 20, 48, 38)
+  },
+  {
+    message: "Cutting-edge Robotics Company Unveils New Products, Setting a New Standard in the Robotics Industry",
+    triggerFactor: "Product Launch",
+    title: "Robotics Firm Reveals Future Tech",
+    timestamp: new Date(2023, 5, 21, 20, 48, 38)
+  }
 ];
 
 
@@ -177,7 +181,7 @@ async function main() {
   // Create Companies and relate to user
   const companies: Company[] = []
   for (let i = 0; i < 20; i++) {
-    if ( i < 5) {
+    if (i < 5) {
       companies.push(
         await prisma.company.create({
           data: {
@@ -384,14 +388,17 @@ async function main() {
   }
 
   // Define possible values for type and measurementName
-  const possibleTypes = ['Int', 'Int', 'Int', 'Float', 'Paragraph', 'Text'] // Add more as needed
+  const possibleTypes = ['Int', 'Int', 'Int', 'Float', 'Paragraph', 'Text', 'Comment', 'Comment', 'Comment'] // Add more as needed
   const possibleMeasurementNames = [
     '# of Employees',
     '# of Stars',
     '# of followers',
     'Monthly Revenue',
     'Review',
-    'Event'
+    'Event',
+    'User Comments',
+    'User Reviews',
+    'Customer Reviews',
   ] // Add more as needed
 
   // Create SourceMeasurements for each data source
@@ -407,12 +414,31 @@ async function main() {
             type: possibleTypes[random], // Random type
             measurementName: possibleMeasurementNames[random] // Random measurement name
             // parentMeasurementId: null or some logic if you're handling hierarchy
+
             // createdAt and modifiedAt will be set automatically
           }
         })
       )
     }
   }
+  // After creating all SourceMeasurements, optionally assign a parentMeasurementId to some of them
+  for (const measurement of sourceMeasurements) {
+    // Decide randomly whether to assign a parentMeasurementId or not
+    if (Math.random() < 0.5) { // Adjust the probability as needed
+      // Select a random SourceMeasurement's id as the parentMeasurementId
+      const randomParentIndex = Math.floor(Math.random() * sourceMeasurements.length)
+      const parentMeasurementId = sourceMeasurements[randomParentIndex].id
+
+      // Make sure not to assign a measurement as its own parent
+      if (parentMeasurementId !== measurement.id) {
+        await prisma.sourceMeasurement.update({
+          where: { id: measurement.id },
+          data: { parentMeasurementId }
+        })
+      }
+    }
+  }
+
 
   // Create CompanySourceMeasurements for each company for some source measurements
   const companySourceMeasurements: CompanySourceMeasurement[] = []
@@ -465,6 +491,16 @@ async function main() {
           companyMeasurementId: csm.companyMeasurementId,
           value: `Sample paragraph value for measurement ${csm.companyMeasurementId}`,
           timestamp: randomDate(startDate, endDate) // Random timestamp within the fixed range
+          // createdAt and modifiedAt will be set automatically
+        }
+      })
+      //
+      await prisma.measurementCommentValue.create({
+        data: {
+          companyMeasurementId: csm.companyMeasurementId,
+          value: `Sample comment value for measurement ${csm.companyMeasurementId}`,
+          timestamp: randomDate(startDate, endDate), // Random timestamp within the fixed range
+          sentimentScore: randomSentimentScore()
           // createdAt and modifiedAt will be set automatically
         }
       })

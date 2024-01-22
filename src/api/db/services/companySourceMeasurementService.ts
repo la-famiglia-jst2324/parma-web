@@ -60,7 +60,8 @@ const getValueByMeasurementIdCompanyId = async (sourceMeasurementId: number, com
         sourceMeasurement: true,
         company: true,
         measurementIntValues: true,
-        measurementFloatValues: true
+        measurementFloatValues: true,
+        measurementCommentValues: true
       }
     })
     if (!companySourceMeasurement) {

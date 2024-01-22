@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client'
+import { Prisma, PrismaClient } from '@prisma/client'
 import {
   createUser,
   createCompany,
@@ -97,20 +97,22 @@ describe('CompanyDataSource Model Tests', () => {
   })
 
   // Create CompanyDataSource Test
-  test('Create a new CompanyDataSource', async () => {
-    const companyDataSource = await prisma.companyDataSource.create({
-      data: {
-        companyId,
-        dataSourceId,
-        isDataSourceActive: true,
-        healthStatus: 'UP' // Replace with your actual enum value
-      }
-    })
-
-    expect(companyDataSource).toHaveProperty('companyId')
-    expect(companyDataSource).toHaveProperty('dataSourceId')
-    expect(companyDataSource.isDataSourceActive).toBe(true)
-    expect(companyDataSource.healthStatus).toBe('UP')
+  test('Create a new CompanyDataSource with duplicate data', async () => {
+    try {
+      await prisma.companyDataSource.create({
+        data: {
+          companyId,
+          dataSourceId,
+          isDataSourceActive: true,
+          healthStatus: 'UP'
+        }
+      })
+      // If the above line does not throw an error, fail the test
+      expect('This should not be reached').toBe(false)
+    } catch (error) {
+      // Check a validation error is thrown.
+      expect(error).toBeInstanceOf(Prisma.PrismaClientKnownRequestError)
+    }
   })
 
   // Read CompanyDataSource Test

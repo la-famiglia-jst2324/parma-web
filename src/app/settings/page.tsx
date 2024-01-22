@@ -75,13 +75,13 @@ function SettingsPage() {
           <h2 className="text-xl font-bold ">API Keys</h2>
 
           <ApiKeyConfiguration serviceName="Slack" onConfigure={handleConfigureSlack} />
-          <Input className="w-50 ml-1 mt-2 rounded bg-slate-800" placeholder="Enter Your API Key" color=""></Input>
+          <Input className="ml-1 mt-2 w-52 rounded bg-slate-800" placeholder="Enter Your API Key" color=""></Input>
 
           <ApiKeyConfiguration serviceName="OpenAI" onConfigure={handleConfigureSlack} />
-          <Input className="w-50 ml-1 mt-2 rounded bg-slate-800" placeholder="Enter Your API Key" color=""></Input>
+          <Input className="ml-1 mt-2 w-52 rounded bg-slate-800" placeholder="Enter Your API Key" color=""></Input>
 
           <ApiKeyConfiguration serviceName="Affinity" onConfigure={handleConfigureAffinity} />
-          <Input className="w-50 ml-1 mt-2 rounded bg-slate-800" placeholder="Enter Your API Key" color=""></Input>
+          <Input className="ml-1 mt-2 w-52 rounded bg-slate-800" placeholder="Enter Your API Key" color=""></Input>
         </div>
       </div>
     </main>

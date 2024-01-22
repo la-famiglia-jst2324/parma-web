@@ -1,5 +1,5 @@
 'use client'
-import { Plus } from 'lucide-react'
+import { PlusIcon } from 'lucide-react'
 import { CheckBadgeIcon } from '@heroicons/react/20/solid'
 import type { Bucket, Company } from '@prisma/client'
 import { MultiSelect, MultiSelectItem } from '@tremor/react'
@@ -80,7 +80,7 @@ const CreateBucket = () => {
   return (
     <Dialog>
       <DialogTrigger asChild onClick={getCompanies}>
-        <Plus className="cursor-pointer" />
+        <PlusIcon className="mr-2 h-4 w-4 cursor-pointer text-gray-500 hover:text-gray-200" />
       </DialogTrigger>
       <DialogContent className="m-2 sm:max-w-[500px]">
         <DialogHeader>

@@ -6,6 +6,7 @@ import LandingPage from '../LandingPage'
 import Spinner from '../Spinner'
 import Header from '../Header'
 import { CompanyProvider } from '../CompanyContext'
+import { CommandInterface } from '../CommandInterface'
 import StartLayout from './StartLayout'
 import { AuthContext } from '@/lib/firebase/auth'
 
@@ -24,6 +25,7 @@ function _AuthLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex min-h-screen">
       <Sidebar />
+      <CommandInterface />
       <div className="flex w-full flex-col">
         <Header />
         <CompanyProvider>

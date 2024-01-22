@@ -98,10 +98,26 @@ const getInvitees = async (bucketId: number) => {
   }
 }
 
-const getMyOwnBuckets = async () => {
+// const getMyOwnBuckets = async () => {
+//   try {
+//     const response = await fetchClient.get(`/api/bucket/own`)
+//     return response.data
+//   } catch (error) {
+//     console.log('An error has occurred: ', error)
+//     throw error
+//   }
+// }
+async function getMyOwnBuckets(idToken: string) {
   try {
-    const response = await fetchClient.get(`/api/bucket/own`)
-    return response.data
+    const response = await fetch(`/api/bucket/own`, {
+      method: 'GET',
+      cache: 'no-cache',
+      headers: {
+        Authorization: idToken
+      }
+    })
+    const data = await response.json() // Extract JSON data from the response
+    return data
   } catch (error) {
     console.log('An error has occurred: ', error)
     throw error

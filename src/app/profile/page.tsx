@@ -100,7 +100,7 @@ const ProfilePage: React.FC = () => {
           <Dialog>
             <DialogTrigger asChild>
               <Image
-                className="mb-5 block h-[150px] w-[150px] rounded-full transition duration-500 ease-in hover:cursor-pointer hover:shadow-[0_0_15px_15px_rgba(63,55,201,0.5)] hover:delay-75"
+                className="mb-5 block h-[150px] w-[150px] rounded-full hover:cursor-pointer"
                 src={userPhotoURL || profilePic}
                 width={400}
                 height={400}

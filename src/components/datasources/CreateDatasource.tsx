@@ -21,10 +21,9 @@ import { createNewDatasource } from '@/services/datasource/datasourceService'
 
 interface CreateDatasourceProps {
   triggerButton: React.ReactNode
-  onClose: () => void
 }
 
-const CreateDatasource: React.FC<CreateDatasourceProps> = ({ triggerButton, onClose }) => {
+const CreateDatasource: React.FC<CreateDatasourceProps> = ({ triggerButton }) => {
   const [name, setName] = useState<string>('')
   const [url, setUrl] = useState<string>('')
   const [description, setDescription] = useState<string>('')
@@ -151,7 +150,7 @@ const CreateDatasource: React.FC<CreateDatasourceProps> = ({ triggerButton, onCl
           </div>
           <DialogFooter className="sm:justify-end">
             <DialogClose asChild>
-              <Button onClick={onClose} type="button" variant="outline">
+              <Button type="button" variant="outline">
                 Close
               </Button>
             </DialogClose>

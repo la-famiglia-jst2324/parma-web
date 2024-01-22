@@ -17,9 +17,6 @@ import CreateDatasource from '@/components/datasources/CreateDatasource'
 
 export function CommandInterface() {
   const [open, setOpen] = useState(false)
-  const [, setCreateBucketOpen] = useState<boolean>(false)
-  const [, setCreateCompanyOpen] = useState<boolean>(false)
-  const [, setCreateDatasourceOpen] = useState<boolean>(false)
   const router = useRouter()
 
   React.useEffect(() => {
@@ -71,7 +68,6 @@ export function CommandInterface() {
                   <span>Create Bucket</span>
                 </div>
               }
-              onClose={() => setCreateBucketOpen(false)}
             />
           </CommandItem>
         </CommandGroup>
@@ -85,7 +81,6 @@ export function CommandInterface() {
                   <span>Create Company</span>
                 </div>
               }
-              onClose={() => setCreateCompanyOpen(false)}
             />
           </CommandItem>
         </CommandGroup>
@@ -99,7 +94,6 @@ export function CommandInterface() {
                   <span>Create Datasource</span>
                 </div>
               }
-              onClose={() => setCreateDatasourceOpen(false)}
             />
           </CommandItem>
           <CommandItem>

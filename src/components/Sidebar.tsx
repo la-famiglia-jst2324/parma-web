@@ -70,7 +70,7 @@ const Sidebar: React.FC = () => {
                 <FolderIcon className={`mr-2 h-4 w-4 text-gray-500`} />
                 <p className="text-base font-medium text-gray-300">Buckets</p>
               </div>
-              <CreateBucket triggerButton={<Plus className="cursor-pointer" />} onClose={() => ({})} />
+              <CreateBucket triggerButton={<Plus className="cursor-pointer" />} />
             </div>
             <div className="ml-6">
               <ScrollArea className="mt-2 h-24 w-full">
@@ -99,7 +99,7 @@ const Sidebar: React.FC = () => {
                 <FolderIcon className={`mr-2 h-4 w-4 text-gray-500`} />
                 <p className="text-base font-medium text-gray-300">Companies</p>
               </div>
-              <CreateCompanyModal triggerButton={<Plus className="cursor-pointer" />} onClose={() => ({})} />
+              <CreateCompanyModal triggerButton={<Plus className="cursor-pointer" />} />
             </div>
             <div className="ml-6">
               <ScrollArea className="mt-2 h-24 w-full">

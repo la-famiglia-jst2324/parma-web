@@ -34,7 +34,6 @@ function DatasourcesPage() {
                 Create
               </Button>
             }
-            onClose={() => ({})}
           />
         </div>
       </div>

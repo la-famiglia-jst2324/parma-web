@@ -23,10 +23,9 @@ import { Button } from '@/components/ui/button'
 
 interface CreateBucketProps {
   triggerButton: React.ReactNode
-  onClose: () => void
 }
 
-const CreateBucket: React.FC<CreateBucketProps> = ({ triggerButton, onClose }) => {
+const CreateBucket: React.FC<CreateBucketProps> = ({ triggerButton }) => {
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
   const [isPublic, setIsPublic] = useState(true)
@@ -145,7 +144,7 @@ const CreateBucket: React.FC<CreateBucketProps> = ({ triggerButton, onClose }) =
           </DialogClose>
 
           <DialogClose asChild>
-            <Button onClick={onClose} type="submit" className="mt-2" variant="secondary">
+            <Button type="submit" className="mt-2" variant="secondary">
               Cancel
             </Button>
           </DialogClose>

@@ -20,10 +20,9 @@ import { postCompany } from '@/services/company/companyService'
 
 interface CreateCompanyProps {
   triggerButton: React.ReactNode
-  onClose: () => void
 }
 
-const CreateCompanyModal: React.FC<CreateCompanyProps> = ({ triggerButton, onClose }) => {
+const CreateCompanyModal: React.FC<CreateCompanyProps> = ({ triggerButton }) => {
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
 
@@ -93,7 +92,7 @@ const CreateCompanyModal: React.FC<CreateCompanyProps> = ({ triggerButton, onClo
             </Button>
           </DialogClose>
           <DialogClose asChild>
-            <Button onClick={onClose} type="submit" className="mt-2" variant="secondary">
+            <Button type="submit" className="mt-2" variant="secondary">
               Cancel
             </Button>
           </DialogClose>

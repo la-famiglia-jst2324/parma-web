@@ -204,7 +204,6 @@ const getMeasurementsByCompanyIdSourceId = async (sourceModuleId: number, compan
         return rest
       })
     )
-    // console.log(rest)
     return flattenedMeasurements
   } catch (error) {
     console.error('Error getting the measurements of specific company and data source module:', error)

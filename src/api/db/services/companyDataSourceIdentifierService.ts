@@ -1,5 +1,6 @@
 import type { IdentifierType } from '@prisma/client'
 import { prisma } from '../prisma/prismaClient'
+import { ItemNotFoundError } from '@/api/utils/errorUtils'
 
 const createCompanyDataSourceIdentifier = async (data: {
   companyDataSourceId: number
@@ -63,12 +64,14 @@ const getCompanyDataSourceIdentifiersByDataSourceId = async (companyDataSourceId
       where: { companyDataSourceId }
     })
     if (!identifiers || identifiers.length === 0) {
-      throw new Error(`CompanyDataSourceIdentifier with companyDataSourceId ${companyDataSourceId} not found`)
+      throw new ItemNotFoundError(
+        `CompanyDataSourceIdentifier with companyDataSourceId ${companyDataSourceId} not found`
+      )
     }
     return identifiers
   } catch (error) {
     console.error('Error retrieving company data source identifiers:', error)
-    throw new Error('Unable to retrieve company data source identifiers')
+    throw new ItemNotFoundError('Unable to retrieve company data source identifiers')
   }
 }
 

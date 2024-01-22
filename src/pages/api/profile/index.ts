@@ -76,8 +76,23 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse, user: U
         const existingUser = await getUserById(Number(userId))
         if (existingUser) {
           const updatedUser = await updateUser(Number(userId), req.body)
+          // const freshUser = await getUserById(Number(userId));
+          // console.log("after updating User in PUT ", { userId: userId, freshUser });
           res.status(200).json(updatedUser)
         } else res.status(404).json({ error: 'User not Found' })
+      } catch (error) {
+        if (error instanceof ItemNotFoundError) res.status(404).json({ error: error.message })
+        else res.status(500).json({ error: 'Internal Server Error' })
+      }
+      break
+
+    case 'GET':
+      try {
+        const existingUser = await getUserById(Number(userId))
+        console.log('User retrieved in profile endpoint', { userId, user })
+
+        if (existingUser) res.status(200).json(existingUser)
+        else res.status(404).json({ error: 'User not Found' })
       } catch (error) {
         if (error instanceof ItemNotFoundError) res.status(404).json({ error: error.message })
         else res.status(500).json({ error: 'Internal Server Error' })

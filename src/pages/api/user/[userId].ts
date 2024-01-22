@@ -96,7 +96,10 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     case 'GET':
       try {
         // get a single user
+
         const user = await getUserById(Number(userId))
+        console.log('User retrieved in user endpoint', { userId, user })
+
         let profilePictureUrl = ''
         if (user) {
           if (user.profilePicture) profilePictureUrl = await generateFileUrl(user.profilePicture)

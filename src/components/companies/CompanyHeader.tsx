@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { ArrowUpFromLineIcon, CheckCircle2Icon, FileDownIcon } from 'lucide-react'
+import { CheckCircle2Icon, FileDownIcon } from 'lucide-react'
 import { Button } from '../ui/button'
 import { useToast } from '../ui/use-toast'
 import type { CompanyContextProps } from '../CompanyContext'
@@ -36,14 +36,6 @@ const CompanyHeader: React.FC<CompanyHeaderProps> = ({ companyId }) => {
       })
     } catch (error) {
       console.error('Error unsubscribing:', error)
-    }
-  }
-
-  const handleExportToCRM = async () => {
-    try {
-      // const exportDataResponse = await getExportData(companyId)
-    } catch (error) {
-      console.error('Error exporting data to CRM:', error)
     }
   }
 
@@ -114,10 +106,6 @@ const CompanyHeader: React.FC<CompanyHeaderProps> = ({ companyId }) => {
           <Button variant="secondary" onClick={() => handleExport(companyData.name)}>
             <FileDownIcon className="mr-2 h-4 w-4" />
             Download Data
-          </Button>
-          <Button variant="secondary" onClick={() => handleExportToCRM()}>
-            <ArrowUpFromLineIcon className="mr-2 h-4 w-4" />
-            Export to CRM
           </Button>
         </div>
       </div>

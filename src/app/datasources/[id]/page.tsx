@@ -16,7 +16,6 @@ function DatasourcePage({ params: { id } }: { params: { id: string } }) {
   const [, setInvocationEndpoint] = useState<string>('')
   const [, setStatus] = useState<boolean>(false)
   const [isLoading, setIsLoading] = useState<boolean>(true)
-
   useEffect(() => {
     getDatasourceById(id)
       .then((datasource) => {

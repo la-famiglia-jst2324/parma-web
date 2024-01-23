@@ -76,9 +76,11 @@ const EditCompanyModal: React.FC<EditCompanyModalProps> = ({ companyName, compan
               Close
             </Button>
           </DialogClose>
-          <Button variant="secondary" onClick={handleSaveClick}>
-            Save
-          </Button>
+          <DialogClose asChild>
+            <Button variant="secondary" onClick={handleSaveClick}>
+              Save
+            </Button>
+          </DialogClose>
         </DialogFooter>
       </DialogContent>
     </Dialog>

@@ -98,10 +98,26 @@ const getInvitees = async (bucketId: number) => {
   }
 }
 
-const getMyOwnBuckets = async () => {
+// const getMyOwnBuckets = async () => {
+//   try {
+//     const response = await fetchClient.get(`/api/bucket/own`)
+//     return response.data
+//   } catch (error) {
+//     console.log('An error has occurred: ', error)
+//     throw error
+//   }
+// }
+async function getMyOwnBuckets(idToken: string) {
   try {
-    const response = await fetchClient.get(`/api/bucket/own`)
-    return response.data
+    const response = await fetch(`/api/bucket/own`, {
+      method: 'GET',
+      cache: 'no-cache',
+      headers: {
+        Authorization: idToken
+      }
+    })
+    const data = await response.json() // Extract JSON data from the response
+    return data
   } catch (error) {
     console.log('An error has occurred: ', error)
     throw error
@@ -112,6 +128,23 @@ const deleteCompaniesFromBucket = async (bucketId: number, companies: number[]) 
   try {
     const companiesQuery = companies.map((companyId) => `companyId=${companyId}`).join('&')
     const response = await fetchClient.delete(`/api/companyBucketRelation?bucketId=${bucketId}&${companiesQuery}`)
+    return response.data
+  } catch (e) {}
+}
+
+const updateInvitee = async (bucketId: number, inviteeId: number, permission: string) => {
+  try {
+    const response = await fetchClient.put(`/api/bucket/share/${bucketId}`, {
+      inviteeId,
+      permission
+    })
+    return response.data
+  } catch (e) {}
+}
+
+const deleteInvitee = async (bucketId: number, inviteeId: number) => {
+  try {
+    const response = await fetchClient.delete(`/api/bucket/share/${bucketId}`, { data: { inviteeId } })
     return response.data
   } catch (e) {}
 }
@@ -129,5 +162,7 @@ export default {
   getInvitees,
   getAllBuckets,
   getMyOwnBuckets,
-  deleteCompaniesFromBucket
+  deleteCompaniesFromBucket,
+  updateInvitee,
+  deleteInvitee
 }

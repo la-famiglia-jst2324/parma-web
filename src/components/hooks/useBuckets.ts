@@ -1,20 +1,27 @@
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import type { Bucket } from '@prisma/client'
 import BucketFunctions from '@/app/services/bucket.service'
+import { AuthContext, getAuthToken } from '@/lib/firebase/auth'
 
 const useBuckets = () => {
   const [buckets, setBuckets] = useState<Bucket[]>([])
+  const user = useContext(AuthContext)
 
+  // useEffect(() => {
+  //   ;(async () => {
+  //     const data = await BucketFunctions.getMyOwnBuckets()
+  //     setBuckets(data)
+  //   	})().catch((error) => console.error('Error in useEffect:', error))
+
+  // }, [user])
   useEffect(() => {
-    BucketFunctions.getMyOwnBuckets()
-      .then((res) => {
-        setBuckets(res)
-      })
-      .catch((error) => {
-        console.error('Failed to fetch buckets', error)
-      })
-  }, [])
-
+    ;(async () => {
+      const token = await getAuthToken(user)
+      if (!token) return
+      const data = await BucketFunctions.getMyOwnBuckets(token)
+      setBuckets(data)
+    })().catch((error) => console.error('Error in useEffect:', error))
+  }, [user])
   return buckets
 }
 

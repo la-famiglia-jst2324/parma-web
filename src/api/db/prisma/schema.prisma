@@ -36,12 +36,12 @@ model Company {
   id          Int      @id @default(autoincrement())
   name        String
   description String?
-  addedBy     Int      @map("added_by")
+  addedBy     Int?      @map("added_by")
   createdAt   DateTime @default(now()) @map("created_at")
   modifiedAt  DateTime @updatedAt @map("modified_at")
 
   // Relation fields
-  user                      User                       @relation("UserAddsCompany", fields: [addedBy], references: [id])
+  user                      User?                       @relation("UserAddsCompany", fields: [addedBy], references: [id])
   companyBucketMember       CompanyBucketMembership[]
   companyAttachments        CompanyAttachment[]        @relation("CompanyAttachment")
   companyDataSource         CompanyDataSource[]

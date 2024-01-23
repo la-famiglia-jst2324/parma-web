@@ -1,13 +1,14 @@
 import type { Role } from '@prisma/client'
 import { prisma } from '../prisma/prismaClient'
 
-const createUser = async (data: { authId: string; name: string; role: Role }) => {
+const createUser = async (data: { authId: string; name: string; role: Role; username?: string }) => {
   try {
     const user = await prisma.user.create({
       data: {
         name: data.name,
         authId: data.authId,
-        role: data.role
+        role: data.role,
+        username: data.username
       }
     })
     return user
@@ -86,7 +87,8 @@ const getAllUsers = async () => {
 const updateUser = async (
   id: number,
   data: {
-    name?: string
+    // name can't be changed, update username instead
+    username?: string
     role?: Role
     profilePicture?: string
   }
@@ -95,7 +97,7 @@ const updateUser = async (
     const user = await prisma.user.update({
       where: { id },
       data: {
-        name: data.name,
+        username: data.username,
         role: data.role,
         profilePicture: data?.profilePicture
       }

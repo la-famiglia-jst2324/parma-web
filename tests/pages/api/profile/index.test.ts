@@ -18,7 +18,8 @@ const mockUser: User = {
   profilePicture: 'pic',
   role: 'USER',
   createdAt: new Date(),
-  modifiedAt: new Date()
+  modifiedAt: new Date(),
+  username: 'a'
 }
 
 describe('Profile API', () => {

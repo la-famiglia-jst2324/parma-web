@@ -27,7 +27,7 @@ const Sidebar: React.FC = () => {
             <Link href="/" passHref>
               <div className="flex items-center justify-start">
                 <Image width="75" height="75" className="h-10 w-10 rounded-full" src="/DALLE-logo.png" alt="" />
-                <p className="font-mono text-2xl font-bold tracking-wide	">ParmaAI</p>
+                <p className="text-2xl font-bold">ParmaAI</p>
               </div>
             </Link>
             <UserNav />
@@ -79,7 +79,6 @@ const Sidebar: React.FC = () => {
                               variant="ghost"
                               className="group flex h-5 w-full justify-start rounded px-3 text-base"
                             >
-                              <li></li>
                               <p className="text-sm font-medium text-slate-400 group-hover:text-gray-200">
                                 {bucket.title}
                               </p>
@@ -128,7 +127,6 @@ const Sidebar: React.FC = () => {
                               variant="ghost"
                               className="group flex h-5 w-full justify-start rounded px-3 text-base"
                             >
-                              <li></li>
                               <p className="text-sm font-medium text-slate-400 group-hover:text-gray-200">
                                 {company.name}
                               </p>

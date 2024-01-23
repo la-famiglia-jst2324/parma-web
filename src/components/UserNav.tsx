@@ -16,9 +16,7 @@ import { AuthContext, authLogout } from '@/lib/firebase/auth'
 import { getUserAttachment } from '@/services/user/userService'
 import profilePic from '@/../../public/Default_pfp.jpg'
 
-interface UserNavProps {}
-
-const UserNav: React.FC<UserNavProps> = () => {
+const UserNav: React.FC = () => {
   const user = useContext(AuthContext)
   const router = useRouter()
   const [userPhotoURL, setUserPhotoURL] = useState<string | null>(profilePic.toString())
@@ -60,31 +58,43 @@ const UserNav: React.FC<UserNavProps> = () => {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" className="relative h-8 w-8 rounded-full">
-          <Avatar className="h-8 w-8 transition duration-500 ease-in hover:cursor-pointer hover:shadow-[0_0_8px_8px_rgba(63,55,201,0.5)]">
+          <Avatar className="h-8 w-8 hover:cursor-pointer">
             <AvatarImage src={userPhotoURL || ''} />
             <AvatarFallback>{initials}</AvatarFallback>
           </Avatar>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-40" align="start" forceMount>
+      <DropdownMenuContent className="w-52" align="start" forceMount>
         <DropdownMenuGroup>
-          <DropdownMenuItem className="hover:cursor-pointer" onClick={() => router.push('/profile')}>
+          <DropdownMenuItem
+            className="flex justify-between hover:cursor-pointer"
+            onClick={() => router.push('/profile')}
+          >
             <div className="flex">
               <UserIcon className="ml-2 mr-4 h-6 w-4 text-[#374151]" />
               Profile
             </div>
+            <div className="flex-row-reverse text-xs">⌘P</div>
           </DropdownMenuItem>
-          <DropdownMenuItem className="hover:cursor-pointer" onClick={() => router.push('/datasources')}>
+          <DropdownMenuItem
+            className="flex justify-between hover:cursor-pointer"
+            onClick={() => router.push('/datasources')}
+          >
             <div className="flex">
               <RocketLaunchIcon className="ml-2 mr-4 h-6 w-4 text-[#374151]" />
               Datasources
             </div>
+            <div className="flex-row-reverse text-xs">⌘D</div>
           </DropdownMenuItem>
-          <DropdownMenuItem className="hover:cursor-pointer" onClick={() => router.push('/settings')}>
+          <DropdownMenuItem
+            className="flex justify-between hover:cursor-pointer"
+            onClick={() => router.push('/settings')}
+          >
             <div className="flex">
               <Cog8ToothIcon className="ml-2 mr-4 h-6 w-4 text-[#374151]" />
               Settings
             </div>
+            <div className="flex-row-reverse text-xs">⌘S</div>
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />

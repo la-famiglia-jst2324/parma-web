@@ -33,7 +33,7 @@ export function CommandInterface() {
       } else if (e.key === 'p' && (e.metaKey || e.ctrlKey)) {
         e.preventDefault()
         router.push('/profile')
-      } else if (e.key === 'o' && (e.metaKey || e.ctrlKey)) {
+      } else if (e.key === 'd' && (e.metaKey || e.ctrlKey)) {
         e.preventDefault()
         router.push('/datasources')
       }
@@ -99,7 +99,7 @@ export function CommandInterface() {
           <CommandItem>
             <Database className="mr-2" />
             <span onClick={() => router.push('/settings')}>Open Datasources</span>
-            <CommandShortcut>⌘O</CommandShortcut>
+            <CommandShortcut>⌘D</CommandShortcut>
           </CommandItem>
         </CommandGroup>
         <CommandSeparator />

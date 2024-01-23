@@ -95,6 +95,14 @@ const ShareBucketModal: React.FC<ShareBucketModalProps> = ({ handleShare, id }) 
         })()
       )
       setUsersToShare(uniqueArray)
+      setListToPost((prev) => [
+        ...prev,
+        {
+          bucketId: +id,
+          inviteeId: user.id,
+          permission: 'VIEWER'
+        }
+      ])
     }
   }
 
@@ -178,16 +186,22 @@ const ShareBucketModal: React.FC<ShareBucketModalProps> = ({ handleShare, id }) 
   const onShareBucket = () => {
     setInvitees([])
     setUsersToShare([])
+    setUserValue('')
     handleShare(listToPost)
+  }
+
+  const removeUserFromShareList = (user: User) => {
+    if (+userValue === user.id) {
+      setUserValue('')
+    }
+    setListToPost((prev) => prev.filter((item) => item.inviteeId !== user.id))
+    setUsersToShare((prev) => prev.filter((item) => item.id !== user.id))
   }
   return (
     <div>
       <Dialog>
         <DialogTrigger asChild onClick={getInvitees}>
-          <Button
-            className="mr-2 flex items-center gap-2 border-blue-600 bg-transparent text-blue-600"
-            variant="outline"
-          >
+          <Button className="mr-2 flex items-center gap-2" variant="secondary">
             <Share2 />
             Share
           </Button>
@@ -230,10 +244,7 @@ const ShareBucketModal: React.FC<ShareBucketModalProps> = ({ handleShare, id }) 
                         >
                           {user.name}
                           <CheckIcon
-                            className={cn(
-                              'ml-auto h-4 w-4',
-                              usersToShare.find((u) => (u.id === user.id ? 'opacity-100' : 'opacity-0'))
-                            )}
+                            className={cn('ml-auto h-4 w-4', user.id === +userValue ? 'opacity-100' : 'opacity-0')}
                           />
                         </CommandItem>
                       ))}
@@ -244,31 +255,33 @@ const ShareBucketModal: React.FC<ShareBucketModalProps> = ({ handleShare, id }) 
             </div>
 
             <div className="mt-8 h-[200px] max-h-[400px] overflow-auto pr-2 pt-2">
-              {usersToShare.map((user) => (
-                <div className="mb-4 flex flex-row items-center justify-between" key={user.id}>
-                  {user.name}
-                  <Select onValueChange={(val) => prepareUserListToShare(user, val)}>
-                    <SelectTrigger className="w-[180px]">
-                      <SelectValue placeholder="Permission" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectGroup>
-                        <SelectItem key={'MODERATOR'} value="MODERATOR">
-                          Moderator
-                        </SelectItem>
-                        <SelectItem key={'VIEWER'} value="VIEWER">
-                          Viewer
-                        </SelectItem>
-                      </SelectGroup>
-                    </SelectContent>
-                  </Select>
-                </div>
-              ))}
-
-              {invitees?.length > 0 && (
-                <div>
-                  <h2 className="mb-3 text-lg font-semibold">Invitees</h2>
-                  {invitees.map((invitee) => (
+              <div>
+                <h2 className="mb-3 text-lg font-semibold">Invitees</h2>
+                {usersToShare.map((user) => (
+                  <div className="mb-4 flex flex-row items-center justify-between" key={user.id}>
+                    {user.name}
+                    <div className="flex items-center gap-2">
+                      <Select disabled={true} value="VIEWER" onValueChange={(val) => prepareUserListToShare(user, val)}>
+                        <SelectTrigger className="w-[180px]">
+                          <SelectValue placeholder="Permission" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectGroup>
+                            <SelectItem key={'MODERATOR'} value="MODERATOR">
+                              Moderator
+                            </SelectItem>
+                            <SelectItem key={'VIEWER'} value="VIEWER">
+                              Viewer
+                            </SelectItem>
+                          </SelectGroup>
+                        </SelectContent>
+                      </Select>
+                      <X className="h-4 w-16 cursor-pointer" onClick={() => removeUserFromShareList(user)} />
+                    </div>
+                  </div>
+                ))}
+                {invitees?.length > 0 &&
+                  invitees.map((invitee) => (
                     <div className="mb-4 flex flex-row items-center justify-between" key={invitee.user.id}>
                       {invitee.user.name}
                       <div className="flex w-2/3 flex-row items-center justify-end gap-2">
@@ -317,14 +330,13 @@ const ShareBucketModal: React.FC<ShareBucketModalProps> = ({ handleShare, id }) 
                       </div>
                     </div>
                   ))}
-                </div>
-              )}
+              </div>
             </div>
           </div>
           <DialogFooter>
             <DialogClose asChild>
               <Button type="submit" className="mt-2" onClick={onShareBucket}>
-                Share
+                Save
               </Button>
             </DialogClose>
 

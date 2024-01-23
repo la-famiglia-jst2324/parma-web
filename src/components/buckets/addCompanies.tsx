@@ -38,10 +38,7 @@ const AddCompaniesToBucket: React.FC<AddCompaniesToBucketProps> = ({ handleSave,
     <div>
       <Dialog>
         <DialogTrigger asChild>
-          <Button
-            className="mr-2 flex items-center gap-2 border-blue-600 bg-transparent text-blue-600"
-            variant="outline"
-          >
+          <Button className="mr-2 flex items-center gap-2" variant="secondary">
             Add New Companies
           </Button>
         </DialogTrigger>

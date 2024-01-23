@@ -7,6 +7,7 @@ import {
   createDataSource,
   deleteDataSource
 } from './utils/helperFunctions'
+import { getDataSourceByID } from '@/api/db/services/dataSourceService'
 
 const prisma = new PrismaClient()
 
@@ -51,6 +52,11 @@ describe('DataSource Model Tests', () => {
 
     expect(dataSource).toBeTruthy()
     expect(dataSource.id).toBe(dataSourceId)
+  })
+
+  test('Retrieve a data source for non existing id', async () => {
+    const id = 1234567
+    await expect(getDataSourceByID(1234567)).rejects.toThrow(`Data source with ID ${id} not found.`)
   })
 
   // Update DataSource Test

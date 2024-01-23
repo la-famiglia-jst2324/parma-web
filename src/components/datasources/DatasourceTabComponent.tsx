@@ -1,6 +1,6 @@
 import type { ScheduledTask } from '@prisma/client'
 import { CompaniesTable } from './CompaniesTable'
-import ScheduledTasksTable from './ScheduledTasks'
+import ScheduledTasksTable from './ScheduledTasks/ScheduledTasks'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 
 export const NoData: React.FC = () => (

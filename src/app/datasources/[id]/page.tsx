@@ -1,7 +1,7 @@
 'use client'
 import React, { useEffect, useState } from 'react'
-import type { DataSource } from '@prisma/client'
-import { editDatasource, getDatasourceById } from '@/services/datasource/datasourceService'
+import type { DataSource, ScheduledTask } from '@prisma/client'
+import { editDatasource, getDatasourceById, getScheduledTasks } from '@/services/datasource/datasourceService'
 import { MainLayoutWrapper } from '@/components/layout/MainLayout'
 import { HeaderComponent } from '@/components/datasources/DatasourcePageHeader'
 import { ButtonGroup } from '@/components/datasources/ButtonGroup'
@@ -16,6 +16,12 @@ function DatasourcePage({ params: { id } }: { params: { id: string } }) {
   const [, setInvocationEndpoint] = useState<string>('')
   const [, setStatus] = useState<boolean>(false)
   const [isLoading, setIsLoading] = useState<boolean>(true)
+  const [tasksData, setTasksData] = useState<ScheduledTask[] | undefined>()
+  const [refreshKey, setRefreshKey] = useState(0)
+
+  const refreshData = () => {
+    setRefreshKey((oldKey) => oldKey + 1)
+  }
 
   useEffect(() => {
     getDatasourceById(id)
@@ -26,11 +32,15 @@ function DatasourcePage({ params: { id } }: { params: { id: string } }) {
         setInvocationEndpoint(datasource.invocationEndpoint)
         setStatus(datasource.isActive)
         setIsLoading(false)
+        return getScheduledTasks(id)
+      })
+      .then((scheduledTasks) => {
+        setTasksData(scheduledTasks)
       })
       .catch((error) => {
-        console.error('Failed to fetch datasource:', error)
+        console.error('Failed to fetch datasource or scheduled tasks:', error)
       })
-  }, [id])
+  }, [id, refreshKey])
 
   if (isLoading) {
     return <div className="flex h-screen items-center justify-center text-2xl text-gray-500">Loading...</div>
@@ -85,6 +95,7 @@ function DatasourcePage({ params: { id } }: { params: { id: string } }) {
                 handleSave(updates.newName, updates.newDescription, updates.newUrl, updates.newStatus)
               }
               data={data}
+              refreshData={refreshData}
             />
           </div>
         </div>
@@ -94,7 +105,7 @@ function DatasourcePage({ params: { id } }: { params: { id: string } }) {
             handleSave(updates.newName, updates.newDescription, updates.newUrl, updates.newStatus)
           }
         />
-        <TabComponent sourceId={data.id.toString()} />
+        <TabComponent tasksData={tasksData || []} sourceId={data.id.toString()} />
       </div>
     </main>
   )

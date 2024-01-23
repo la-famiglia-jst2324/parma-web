@@ -1,29 +1,14 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import type { ScheduledTask } from '@prisma/client'
 import { Badge } from '@tremor/react'
 import { Table, TableHead, TableBody, TableRow, TableCell, TableHeader } from '../ui/table'
-import { getScheduledTasks } from '@/services/datasource/datasourceService'
 import formatDate from '@/utils/formatDate'
 
 interface ScheduledTasksProps {
-  datasourceId: string
+  data: ScheduledTask[]
 }
 
-const ScheduledTasksTable = ({ datasourceId }: ScheduledTasksProps) => {
-  const [data, setData] = useState<ScheduledTask[] | undefined>()
-
-  useEffect(() => {
-    getScheduledTasks(datasourceId)
-      .then((scheduledTasks) => {
-        setData(scheduledTasks)
-      })
-      .catch((error) => {
-        console.error('Failed to fetch datasources:', error)
-      })
-  }, [datasourceId])
-
-  console.log('data: ', data)
-
+const ScheduledTasksTable = ({ data }: ScheduledTasksProps) => {
   if (!data || data.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center">

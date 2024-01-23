@@ -65,10 +65,19 @@ export function DataTable<TData, TValue>({ columns, data, type }: DataTableProps
                     let path
                     if (type === 'search') {
                       const rowType = row.getValue('type') as string
-                      rowType === 'bucket' ? (path = 'buckets') : (path = 'companies')
-                    } else {
+                      if (rowType === 'bucket') {
+                        path = 'buckets'
+                      } else if (rowType === 'company') {
+                        path = 'companies'
+                      }
+                    } else if (type === 'datasource') {
                       path = 'datasources'
+                    } else if (type === 'company') {
+                      path = 'companies'
+                    } else {
+                      return // Prevent redirection if type is unknown
                     }
+
                     router.push(`/${path}/${id}`)
                   }}
                   className="cursor-pointer"

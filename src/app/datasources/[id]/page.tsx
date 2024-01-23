@@ -1,6 +1,6 @@
 'use client'
 import React, { useEffect, useState } from 'react'
-import type { DataSource, ScheduledTask } from '@prisma/client'
+import type { DataSource, ScheduledTask, Company } from '@prisma/client'
 import { editDatasource, getDatasourceById, getScheduledTasks } from '@/services/datasource/datasourceService'
 import { MainLayoutWrapper } from '@/components/layout/MainLayout'
 import { HeaderComponent } from '@/components/datasources/DatasourcePageHeader'
@@ -8,6 +8,7 @@ import { ButtonGroup } from '@/components/datasources/ButtonGroup'
 import { TabComponent } from '@/components/datasources/DatasourceTabComponent'
 import { GoBackButton } from '@/components/GoBackButton'
 import DescriptionCard from '@/components/datasources/Card'
+import { getCompaniesByDatasourceId } from '@/services/company/companyService'
 
 function DatasourcePage({ params: { id } }: { params: { id: string } }) {
   const [data, setData] = useState<DataSource>()
@@ -18,12 +19,14 @@ function DatasourcePage({ params: { id } }: { params: { id: string } }) {
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const [tasksData, setTasksData] = useState<ScheduledTask[] | undefined>()
   const [refreshKey, setRefreshKey] = useState(0)
+  const [companiesData, setCompaniesData] = useState<Company[] | undefined>()
 
   const refreshData = () => {
     setRefreshKey((oldKey) => oldKey + 1)
   }
 
   useEffect(() => {
+    setIsLoading(true)
     getDatasourceById(id)
       .then((datasource) => {
         setData(datasource)
@@ -31,14 +34,16 @@ function DatasourcePage({ params: { id } }: { params: { id: string } }) {
         setDescription(datasource.description)
         setInvocationEndpoint(datasource.invocationEndpoint)
         setStatus(datasource.isActive)
-        setIsLoading(false)
-        return getScheduledTasks(id)
+        return Promise.all([getScheduledTasks(id), getCompaniesByDatasourceId(id)])
       })
-      .then((scheduledTasks) => {
+      .then(([scheduledTasks, companies]) => {
         setTasksData(scheduledTasks)
+        setCompaniesData(companies)
+        setIsLoading(false)
       })
       .catch((error) => {
-        console.error('Failed to fetch datasource or scheduled tasks:', error)
+        console.error('Failed to fetch datasource, scheduled tasks, or companies:', error)
+        setIsLoading(false)
       })
   }, [id, refreshKey])
 
@@ -105,7 +110,7 @@ function DatasourcePage({ params: { id } }: { params: { id: string } }) {
             handleSave(updates.newName, updates.newDescription, updates.newUrl, updates.newStatus)
           }
         />
-        <TabComponent tasksData={tasksData || []} sourceId={data.id.toString()} />
+        <TabComponent tasksData={tasksData || []} companiesData={companiesData || []} sourceId={data.id.toString()} />
       </div>
     </main>
   )

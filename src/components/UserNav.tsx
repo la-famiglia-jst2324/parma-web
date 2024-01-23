@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { UserIcon, Cog8ToothIcon, RocketLaunchIcon } from '@heroicons/react/20/solid'
 import { LogOutIcon } from 'lucide-react'
@@ -13,14 +13,15 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar'
 import { Button } from './ui/button'
 import { AuthContext, authLogout } from '@/lib/firebase/auth'
+import { getUserAttachment } from '@/services/user/userService'
+import profilePic from '@/../../public/Default_pfp.jpg'
 
 interface UserNavProps {}
 
 const UserNav: React.FC<UserNavProps> = () => {
   const user = useContext(AuthContext)
   const router = useRouter()
-
-  const photoURL = user === null || user === 'loading' ? null : user.photoURL
+  const [userPhotoURL, setUserPhotoURL] = useState<string | null>(profilePic.toString())
 
   const extractInitials = (displayName: string | null | undefined): string => {
     if (!displayName) {
@@ -43,12 +44,24 @@ const UserNav: React.FC<UserNavProps> = () => {
     }
   }
 
+  useEffect(() => {
+    const fetchUserAttachment = async () => {
+      try {
+        const response = await getUserAttachment()
+        setUserPhotoURL(response.fileUrl)
+      } catch (error) {
+        console.warn('No user attachment available', error)
+      }
+    }
+    fetchUserAttachment()
+  }, [])
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" className="relative h-8 w-8 rounded-full">
-          <Avatar className="h-8 w-8 transition duration-500 ease-in hover:cursor-pointer hover:shadow-[0_0_15px_15px_rgba(63,55,201,0.5)]">
-            <AvatarImage src={photoURL || ''} />
+          <Avatar className="h-8 w-8 transition duration-500 ease-in hover:cursor-pointer hover:shadow-[0_0_8px_8px_rgba(63,55,201,0.5)]">
+            <AvatarImage src={userPhotoURL || ''} />
             <AvatarFallback>{initials}</AvatarFallback>
           </Avatar>
         </Button>

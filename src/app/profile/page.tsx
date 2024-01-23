@@ -5,27 +5,25 @@ import Image from 'next/image'
 import { ArrowUpTrayIcon } from '@heroicons/react/20/solid'
 import { Button } from '@/components/ui/button'
 import profilePic from '@/../../public/Default_pfp.jpg'
-import { FormContent } from '@/components/FormContent'
 import { MainLayoutWrapper } from '@/components/layout/MainLayout'
 import { AuthContext, authResetPassword } from '@/lib/firebase/auth'
 import { getUserAttachment, putUserAttachment, putUsername } from '@/services/user/userService'
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog'
 import { ShowToast } from '@/components/ShowToast'
+import { Input } from '@/components/ui/input'
 const ProfilePage: React.FC = () => {
   const user = useContext(AuthContext)
+  console.log('user:', user)
   const [fullName, setFullName] = useState('')
   const [userPhotoURL, setUserPhotoURL] = useState<string | null>('')
-  const saveProfileData = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
+  const [uploadAttachment, setUploadAttachment] = useState<Blob | string>('')
+
+  const saveProfileData = async () => {
     try {
-      const Userdata = new FormData()
-      Userdata.append('name', fullName)
-      const response = await putUsername(Userdata)
-      if (!response.ok) {
-        throw new Error('Network response was not ok')
-      }
-      const data = await response.json()
-      console.log('Profile updated successfully:', data)
+      const response = await putUsername(fullName)
+      // const userD = await getUsername()
+      // console.log('UserName', userD)
+      console.log('value:', response.displayName)
       ShowToast('Profile updated successfully', 'You have successfully updated your profile')
     } catch (error) {
       console.error('Error updating profile:', error)
@@ -47,7 +45,7 @@ const ProfilePage: React.FC = () => {
   const userMail = user === 'loading' ? null : user?.email
   const userFullName = user === 'loading' ? null : user?.displayName
 
-  const handleSubmit = async () => {
+  const resetPassword = async () => {
     let timeoutId: NodeJS.Timeout | null = null
     try {
       if (!userMail) {
@@ -75,7 +73,6 @@ const ProfilePage: React.FC = () => {
       setUploadAttachment(file)
     }
   }
-  const [uploadAttachment, setUploadAttachment] = useState<Blob | string>('')
   const handleFileChange = async () => {
     try {
       console.log('uploadAttachment:', uploadAttachment)
@@ -93,68 +90,65 @@ const ProfilePage: React.FC = () => {
   }
 
   return (
-    <div className="items-center space-x-7">
+    <div className="items-center">
       <h1 className="py-2 pl-2 text-3xl font-bold">Edit Profile</h1>
-      <div className="flex justify-center">
-        <div className="m-2 ml-10 flex-col pt-12 ">
-          <div className="flex justify-center">
-            <Dialog>
-              <DialogTrigger asChild>
-                <Image
-                  className="mb-5 block h-[180px] w-[180px] rounded-full transition duration-500 ease-in hover:cursor-pointer hover:shadow-[0_0_15px_15px_rgba(63,55,201,0.5)] hover:delay-75"
-                  src={userPhotoURL || profilePic}
-                  width={500}
-                  height={500}
-                  alt="Profile"
-                />
-              </DialogTrigger>
-              <DialogContent>
-                <Image
-                  src={userPhotoURL?.toString() || profilePic}
-                  alt={'Profile'}
-                  width={510}
-                  height={400}
-                  className="rounded"
-                />
-              </DialogContent>
-            </Dialog>
+      <div className="mx-10">
+        <div className="pt-12 ">
+          <div className=" mb-4 flex-col justify-center">
+            <label className="mb-2 block text-sm font-bold text-gray-700">Profile Picture</label>
           </div>
+          <Dialog>
+            <DialogTrigger asChild>
+              <Image
+                className="mb-5 block h-[150px] w-[150px] rounded-full hover:cursor-pointer"
+                src={userPhotoURL || profilePic}
+                width={400}
+                height={400}
+                alt="Profile"
+              />
+            </DialogTrigger>
+            <DialogContent>
+              <Image
+                src={userPhotoURL?.toString() || profilePic}
+                alt={'Profile'}
+                width={510}
+                height={400}
+                className="rounded"
+              />
+            </DialogContent>
+          </Dialog>
 
-          <div className="flex justify-center gap-1.5">
+          <div className="flex gap-4">
             <Button>
               <label htmlFor="files">Update</label>
               <input id="files" accept="image/*,.jpg" hidden type="file" onChange={fileUpload} />
             </Button>
-            <Button onClick={handleFileChange} disabled={uploadAttachment === ''}>
+            <Button variant="ghost" onClick={handleFileChange} disabled={uploadAttachment === ''}>
               <ArrowUpTrayIcon className="h-4 w-4" />
             </Button>
           </div>
+
           <div className="mt-6 flex-col justify-center font-bold">
-            <form role="form" data-testid="create-profile-form" onSubmit={saveProfileData}>
-              <FormContent
-                id="Full Name"
-                name="Full Name"
-                label="Full Name"
+            <div className=" mb-4 flex-col justify-center">
+              <label className="mb-2 block text-sm font-bold text-gray-700">Email</label>
+              <Input className="focus-visible:ring-0" placeholder={userMail ?? ''} readOnly />
+            </div>
+            <div className=" mb-4 flex-col justify-center">
+              <label className="mb-2 block text-sm font-bold text-gray-700">Full Name</label>
+              <Input
                 placeholder={userFullName || 'your full name here'}
-                type="input"
                 onChange={(e) => setFullName(e.target.value)}
               />
-              <FormContent
-                id="Email"
-                name="Email"
-                label="Email"
-                placeholder={userMail || 'please write your email here'}
-                type="input"
-                readonly={!!userMail}
-              />
-              <div>
-                <Button type="submit">Save Changes</Button>
-              </div>
-            </form>
+            </div>
+            <div>
+              <Button type="submit" onClick={saveProfileData}>
+                Save Changes
+              </Button>
+            </div>
             <div className=" mb-4 pt-4">
               <label className="mb-2 block text-sm font-bold text-gray-700">Do you want to change your password?</label>
               <div>
-                <Button className="bg-red-700" onClick={handleSubmit}>
+                <Button className="bg-red-700" onClick={resetPassword}>
                   Change Password
                 </Button>
               </div>

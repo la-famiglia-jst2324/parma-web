@@ -1,5 +1,5 @@
 import type { ColumnDef } from '@tanstack/react-table'
-import { ArrowUpDown } from 'lucide-react'
+import { ArrowUpDown, WifiIcon, WifiOff } from 'lucide-react'
 import type { DataSource } from '@prisma/client'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -46,7 +46,14 @@ export const columns: ColumnDef<DataSource>[] = [
       const status = isActive ? 'Active' : 'Inactive'
       return (
         <div className="w-10">
-          <Badge className="flex h-6 w-20 items-center justify-center">{status}</Badge>
+          <Badge
+            className={`${
+              isActive ? 'bg-blue-700 text-blue-100 hover:bg-blue-800' : 'bg-red-700 text-red-100 hover:bg-red-800'
+            } flex h-6 w-24 items-center justify-center`}
+          >
+            {isActive ? <WifiIcon className="mr-2 h-4 w-4" /> : <WifiOff className="mr-2 h-4 w-4" />}
+            {status}
+          </Badge>
         </div>
       )
     }

@@ -206,6 +206,11 @@ describe('NotificationRules Service Tests', () => {
     expect(rule?.ruleId).toBe(ruleId)
   })
 
+  test('Retrieve a NotificationRule for non existing id', async () => {
+    const id = 1234
+    await expect(getNotificationRuleById(id)).rejects.toThrow(`Unable to retrieve notification rule`)
+  })
+
   test('Update a NotificationRule', async () => {
     const updatedRule = await updateNotificationRule(ruleId, {
       ruleName: 'Updated Test Rule'

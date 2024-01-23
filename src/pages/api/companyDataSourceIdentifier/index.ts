@@ -36,7 +36,8 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
           else res.status(400).json({ error: 'No Identifiers found' })
         }
       } catch (error) {
-        if (error instanceof ItemNotFoundError) res.status(404).json({ error: error.message })
+        if (error instanceof ItemNotFoundError)
+          res.status(200).json({ message: `There is no identifier with the id you provide` })
         else res.status(500).json({ error: 'Internal Server Error' })
       }
       break

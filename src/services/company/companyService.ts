@@ -160,3 +160,23 @@ export async function getExportData(companyId: string) {
     return ''
   }
 }
+
+export async function getCompaniesByDatasourceId(dataSourceId: string) {
+  try {
+    const response = await fetchClient.get(`/api/companyDataSourceRelation?dataSourceId=${dataSourceId}`)
+    return response.data
+  } catch (error) {
+    console.error('Error:', error)
+  }
+}
+
+export async function getCompanyDataSourceId(dataSourceId: string, companyId: string) {
+  try {
+    const response = await fetchClient.get(
+      `/api/companyDataSourceRelation?companyId=${companyId}&dataSourceId=${dataSourceId}`
+    )
+    return response.data
+  } catch (error) {
+    console.error('Error:', error)
+  }
+}

@@ -18,6 +18,7 @@ erDiagram
     data_source ||--o{ company_data_source : ""
     data_source ||--o{ source_measurement : ""
     data_source ||--o{ NOTIFICATION : ""
+    data_source ||--o{ scheduled_task : ""
     data_source ||--|| user_important_measurement_preference : ""
     company_data_source ||--o{ company_data_source_identifier : ""
     notification_subscription ||--o{ notification_channel : ""
@@ -44,7 +45,7 @@ erDiagram
     company_source_measurement ||--o{ measurement_link_value : ""
     company_source_measurement ||--o{ measurement_image_value : ""
     company_source_measurement ||--o{ measurement_date_value : ""
-    company_source_measurement ||--o{ measurement_nest_value : ""
+    company_source_measurement ||--o{ measurement_nested_value : ""
 
     notification_rules ||--o{ source_measurement : ""
 

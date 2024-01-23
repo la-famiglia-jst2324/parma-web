@@ -14,27 +14,6 @@ import { ScrollArea } from '@/components/ui/scroll-area'
 import { Separator } from '@/components/ui/separator'
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible'
 
-interface SidebarLinkProps {
-  href: string
-  icon?: React.ElementType
-  text: string
-  hoverClass?: string
-  size?: string
-}
-
-const SidebarLink: React.FC<SidebarLinkProps> = ({
-  href,
-  icon: Icon,
-  text,
-  hoverClass = 'hover:bg-gray-800',
-  size
-}) => (
-  <Link className={`ml-2 flex cursor-pointer items-center rounded text-base ${hoverClass}`} href={href}>
-    {Icon && <Icon className={`mr-2 h-4 w-4 text-gray-500`} />}
-    <p className={`text-base font-medium text-gray-300 ${size}`}>{text}</p>
-  </Link>
-)
-
 const Sidebar: React.FC = () => {
   const buckets = useBuckets()
   const companies = useCompanies()
@@ -54,9 +33,8 @@ const Sidebar: React.FC = () => {
             <UserNav />
           </div>
 
-          {/* Overview */}
+          {/* Newsfeed */}
           <div className="mb-4 mt-8 flex items-center justify-between">
-            {/* <SidebarLink href="/" icon={Newspaper} text="Newsfeed" /> */}
             <Link href="/">
               <Button variant="ghost" className="group flex w-40 justify-start rounded text-base">
                 <Squares2X2Icon className="mr-2 h-4 w-4 text-gray-500 group-hover:text-gray-200" />
@@ -64,13 +42,7 @@ const Sidebar: React.FC = () => {
               </Button>
             </Link>
             <Link href="/search">
-              {/* <Button
-                variant="link"
-                size="icon"
-               className="flex h-8 w-8 items-center justify-center rounded-lg border border-gray-600 text-gray-600 hover:bg-gray-900"
-              > */}
-              <MagnifyingGlassIcon className="hover:text-gray-20 mr-2 h-4 w-4 cursor-pointer text-gray-500" />
-              {/* </Button> */}
+              <MagnifyingGlassIcon className="mr-2 h-4 w-4 cursor-pointer text-gray-500 hover:text-gray-200" />
             </Link>
           </div>
           {/* Buckets */}
@@ -97,21 +69,24 @@ const Sidebar: React.FC = () => {
                 />
               </div>
               <CollapsibleContent>
-                <div className="ml-6">
+                <div className="ml-8">
                   <ScrollArea className="mt-2 h-32 w-full">
                     <div className="pl-2">
                       {buckets.map((bucket) => (
-                        <>
-                          <div key={bucket.id}>
-                            <SidebarLink
-                              key={bucket.id}
-                              href={`/buckets/${bucket.id}`}
-                              text={bucket.title}
-                              size="text-sm text-slate-300"
-                            />
-                          </div>
+                        <div key={bucket.id}>
+                          <Link href={`/buckets/${bucket.id}`} passHref>
+                            <Button
+                              variant="ghost"
+                              className="group flex h-5 w-full justify-start rounded px-3 text-base"
+                            >
+                              <li></li>
+                              <p className="text-sm font-medium text-slate-400 group-hover:text-gray-200">
+                                {bucket.title}
+                              </p>
+                            </Button>
+                          </Link>
                           <Separator className="my-2" />
-                        </>
+                        </div>
                       ))}
                     </div>
                   </ScrollArea>
@@ -147,17 +122,20 @@ const Sidebar: React.FC = () => {
                   <ScrollArea className="mt-2 h-32 w-full">
                     <div className="pl-2">
                       {companies.map((company) => (
-                        <>
-                          <div key={company.id}>
-                            <SidebarLink
-                              key={company.id}
-                              href={`/companies/${company.id}`}
-                              text={company.name}
-                              size="text-sm text-slate-300"
-                            />
-                          </div>
+                        <div key={company.id}>
+                          <Link href={`/companies/${company.id}`} passHref>
+                            <Button
+                              variant="ghost"
+                              className="group flex h-5 w-full justify-start rounded px-3 text-base"
+                            >
+                              <li></li>
+                              <p className="text-sm font-medium text-slate-400 group-hover:text-gray-200">
+                                {company.name}
+                              </p>
+                            </Button>
+                          </Link>
                           <Separator className="my-2" />
-                        </>
+                        </div>
                       ))}
                     </div>
                   </ScrollArea>

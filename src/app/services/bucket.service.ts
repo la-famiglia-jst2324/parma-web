@@ -132,6 +132,23 @@ const deleteCompaniesFromBucket = async (bucketId: number, companies: number[]) 
   } catch (e) {}
 }
 
+const updateInvitee = async (bucketId: number, inviteeId: number, permission: string) => {
+  try {
+    const response = await fetchClient.put(`/api/bucket/share/${bucketId}`, {
+      inviteeId,
+      permission
+    })
+    return response.data
+  } catch (e) {}
+}
+
+const deleteInvitee = async (bucketId: number, inviteeId: number) => {
+  try {
+    const response = await fetchClient.delete(`/api/bucket/share/${bucketId}`, { data: { inviteeId } })
+    return response.data
+  } catch (e) {}
+}
+
 export default {
   createBucket,
   deleteBucket,
@@ -145,5 +162,7 @@ export default {
   getInvitees,
   getAllBuckets,
   getMyOwnBuckets,
-  deleteCompaniesFromBucket
+  deleteCompaniesFromBucket,
+  updateInvitee,
+  deleteInvitee
 }

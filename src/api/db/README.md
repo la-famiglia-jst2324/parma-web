@@ -11,12 +11,15 @@ erDiagram
     company ||--o{ notification : ""
     company ||--o{ company_data_source : ""
     company ||--|| news_subscription :""
+    company ||--|| company_subscription : ""
     company ||--o{ news : ""
+    company ||--o{ user_company_customization : ""
     data_source ||--o{ news : ""
     data_source ||--o{ company_data_source : ""
     data_source ||--o{ source_measurement : ""
     data_source ||--o{ NOTIFICATION : ""
     data_source ||--|| user_important_measurement_preference : ""
+    company_data_source ||--o{ company_data_source_identifier : ""
     notification_subscription ||--o{ notification_channel : ""
     report ||--o{ company : "contains"
     report_subscription ||--o{ notification_channel : ""
@@ -26,8 +29,13 @@ erDiagram
     user ||--o{ bucket_access : "has"
     user ||--|| news_subscription :""
     user ||--o{ company_attachment : "attaches"
+    user ||--o{ company_subscription : ""
+    user ||--o{ user_customization : "customize"
+    user_customization ||--o{ user_company_customization : ""
+    user_customization ||--o{ user_metric_customization : ""
     source_measurement ||--o{ source_measurement : "child of"
     source_measurement ||--o{ company_source_measurement : ""
+    source_measurement ||--|| user_metric_customization : ""
     company_source_measurement ||--o{ measurement_text_value : ""
     company_source_measurement ||--o{ measurement_int_value : ""
     company_source_measurement ||--o{ measurement_comment_value : ""
@@ -283,7 +291,7 @@ erDiagram
     user_customization {
         int id PK
         string name
-        int user_id
+        int user_id FK
         datetime created_at
         datetime modified_at
     }

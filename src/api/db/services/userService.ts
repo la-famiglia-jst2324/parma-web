@@ -1,5 +1,6 @@
 import type { Role } from '@prisma/client'
 import { prisma } from '../prisma/prismaClient'
+import { ItemNotFoundError } from '@/api/utils/errorUtils'
 
 const createUser = async (data: { authId: string; name: string; role: Role }) => {
   try {
@@ -27,7 +28,7 @@ const getUserById = async (id: number) => {
       }
     })
     if (!user) {
-      throw new Error(`User with ID ${id} not found`)
+      throw new ItemNotFoundError(`User with ID ${id} not found`)
     }
     return user
   } catch (error) {

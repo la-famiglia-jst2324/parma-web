@@ -53,6 +53,11 @@ describe('Notification Channel Model Tests', () => {
     expect(channel?.id).toBe(channelId)
   })
 
+  test('Retrieve a notification channel for non existing id', async () => {
+    const id = -1
+    await expect(getNotificationChannelById(id)).rejects.toThrow(`Unable to retrieve notification channel`)
+  })
+
   test('Update a channel name', async () => {
     const updatedReport = await updateNotificationChannel(channelId, {
       channelType: ChannelType.SLACK,

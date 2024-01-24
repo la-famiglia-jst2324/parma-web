@@ -44,6 +44,11 @@ describe('Data Source Model Tests', () => {
     expect(dataSource?.id).toBe(dataSourceId)
   })
 
+  test('Retrieve a data source for non existing id', async () => {
+    const id = -1
+    await expect(getDataSourceByID(id)).rejects.toThrow(`Data source with ID ${id} not found.`)
+  })
+
   test('Update a data source name', async () => {
     const updatedDataSource = await updateDataSource(dataSourceId, {
       sourceName: 'source2',

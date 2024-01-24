@@ -19,10 +19,12 @@ import { Button } from '@/components/ui/button'
 import { postCompany } from '@/services/company/companyService'
 
 interface CreateCompanyProps {
-  triggerButton: React.ReactNode
+  triggerButton?: React.ReactNode
+  isOpen?: boolean
+  setOpen?: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-const CreateCompanyModal: React.FC<CreateCompanyProps> = ({ triggerButton }) => {
+const CreateCompanyModal: React.FC<CreateCompanyProps> = ({ triggerButton, isOpen, setOpen }) => {
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
 
@@ -46,7 +48,7 @@ const CreateCompanyModal: React.FC<CreateCompanyProps> = ({ triggerButton }) => 
   }
 
   return (
-    <Dialog>
+    <Dialog open={isOpen} onOpenChange={setOpen}>
       <DialogTrigger asChild>{triggerButton}</DialogTrigger>
       <DialogContent className="m-2 sm:max-w-[500px]">
         <DialogHeader>
@@ -92,7 +94,7 @@ const CreateCompanyModal: React.FC<CreateCompanyProps> = ({ triggerButton }) => 
             </Button>
           </DialogClose>
           <DialogClose asChild>
-            <Button type="submit" className="mt-2" variant="secondary">
+            <Button type="button" className="mt-2" variant="secondary">
               Cancel
             </Button>
           </DialogClose>

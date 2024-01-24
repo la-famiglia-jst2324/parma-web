@@ -4,6 +4,7 @@ import { useToast } from '../ui/use-toast'
 import type { CompanyContextProps } from '../CompanyContext'
 import { CompanyContext } from '../CompanyContext'
 import { MultiSelect } from '../ui/multi-select'
+import { IdentifierModal } from '../datasources/Identifiers/IdentifierModal'
 import {
   Dialog,
   DialogClose,
@@ -145,6 +146,7 @@ const ConfigureDatasourcesModal: React.FC<ConfigureDatasourcesModalProps> = ({ c
               <TableHead>Status</TableHead>
               <TableHead>Frequency</TableHead>
               <TableHead>Action</TableHead>
+              <TableHead>Identifiers</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody className="max-h-96 items-start overflow-y-auto">
@@ -176,6 +178,9 @@ const ConfigureDatasourcesModal: React.FC<ConfigureDatasourcesModalProps> = ({ c
                     >
                       Unlink
                     </Button>
+                  </TableCell>
+                  <TableCell>
+                    <IdentifierModal companyId={companyId} datasourceId={dataSource.id.toString()} />
                   </TableCell>
                 </TableRow>
               ))

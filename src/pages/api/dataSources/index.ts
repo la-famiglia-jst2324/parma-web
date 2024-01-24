@@ -190,7 +190,7 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
         const handshakeResponse = await fetch(handshakeUrl.href)
         // Check the handshake response
-        if (handshakeResponse.status != 201) {
+        if (handshakeResponse.status !== 201) {
           res.status(500).json({ error: 'Handshake for the data source failed, please verify the URL is correct.' })
         }
         // update frequency of the data source after the handshake

@@ -9,8 +9,8 @@ interface HeaderProps {
 }
 
 export const HeaderComponent: React.FC<HeaderProps> = ({ data }) => (
-  <div className="mb-2 flex items-center justify-start space-x-6">
-    <h1 className="text-3xl font-bold"> {data.sourceName} </h1>
+  <div className="mb-2 flex flex-col items-center justify-start space-y-2 sm:flex-row sm:space-x-6 sm:space-y-0">
+    <h1 className="text-2xl font-bold sm:text-3xl"> {data.sourceName} </h1>
     <Badge
       className={`${
         data.isActive ? 'bg-blue-700 text-blue-100 hover:bg-blue-800' : 'bg-red-700 text-red-100 hover:bg-red-800'

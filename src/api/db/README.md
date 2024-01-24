@@ -11,11 +11,14 @@ erDiagram
     company ||--o{ notification : ""
     company ||--o{ company_data_source : ""
     company ||--|| news_subscription :""
+    company ||--|| company_subscription : ""
     company ||--o{ news : ""
+    company ||--o{ user_company_customization : ""
     data_source ||--o{ news : ""
     data_source ||--o{ company_data_source : ""
     data_source ||--o{ source_measurement : ""
     data_source ||--o{ NOTIFICATION : ""
+    data_source ||--o{ scheduled_task : ""
     data_source ||--|| user_important_measurement_preference : ""
     company_data_source ||--o{ company_data_source_identifier : ""
     notification_subscription ||--o{ notification_channel : ""
@@ -27,10 +30,23 @@ erDiagram
     user ||--o{ bucket_access : "has"
     user ||--|| news_subscription :""
     user ||--o{ company_attachment : "attaches"
+    user ||--o{ company_subscription : ""
+    user ||--o{ user_customization : "customize"
+    user_customization ||--o{ user_company_customization : ""
+    user_customization ||--o{ user_metric_customization : ""
     source_measurement ||--o{ source_measurement : "child of"
     source_measurement ||--o{ company_source_measurement : ""
+    source_measurement ||--|| user_metric_customization : ""
     company_source_measurement ||--o{ measurement_text_value : ""
     company_source_measurement ||--o{ measurement_int_value : ""
+    company_source_measurement ||--o{ measurement_comment_value : ""
+    company_source_measurement ||--o{ measurement_float_value : ""
+    company_source_measurement ||--o{ measurement_paragraph_value : ""
+    company_source_measurement ||--o{ measurement_link_value : ""
+    company_source_measurement ||--o{ measurement_image_value : ""
+    company_source_measurement ||--o{ measurement_date_value : ""
+    company_source_measurement ||--o{ measurement_nested_value : ""
+
     notification_rules ||--o{ source_measurement : ""
 
     bucket {
@@ -41,7 +57,6 @@ erDiagram
         int owner_id FK
         datetime created_at
         datetime modified_at
-        int user_id FK
     }
     bucket_access{
         int bucket_id PK,FK
@@ -147,6 +162,8 @@ erDiagram
         string aggregation_method
         int num_aggregation_entries
         string notification_message
+        datetime created_at
+        datetime modified_at
     }
     report{
         int id PK
@@ -174,7 +191,7 @@ erDiagram
         int id PK
         string auth_id
         string name
-        profile_picture string
+        string profile_picture
         string role
         datetime created_at
         datetime modified_at
@@ -187,7 +204,7 @@ erDiagram
         datetime modified_at
     }
     measurement_text_value {
-        id measurement_value_id PK
+        id id PK
         id company_measurement_id FK
         string value
         datetime timestamp
@@ -195,18 +212,66 @@ erDiagram
         datetime modified_at
     }
     measurement_int_value {
-        id measurement_value_id PK
+        id id PK
         id company_measurement_id FK
         int value
         datetime timestamp
         datetime created_at
         datetime modified_at
     }
+    measurement_float_value {
+        id id PK
+        id company_measurement_id FK
+        float value
+        datetime timestamp
+        datetime created_at
+        datetime modified_at
+    }
     measurement_comment_value {
-        id measurement_value_id PK
+        id id PK
         id company_measurement_id FK
         string value
         int sentiment_score
+        datetime timestamp
+        datetime created_at
+        datetime modified_at
+    }
+    measurement_paragraph_value {
+        id id PK
+        id company_measurement_id FK
+        string value
+        datetime timestamp
+        datetime created_at
+        datetime modified_at
+    }
+    measurement_link_value {
+        id id PK
+        id company_measurement_id FK
+        string value
+        datetime timestamp
+        datetime created_at
+        datetime modified_at
+    }
+    measurement_image_value {
+        id id PK
+        id company_measurement_id FK
+        string value
+        datetime timestamp
+        datetime created_at
+        datetime modified_at
+    }
+    measurement_date_value {
+        id id PK
+        id company_measurement_id FK
+        datetime value
+        datetime timestamp
+        datetime created_at
+        datetime modified_at
+    }
+    measurement_nested_value {
+        id id PK
+        id company_measurement_id FK
+        string value
         datetime timestamp
         datetime created_at
         datetime modified_at
@@ -231,4 +296,36 @@ erDiagram
         string value
         datetime validity
     }
+
+    user_customization {
+        int id PK
+        string name
+        int user_id FK
+        datetime created_at
+        datetime modified_at
+    }
+
+    user_company_customization {
+        int id PK
+        int customization_id FK
+        int company_id FK
+        datetime created_at
+        datetime modified_at
+    }
+
+    user_metric_customization {
+        int id PK
+        int customization_id FK
+        int source_measurement_id FK
+        datetime created_at
+        datetime modified_at
+    }
+
+    company_subscription {
+        int user_id FK
+        int company_id FK
+        datetime created_at
+        datetime modified_at
+    }
+
 ```

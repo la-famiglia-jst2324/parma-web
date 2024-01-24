@@ -15,13 +15,17 @@ import BucketFunctions from '@/app/services/bucket.service'
 
 interface AddCompaniesToBucketProps {
   handleSave: (companyIds: string[]) => void
+  bucketCompanies?: Company[]
 }
-const AddCompaniesToBucket: React.FC<AddCompaniesToBucketProps> = ({ handleSave }) => {
+const AddCompaniesToBucket: React.FC<AddCompaniesToBucketProps> = ({ handleSave, bucketCompanies }) => {
   const [allCompanies, setAllCompanies] = useState<Company[]>([])
   const [selectedCompanies, setSelectedCompanies] = useState<string[]>()
   useEffect(() => {
     BucketFunctions.getAllCompanies()
-      .then(setAllCompanies)
+      .then((res) => {
+        res = res.filter((company: Company) => !bucketCompanies?.some((item) => item.id === company.id))
+        setAllCompanies(res)
+      })
       .catch((error) => {
         console.error('Failed to fetch companies:', error)
       })
@@ -34,10 +38,7 @@ const AddCompaniesToBucket: React.FC<AddCompaniesToBucketProps> = ({ handleSave 
     <div>
       <Dialog>
         <DialogTrigger asChild>
-          <Button
-            className="mr-2 flex items-center gap-2 border-blue-600 bg-transparent text-blue-600"
-            variant="outline"
-          >
+          <Button className="mr-2 flex items-center gap-2" variant="secondary">
             Add New Companies
           </Button>
         </DialogTrigger>

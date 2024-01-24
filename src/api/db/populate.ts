@@ -343,21 +343,6 @@ async function main() {
     })
   }
 
-  // Create CompanyDataSources for each company for each data source
-  for (const company of companies) {
-    for (const dataSource of dataSources) {
-      await prisma.companyDataSource.create({
-        data: {
-          companyId: company.id,
-          dataSourceId: dataSource.id,
-          isDataSourceActive: Math.random() < 0.5, // Randomly true or false
-          healthStatus: getRandomEnumValue(allHealthStatuses) // Random health status
-          // createdAt and modifiedAt will be set automatically
-        }
-      })
-    }
-  }
-
   const allBucketPermissions = Object.values(BucketPermission)
   // Create BucketAccess records for each bucket for some users
   for (const bucket of buckets) {

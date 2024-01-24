@@ -288,6 +288,14 @@ erDiagram
         datetime created_at
         datetime modified_at
     }
+    company_data_source_identifier {
+        int id PK
+        int companyDataSourceId FK
+        identifier_type identifier
+        string property
+        string value
+        datetime validity
+    }
 
     user_customization {
         int id PK
@@ -316,18 +324,6 @@ erDiagram
     company_subscription {
         int user_id FK
         int company_id FK
-        datetime created_at
-        datetime modified_at
-    }
-
-    company_data_source_identifier {
-        int id PK
-        int company_data_source_id FK
-        string identifier_key
-        string identifier_type
-        string property
-        string value
-        datetime validity
         datetime created_at
         datetime modified_at
     }

@@ -17,6 +17,7 @@ model User {
   role           Role     @default(USER)
   createdAt      DateTime @default(now()) @map("created_at")
   modifiedAt     DateTime @updatedAt @map("modified_at")
+  username       String?
 
   // Relation fields
   addedCompanies                     Company[]                            @relation("UserAddsCompany")

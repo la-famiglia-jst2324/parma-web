@@ -195,6 +195,7 @@ erDiagram
         string role
         datetime created_at
         datetime modified_at
+        string username
     }
     user_important_measurement_preference {
         int data_source_id PK,FK

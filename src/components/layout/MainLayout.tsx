@@ -25,12 +25,14 @@ function _AuthLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex min-h-screen">
       <Sidebar />
-      <CommandInterface />
-      <div className="flex w-full flex-col">
-        <Header />
-        <CompanyProvider>
-          <main className="grow p-4">{content}</main>
-        </CompanyProvider>
+      <div className="ml-72 grow">
+        <CommandInterface />
+        <div className="flex w-full flex-col">
+          <Header />
+          <CompanyProvider>
+            <main className="grow p-4">{content}</main>
+          </CompanyProvider>
+        </div>
       </div>
     </div>
   )

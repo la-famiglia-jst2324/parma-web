@@ -34,18 +34,33 @@ function DatasourcePage({ params: { id } }: { params: { id: string } }) {
         setDescription(datasource.description)
         setInvocationEndpoint(datasource.invocationEndpoint)
         setStatus(datasource.isActive)
-        return Promise.all([getScheduledTasks(id), getCompaniesByDatasourceId(id)])
-      })
-      .then(([scheduledTasks, companies]) => {
-        setTasksData(scheduledTasks)
-        setCompaniesData(companies)
         setIsLoading(false)
       })
       .catch((error) => {
-        console.error('Failed to fetch datasource, scheduled tasks, or companies:', error)
+        console.error('Failed to fetch datasource:', error)
         setIsLoading(false)
       })
+  }, [id])
+
+  useEffect(() => {
+    getScheduledTasks(id)
+      .then((scheduledTasks) => {
+        setTasksData(scheduledTasks)
+      })
+      .catch((error) => {
+        console.error('Failed to fetch scheduled tasks:', error)
+      })
   }, [id, refreshKey])
+
+  useEffect(() => {
+    getCompaniesByDatasourceId(id)
+      .then((companies) => {
+        setCompaniesData(companies)
+      })
+      .catch((error) => {
+        console.error('Failed to fetch companies:', error)
+      })
+  }, [id])
 
   if (isLoading) {
     return <div className="flex h-screen items-center justify-center text-2xl text-gray-500">Loading...</div>

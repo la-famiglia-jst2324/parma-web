@@ -163,13 +163,16 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     case 'POST':
       try {
         const { sourceName } = req.body
-        const regex = /^[a-z0-9_-]+$/;
+        const regex = /^[a-z0-9_-]+$/
 
         if (!sourceName || !regex.test(sourceName)) {
-          res.status(400).json({ error: 'Invalid request parameters: name is required and should only contain lowercase letters, numbers, underscores, and hyphens.' });
-          return;
+          res.status(400).json({
+            error:
+              'Invalid request parameters: name is required and should only contain lowercase letters, numbers, underscores, and hyphens.'
+          })
+          return
         }
-        
+
         // Create a new data source.
         // New company data source relationships will be added for this data source with all existing companies.
         const newDataSource = await createDataSource(req.body)

@@ -31,7 +31,7 @@ const CreateDatasource: React.FC<CreateDatasourceProps> = ({ triggerButton, isOp
   const [description, setDescription] = useState<string>('')
   const [frequency, setFrequency] = useState<string>('')
   const { toast } = useToast()
-  const regex = /^[a-z0-9_-]+$/;
+  const regex = /^[a-z0-9_-]+$/
 
   async function createDatasource(
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>,

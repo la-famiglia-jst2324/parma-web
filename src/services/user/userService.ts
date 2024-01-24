@@ -1,9 +1,9 @@
 import type { Role } from '@prisma/client'
 import fetchClient from '../fetchClient'
 
-export async function postCompanyAttachment(companyId: string, data: FormData) {
+export async function putUserAttachment(data: FormData) {
   try {
-    const response = await fetchClient.post(`/api/company/${companyId}/attachment`, data)
+    const response = await fetchClient.put(`/api/user/pic`, data)
     return response.data
   } catch (error) {
     console.log('An error has occurred: ', error)
@@ -11,9 +11,9 @@ export async function postCompanyAttachment(companyId: string, data: FormData) {
   }
 }
 
-export async function putUserAttachment(data: FormData) {
+export async function postUserAttachment(data: FormData) {
   try {
-    const response = await fetchClient.put(`/api/user/pic`, data)
+    const response = await fetchClient.post(`/api/user/pic`, data)
     return response.data
   } catch (error) {
     console.log('An error has occurred: ', error)
@@ -32,9 +32,9 @@ export async function getUserAttachment() {
   }
 }
 
-export async function putUsername(name?: string, role?: Role, profilePicture?: string) {
+export async function putUsername(username?: string, role?: Role, profilePicture?: string) {
   try {
-    const response = await fetchClient.put(`/api/profile`, { name, role, profilePicture })
+    const response = await fetchClient.put(`/api/profile`, { username, role, profilePicture })
     return response.data
   } catch (error) {
     console.log('An error has occurred: ', error)

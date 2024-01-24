@@ -8,7 +8,6 @@ import * as z from 'zod'
 import { Button } from '@/components/ui/button'
 import { MainLayoutWrapper } from '@/components/layout/MainLayout'
 import { Input } from '@/components/ui/input'
-// import { Separator } from '@/components/ui/separator'
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel } from '@/components/ui/form'
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { AuthContext, authResetPassword } from '@/lib/firebase/auth'
@@ -19,24 +18,16 @@ function SettingsPage() {
   const [selectedChannel, setSelectedChannel] = useState<string>('')
   const user = useContext(AuthContext)
   const resetPassword = async () => {
-    let timeoutId: NodeJS.Timeout | null = null
     const userMail = user === 'loading' ? null : user?.email
     try {
       if (!userMail) {
         return
       }
-      timeoutId = setTimeout(() => {}, 10000)
       await authResetPassword(userMail)
-      clearTimeout(timeoutId)
-      timeoutId = null
       ShowToast('We have sent instructions on your given email to reset your password.', 'Please check your email')
     } catch (error) {
       console.error('Error resetting password:', error)
       ShowToast('Error resetting password', 'Please try again', 'destructive')
-    } finally {
-      if (timeoutId) {
-        clearTimeout(timeoutId)
-      }
     }
   }
 
@@ -61,12 +52,11 @@ function SettingsPage() {
       ShowToast('Slack API Key is required', 'Please enter a valid slack api key', 'destructive')
     } else {
       try {
-        const response = await postNotificationChannel(
+        await postNotificationChannel(
           values.channel === 'email' ? ChannelType.EMAIL : ChannelType.SLACK,
           values.email,
           values.slack || ''
         )
-        console.log(response)
         ShowToast(
           'Channel added successfully',
           'You will now receive reports and notifications on your selected channel'

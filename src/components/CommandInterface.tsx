@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { SearchIcon, Plus, TrendingUpIcon, Settings, User2Icon, Database } from 'lucide-react'
 import CreateBucket from './buckets/createBucket'
@@ -19,7 +19,7 @@ export function CommandInterface() {
   const [open, setOpen] = useState(false)
   const router = useRouter()
 
-  React.useEffect(() => {
+  useEffect(() => {
     const down = (e: KeyboardEvent) => {
       if (e.key === 'k' && (e.metaKey || e.ctrlKey)) {
         e.preventDefault()
@@ -100,6 +100,7 @@ export function CommandInterface() {
             <Database className="mr-2" />
             <span onClick={() => router.push('/settings')}>Open Datasources</span>
             <CommandShortcut>⌘D</CommandShortcut>
+
           </CommandItem>
         </CommandGroup>
         <CommandSeparator />

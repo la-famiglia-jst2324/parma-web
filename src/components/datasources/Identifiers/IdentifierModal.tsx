@@ -31,7 +31,6 @@ interface IdentifierModalProps {
 export const IdentifierModal: React.FC<IdentifierModalProps> = ({ companyId, datasourceId }) => {
   const [companyDatasourceId, setCompanyDatasourceId] = useState('')
   const [identifiers, setIdentifiers] = useState<CompanyDataSourceIdentifier[]>([])
-  const [identifierKey] = useState('')
   const [property, setProperty] = useState('')
   const [value, setValue] = useState('')
   const { toast } = useToast()
@@ -86,13 +85,12 @@ export const IdentifierModal: React.FC<IdentifierModalProps> = ({ companyId, dat
     }
   }
 
-  async function addIdentifier(identifierKey: string, property: string, value: string) {
+  async function addIdentifier(property: string, value: string) {
     const validityDate = new Date()
     validityDate.setMonth(validityDate.getMonth() + 6)
 
     const newIdentifier = {
       companyDataSourceId: parseInt(companyDatasourceId),
-      identifierKey,
       identifierType: IdentifierType.MANUALLY_ADDED,
       property,
       value,
@@ -157,7 +155,7 @@ export const IdentifierModal: React.FC<IdentifierModalProps> = ({ companyId, dat
         <DialogFooter>
           <Input value={property} onChange={handleInputChange(setProperty)} placeholder="Property" />
           <Input value={value} onChange={handleInputChange(setValue)} placeholder="Value" />
-          <Button type="button" onClick={() => addIdentifier(identifierKey, property, value)}>
+          <Button type="button" onClick={() => addIdentifier(property, value)}>
             Add Identifier
           </Button>
           <DialogClose asChild>

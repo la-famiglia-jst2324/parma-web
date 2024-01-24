@@ -22,10 +22,12 @@ import {
 import { Button } from '@/components/ui/button'
 
 interface CreateBucketProps {
-  triggerButton: React.ReactNode
+  triggerButton?: React.ReactNode
+  isOpen?: boolean
+  setOpen?: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-const CreateBucket: React.FC<CreateBucketProps> = ({ triggerButton }) => {
+const CreateBucket: React.FC<CreateBucketProps> = ({ triggerButton, isOpen, setOpen }) => {
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
   const [isPublic, setIsPublic] = useState(true)
@@ -81,7 +83,7 @@ const CreateBucket: React.FC<CreateBucketProps> = ({ triggerButton }) => {
   }
 
   return (
-    <Dialog>
+    <Dialog open={isOpen} onOpenChange={setOpen}>
       <DialogTrigger asChild onClick={getCompanies}>
         {triggerButton}
       </DialogTrigger>

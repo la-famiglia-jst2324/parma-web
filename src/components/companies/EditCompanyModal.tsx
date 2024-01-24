@@ -48,17 +48,17 @@ const EditCompanyModal: React.FC<EditCompanyModalProps> = ({ companyName, compan
       <DialogTrigger>
         <Button variant="outline">
           <PencilIcon className="mr-2 h-4 w-4" />
-          Edit Company
+          Edit
         </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Edit Information</DialogTitle>
-          <DialogDescription>You can edit the company information here</DialogDescription>
+          <DialogDescription>Edit the company information here</DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-4">
           <div className="space-y-1">
-            <Label className="text-left">Company Name</Label>
+            <Label className="text-left">Name</Label>
             <Input id="name" value={name} onChange={(event) => handleInputChange(event, setName)} />
           </div>
           <div className="space-y-1">

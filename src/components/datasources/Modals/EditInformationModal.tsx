@@ -58,13 +58,13 @@ const EditInformationModal: React.FC<EditInformationModalProps> = ({
         <DialogTrigger asChild>
           <Button variant="outline">
             <PencilIcon className="mr-2 h-4 w-4" />
-            Edit Information
+            Edit
           </Button>
         </DialogTrigger>
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Edit Datasource</DialogTitle>
-            <DialogDescription>Please fill the following information</DialogDescription>
+            <DialogDescription>Edit the datasource information below</DialogDescription>
           </DialogHeader>
           <div className="grid gap-3 py-2">
             <div className="space-y-1">
@@ -93,7 +93,7 @@ const EditInformationModal: React.FC<EditInformationModalProps> = ({
               <label htmlFor="frequency">Frequency</label>
               <Select value={frequency} onValueChange={setFrequency}>
                 <SelectTrigger>
-                  <SelectValue placeholder="Frequency" />
+                  <SelectValue placeholder="Select the datasource frequency" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectGroup>

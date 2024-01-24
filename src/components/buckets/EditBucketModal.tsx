@@ -2,8 +2,10 @@
 
 import { useState } from 'react'
 import { PencilIcon } from 'lucide-react'
+import { DialogDescription } from '@radix-ui/react-dialog'
 import { Label } from '../ui/label'
 import { Input } from '../ui/input'
+import { Checkbox } from '../ui/checkbox'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -14,7 +16,6 @@ import {
   DialogTitle,
   DialogTrigger
 } from '@/components/ui/dialog'
-import { Switch } from '@/components/ui/switch'
 
 interface EditBucketModalProps {
   title: string
@@ -42,17 +43,18 @@ const EditBucketModal: React.FC<EditBucketModalProps> = ({
         <DialogTrigger asChild>
           <Button className="mr-2 flex items-center border-gray-500" variant="outline" color="gray">
             <PencilIcon className="mr-2 h-4 w-4" />
-            Edit bucket information
+            Edit
           </Button>
         </DialogTrigger>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
             <DialogTitle>Edit bucket</DialogTitle>
+            <DialogDescription className="text-sm text-gray-500">Edit the bucket information here</DialogDescription>
           </DialogHeader>
           <div>
             <div className="mb-8">
               <div className="grid w-full max-w-sm  gap-1.5">
-                <Label htmlFor="title">Bucket Title</Label>
+                <Label htmlFor="title">Title</Label>
                 <Input
                   placeholder="Please enter bucket title"
                   type="text"
@@ -65,7 +67,7 @@ const EditBucketModal: React.FC<EditBucketModalProps> = ({
             </div>
             <div className="mb-8">
               <div className="grid w-full max-w-sm  gap-1.5">
-                <Label htmlFor="description">Bucket description</Label>
+                <Label htmlFor="description">Description</Label>
                 <Input
                   placeholder="Please enter bucket description"
                   type="text"
@@ -76,18 +78,31 @@ const EditBucketModal: React.FC<EditBucketModalProps> = ({
                 />
               </div>
             </div>
-            <div className="mb-8 flex items-center gap-4">
-              <Label htmlFor="isPublic">Is public</Label>
-              <Switch id="isPublic" name="isPublic" checked={isPublic} onCheckedChange={(val) => setIsPublic(val)} />
+            <div className="mb-4 flex items-center gap-4">
+              <Checkbox
+                id="isPublic"
+                name="isPublic"
+                checked={isPublic}
+                onCheckedChange={(val) => {
+                  if (val === 'indeterminate') {
+                    setIsPublic(false)
+                  } else {
+                    setIsPublic(val)
+                  }
+                }}
+              />
+              <Label htmlFor="isPublic">Make this bucket publicly available</Label>
             </div>
           </div>
           <DialogFooter>
             <DialogClose asChild>
-              <Button onClick={handleSaveClick}>Save</Button>
+              <Button type="button" variant="outline">
+                Close
+              </Button>
             </DialogClose>
             <DialogClose asChild>
-              <Button type="button" variant="secondary">
-                Close
+              <Button variant="secondary" onClick={handleSaveClick}>
+                Save
               </Button>
             </DialogClose>
           </DialogFooter>

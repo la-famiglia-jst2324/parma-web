@@ -1,15 +1,14 @@
 'use client'
 
-import { CheckBadgeIcon } from '@heroicons/react/20/solid'
 import type { Bucket, Company } from '@prisma/client'
-import { MultiSelect, MultiSelectItem } from '@tremor/react'
 import { useState } from 'react'
+import { MultiSelect } from '../ui/multi-select'
 import { DialogHeader, DialogFooter } from '../ui/dialog'
 import { Input } from '../ui/input'
 import { Label } from '../ui/label'
 import { Textarea } from '../ui/textarea'
-import { Switch } from '../ui/switch'
 import { useToast } from '../ui/use-toast'
+import { Checkbox } from '../ui/checkbox'
 import BucketFunctions from '@/app/services/bucket.service'
 import {
   Dialog,
@@ -82,6 +81,13 @@ const CreateBucket: React.FC<CreateBucketProps> = ({ triggerButton, isOpen, setO
     setIsPublic(value)
   }
 
+  const data = allCompaniesPaginated?.map((company: Company) => {
+    return {
+      value: String(company?.id),
+      label: company?.name
+    }
+  })
+  console.log('data', data)
   return (
     <Dialog open={isOpen} onOpenChange={setOpen}>
       <DialogTrigger asChild onClick={getCompanies}>
@@ -89,65 +95,59 @@ const CreateBucket: React.FC<CreateBucketProps> = ({ triggerButton, isOpen, setO
       </DialogTrigger>
       <DialogContent className="m-2 sm:max-w-[500px]">
         <DialogHeader>
-          <DialogTitle>Create bucket</DialogTitle>
-          <DialogDescription>
-            You can create a collection of companies here. Please choose companies from a list of available companies.
-          </DialogDescription>
+          <DialogTitle>Create Bucket</DialogTitle>
+          <DialogDescription>Please fill in the details below to create a new bucket.</DialogDescription>
         </DialogHeader>
         <div className="max-w-[465px] p-2" role="main">
           <div className="w-full rounded-lg border-0 shadow-md">
             <form role="form" data-testid="create-bucket-form">
               <div className="mb-4 flex flex-col gap-2">
-                <Label htmlFor="title">Bucket title</Label>
+                <Label htmlFor="title">Title</Label>
                 <Input
                   type="text"
                   id="title"
                   name="title"
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
-                  placeholder="Please enter bucket title"
+                  placeholder="Software companies"
                 />
               </div>
               <div className="mb-4 flex flex-col gap-2">
-                <Label htmlFor="description">Bucket description</Label>
+                <Label htmlFor="description"> Description</Label>
                 <Textarea
                   id="description"
                   name="description"
                   value={description}
-                  placeholder="Please enter bucket description"
+                  placeholder="New software companies in the market"
                   onChange={(e) => setDescription(e.target.value)}
                 />
               </div>
               <div className="mb-8">
                 <label className="mb-2 block text-sm font-bold ">Companies</label>
-                <MultiSelect onValueChange={(e) => setSelectedCompanies(e || [])}>
-                  {allCompaniesPaginated?.map((company: Company) => (
-                    <MultiSelectItem key={company.id} value={`${company.id}`}>
-                      {company.name}
-                    </MultiSelectItem>
-                  ))}
-                </MultiSelect>
+                <MultiSelect
+                  options={data}
+                  selected={selectedCompanies}
+                  onChange={(e) => setSelectedCompanies(e || [])}
+                  placeholder="Select Datasources"
+                  width="w-80"
+                />
               </div>
-              <div className="mb-4 flex items-center space-x-2">
-                <Label htmlFor="switch">Make this bucket public</Label>
-                <Switch id="switch" name="isPublic" checked={isPublic} onCheckedChange={handleSwitchChange} />
+              <div className=" flex items-center space-x-4">
+                <Checkbox id="switch" name="isPublic" checked={isPublic} onCheckedChange={handleSwitchChange} />
+                <Label htmlFor="switch">Make this bucket publicly available</Label>
               </div>
             </form>
           </div>
         </div>
         <DialogFooter>
           <DialogClose asChild>
-            <Button type="submit" className="mt-2" onClick={createBucket}>
-              <div className="flex items-center gap-2">
-                <CheckBadgeIcon className="h-5 w-5"></CheckBadgeIcon>
-                <div className="flex items-center gap-0.5 ">Create new Bucket</div>
-              </div>
+            <Button type="submit" className="mt-2" variant="outline">
+              Cancel
             </Button>
           </DialogClose>
-
           <DialogClose asChild>
-            <Button type="submit" className="mt-2" variant="secondary">
-              Cancel
+            <Button type="submit" className="mt-2" variant="secondary" onClick={createBucket}>
+              <div className="flex items-center gap-0.5 ">Create</div>
             </Button>
           </DialogClose>
         </DialogFooter>

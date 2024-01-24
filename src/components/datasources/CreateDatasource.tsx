@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react'
 import { Frequency } from '@prisma/client'
+import { Label } from '../ui/label'
 import { useToast } from '@/components/ui/use-toast'
 import {
   Dialog,
@@ -111,33 +112,43 @@ const CreateDatasource: React.FC<CreateDatasourceProps> = ({ triggerButton, isOp
         <DialogTrigger asChild>{triggerButton}</DialogTrigger>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Create New Datasource</DialogTitle>
-            <DialogDescription>Please fill the following information</DialogDescription>
+            <DialogTitle>Create Datasource</DialogTitle>
+            <DialogDescription>Please fill the following information to create a new datasource</DialogDescription>
           </DialogHeader>
           <div className="grid gap-3 py-2">
             <div className="space-y-1">
+              <Label htmlFor="title">Name</Label>
               <Input
                 id="name"
-                placeholder="Name"
+                placeholder="Parma AI"
                 value={name}
                 onChange={(event) => handleInputChange(event, setName)}
               />
             </div>
             <div className="space-y-1">
+              <Label>Description</Label>
               <Textarea
                 id="description"
+                placeholder="Parma AI provides day to day information about recent trends in the market."
                 value={description}
-                placeholder="Description"
                 onChange={(event) => handleInputChange(event, setDescription)}
               />
             </div>
             <div className="space-y-1">
-              <Input id="url" value={url} onChange={(event) => handleInputChange(event, setUrl)} placeholder="URL" />
+              <Label>URL</Label>
+              <Input
+                id="url"
+                value={url}
+                onChange={(event) => handleInputChange(event, setUrl)}
+                placeholder="https://parma.software"
+              />
             </div>
             <div className="space-y-1">
+              <Label>Frequency</Label>
+
               <Select value={frequency} onValueChange={setFrequency}>
                 <SelectTrigger>
-                  <SelectValue placeholder="Frequency" />
+                  <SelectValue placeholder="Select the datasource frequency" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectGroup>
@@ -156,9 +167,14 @@ const CreateDatasource: React.FC<CreateDatasourceProps> = ({ triggerButton, isOp
                 Close
               </Button>
             </DialogClose>
-            <Button variant="secondary" onClick={(event) => createDatasource(event, name, description, url, frequency)}>
-              Create
-            </Button>
+            <DialogClose asChild>
+              <Button
+                variant="secondary"
+                onClick={(event) => createDatasource(event, name, description, url, frequency)}
+              >
+                Create
+              </Button>
+            </DialogClose>
           </DialogFooter>
         </DialogContent>
       </Dialog>

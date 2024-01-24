@@ -132,20 +132,24 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse, user: U
             parseInt(pageSize as string)
           )
 
-          const authorizedBuckets = await Promise.all(buckets.buckets.map(async (bucket) => {
-            const invitees = await getInviteesIdsByBucketId(bucket.id);
-            return invitees.map(x => x.inviteeId).includes(user.id) ? bucket : null;
-          })).then(buckets => buckets.filter(bucket => bucket !== null));
+          const authorizedBuckets = await Promise.all(
+            buckets.buckets.map(async (bucket) => {
+              const invitees = await getInviteesIdsByBucketId(bucket.id)
+              return invitees.map((x) => x.inviteeId).includes(user.id) ? bucket : null
+            })
+          ).then((buckets) => buckets.filter((bucket) => bucket !== null))
 
           if (authorizedBuckets) res.status(200).json(authorizedBuckets)
           else res.status(400).json({ error: 'No Bucket found' })
         } else {
           const buckets = await getAllBuckets(parseInt(page as string), parseInt(pageSize as string))
 
-          const authorizedBuckets = await Promise.all(buckets.buckets.map(async (bucket) => {
-            const invitees = await getInviteesIdsByBucketId(bucket.id);
-            return invitees.map(x => x.inviteeId).includes(user.id) ? bucket : null;
-          })).then(buckets => buckets.filter(bucket => bucket !== null));
+          const authorizedBuckets = await Promise.all(
+            buckets.buckets.map(async (bucket) => {
+              const invitees = await getInviteesIdsByBucketId(bucket.id)
+              return invitees.map((x) => x.inviteeId).includes(user.id) ? bucket : null
+            })
+          ).then((buckets) => buckets.filter((bucket) => bucket !== null))
 
           if (authorizedBuckets) res.status(200).json(authorizedBuckets)
           else res.status(400).json({ error: 'No Buckets found' })

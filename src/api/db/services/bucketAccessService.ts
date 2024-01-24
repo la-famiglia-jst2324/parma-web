@@ -121,4 +121,11 @@ const deleteBucketAccess = async (bucketId: number, inviteeId: number) => {
   }
 }
 
-export { createBucketAccess, getBucketAccessByID, getInviteesByBucketId, updateBucketAccess, deleteBucketAccess, getInviteesIdsByBucketId }
+export {
+  createBucketAccess,
+  getBucketAccessByID,
+  getInviteesByBucketId,
+  updateBucketAccess,
+  deleteBucketAccess,
+  getInviteesIdsByBucketId
+}

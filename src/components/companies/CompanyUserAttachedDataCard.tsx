@@ -125,7 +125,7 @@ const CompanyUserAttachedDataCard: React.FC<CompanyUserAttachedDataCardProps> = 
             ) : null}
           </div>
         </div>
-        <div className="my-2 flex flex-wrap">
+        <div className="my-2 flex h-40 flex-wrap overflow-y-auto">
           {companyAttachments.length > 0
             ? companyAttachments?.map((attachment) => (
                 <CompanyAttachment

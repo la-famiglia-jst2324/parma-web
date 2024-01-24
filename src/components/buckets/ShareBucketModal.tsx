@@ -45,6 +45,7 @@ const initialValue: User[] = [
     id: 0,
     authId: '',
     name: '',
+    username: '',
     profilePicture: null,
     role: $Enums.Role.USER,
     createdAt: new Date(),

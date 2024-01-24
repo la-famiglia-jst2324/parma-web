@@ -176,7 +176,7 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     case 'PUT':
       try {
         const parseResult = updateDataSourceSchema.parse(req.body)
-        let sourceName = parseResult.sourceName
+        const sourceName = parseResult.sourceName
         const regex = /^[a-z0-9_-]+$/
 
         if (!sourceName || !regex.test(sourceName)) {
@@ -185,7 +185,7 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
               'Invalid request parameters: name is required and should only contain lowercase letters, numbers, underscores, and hyphens.'
           })
         }
-       
+
         const existingDataSource = await getDataSourceByID(Number(dataSourceId))
         if (existingDataSource) {
           // Update Bucket

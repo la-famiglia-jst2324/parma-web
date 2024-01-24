@@ -59,16 +59,27 @@ const getDataSourceByName = async (sourceName: string) => {
 
 const getAllDataSources = async (page: number, pageSize: number, name: string) => {
   try {
-    const datasources = await prisma.dataSource.findMany({
-      where: {
-        sourceName: {
-          contains: name,
-          mode: 'insensitive' // case-insensitive
+    let datasources
+    if (!page || !pageSize) {
+      datasources = await prisma.dataSource.findMany({
+        where: {
+          sourceName: {
+            contains: name,
+            mode: 'insensitive' // case-insensitive
+          }
         }
-      },
-      skip: (page - 1) * pageSize,
-      take: pageSize
-    })
+      })
+    } else
+      datasources = await prisma.dataSource.findMany({
+        where: {
+          sourceName: {
+            contains: name,
+            mode: 'insensitive' // case-insensitive
+          }
+        },
+        skip: (page - 1) * pageSize,
+        take: pageSize
+      })
     const totalCount = await prisma.dataSource.count()
     const totalPages = Math.ceil(totalCount / pageSize)
     return {

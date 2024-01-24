@@ -128,6 +128,7 @@ export function DataTable<TData, TValue>({
                     } else {
                       path = type
                     }
+
                     router.push(`/${path}/${id}`)
                   }}
                   className="cursor-pointer"

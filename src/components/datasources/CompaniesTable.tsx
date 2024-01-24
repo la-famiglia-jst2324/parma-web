@@ -1,29 +1,55 @@
 'use client'
 import type { Company } from '@prisma/client'
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import { useRouter } from 'next/navigation'
-import { Table, TableHead, TableBody, TableRow, TableCell, TableHeader } from '../ui/table'
+import type { ColumnDef, Row } from '@tanstack/react-table'
+import { DataTable } from '../DataTable/Table'
 import { IdentifierModal } from './Identifiers/IdentifierModal'
-import { getCompaniesByDatasourceId } from '@/services/company/companyService'
 
 interface CompaniesTableProps {
   datasourceId: string
+  companiesData: Company[]
 }
 
-export const CompaniesTable = ({ datasourceId }: CompaniesTableProps) => {
-  const [data, setData] = useState<Company[] | undefined>()
+export const CompaniesTable = ({ datasourceId, companiesData }: CompaniesTableProps) => {
+  const data = companiesData
   const dataSourceId = datasourceId
   const router = useRouter()
 
-  useEffect(() => {
-    getCompaniesByDatasourceId(dataSourceId)
-      .then((companies) => {
-        setData(companies)
-      })
-      .catch((error) => {
-        console.error('Failed to fetch datasources:', error)
-      })
-  }, [dataSourceId])
+  const columns: ColumnDef<Company>[] = [
+    {
+      accessorKey: 'name',
+      header: 'Name',
+      cell: ({ row }: { row: Row<Company> }) => {
+        const name = row.getValue('name') as string
+        return (
+          <div onClick={() => router.push(`/companies/${name}`)} style={{ cursor: 'pointer' }}>
+            {name}
+          </div>
+        )
+      }
+    },
+    {
+      accessorKey: 'description',
+      header: 'Description',
+      cell: ({ row }: { row: Row<Company> }) => {
+        const description = row.getValue('description') as string
+        return (
+          <div onClick={() => router.push(`/companies/${description}`)} style={{ cursor: 'pointer' }}>
+            {description}
+          </div>
+        )
+      }
+    },
+    {
+      accessorKey: 'id',
+      header: 'Configure Identifier',
+      cell: ({ row }: { row: Row<Company> }) => {
+        const id = row.getValue('id') as string
+        return <IdentifierModal companyId={id} datasourceId={dataSourceId} />
+      }
+    }
+  ]
 
   if (!data || data.length === 0) {
     return (
@@ -34,30 +60,5 @@ export const CompaniesTable = ({ datasourceId }: CompaniesTableProps) => {
     )
   }
 
-  return (
-    <Table>
-      <TableHeader>
-        <TableRow>
-          <TableHead>Name</TableHead>
-          <TableHead>Description</TableHead>
-          <TableHead>Configure Identifier</TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {data.map((company) => (
-          <TableRow key={company.name}>
-            <TableCell onClick={() => router.push(`/companies/${company.id}`)} style={{ cursor: 'pointer' }}>
-              {company.name}
-            </TableCell>
-            <TableCell onClick={() => router.push(`/companies/${company.id}`)} style={{ cursor: 'pointer' }}>
-              {company.description}
-            </TableCell>
-            <TableCell>
-              <IdentifierModal companyId={company.id.toString()} datasourceId={dataSourceId} />
-            </TableCell>
-          </TableRow>
-        ))}
-      </TableBody>
-    </Table>
-  )
+  return <DataTable columns={columns} data={data} type="" />
 }

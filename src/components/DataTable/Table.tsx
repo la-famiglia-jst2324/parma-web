@@ -125,6 +125,8 @@ export function DataTable<TData, TValue>({
                     if (type === 'search') {
                       const rowType = row.getValue('type') as string
                       rowType === 'bucket' ? (path = 'buckets') : (path = 'companies')
+                    } else if (type === 'no_redirect') {
+                      return
                     } else {
                       path = type
                     }

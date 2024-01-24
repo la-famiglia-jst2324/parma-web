@@ -1,8 +1,7 @@
 import React from 'react'
+import { columns } from './Columns'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Separator } from '@/components/ui/separator'
 import { DataTable } from '@/components/DataTable/Table'
-import { columns } from '@/components/DataTable/Columns'
 
 interface SearchItem {
   id: number
@@ -31,8 +30,7 @@ const SearchTabs: React.FC<SearchTabsProps> = ({ searchData, searchTerm, hasSear
         <TabsTrigger value="buckets">Buckets</TabsTrigger>
         <TabsTrigger value="companies">Companies</TabsTrigger>
       </TabsList>
-      <div className="-mx-4">
-        <Separator className="my-3 w-full" />
+      <div className="mt-4">
         <TabsContent value="all">
           {hasSearched && Array.isArray(searchData) && searchData.length > 0 ? (
             <div>

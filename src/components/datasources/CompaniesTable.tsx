@@ -60,5 +60,5 @@ export const CompaniesTable = ({ datasourceId, companiesData }: CompaniesTablePr
     )
   }
 
-  return <DataTable columns={columns} data={data} type="" />
+  return <DataTable columns={columns} data={data} type="no_redirect" />
 }

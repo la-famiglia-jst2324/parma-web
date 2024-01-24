@@ -4,7 +4,7 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import { randomBucketDummies, randomBucketDummy } from '@tests/data/dummy/bucket'
 import { randomDbUserDummy } from '@tests/data/dummy/user'
 import { handler } from '@/pages/api/bucket'
-import { getAllBuckets, createBucket, getBucketByName } from '@/api/db/services/bucketService'
+import { getAllBuckets, createBucket, getBucketsByName } from '@/api/db/services/bucketService'
 import { ItemNotFoundError } from '@/api/utils/errorUtils'
 jest.mock('@/api/db/services/bucketService')
 jest.mock('@/api/middleware/auth', () => ({
@@ -48,7 +48,7 @@ describe('Bucket API', () => {
   })
 
   test('GET with bucketName returns bucket', async () => {
-    getBucketByName.mockResolvedValueOnce(mockBucket)
+    getBucketsByName.mockResolvedValueOnce(mockBucket)
 
     const { req, res } = createMocks({
       method: 'GET',
@@ -75,7 +75,7 @@ describe('Bucket API', () => {
 
   test('GET with non-existent returns 404', async () => {
     const mockName = 'bucket1'
-    getBucketByName.mockRejectedValueOnce(new ItemNotFoundError('Item not found'))
+    getBucketsByName.mockRejectedValueOnce(new ItemNotFoundError('Item not found'))
     const { req, res } = createMocks({
       method: 'GET',
       query: { name: mockName }

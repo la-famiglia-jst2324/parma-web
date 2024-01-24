@@ -10,7 +10,7 @@ import {
   updateBucket,
   getOwnBuckets,
   getAllBuckets,
-  getBucketByName
+  getBucketsByName
 } from '@/api/db/services/bucketService'
 import { createUser } from '@/api/db/services/userService'
 const prisma = new PrismaClient()
@@ -64,7 +64,7 @@ describe('Bucket Model Tests', () => {
   })
 
   test('Retrieve a bucket by name', async () => {
-    const bucket = await getBucketByName(createdbucket.title, 1, 10)
+    const bucket = await getBucketsByName(createdbucket.title, 1, 10)
     expect(bucket).toBeTruthy()
   })
 

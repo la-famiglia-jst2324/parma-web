@@ -38,7 +38,7 @@ const getBucketById = async (id: number) => {
   }
 }
 
-const getBucketByName = async (title: string, page: number, pageSize: number) => {
+const getBucketsByName = async (title: string, page: number, pageSize: number) => {
   try {
     const skip = (page - 1) * pageSize
     const buckets = await prisma.bucket.findMany({
@@ -160,4 +160,4 @@ const deleteBucket = async (id: number) => {
   }
 }
 
-export { createBucket, getBucketById, getBucketByName, getAllBuckets, getOwnBuckets, updateBucket, deleteBucket }
+export { createBucket, getBucketById, getBucketsByName, getAllBuckets, getOwnBuckets, updateBucket, deleteBucket }

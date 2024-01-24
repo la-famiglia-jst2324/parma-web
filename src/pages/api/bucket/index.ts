@@ -1,8 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import type { User } from '@prisma/client'
-import { createBucket, getBucketByName, getAllBuckets } from '@/api/db/services/bucketService'
+import { createBucket, getBucketsByName, getAllBuckets } from '@/api/db/services/bucketService'
 import { ItemNotFoundError } from '@/api/utils/errorUtils'
 import { withAuthValidation } from '@/api/middleware/auth'
+import { getInviteesIdsByBucketId } from '@/api/db/services/bucketAccessService'
 /**
  * @swagger
  * tags:
@@ -125,16 +126,28 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse, user: U
     case 'GET':
       try {
         if (bucketName) {
-          const bucket = await getBucketByName(
+          const buckets = await getBucketsByName(
             String(bucketName),
             parseInt(page as string),
             parseInt(pageSize as string)
           )
-          if (bucket) res.status(200).json(bucket)
+
+          const authorizedBuckets = await Promise.all(buckets.buckets.map(async (bucket) => {
+            const invitees = await getInviteesIdsByBucketId(bucket.id);
+            return invitees.map(x => x.inviteeId).includes(user.id) ? bucket : null;
+          })).then(buckets => buckets.filter(bucket => bucket !== null));
+
+          if (authorizedBuckets) res.status(200).json(authorizedBuckets)
           else res.status(400).json({ error: 'No Bucket found' })
         } else {
           const buckets = await getAllBuckets(parseInt(page as string), parseInt(pageSize as string))
-          if (buckets) res.status(200).json(buckets)
+
+          const authorizedBuckets = await Promise.all(buckets.buckets.map(async (bucket) => {
+            const invitees = await getInviteesIdsByBucketId(bucket.id);
+            return invitees.map(x => x.inviteeId).includes(user.id) ? bucket : null;
+          })).then(buckets => buckets.filter(bucket => bucket !== null));
+
+          if (authorizedBuckets) res.status(200).json(authorizedBuckets)
           else res.status(400).json({ error: 'No Buckets found' })
         }
       } catch (error) {

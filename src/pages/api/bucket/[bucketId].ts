@@ -2,6 +2,8 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 
 import { deleteBucket, getBucketById, updateBucket } from '@/api/db/services/bucketService'
 import { ItemNotFoundError } from '@/api/utils/errorUtils'
+import { getBucketAccessByID, getInviteesIdsByBucketId } from '@/api/db/services/bucketAccessService'
+import { User } from '@prisma/client'
 
 /**
  * @swagger
@@ -90,7 +92,7 @@ import { ItemNotFoundError } from '@/api/utils/errorUtils'
  *       405:
  *         description: Method Not Allowed.
  */
-export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
+export const handler = async (req: NextApiRequest, res: NextApiResponse, user: User) => {
   const { method } = req
   const { bucketId } = req.query
 
@@ -98,9 +100,14 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     case 'GET':
       try {
         const bucket = await getBucketById(Number(bucketId))
-        if (bucket) res.status(200).json(bucket)
-        else res.status(400).json({ error: 'No Bucket found' })
-        // get all buckets
+        if (!bucket)
+        {
+          res.status(400).json({ error: 'No Bucket found' })
+        }
+        // check the user has access to bucket.
+        const bucketAccess = await getBucketAccessByID(bucket.id, user.id);
+        if (bucketAccess) res.status(200).json(bucket)
+        else res.status(400).json({ error: 'Not authorized to view this bucket' })
       } catch (error) {
         if (error instanceof ItemNotFoundError) res.status(404).json({ error: error.message })
         else res.status(500).json({ error: 'Internal Server Error' })
@@ -111,6 +118,11 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       try {
         const existingBucket = await getBucketById(Number(bucketId))
         if (existingBucket) {
+          const bucketAccess = await getBucketAccessByID(existingBucket.id, user.id);
+          if (!bucketAccess || bucketAccess.permission !== 'MODERATOR') {
+            res.status(400).json({ error: 'Not authorized to update this bucket' })
+          }
+
           // Update Bucket
           const updatedBucket = await updateBucket(Number(bucketId), req.body)
           res.status(200).json(updatedBucket)

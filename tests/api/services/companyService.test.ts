@@ -39,6 +39,10 @@ describe('Company Model Tests', () => {
     expect(company).toBeTruthy()
     expect(company?.id).toBe(companyId)
   })
+  test('Retrieve a company for non existing id', async () => {
+    const id = -1
+    await expect(getCompanyByID(id)).rejects.toThrow(`Company with ID ${id} not found.`)
+  })
   test('Update a company name', async () => {
     const updatedCompany = await updateCompany(companyId, { name: 'github' })
     expect(updatedCompany.name).toBe('github')

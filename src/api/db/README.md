@@ -17,6 +17,7 @@ erDiagram
     data_source ||--o{ source_measurement : ""
     data_source ||--o{ NOTIFICATION : ""
     data_source ||--|| user_important_measurement_preference : ""
+    company_data_source ||--o{ company_data_source_identifier : ""
     notification_subscription ||--o{ notification_channel : ""
     report ||--o{ company : "contains"
     report_subscription ||--o{ notification_channel : ""
@@ -221,5 +222,13 @@ erDiagram
         datetiem timestamp
         datetime created_at
         datetime modified_at
+    }
+    company_data_source_identifier {
+        int id PK
+        int companyDataSourceId FK
+        identifier_type identifier
+        string property
+        string value
+        datetime validity
     }
 ```

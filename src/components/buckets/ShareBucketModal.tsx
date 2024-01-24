@@ -1,9 +1,12 @@
 'use client'
 
-import { SearchSelect, SearchSelectItem, Select, SelectItem } from '@tremor/react'
 import { useEffect, useState } from 'react'
 import { $Enums, type User } from '@prisma/client'
-import { Share2 } from 'lucide-react'
+import { Share2, Pencil, Check, Trash2, X, CheckIcon, ChevronDown } from 'lucide-react'
+import { useToast } from '../ui/use-toast'
+import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover'
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from '../ui/command'
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import BucketFunctions from '@/app/services/bucket.service'
 import { Button } from '@/components/ui/button'
 import {
@@ -16,6 +19,7 @@ import {
   DialogTrigger,
   DialogClose
 } from '@/components/ui/dialog'
+import { cn } from '@/utils/utils'
 interface ShareBucketModalProps {
   handleShare: (shareUsersList: ShareBucketProps[]) => void
   id: string
@@ -34,6 +38,7 @@ interface Invitee {
   inviteeId: number
   permission: string
   user: User
+  isEdit?: boolean
 }
 const initialValue: User[] = [
   {
@@ -52,6 +57,9 @@ const ShareBucketModal: React.FC<ShareBucketModalProps> = ({ handleShare, id }) 
   const [usersToShare, setUsersToShare] = useState<User[]>([])
   const [listToPost, setListToPost] = useState<ShareBucketProps[]>([])
   const [invitees, setInvitees] = useState<Invitee[]>([])
+  const [open, setOpen] = useState(false)
+  const [userValue, setUserValue] = useState('')
+  const { toast } = useToast()
 
   useEffect(() => {
     BucketFunctions.getUsersForBucketAccess()
@@ -61,7 +69,12 @@ const ShareBucketModal: React.FC<ShareBucketModalProps> = ({ handleShare, id }) 
 
   const getInvitees = () => {
     BucketFunctions.getInvitees(+id)
-      .then((res) => setInvitees(res))
+      .then((res) => {
+        res.map((item: Invitee[]) => {
+          return { ...item, isEdit: false }
+        })
+        setInvitees(res)
+      })
       .catch((err) => console.log(err))
   }
 
@@ -82,6 +95,14 @@ const ShareBucketModal: React.FC<ShareBucketModalProps> = ({ handleShare, id }) 
         })()
       )
       setUsersToShare(uniqueArray)
+      setListToPost((prev) => [
+        ...prev,
+        {
+          bucketId: +id,
+          inviteeId: user.id,
+          permission: 'VIEWER'
+        }
+      ])
     }
   }
 
@@ -96,85 +117,239 @@ const ShareBucketModal: React.FC<ShareBucketModalProps> = ({ handleShare, id }) 
     ])
   }
 
+  const handleEditInviteeClick = (invitee: Invitee) => {
+    setInvitees((prev) =>
+      prev.map((item) => {
+        if (item.inviteeId === invitee.inviteeId) {
+          return { ...item, isEdit: !invitee.isEdit }
+        }
+        return item
+      })
+    )
+  }
+
+  const changeInvitePermission = (val: string, invitee: Invitee) => {
+    setInvitees((prev) =>
+      prev.map((item) => {
+        if (item.inviteeId === invitee.inviteeId) {
+          return { ...item, permission: val }
+        }
+        return item
+      })
+    )
+  }
+
+  const updateInvitee = (invitee: Invitee) => {
+    BucketFunctions.updateInvitee(+id, invitee.inviteeId, invitee.permission)
+      .then((res) => {
+        setInvitees((prev) =>
+          prev.map((item) => {
+            if (item.inviteeId === res.inviteeId) {
+              return { ...item, permission: res.permission }
+            }
+            return item
+          })
+        )
+        toast({
+          title: 'Success',
+          description: 'Invitee is updated successfully'
+        })
+      })
+      .catch(() => {
+        toast({
+          title: 'Error',
+          description: 'Failed to update invitee',
+          variant: 'destructive'
+        })
+      })
+  }
+
+  const deleteInvitee = (inviteeId: number) => {
+    BucketFunctions.deleteInvitee(+id, inviteeId)
+      .then((res) => {
+        if (res) {
+          setInvitees((prev) => prev.filter((item) => item.inviteeId !== inviteeId))
+        }
+        toast({
+          title: 'Success',
+          description: 'Invitee is deleted successfully'
+        })
+      })
+      .catch(() => {
+        toast({
+          title: 'Error',
+          description: 'Failed to delete invitee',
+          variant: 'destructive'
+        })
+      })
+  }
   const onShareBucket = () => {
     setInvitees([])
     setUsersToShare([])
+    setUserValue('')
     handleShare(listToPost)
+  }
+
+  const removeUserFromShareList = (user: User) => {
+    if (+userValue === user.id) {
+      setUserValue('')
+    }
+    setListToPost((prev) => prev.filter((item) => item.inviteeId !== user.id))
+    setUsersToShare((prev) => prev.filter((item) => item.id !== user.id))
   }
   return (
     <div>
       <Dialog>
         <DialogTrigger asChild onClick={getInvitees}>
-          <Button
-            className="mr-2 flex items-center gap-2 border-blue-600 bg-transparent text-blue-600"
-            variant="outline"
-          >
+          <Button className="mr-2 flex items-center gap-2" variant="secondary">
             <Share2 />
             Share
           </Button>
         </DialogTrigger>
-        <DialogContent className="m-2 sm:max-w-[440px]">
+        <DialogContent className="m-2 sm:max-w-[500px]">
           <DialogHeader>
             <DialogTitle>Share this bucket</DialogTitle>
             <DialogDescription>
               Only private buckets can be shared with others. Please make the bucket private if you want to share it
-              with other people. People can already search public buckets
+              with other people. People can already search public buckets.
             </DialogDescription>
           </DialogHeader>
           <div>
-            <p className="mb-4 text-lg text-gray-400">Search for emails to whom you want to share this bucket with</p>
+            <p className="mb-4 text-sm text-muted-foreground">
+              Search for user names to whom you want to share this bucket with.
+            </p>
 
             <div className="flex flex-row items-center gap-4">
-              <SearchSelect onValueChange={(val) => addUserToShareList(val)}>
-                {users?.map((user) => (
-                  <SearchSelectItem value={user.id + ''} key={user.id}>
-                    {user.name}
-                  </SearchSelectItem>
-                ))}
-              </SearchSelect>
+              <Popover open={open} onOpenChange={setOpen}>
+                <PopoverTrigger asChild>
+                  <Button variant="outline" role="combobox" aria-expanded={open} className="w-full justify-between">
+                    {userValue ? usersToShare.find((user) => +user.id === +userValue)?.name : 'Select users to share'}
+                    <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-[450px] p-0">
+                  <Command>
+                    <CommandInput placeholder="Select users..." className="h-9" />
+                    <CommandEmpty>No users found.</CommandEmpty>
+                    <CommandGroup>
+                      {users.map((user) => (
+                        <CommandItem
+                          key={user.id}
+                          value={user.id + ''}
+                          onSelect={(currentValue) => {
+                            addUserToShareList(currentValue)
+                            setUserValue(currentValue)
+                            setOpen(false)
+                          }}
+                        >
+                          {user.name}
+                          <CheckIcon
+                            className={cn('ml-auto h-4 w-4', user.id === +userValue ? 'opacity-100' : 'opacity-0')}
+                          />
+                        </CommandItem>
+                      ))}
+                    </CommandGroup>
+                  </Command>
+                </PopoverContent>
+              </Popover>
             </div>
 
-            <div className="mt-8 h-[200px] max-h-[400px] overflow-auto">
-              {usersToShare.map((user) => (
-                <div className="mb-4 flex flex-row items-center justify-between" key={user.id}>
-                  {user.name}
-                  <Select
-                    placeholder="Permission"
-                    className="w-1/2"
-                    onValueChange={(val) => prepareUserListToShare(user, val)}
-                  >
-                    <SelectItem key={'MODERATOR'} value="MODERATOR">
-                      MODERATOR
-                    </SelectItem>
-                    <SelectItem key={'VIEWER'} value="VIEWER">
-                      VIEWER
-                    </SelectItem>
-                  </Select>
-                </div>
-              ))}
-
-              {invitees?.length > 0 && (
-                <div>
-                  <h2 className="mb-3 text-lg font-semibold">Invitees</h2>
-                  {invitees.map((invitee) => (
+            <div className="mt-8 h-[200px] max-h-[400px] overflow-auto pr-2 pt-2">
+              <div>
+                <h2 className="mb-3 text-lg font-semibold">Invitees</h2>
+                {usersToShare.map((user) => (
+                  <div className="mb-4 flex flex-row items-center justify-between" key={user.id}>
+                    {user.name}
+                    <div className="flex items-center gap-2">
+                      <Select disabled={true} value="VIEWER" onValueChange={(val) => prepareUserListToShare(user, val)}>
+                        <SelectTrigger className="w-[180px]">
+                          <SelectValue placeholder="Permission" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectGroup>
+                            <SelectItem key={'MODERATOR'} value="MODERATOR">
+                              Moderator
+                            </SelectItem>
+                            <SelectItem key={'VIEWER'} value="VIEWER">
+                              Viewer
+                            </SelectItem>
+                          </SelectGroup>
+                        </SelectContent>
+                      </Select>
+                      <X className="h-4 w-16 cursor-pointer" onClick={() => removeUserFromShareList(user)} />
+                    </div>
+                  </div>
+                ))}
+                {invitees?.length > 0 &&
+                  invitees.map((invitee) => (
                     <div className="mb-4 flex flex-row items-center justify-between" key={invitee.user.id}>
                       {invitee.user.name}
-                      <p>{invitee.permission}</p>
+                      <div className="flex w-2/3 flex-row items-center justify-end gap-2">
+                        <Select
+                          value={invitee.permission}
+                          onValueChange={(val) => changeInvitePermission(val, invitee)}
+                          disabled={!invitee.isEdit}
+                        >
+                          <SelectTrigger className="w-[180px]">
+                            <SelectValue placeholder="Permission" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectGroup>
+                              <SelectItem key={'MODERATOR'} value="MODERATOR">
+                                Moderator
+                              </SelectItem>
+                              <SelectItem key={'VIEWER'} value="VIEWER">
+                                Viewer
+                              </SelectItem>
+                            </SelectGroup>
+                          </SelectContent>
+                        </Select>
+                        {invitee.isEdit ? (
+                          <div className="flex w-16 flex-row gap-2">
+                            <Check
+                              color="green"
+                              className="cursor-pointer"
+                              onClick={() => {
+                                updateInvitee(invitee)
+                                handleEditInviteeClick(invitee)
+                              }}
+                            />
+                            <Trash2
+                              color="red"
+                              className="cursor-pointer"
+                              onClick={() => {
+                                deleteInvitee(invitee.inviteeId)
+                                handleEditInviteeClick(invitee)
+                              }}
+                            />
+                            <X className="cursor-pointer" onClick={() => handleEditInviteeClick(invitee)} />
+                          </div>
+                        ) : (
+                          <Pencil className="h-4 w-16 cursor-pointer" onClick={() => handleEditInviteeClick(invitee)} />
+                        )}
+                      </div>
                     </div>
                   ))}
-                </div>
-              )}
+              </div>
             </div>
           </div>
           <DialogFooter>
             <DialogClose asChild>
               <Button type="submit" className="mt-2" onClick={onShareBucket}>
-                Share
+                Save
               </Button>
             </DialogClose>
 
             <DialogClose asChild>
-              <Button type="submit" className="mt-2" variant="secondary" onClick={() => setUsersToShare([])}>
+              <Button
+                type="submit"
+                className="mt-2"
+                variant="secondary"
+                onClick={() => {
+                  setUsersToShare([])
+                  setUserValue('')
+                }}
+              >
                 Cancel
               </Button>
             </DialogClose>

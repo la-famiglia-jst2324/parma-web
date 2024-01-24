@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useContext } from 'react'
 import { ArrowDown, ArrowUp, Link2Icon, PencilIcon } from 'lucide-react'
-import { MultiSelect, MultiSelectItem } from '@tremor/react'
 import { useToast } from '../ui/use-toast'
 import type { CompanyContextProps } from '../CompanyContext'
 import { CompanyContext } from '../CompanyContext'
+import { MultiSelect } from '../ui/multi-select'
 import {
   Dialog,
   DialogClose,
@@ -54,7 +54,7 @@ const ConfigureDatasourcesModal: React.FC<ConfigureDatasourcesModalProps> = ({ c
     const fetchData = async () => {
       try {
         const data = await getDataSources()
-        setAllDataSources(data.dataSources)
+        setAllDataSources(data.datasources)
       } catch (error) {
         console.error('Error fetching data sources:', error)
       }
@@ -72,14 +72,10 @@ const ConfigureDatasourcesModal: React.FC<ConfigureDatasourcesModalProps> = ({ c
     }
   }, [allDataSources, companyDatasources])
 
-  const handleMultiSelectChange = (values: string[]) => {
-    setSelectedValues(values)
-  }
-
   const handleUnlinkDataSource = async (dataSourceId: string) => {
     await deleteCompanyDataSource(companyId, dataSourceId)
     const alldatasource = await getDataSources()
-    setAllDataSources(alldatasource.dataSources)
+    setAllDataSources(alldatasource.datasources)
     const companydatasources = await getDataSourcesByCompanyId(companyId)
     setCompanyDatasources(companydatasources)
     toast({
@@ -94,7 +90,7 @@ const ConfigureDatasourcesModal: React.FC<ConfigureDatasourcesModalProps> = ({ c
     )
     setSelectedValues([])
     const alldatasource = await getDataSources()
-    setAllDataSources(alldatasource.dataSources)
+    setAllDataSources(alldatasource.datasources)
     const companydatasources = await getDataSourcesByCompanyId(companyId)
     setCompanyDatasources(companydatasources)
     toast({
@@ -102,6 +98,13 @@ const ConfigureDatasourcesModal: React.FC<ConfigureDatasourcesModalProps> = ({ c
       description: 'You have successfully added a datasource to the company'
     })
   }
+
+  const data = filteredDataSources?.map((datasource) => {
+    return {
+      value: String(datasource?.id),
+      label: datasource.sourceName
+    }
+  })
 
   return (
     <Dialog>
@@ -119,14 +122,14 @@ const ConfigureDatasourcesModal: React.FC<ConfigureDatasourcesModalProps> = ({ c
           </DialogDescription>
         </DialogHeader>
         <div className="flex">
-          <div className="w-64 pb-3">
-            <MultiSelect onValueChange={handleMultiSelectChange} value={selectedValues}>
-              {filteredDataSources?.map((datasource: CompanyDataSource, index) => (
-                <MultiSelectItem key={index} value={String(datasource.id)}>
-                  {datasource.sourceName}
-                </MultiSelectItem>
-              ))}
-            </MultiSelect>
+          <div className="pb-3">
+            <MultiSelect
+              options={data}
+              selected={selectedValues}
+              onChange={setSelectedValues}
+              placeholder="Select Datasources"
+              width="w-80"
+            />
           </div>
           <div className="pl-3">
             <Button onClick={handleAddDataSourceToCompany} disabled={selectedValues.length === 0}>

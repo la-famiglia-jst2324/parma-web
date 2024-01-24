@@ -1,9 +1,19 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { LineChart, SearchSelect, SearchSelectItem } from '@tremor/react'
+import { LineChart } from '@tremor/react'
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card'
-import type { CompanyContextProps } from '../CompanyContext'
 import { CompanyContext } from '../CompanyContext'
+import type { CompanyContextProps } from '../CompanyContext'
+import { Button } from '../ui/button'
 import { getAnalyticsDataForCompany } from '@/services/measurement/measurementService'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger
+} from '@/components/ui/dropdown-menu'
 
 interface CompanyMeasurement {
   id: number
@@ -26,42 +36,53 @@ interface DataItem {
   [key: string]: number | string
 }
 
-const CompanyGraphCard: React.FC<CompanyGraphCardProps> = ({ companyId, measurements }) => {
+const CompanyGraphCard: React.FC<CompanyGraphCardProps> = ({ companyId, measurements = [] }) => {
   const [graphData, setGraphData] = useState<DataItem[]>([])
+  const [selectedMeasurement, setSelectedMeasurement] = useState<string>(measurements[0]?.measurementName || '')
   const { companyData } = useContext(CompanyContext) as CompanyContextProps
-  const defaultMeasurement = String(measurements[0]?.id)
+  const defaultMeasurement = measurements[0]
 
-  const handleMeasurementChange = async (value: string) => {
+  const handleMeasurementChange = async (value: string, measurementName: string) => {
     try {
       const data = await getAnalyticsDataForCompany(value, companyId)
       setGraphData(data)
+      setSelectedMeasurement(measurementName)
     } catch (error) {
-      console.error('Failed to get the measurement data', error)
+      console.error('Failed to get the measurement data:', error)
     }
   }
 
   useEffect(() => {
-    handleMeasurementChange(defaultMeasurement)
-  }, [defaultMeasurement, companyId])
+    handleMeasurementChange(String(defaultMeasurement?.id), defaultMeasurement?.measurementName || '')
+  }, [defaultMeasurement?.id, companyId])
 
   return (
     <Card>
       <CardHeader>
-        <div className="flex items-center justify-between">
-          <CardTitle className="text-xl">Graph</CardTitle>
-          <SearchSelect
-            onValueChange={handleMeasurementChange}
-            placeholder={'Select graph measurement'}
-            className="w-96"
-            value={defaultMeasurement}
-            enableClear={false}
-          >
-            {measurements?.map((measurement, index) => (
-              <SearchSelectItem key={index} value={String(measurement.id)}>
-                {measurement.measurementName}
-              </SearchSelectItem>
-            ))}
-          </SearchSelect>
+        <div className="flex items-start justify-between">
+          <div className="space-y-1">
+            <CardTitle className="text-xl">Graph</CardTitle>
+            <p className="text-sm">Selected Measurement: {selectedMeasurement}</p>
+          </div>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline">Select measurements</Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-56">
+              <DropdownMenuLabel>Measurements</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuGroup>
+                {measurements.map((measurement) => (
+                  <DropdownMenuItem
+                    key={measurement.id}
+                    onClick={() => handleMeasurementChange(String(measurement.id), measurement.measurementName)}
+                  >
+                    {measurement.measurementName}
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuGroup>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </CardHeader>
       <CardContent>
@@ -69,7 +90,7 @@ const CompanyGraphCard: React.FC<CompanyGraphCardProps> = ({ companyId, measurem
           className="mt-6"
           data={graphData}
           index="date"
-          categories={[companyData?.name]}
+          categories={[companyData?.name || '']}
           colors={['emerald']}
           yAxisWidth={40}
         />

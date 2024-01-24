@@ -87,13 +87,16 @@ export const IdentifierModal: React.FC<IdentifierModalProps> = ({ companyId, dat
   }
 
   async function addIdentifier(identifierKey: string, property: string, value: string) {
+    const validityDate = new Date()
+    validityDate.setMonth(validityDate.getMonth() + 6)
+
     const newIdentifier = {
       companyDataSourceId: parseInt(companyDatasourceId),
       identifierKey,
       identifierType: IdentifierType.MANUALLY_ADDED,
       property,
       value,
-      validity: new Date().toISOString()
+      validity: validityDate.toISOString()
     }
 
     try {

@@ -49,9 +49,13 @@ export const columns: ColumnDef<SearchItem>[] = [
     },
     cell: ({ row }) => {
       const type = row.getValue('type') as string
+      const formattedType = type.charAt(0).toUpperCase() + type.slice(1)
+      const badgeColor = type === 'bucket' ? 'blue' : 'green'
       return (
         <div className="w-10">
-          <Badge className="flex h-6 w-20 items-center justify-center">{type}</Badge>
+          <Badge variant={badgeColor} className="flex h-6 w-20 items-center justify-center">
+            {formattedType}
+          </Badge>
         </div>
       )
     }

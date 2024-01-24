@@ -3,7 +3,7 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import type { User } from '@prisma/client'
 import { deleteBucket, getBucketById, updateBucket } from '@/api/db/services/bucketService'
 import { ItemNotFoundError } from '@/api/utils/errorUtils'
-import { getBucketAccessByID, getInviteesIdsByBucketId } from '@/api/db/services/bucketAccessService'
+import { getBucketAccessByID } from '@/api/db/services/bucketAccessService'
 
 /**
  * @swagger

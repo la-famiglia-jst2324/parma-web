@@ -36,4 +36,14 @@ describe('Profile API', () => {
     await handler(req, res, mockUser)
     expect(res._getStatusCode()).toBe(200)
   })
+
+  test('GET logged in user profile', async () => {
+    const existingUser = getUserById.mockResolvedValueOnce(mockUser)
+    getUserById.mockResolvedValueOnce(existingUser)
+    const { req, res } = createMocks({
+      method: 'GET'
+    })
+    await handler(req, res, mockUser)
+    expect(res._getStatusCode()).toBe(200)
+  })
 })

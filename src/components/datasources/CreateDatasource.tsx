@@ -31,6 +31,7 @@ const CreateDatasource: React.FC<CreateDatasourceProps> = ({ triggerButton, isOp
   const [description, setDescription] = useState<string>('')
   const [frequency, setFrequency] = useState<string>('')
   const { toast } = useToast()
+  const regex = /^[a-z0-9_-]+$/;
 
   async function createDatasource(
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
@@ -54,6 +55,15 @@ const CreateDatasource: React.FC<CreateDatasourceProps> = ({ triggerButton, isOp
       toast({
         title: 'Name is required',
         description: 'Please provide a name for the datasource',
+        duration: 5000
+      })
+      return
+    }
+
+    if (!regex.test(name)) {
+      toast({
+        title: 'Invalid name format.',
+        description: 'Name is required and should only contain lowercase letters, numbers, underscores, and hyphens.',
         duration: 5000
       })
       return

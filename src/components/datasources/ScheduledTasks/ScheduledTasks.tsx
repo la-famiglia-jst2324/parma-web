@@ -17,6 +17,6 @@ const ScheduledTasksTable = ({ data }: ScheduledTasksProps) => {
     )
   }
 
-  return <DataTable data={data} columns={columns} type="schedule" />
+  return <DataTable data={data} columns={columns} type="no_redirect" />
 }
 export default ScheduledTasksTable

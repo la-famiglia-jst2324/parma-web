@@ -3,11 +3,7 @@
 import { useEffect, useState } from 'react'
 import type { Company, Bucket } from '@prisma/client'
 import { useRouter } from 'next/navigation'
-import { Checkbox } from '@/components/ui/checkbox'
 import { Button } from '@/components/ui/button'
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
-import { GoBackButton } from '@/components/GoBackButton'
-import EditBucketModal from '@/components/buckets/EditBucketModal'
 import DeleteBucketModal from '@/components/buckets/DeleteBucketModal'
 import BucketFunctions from '@/app/services/bucket.service'
 import type { ShareBucketProps } from '@/components/buckets/ShareBucketModal'
@@ -16,6 +12,9 @@ import { MainLayoutWrapper } from '@/components/layout/MainLayout'
 import BucketGraph from '@/components/buckets/bucketGraph'
 import AddCompaniesToBucket from '@/components/buckets/addCompanies'
 import { useToast } from '@/components/ui/use-toast'
+import { DataTable } from '@/components/DataTable/Table'
+import { columns } from '@/components/buckets/bucketColumns'
+import BucketDescriptionCard from '@/components/buckets/bucketDescriptionCard'
 
 const initialBucketValue = {
   id: 0,
@@ -52,40 +51,17 @@ const BucketPage = ({ params: { id } }: { params: { id: string } }) => {
       })
   }, [id])
 
-  const onSelectCheckbox = (companyId: number, value: string | boolean) => {
-    if (!value) {
-      setSelectedCompanies(selectedCompanies.filter((id) => id !== companyId))
+  const onSelectCheckbox = (companyId: number | number[]) => {
+    if (!Array.isArray(companyId)) {
+      if (selectedCompanies.includes(companyId)) {
+        setSelectedCompanies(selectedCompanies.filter((id) => id !== companyId))
+      } else {
+        setSelectedCompanies([...selectedCompanies, companyId])
+      }
     } else {
-      setSelectedCompanies([...selectedCompanies, companyId])
+      setSelectedCompanies(companyId)
     }
   }
-
-  const saveBucket = (title: string, description: string | null, isPublic: boolean) => {
-    BucketFunctions.updateBucket(title, description, +id, isPublic)
-      .then((res) => {
-        if (res) {
-          setBucket(res)
-          toast({
-            title: 'Success',
-            description: 'Bucket is updated successfully'
-          })
-        } else {
-          toast({
-            title: 'Error',
-            description: 'Failed to update bucket',
-            variant: 'destructive'
-          })
-        }
-      })
-      .catch((e) => {
-        toast({
-          title: 'Error',
-          description: e,
-          variant: 'destructive'
-        })
-      })
-  }
-
   const onDeleteBucket = () => {
     BucketFunctions.deleteBucket(+id)
       .then((res) => {
@@ -126,6 +102,14 @@ const BucketPage = ({ params: { id } }: { params: { id: string } }) => {
   }
 
   const removeCompanies = () => {
+    if (selectedCompanies.length === 0) {
+      toast({
+        title: 'Error',
+        description: 'Please select at least one company',
+        variant: 'destructive'
+      })
+      return
+    }
     BucketFunctions.deleteCompaniesFromBucket(+id, selectedCompanies)
       .then((res) => {
         if (res) {
@@ -178,9 +162,6 @@ const BucketPage = ({ params: { id } }: { params: { id: string } }) => {
       <div className="w-full">
         <div className="mb-4 flex items-center justify-between">
           <div className="mb-3 flex items-start justify-start space-x-4">
-            <div className="mt-1">
-              <GoBackButton url="/buckets"></GoBackButton>
-            </div>
             <div className="flex flex-col">
               <h1 className="text-2xl font-bold">{bucket.title}</h1>
             </div>
@@ -190,28 +171,18 @@ const BucketPage = ({ params: { id } }: { params: { id: string } }) => {
               id={id}
               handleShare={(shareUsersList: ShareBucketProps[]) => onHandleShare(shareUsersList)}
             ></ShareBucketModal>
-            <EditBucketModal
-              title={bucket.title}
-              description={bucket.description}
-              isPublic={bucket.isPublic}
-              handleSave={(title: string, description: string | null, isPublic: boolean) =>
-                saveBucket(title, description, isPublic)
-              }
-            ></EditBucketModal>
-
             <DeleteBucketModal handleDelete={onDeleteBucket}></DeleteBucketModal>
           </div>
         </div>
-        <div className="mb-12 ml-8">
-          <div className="pb-4 font-semibold uppercase text-gray-500">Description</div>
-          <p className="mb-4">{bucket.description}</p>
+        <div className="mb-12">
+          <BucketDescriptionCard handleSave={(val) => setBucket(val)} bucket={bucket}></BucketDescriptionCard>
         </div>
 
         <div className="mb-12">
           <BucketGraph companies={bucketCompanies}></BucketGraph>
         </div>
         {bucketCompanies && bucketCompanies.length > 0 && (
-          <div className="ml-8 flex items-center justify-between">
+          <div className="flex items-center justify-between">
             <h1 className="mb-8 text-2xl font-bold">All companies in this bucket</h1>
             <div className="flex flex-row items-center gap-4">
               {!editCompanies && (
@@ -225,12 +196,15 @@ const BucketPage = ({ params: { id } }: { params: { id: string } }) => {
                 </Button>
               )}
               {editCompanies && (
-                <AddCompaniesToBucket handleSave={(val) => addCompaniesToBucket(val)}></AddCompaniesToBucket>
+                <AddCompaniesToBucket
+                  bucketCompanies={bucketCompanies}
+                  handleSave={(val) => addCompaniesToBucket(val)}
+                ></AddCompaniesToBucket>
               )}
               {editCompanies && (
                 <Button
-                  className="mr-2 flex items-center gap-2 border-red-600 bg-transparent text-red-600"
-                  variant="outline"
+                  className="mr-2 flex items-center gap-2"
+                  variant="destructive"
                   color="gray"
                   onClick={removeCompanies}
                 >
@@ -252,34 +226,25 @@ const BucketPage = ({ params: { id } }: { params: { id: string } }) => {
         )}
 
         {bucketCompanies && bucketCompanies.length > 0 && (
-          <Table className="ml-8">
-            <TableHeader>
-              <TableRow>
-                {editCompanies && <TableHead></TableHead>}
-                <TableHead>Company name</TableHead>
-                <TableHead>Description</TableHead>
-                <TableHead>Metric</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {bucketCompanies.map((item) => (
-                <TableRow key={item.id}>
-                  {editCompanies && (
-                    <TableCell>
-                      <Checkbox onCheckedChange={(e) => onSelectCheckbox(item.id, e)} />
-                    </TableCell>
-                  )}
-                  <TableCell className="font-medium">{item.name}</TableCell>
-                  <TableCell>{item.description}</TableCell>
-                  <TableCell></TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+          <div>
+            <DataTable
+              columns={columns}
+              data={bucketCompanies}
+              type="companies"
+              toggleColumn={{ columnId: 'select', value: editCompanies }}
+              sendDataToParent={onSelectCheckbox}
+            ></DataTable>
+          </div>
         )}
 
         {bucketCompanies && !(bucketCompanies.length > 0) && (
-          <div className="ml-8 mt-4 text-gray-400">This bucket does not have any companies.</div>
+          <div className="flex items-center justify-between">
+            <div className="ml-8 mt-4 text-gray-400">This bucket does not have any companies.</div>
+            <AddCompaniesToBucket
+              bucketCompanies={bucketCompanies}
+              handleSave={(val) => addCompaniesToBucket(val)}
+            ></AddCompaniesToBucket>
+          </div>
         )}
       </div>
     </main>

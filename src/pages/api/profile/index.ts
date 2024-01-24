@@ -38,6 +38,22 @@ import { withAuthValidation } from '@/api/middleware/auth'
  *         description: User not found.
  *       500:
  *         description: Internal Server Error.
+ *   get:
+ *     tags:
+ *       - user
+ *     summary: Retrieve the logged in user information
+ *     description: Fetches details of a specific user.
+ *     responses:
+ *       200:
+ *         description: Successfully retrieved the user.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/User'
+ *       404:
+ *         description: User not found.
+ *       500:
+ *         description: Internal Server Error.
  * components:
  *   schemas:
  *     User:
@@ -77,6 +93,17 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse, user: U
         if (existingUser) {
           const updatedUser = await updateUser(Number(userId), req.body)
           res.status(200).json(updatedUser)
+        } else res.status(404).json({ error: 'User not Found' })
+      } catch (error) {
+        if (error instanceof ItemNotFoundError) res.status(404).json({ error: error.message })
+        else res.status(500).json({ error: 'Internal Server Error' })
+      }
+      break
+    case 'GET':
+      try {
+        const existingUser = await getUserById(Number(userId))
+        if (existingUser) {
+          res.status(200).json(existingUser)
         } else res.status(404).json({ error: 'User not Found' })
       } catch (error) {
         if (error instanceof ItemNotFoundError) res.status(404).json({ error: error.message })

@@ -13,10 +13,13 @@ import {
   DialogTitle,
   DialogTrigger
 } from '@/components/ui/dialog'
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+
 interface EditInformationModalProps {
   sourceName: string
   description: string
   url: string
+  frequency: string
   handleSave: (updates: { newName: string; newDescription: string; newUrl: string }) => Promise<void>
 }
 
@@ -24,11 +27,13 @@ const EditInformationModal: React.FC<EditInformationModalProps> = ({
   sourceName: nameProp,
   description: descriptionProp,
   url: urlProp,
+  frequency: frequencyProp,
   handleSave
 }) => {
   const [sourceName, setName] = useState(nameProp)
   const [description, setDescription] = useState(descriptionProp)
   const [url, setUrl] = useState(urlProp)
+  const [frequency, setFrequency] = useState(frequencyProp)
 
   const handleInputChange = <T extends HTMLInputElement | HTMLTextAreaElement>(
     event: React.ChangeEvent<T>,
@@ -58,23 +63,47 @@ const EditInformationModal: React.FC<EditInformationModalProps> = ({
         </DialogTrigger>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Edit Datasource Model</DialogTitle>
+            <DialogTitle>Edit Datasource</DialogTitle>
             <DialogDescription>Please fill the following information</DialogDescription>
           </DialogHeader>
           <div className="grid gap-3 py-2">
             <div className="space-y-1">
-              <Input id="name" placeholder="Name..." onChange={(event) => handleInputChange(event, setName)} />
+              <label htmlFor="sourceName">Name</label>
+              <Input
+                id="sourceName"
+                value={sourceName}
+                placeholder="Name"
+                onChange={(event) => handleInputChange(event, setName)}
+              />
             </div>
             <div className="space-y-1">
+              <label htmlFor="description">Description</label>
               <Textarea
                 id="description"
                 value={description}
-                placeholder="Description..."
+                placeholder="Description"
                 onChange={(event) => handleInputChange(event, setDescription)}
               />
             </div>
             <div className="space-y-1">
+              <label htmlFor="url">URL</label>
               <Input id="url" value={url} onChange={(event) => handleInputChange(event, setUrl)} placeholder="URL" />
+            </div>
+            <div className="space-y-1">
+              <label htmlFor="frequency">Frequency</label>
+              <Select value={frequency} onValueChange={setFrequency}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Frequency" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectItem value="HOURLY">Hourly</SelectItem>
+                    <SelectItem value="DAILY">Daily</SelectItem>
+                    <SelectItem value="WEEKLY">Weekly</SelectItem>
+                    <SelectItem value="MONTHLY">Monthly</SelectItem>
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
             </div>
           </div>
           <DialogFooter className="sm:justify-end">

@@ -20,6 +20,7 @@
   "dependencies": {
     "@google-cloud/secret-manager": "^5.0.1",
     "@heroicons/react": "2.0.18",
+    "@hookform/resolvers": "^3.3.4",
     "@prisma/client": "5.7.0",
     "@radix-ui/react-accordion": "^1.1.2",
     "@radix-ui/react-alert-dialog": "^1.0.5",
@@ -54,10 +55,11 @@
     "pino": "^8.16.2",
     "react": "^18",
     "react-dom": "^18",
+    "react-hook-form": "^7.49.3",
     "swagger-ui-react": "5.11.0",
     "tailwind-merge": "^2.1.0",
     "tailwindcss-animate": "^1.0.7",
-    "zod": "^3.22.2"
+    "zod": "^3.22.4"
   },
   "devDependencies": {
     "@next/eslint-plugin-next": "^14.0.1",

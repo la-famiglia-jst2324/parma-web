@@ -1,90 +1,171 @@
 'use client'
 
-import type { FormEvent } from 'react'
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { ChannelType } from '@prisma/client'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useForm } from 'react-hook-form'
+import * as z from 'zod'
 import { Button } from '@/components/ui/button'
-import SelectSection from '@/components/settings/SelectSection'
-import ApiKeyConfiguration from '@/components/settings/ApiKeyConfiguration'
 import { MainLayoutWrapper } from '@/components/layout/MainLayout'
 import { Input } from '@/components/ui/input'
+// import { Separator } from '@/components/ui/separator'
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel } from '@/components/ui/form'
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { AuthContext, authResetPassword } from '@/lib/firebase/auth'
+import { ShowToast } from '@/components/ShowToast'
+import { postNotificationChannel } from '@/services/report/reportService'
 
 function SettingsPage() {
-  const [selectedChannels, setSelectedChannels] = useState<string[]>([])
-  const channels = [ChannelType.EMAIL, ChannelType.SLACK]
-
-  // tbd
-  const handleConfigureSlack = () => {}
-  const handleConfigureAffinity = () => {}
-
-  const saveChanges = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
-    console.log(selectedChannels)
+  const [selectedChannel, setSelectedChannel] = useState<string>('')
+  const user = useContext(AuthContext)
+  const resetPassword = async () => {
+    let timeoutId: NodeJS.Timeout | null = null
+    const userMail = user === 'loading' ? null : user?.email
+    try {
+      if (!userMail) {
+        return
+      }
+      timeoutId = setTimeout(() => {}, 10000)
+      await authResetPassword(userMail)
+      clearTimeout(timeoutId)
+      timeoutId = null
+      ShowToast('We have sent instructions on your given email to reset your password.', 'Please check your email')
+    } catch (error) {
+      console.error('Error resetting password:', error)
+      ShowToast('Error resetting password', 'Please try again', 'destructive')
+    } finally {
+      if (timeoutId) {
+        clearTimeout(timeoutId)
+      }
+    }
   }
+
+  const FormSchema = z.object({
+    email: z.string().email({
+      message: 'Email is not valid.'
+    }),
+    channel: z.string(),
+    slack: z.string().optional()
+  })
+
+  const form = useForm<z.infer<typeof FormSchema>>({
+    resolver: zodResolver(FormSchema),
+    defaultValues: {}
+  })
+  async function onSubmit(values: z.infer<typeof FormSchema>) {
+    console.log('sfr', values)
+    if (values.channel === 'slack' && values.slack === '') {
+      form.setError('slack', {
+        message: 'Slack API Key is required'
+      })
+      ShowToast('Slack API Key is required', 'Please enter a valid slack api key', 'destructive')
+    } else {
+      try {
+        const response = await postNotificationChannel(
+          values.channel === 'email' ? ChannelType.EMAIL : ChannelType.SLACK,
+          values.email,
+          values.slack || ''
+        )
+        console.log(response)
+        ShowToast(
+          'Channel added successfully',
+          'You will now receive reports and notifications on your selected channel'
+        )
+      } catch (error) {
+        console.log('An error has occurred: ', error)
+        throw error
+      }
+    }
+  }
+
   return (
-    <main>
-      <div className="space-x-3 text-white">
-        <h1 className="mb-2 p-4 text-3xl font-bold">Preferences</h1>
+    <div className="items-center">
+      <div className="mx-16">
+        <div className="">
+          <div className="mt-6 flex-col justify-center">
+            <Form {...form}>
+              <form onSubmit={form.handleSubmit(onSubmit)} className="w-2/3 space-y-6">
+                <FormField
+                  control={form.control}
+                  name="channel"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Channel</FormLabel>
+                      <Select
+                        onValueChange={(value) => {
+                          setSelectedChannel(value)
+                          field.onChange(value)
+                        }}
+                        defaultValue={field.value}
+                      >
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select Channel" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectGroup>
+                            <SelectItem value="email">Email</SelectItem>
+                            <SelectItem value="slack">Slack</SelectItem>
+                          </SelectGroup>
+                        </SelectContent>
+                      </Select>
+                      <FormDescription>Select a channel to receive reports and notifications.</FormDescription>
+                    </FormItem>
+                  )}
+                />
 
-        <div className="pl-8">
-          <h2 className="text-xl font-bold ">Report & Notification Configuration</h2>
-          <form role="form" data-testid="create-datasource-form" onSubmit={saveChanges}>
-            <SelectSection
-              // id="channel"
-              title="Select Channel"
-              description="Select channel for receiving reports and notifications"
-              placeholder="Channel"
-              options={channels.map(
-                (channel) =>
-                  channel.toString().toLowerCase().charAt(0).toUpperCase() + channel.toString().toLowerCase().slice(1)
-              )}
-              onValueChange={(value) => setSelectedChannels(value)}
-              isMultiSelect={false}
-            />
-            <div>
-              <div className="pb-1 pt-6 font-bold">
-                <h3>Configure Email</h3>
-              </div>
-              <div className="flex">
-                <div>
-                  <h4 className="flex">Provide email address where you want to receive reports and notifications</h4>
-                </div>
-                <div className="absolute right-8 flex w-56 justify-center">
-                  <Button>
-                    {/* onClick={saveChanges} */}
-                    Save Changes
-                  </Button>
-                </div>
-              </div>
-              <Input
-                className="w-50 ml-1 mt-2 rounded bg-slate-800"
-                placeholder="Enter Your Email Address"
-                color=""
-              ></Input>
-            </div>
-          </form>
-        </div>
+                {selectedChannel === 'slack' && (
+                  <FormField
+                    control={form.control}
+                    name="slack"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Slack API Key</FormLabel>
+                        <FormControl>
+                          <Input placeholder="Enter your slack API key" {...field} />
+                        </FormControl>
+                        <FormDescription>
+                          This is needed to send reports and notifications to your slack channel.
+                        </FormDescription>
+                      </FormItem>
+                    )}
+                  />
+                )}
+                <FormField
+                  control={form.control}
+                  name="email"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Email Address</FormLabel>
+                      <FormControl>
+                        <Input placeholder="example@email.com" {...field} />
+                      </FormControl>
+                      <FormDescription>
+                        Provide an email where you want to receive reports and notifications.
+                      </FormDescription>
+                    </FormItem>
+                  )}
+                />
+                <Button type="submit">Submit</Button>
+                <FormField
+                  name=""
+                  render={() => (
+                    <FormItem>
+                      <FormLabel>Reset Your Password</FormLabel>
+                    </FormItem>
+                  )}
+                />
 
-        <div
-          className="p-5 pl-8"
-          // onSubmit={saveChanges}
-        ></div>
-        <div className="w-full rounded-b border-b border-gray-200 p-2"></div>
-
-        <div className="p-8">
-          <h2 className="text-xl font-bold ">API Keys</h2>
-
-          <ApiKeyConfiguration serviceName="Slack" onConfigure={handleConfigureSlack} />
-          <Input className="ml-1 mt-2 w-52 rounded bg-slate-800" placeholder="Enter Your API Key" color=""></Input>
-
-          <ApiKeyConfiguration serviceName="OpenAI" onConfigure={handleConfigureSlack} />
-          <Input className="ml-1 mt-2 w-52 rounded bg-slate-800" placeholder="Enter Your API Key" color=""></Input>
-
-          <ApiKeyConfiguration serviceName="Affinity" onConfigure={handleConfigureAffinity} />
-          <Input className="ml-1 mt-2 w-52 rounded bg-slate-800" placeholder="Enter Your API Key" color=""></Input>
+                <Button variant="destructive" type="button" onClick={resetPassword}>
+                  Send Reset Link
+                </Button>
+              </form>
+            </Form>
+          </div>
         </div>
       </div>
-    </main>
+    </div>
   )
 }
 

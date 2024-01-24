@@ -184,9 +184,8 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             error:
               'Invalid request parameters: name is required and should only contain lowercase letters, numbers, underscores, and hyphens.'
           })
-          return
         }
-                
+       
         const existingDataSource = await getDataSourceByID(Number(dataSourceId))
         if (existingDataSource) {
           // Update Bucket

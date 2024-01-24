@@ -20,8 +20,8 @@ const Sidebar: React.FC = () => {
   const [clickBucket, setClickBucket] = useState(false)
   const [clickCompany, setClickCompany] = useState(false)
   return (
-    <div className="w-72 flex-col border-r-2 border-gray-800">
-      <div className="flex grow flex-col justify-between overflow-y-auto">
+    <div className="fixed h-full w-72 flex-col overflow-auto border-r-2 border-gray-800">
+      <div className="">
         <div className="mx-4">
           <div className="my-4 flex items-center justify-between">
             <Link href="/" passHref>

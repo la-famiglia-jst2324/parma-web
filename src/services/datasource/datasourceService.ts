@@ -144,7 +144,6 @@ export async function getCompanyDataSourceIdentifiers(companyDataSourceId: strin
 
 export async function createCompanyDataSourceIdentifier(body: {
   companyDataSourceId: number
-  identifierKey: string
   identifierType: IdentifierType
   property: string
   value: string
@@ -160,7 +159,6 @@ export async function createCompanyDataSourceIdentifier(body: {
 
 export async function editCompanyDataSourceIdentifier(body: {
   companyDataSourceId: number
-  identifierKey: string
   identifierType: IdentifierType
   property: string
   value: string

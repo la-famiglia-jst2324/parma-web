@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { PencilIcon } from 'lucide-react'
 import { Label } from '../ui/label'
 import { Input } from '../ui/input'
 import { Button } from '@/components/ui/button'
@@ -40,6 +41,7 @@ const EditBucketModal: React.FC<EditBucketModalProps> = ({
       <Dialog>
         <DialogTrigger asChild>
           <Button className="mr-2 flex items-center border-gray-500" variant="outline" color="gray">
+            <PencilIcon className="mr-2 h-4 w-4" />
             Edit bucket information
           </Button>
         </DialogTrigger>

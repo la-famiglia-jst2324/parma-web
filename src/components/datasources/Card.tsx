@@ -23,6 +23,7 @@ const DescriptionCard: React.FC<DescriptionCardProps> = ({ data, handleSave }) =
             sourceName={data.sourceName}
             description={data.description || ''}
             url={data.invocationEndpoint}
+            frequency={data.frequency}
             handleSave={(updates) => handleSave({ ...updates, newStatus: data.isActive })}
           />
         </div>

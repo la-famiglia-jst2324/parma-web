@@ -20,10 +20,12 @@ import { Textarea } from '@/components/ui/textarea'
 import { createNewDatasource } from '@/services/datasource/datasourceService'
 
 interface CreateDatasourceProps {
-  triggerButton: React.ReactNode
+  triggerButton?: React.ReactNode
+  isOpen?: boolean
+  setOpen?: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-const CreateDatasource: React.FC<CreateDatasourceProps> = ({ triggerButton }) => {
+const CreateDatasource: React.FC<CreateDatasourceProps> = ({ triggerButton, isOpen, setOpen }) => {
   const [name, setName] = useState<string>('')
   const [url, setUrl] = useState<string>('')
   const [description, setDescription] = useState<string>('')
@@ -105,7 +107,7 @@ const CreateDatasource: React.FC<CreateDatasourceProps> = ({ triggerButton }) =>
 
   return (
     <div>
-      <Dialog>
+      <Dialog open={isOpen} onOpenChange={setOpen}>
         <DialogTrigger asChild>{triggerButton}</DialogTrigger>
         <DialogContent>
           <DialogHeader>

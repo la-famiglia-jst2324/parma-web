@@ -43,7 +43,7 @@ function MultiSelect({
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className={`${width || 'width-full'} justify-between ${selected.length > 1 ? 'h-full' : 'h-10'}`}
+          className={`${width || 'w-full'} justify-between ${selected.length > 1 ? 'h-full' : 'h-10'}`}
           onClick={() => setOpen(!open)}
         >
           <div className="flex flex-wrap items-center gap-1">
@@ -72,7 +72,7 @@ function MultiSelect({
           <ChevronDown className="h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className={`${width || 'width-full'} p-0`}>
+      <PopoverContent className={`${width || 'w-full'} p-0`}>
         <Command className={className}>
           <CommandInput placeholder="Search ..." />
           {options.length > 0 ? (

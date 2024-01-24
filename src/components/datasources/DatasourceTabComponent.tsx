@@ -1,5 +1,6 @@
+import type { ScheduledTask, Company } from '@prisma/client'
 import { CompaniesTable } from './CompaniesTable'
-import ScheduledTasksTable from './ScheduledTasks'
+import ScheduledTasksTable from './ScheduledTasks/ScheduledTasks'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 
 export const NoData: React.FC = () => (
@@ -11,9 +12,11 @@ export const NoData: React.FC = () => (
 
 interface TabComponentProps {
   sourceId: string
+  tasksData: ScheduledTask[]
+  companiesData: Company[]
 }
 
-export const TabComponent: React.FC<TabComponentProps> = ({ sourceId }) => {
+export const TabComponent: React.FC<TabComponentProps> = ({ sourceId, tasksData, companiesData }) => {
   return (
     <Tabs defaultValue="Companies Monitored">
       <TabsList>
@@ -22,11 +25,11 @@ export const TabComponent: React.FC<TabComponentProps> = ({ sourceId }) => {
       </TabsList>
       {/* Companies Monitored */}
       <TabsContent value="Companies Monitored">
-        <CompaniesTable datasourceId={sourceId} />
+        <CompaniesTable companiesData={companiesData} datasourceId={sourceId} />
       </TabsContent>
       {/* Scheduled Tasks */}
       <TabsContent value="Scheduled Tasks">
-        <ScheduledTasksTable datasourceId={sourceId} />
+        <ScheduledTasksTable data={tasksData} />
       </TabsContent>
     </Tabs>
   )

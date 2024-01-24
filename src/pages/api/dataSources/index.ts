@@ -141,15 +141,18 @@ const frequencyMapping: { [key: string]: Frequency | undefined } = {
 
 export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const { method } = req
+  const { name, page, size } = req.query
 
   switch (method) {
     case 'GET':
       try {
-        const name = (req.query.name as string) || ''
-        const page = parseInt(req.query.page as string, 10) || 1
-        const size = parseInt(req.query.size as string, 10) || 10
+        const searchString = (name as string) || ''
 
-        const dataSourcesPagination = await getAllDataSources(page, size, name)
+        const dataSourcesPagination = await getAllDataSources(
+          parseInt(page as string),
+          parseInt(size as string),
+          searchString
+        )
         if (dataSourcesPagination.datasources.length > 0) res.status(200).json(dataSourcesPagination)
         else res.status(400).json({ error: 'No Data Sources found' })
       } catch (error) {

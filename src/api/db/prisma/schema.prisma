@@ -36,12 +36,12 @@ model Company {
   id          Int      @id @default(autoincrement())
   name        String
   description String?
-  addedBy     Int      @map("added_by")
+  addedBy     Int?      @map("added_by")
   createdAt   DateTime @default(now()) @map("created_at")
   modifiedAt  DateTime @updatedAt @map("modified_at")
 
   // Relation fields
-  user                      User                       @relation("UserAddsCompany", fields: [addedBy], references: [id])
+  user                      User?                       @relation("UserAddsCompany", fields: [addedBy], references: [id])
   companyBucketMember       CompanyBucketMembership[]
   companyAttachments        CompanyAttachment[]        @relation("CompanyAttachment")
   companyDataSource         CompanyDataSource[]
@@ -534,7 +534,6 @@ model CompanySubscription {
 model CompanyDataSourceIdentifier {
   id                  Int            @id @default(autoincrement())
   companyDataSourceId Int            @map("company_data_source_id")
-  identifierKey       String         @map("identifier_key")
   identifierType      IdentifierType @map("identifier_type")
   property            String
   value               String

@@ -182,3 +182,12 @@ export async function deleteCompanyDataSourceIdentifierById(id: string) {
     console.log('An error has occurred: ', error)
   }
 }
+
+export async function triggerDataSource(dataSourceId: string) {
+  try {
+    const res = await fetchClient.post(`/api/triggerDataSource/${dataSourceId}`)
+    return res.data
+  } catch (error) {
+    console.log('An error has occurred: ', error)
+  }
+}

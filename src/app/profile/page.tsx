@@ -9,7 +9,13 @@ import { Button } from '@/components/ui/button'
 import profilePic from '@/../../public/Default_pfp.jpg'
 import { MainLayoutWrapper } from '@/components/layout/MainLayout'
 import { AuthContext } from '@/lib/firebase/auth'
-import { getUserAttachment, putUserAttachment, putUsername } from '@/services/user/userService'
+import {
+  getUserAttachment,
+  getUsername,
+  postUserAttachment,
+  putUserAttachment,
+  putUsername
+} from '@/services/user/userService'
 import { ShowToast } from '@/components/ShowToast'
 
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
@@ -17,15 +23,13 @@ import { Input } from '@/components/ui/input'
 
 const ProfilePage: React.FC = () => {
   const user = useContext(AuthContext)
-  // const [fullName, setFullName] = useState('')
+  const [userName, setUserName] = useState('')
   const [userPhotoURL, setUserPhotoURL] = useState<string | null>('')
-
-  const saveProfileData = async (userName: string) => {
+  const userMail = user === 'loading' ? null : user?.email
+  const saveProfileData = async (name: string) => {
     try {
-      const response = await putUsername(userName)
-      // const userD = await getUsername()
-      // console.log('UserName', userD)
-      console.log('value:', response.displayName)
+      const response = await putUsername(name)
+      setUserName(response.username)
       ShowToast('Profile updated successfully', 'You have successfully updated your profile')
     } catch (error) {
       console.error('Error updating profile:', error)
@@ -36,7 +40,6 @@ const ProfilePage: React.FC = () => {
     const fetchUserAttachment = async () => {
       try {
         const response = await getUserAttachment()
-        console.log('value:', response.fileUrl)
         setUserPhotoURL(response.fileUrl)
       } catch (error) {
         console.warn('No user attachment available', error)
@@ -44,13 +47,23 @@ const ProfilePage: React.FC = () => {
     }
     fetchUserAttachment()
   }, [])
-  const userMail = user === 'loading' ? null : user?.email
-  const userFullName = user === 'loading' ? null : user?.displayName
+
+  useEffect(() => {
+    const fetchUserName = async () => {
+      try {
+        const response = await getUsername()
+        setUserName(response.username)
+        return response.username
+      } catch (error) {
+        console.error('Error fetching userName:', error)
+      }
+    }
+    fetchUserName()
+  })
 
   const fileUpload = (event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files.length > 0) {
       const file = event.target.files[0]
-      console.log('File:', file)
       handleFileChange(file)
     }
   }
@@ -58,7 +71,12 @@ const ProfilePage: React.FC = () => {
     try {
       const data = new FormData()
       data.append('file', file)
-      const response = await putUserAttachment(data)
+      let response = null
+      if (userPhotoURL !== null) {
+        response = await putUserAttachment(data)
+      } else {
+        response = await postUserAttachment(data)
+      }
       setUserPhotoURL(response.profilePicture)
       ShowToast('Upload successful', 'your profile picture is successfully uploaded')
     } catch (error) {
@@ -76,14 +94,13 @@ const ProfilePage: React.FC = () => {
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      username: userFullName || ''
+      username: userName
     }
   })
   function onSubmit(values: z.infer<typeof FormSchema>) {
     if (values.username !== '') {
       saveProfileData(values.username)
     }
-    console.log('sfr', values)
   }
   return (
     <div className="items-center">
@@ -121,7 +138,7 @@ const ProfilePage: React.FC = () => {
                     <FormItem>
                       <FormLabel>Username</FormLabel>
                       <FormControl>
-                        <Input placeholder="your name" {...field} />
+                        <Input placeholder={userName} {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>

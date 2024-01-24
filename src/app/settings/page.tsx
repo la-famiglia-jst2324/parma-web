@@ -8,7 +8,7 @@ import * as z from 'zod'
 import { Button } from '@/components/ui/button'
 import { MainLayoutWrapper } from '@/components/layout/MainLayout'
 import { Input } from '@/components/ui/input'
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel } from '@/components/ui/form'
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { AuthContext, authResetPassword } from '@/lib/firebase/auth'
 import { ShowToast } from '@/components/ShowToast'
@@ -44,12 +44,10 @@ function SettingsPage() {
     defaultValues: {}
   })
   async function onSubmit(values: z.infer<typeof FormSchema>) {
-    console.log('sfr', values)
-    if (values.channel === 'slack' && values.slack === '') {
+    if (values.channel === 'slack' && (values.slack === '' || !values.slack)) {
       form.setError('slack', {
         message: 'Slack API Key is required'
       })
-      ShowToast('Slack API Key is required', 'Please enter a valid slack api key', 'destructive')
     } else {
       try {
         await postNotificationChannel(
@@ -101,6 +99,7 @@ function SettingsPage() {
                         </SelectContent>
                       </Select>
                       <FormDescription>Select a channel to receive reports and notifications.</FormDescription>
+                      <FormMessage />
                     </FormItem>
                   )}
                 />
@@ -118,6 +117,7 @@ function SettingsPage() {
                         <FormDescription>
                           This is needed to send reports and notifications to your slack channel.
                         </FormDescription>
+                        <FormMessage />
                       </FormItem>
                     )}
                   />
@@ -134,6 +134,7 @@ function SettingsPage() {
                       <FormDescription>
                         Provide an email where you want to receive reports and notifications.
                       </FormDescription>
+                      <FormMessage />
                     </FormItem>
                   )}
                 />

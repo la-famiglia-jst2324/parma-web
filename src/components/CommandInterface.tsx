@@ -100,7 +100,6 @@ export function CommandInterface() {
             <Database className="mr-2" />
             <span onClick={() => router.push('/settings')}>Open Datasources</span>
             <CommandShortcut>⌘D</CommandShortcut>
-
           </CommandItem>
         </CommandGroup>
         <CommandSeparator />

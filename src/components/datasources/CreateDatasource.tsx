@@ -101,9 +101,17 @@ const CreateDatasource: React.FC<CreateDatasourceProps> = ({ triggerButton, isOp
       }
     } catch (error) {
       console.error('Error creating datasource:', error)
+
+      let errorMessage = 'Failed to create new datasource'
+
+      // If the error is an instance of Error
+      if (error instanceof Error) {
+        errorMessage = error.message
+      }
+
       toast({
         title: 'Datasource creation failed',
-        description: 'Failed to create new datasource',
+        description: errorMessage,
         duration: 5000
       })
     }
@@ -166,7 +174,11 @@ const CreateDatasource: React.FC<CreateDatasourceProps> = ({ triggerButton, isOp
                 Close
               </Button>
             </DialogClose>
-            <Button variant="secondary" onClick={(event) => createDatasource(event, name, description, url, frequency)}>
+            <Button
+              type="submit"
+              variant="secondary"
+              onClick={(event) => createDatasource(event, name, description, url, frequency)}
+            >
               Create
             </Button>
           </DialogFooter>

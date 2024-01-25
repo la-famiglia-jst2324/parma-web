@@ -2,7 +2,6 @@
 import React from 'react'
 import { useRouter } from 'next/navigation'
 import { Trash2 } from 'lucide-react'
-import { toast } from '../../ui/use-toast'
 import { Button } from '../../ui/button'
 
 import {
@@ -17,6 +16,7 @@ import {
   AlertDialogTrigger
 } from '@/components/ui/alert-dialog'
 import { deleteDatasource } from '@/services/datasource/datasourceService'
+import { ShowToast } from '@/components/ShowToast'
 
 interface DeleteModalProps {
   id: string
@@ -31,11 +31,7 @@ const DeleteModal: React.FC<DeleteModalProps> = ({ id }) => {
       router.push('/datasources')
     } catch (error) {
       console.error('Failed to delete datasource:', error)
-      toast({
-        title: 'Failed to delete datasource',
-        description: 'An error occurred while deleting the datasource',
-        duration: 5000
-      })
+      ShowToast('Failed to delete datasource', 'An error occurred while deleting the datasource')
     }
   }
 

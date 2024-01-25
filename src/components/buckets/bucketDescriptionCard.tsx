@@ -1,7 +1,7 @@
 import React from 'react'
 import type { Bucket } from '@prisma/client'
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card'
-import { useToast } from '../ui/use-toast'
+import { ShowToast } from '../ShowToast'
 import EditBucketModal from './EditBucketModal'
 import BucketFunctions from '@/app/services/bucket.service'
 
@@ -12,30 +12,18 @@ interface BucketDescriptionCardProps {
 }
 
 const BucketDescriptionCard: React.FC<BucketDescriptionCardProps> = ({ bucket, handleSave, isModerator }) => {
-  const { toast } = useToast()
   const saveBucket = (title: string, description: string | null, isPublic: boolean, id: number) => {
     BucketFunctions.updateBucket(title, description, id, isPublic)
       .then((res) => {
         if (res) {
           handleSave(res) // Send updated bucket to parent component
-          toast({
-            title: 'Success',
-            description: 'Bucket is updated successfully'
-          })
+          ShowToast('Success', 'Bucket is updated successfully')
         } else {
-          toast({
-            title: 'Error',
-            description: 'Failed to update bucket',
-            variant: 'destructive'
-          })
+          ShowToast('Error', 'Failed to update bucket', 'destructive')
         }
       })
       .catch((e) => {
-        toast({
-          title: 'Error',
-          description: e,
-          variant: 'destructive'
-        })
+        ShowToast('Error', e, 'destructive')
       })
   }
   return (

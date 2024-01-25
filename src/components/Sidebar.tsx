@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { Squares2X2Icon, FolderIcon, BuildingOffice2Icon, MagnifyingGlassIcon } from '@heroicons/react/20/solid'
 import { ChevronRight, ChevronDown, Plus } from 'lucide-react'
 import Image from 'next/image'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import UserNav from './UserNav'
 import useCompanies from './hooks/useCompanies'
 import useBuckets from './hooks/useBuckets'
@@ -17,8 +17,18 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/component
 const Sidebar: React.FC = () => {
   const buckets = useBuckets()
   const companies = useCompanies()
+
+  const [isBucket, setIsBucket] = useState(buckets.length > 0)
+  const [isCompany, setIsCompany] = useState(companies.length > 0)
+  useEffect(() => {
+    setIsBucket(buckets.length > 0)
+  }, [buckets])
+  useEffect(() => {
+    setIsCompany(companies.length > 0)
+  }, [companies])
   const [clickBucket, setClickBucket] = useState(false)
   const [clickCompany, setClickCompany] = useState(false)
+
   return (
     <div className="fixed h-full w-72 flex-col overflow-auto border-r-2 border-gray-800">
       <div className="">
@@ -27,7 +37,7 @@ const Sidebar: React.FC = () => {
             <Link href="/" passHref>
               <div className="flex items-center justify-start">
                 <Image width="75" height="75" className="h-10 w-10 rounded-full" src="/DALLE-logo.png" alt="" />
-                <p className="font-mono text-2xl font-bold tracking-wide	">ParmaAI</p>
+                <p className="text-2xl font-bold">ParmaAI</p>
               </div>
             </Link>
             <UserNav />
@@ -38,7 +48,7 @@ const Sidebar: React.FC = () => {
             <Link href="/">
               <Button variant="ghost" className="group flex w-40 justify-start rounded text-base">
                 <Squares2X2Icon className="mr-2 h-4 w-4 text-gray-500 group-hover:text-gray-200" />
-                <p className="text-base font-medium text-gray-300">Newsfeed</p>
+                <p className="text-base font-medium text-gray-200">Newsfeed</p>
               </Button>
             </Link>
             <Link href="/search">
@@ -49,14 +59,14 @@ const Sidebar: React.FC = () => {
           <Collapsible>
             <div className="mb-4">
               <div className="flex items-center justify-between">
-                <CollapsibleTrigger>
+                <CollapsibleTrigger disabled={!isBucket}>
                   <Button
                     variant="ghost"
                     className="group flex w-40 justify-start rounded text-base hover:text-white"
                     onClick={() => setClickBucket(!clickBucket)}
                   >
                     <FolderIcon className={`mr-2 h-4 w-4 text-gray-500 group-hover:text-gray-200`} />
-                    <p className="text-base font-medium text-gray-300">Buckets </p>
+                    <p className="text-base font-medium text-gray-200">Buckets </p>
                     {clickBucket ? (
                       <ChevronDown className="ml-2 h-3 w-3 text-gray-500" />
                     ) : (
@@ -72,22 +82,22 @@ const Sidebar: React.FC = () => {
                 <div className="ml-8">
                   <ScrollArea className="mt-2 h-32 w-full">
                     <div className="pl-2">
-                      {buckets.map((bucket) => (
-                        <div key={bucket.id}>
-                          <Link href={`/buckets/${bucket.id}`} passHref>
-                            <Button
-                              variant="ghost"
-                              className="group flex h-5 w-full justify-start rounded px-3 text-base"
-                            >
-                              <li></li>
-                              <p className="text-sm font-medium text-slate-400 group-hover:text-gray-200">
-                                {bucket.title}
-                              </p>
-                            </Button>
-                          </Link>
-                          <Separator className="my-2" />
-                        </div>
-                      ))}
+                      {isBucket &&
+                        buckets.map((bucket) => (
+                          <div key={bucket.id}>
+                            <Link href={`/buckets/${bucket.id}`} passHref>
+                              <Button
+                                variant="ghost"
+                                className="group flex h-5 w-full justify-start rounded px-3 text-base"
+                              >
+                                <p className="text-sm font-medium text-slate-400 group-hover:text-gray-200">
+                                  {bucket.title}
+                                </p>
+                              </Button>
+                            </Link>
+                            <Separator className="my-2" />
+                          </div>
+                        ))}
                     </div>
                   </ScrollArea>
                 </div>
@@ -98,14 +108,14 @@ const Sidebar: React.FC = () => {
           <Collapsible>
             <div className="mb-4">
               <div className="flex items-center justify-between">
-                <CollapsibleTrigger>
+                <CollapsibleTrigger disabled={!isCompany}>
                   <Button
                     variant="ghost"
                     className="group flex w-40 shrink-0 justify-start text-base  hover:text-white"
                     onClick={() => setClickCompany(!clickCompany)}
                   >
                     <BuildingOffice2Icon className="mr-2 h-4 w-6 text-gray-500 group-hover:text-gray-200" />
-                    <p className="text-base font-medium text-gray-300">Companies</p>
+                    <p className="text-base font-medium text-gray-200">Companies</p>
                     {clickCompany ? (
                       <ChevronDown className="ml-2 h-4 w-4 text-gray-500" />
                     ) : (
@@ -121,22 +131,22 @@ const Sidebar: React.FC = () => {
                 <div className="ml-8">
                   <ScrollArea className="mt-2 h-32 w-full">
                     <div className="pl-2">
-                      {companies.map((company) => (
-                        <div key={company.id}>
-                          <Link href={`/companies/${company.id}`} passHref>
-                            <Button
-                              variant="ghost"
-                              className="group flex h-5 w-full justify-start rounded px-3 text-base"
-                            >
-                              <li></li>
-                              <p className="text-sm font-medium text-slate-400 group-hover:text-gray-200">
-                                {company.name}
-                              </p>
-                            </Button>
-                          </Link>
-                          <Separator className="my-2" />
-                        </div>
-                      ))}
+                      {isCompany &&
+                        companies.map((company) => (
+                          <div key={company.id}>
+                            <Link href={`/companies/${company.id}`} passHref>
+                              <Button
+                                variant="ghost"
+                                className="group flex h-5 w-full justify-start rounded px-3 text-base"
+                              >
+                                <p className="text-sm font-medium text-slate-400 group-hover:text-gray-200">
+                                  {company.name}
+                                </p>
+                              </Button>
+                            </Link>
+                            <Separator className="my-2" />
+                          </div>
+                        ))}
                     </div>
                   </ScrollArea>
                 </div>

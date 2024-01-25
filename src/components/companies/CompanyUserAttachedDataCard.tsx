@@ -5,6 +5,7 @@ import { Loader2Icon } from 'lucide-react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card'
 import { Input } from '../ui/input'
 import { Button } from '../ui/button'
+import { ShowToast } from '../ShowToast'
 import CompanyAttachment from './CompanyAttachment'
 import {
   deleteCompanyAttachment,
@@ -12,7 +13,6 @@ import {
   getCompanyAttachments,
   postCompanyAttachment
 } from '@/services/company/companyService'
-import { useToast } from '@/components/ui/use-toast'
 
 interface CompanyUserAttachedDataCardProps {
   companyId: string
@@ -33,7 +33,6 @@ const CompanyUserAttachedDataCard: React.FC<CompanyUserAttachedDataCardProps> = 
   const [uploadLoading, setUploadLoading] = useState<boolean>(false)
   const fileInputRef = useRef<HTMLInputElement | null>(null)
   const [companyAttachments, setCompanyAttachments] = useState<Attachment[]>([])
-  const { toast } = useToast()
 
   useEffect(() => {
     const fetchData = async () => {
@@ -58,10 +57,7 @@ const CompanyUserAttachedDataCard: React.FC<CompanyUserAttachedDataCardProps> = 
       const data1 = await getCompanyAttachments(companyId)
       const returnData = data1 || []
       setCompanyAttachments(returnData)
-      toast({
-        title: `Attachment uploaded successfully`,
-        description: 'You have successfully uploaded an attachment'
-      })
+      ShowToast('Success', 'Attachment uploaded successfully')
     } catch (error) {
       console.error('Error uploading the file:', error)
     }
@@ -77,12 +73,10 @@ const CompanyUserAttachedDataCard: React.FC<CompanyUserAttachedDataCardProps> = 
       const data = await getCompanyAttachments(companyId)
       const returnData = data || []
       setCompanyAttachments(returnData)
-      toast({
-        title: `Attachment deleted successfully`,
-        description: 'You have successfully deleted an attachment'
-      })
+      ShowToast('Success', 'Attachment deleted successfully')
     } catch (error) {
       console.error('Error deleting the attachment:', error)
+      ShowToast('Error', 'Failed to delete attachment', 'destructive')
     }
   }
 
@@ -106,7 +100,7 @@ const CompanyUserAttachedDataCard: React.FC<CompanyUserAttachedDataCardProps> = 
     <Card>
       <CardHeader>
         <CardTitle className="text-xl">User Attached Data</CardTitle>
-        <CardDescription>You can attach pdf, jpg, and png files to this company</CardDescription>
+        <CardDescription>Attach files in pdf, jpg and png format only</CardDescription>
       </CardHeader>
       <CardContent>
         <div>

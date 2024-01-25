@@ -1,7 +1,26 @@
 import { createMocks } from 'node-mocks-http'
+import type { NextApiRequest, NextApiResponse } from 'next'
+import type { User } from '@prisma/client'
 import { handler } from '@/pages/api/dataSources/[dataSourceId]'
 import { getDataSourceByID, deleteDataSource, updateDataSource } from '@/api/db/services/dataSourceService'
 jest.mock('@/api/db/services/dataSourceService')
+jest.mock('@/api/middleware/auth', () => ({
+  withAuthValidation: jest.fn().mockImplementation((handler) => {
+    return async (req: NextApiRequest, res: NextApiResponse, user: User) => {
+      return handler(req, res, user)
+    }
+  })
+}))
+
+const mockUser: User = {
+  id: 1,
+  authId: 'AAAAAdfw',
+  name: 'ZL',
+  profilePicture: 'pic',
+  role: 'USER',
+  createdAt: new Date(),
+  modifiedAt: new Date()
+}
 
 const mockDataSource = {
   id: 1,
@@ -26,7 +45,7 @@ describe('dataSourceId API', () => {
       method: 'GET'
     })
 
-    await handler(req, res)
+    await handler(req, res, mockUser)
     expect(res._getStatusCode()).toBe(200)
     expect(JSON.parse(res._getData())).toEqual(mockDataSource)
   })
@@ -37,7 +56,7 @@ describe('dataSourceId API', () => {
     const { req, res } = createMocks({
       method: 'PUT'
     })
-    await handler(req, res)
+    await handler(req, res, mockUser)
     expect(res._getStatusCode()).toBe(200)
   })
 
@@ -47,7 +66,7 @@ describe('dataSourceId API', () => {
     const { req, res } = createMocks({
       method: 'DELETE'
     })
-    await handler(req, res)
+    await handler(req, res, mockUser)
     expect(res._getStatusCode()).toBe(200)
     expect(JSON.parse(res._getData())).toEqual({ message: 'Data Source successfully Deleted' })
   })

@@ -7,8 +7,8 @@ import { DialogHeader, DialogFooter } from '../ui/dialog'
 import { Input } from '../ui/input'
 import { Label } from '../ui/label'
 import { Textarea } from '../ui/textarea'
-import { useToast } from '../ui/use-toast'
 import { Checkbox } from '../ui/checkbox'
+import { ShowToast } from '../ShowToast'
 import BucketFunctions from '@/app/services/bucket.service'
 import {
   Dialog,
@@ -33,8 +33,6 @@ const CreateBucket: React.FC<CreateBucketProps> = ({ triggerButton, isOpen, setO
   const [selectedCompanies, setSelectedCompanies] = useState<string[]>([])
   const [allCompaniesPaginated, setCompaniesPaginated] = useState([])
 
-  const { toast } = useToast()
-
   const createBucket = async () => {
     const bucket = {
       title,
@@ -54,17 +52,10 @@ const CreateBucket: React.FC<CreateBucketProps> = ({ triggerButton, isOpen, setO
             .then((data) => console.log(data))
             .catch((e) => console.log(e))
         }
-        toast({
-          title: 'Success',
-          description: 'Bucket created successfully'
-        })
+        ShowToast('Success', 'Bucket created successfully')
       })
       .catch((error) => {
-        toast({
-          title: 'Error',
-          description: 'Failed to create bucket',
-          variant: 'destructive'
-        })
+        ShowToast('Error', 'Failed to create bucket', 'destructive')
         console.error('Error:', error)
       })
   }
@@ -87,7 +78,6 @@ const CreateBucket: React.FC<CreateBucketProps> = ({ triggerButton, isOpen, setO
       label: company?.name
     }
   })
-  console.log('data', data)
   return (
     <Dialog open={isOpen} onOpenChange={setOpen}>
       <DialogTrigger asChild onClick={getCompanies}>

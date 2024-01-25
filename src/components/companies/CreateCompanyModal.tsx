@@ -4,8 +4,8 @@ import { DialogHeader, DialogFooter } from '../ui/dialog'
 import { Input } from '../ui/input'
 import { Label } from '../ui/label'
 import { Textarea } from '../ui/textarea'
-import { useToast } from '../ui/use-toast'
 
+import { ShowToast } from '../ShowToast'
 import {
   Dialog,
   DialogTrigger,
@@ -27,21 +27,12 @@ const CreateCompanyModal: React.FC<CreateCompanyProps> = ({ triggerButton, isOpe
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
 
-  const { toast } = useToast()
-
   const handleCompanyCreation = async () => {
     try {
       await postCompany(title, description)
-      toast({
-        title: 'Success',
-        description: 'Company created successfully'
-      })
+      ShowToast('Success', 'Company created successfully')
     } catch (error) {
-      toast({
-        title: 'Error',
-        description: 'Failed to create company',
-        variant: 'destructive'
-      })
+      ShowToast('Error', 'Failed to create company', 'destructive')
       console.error('Error:', error)
     }
   }

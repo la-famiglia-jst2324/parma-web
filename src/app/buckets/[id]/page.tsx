@@ -11,10 +11,10 @@ import ShareBucketModal from '@/components/buckets/ShareBucketModal'
 import { MainLayoutWrapper } from '@/components/layout/MainLayout'
 import BucketGraph from '@/components/buckets/bucketGraph'
 import AddCompaniesToBucket from '@/components/buckets/addCompanies'
-import { useToast } from '@/components/ui/use-toast'
 import { DataTable } from '@/components/DataTable/Table'
 import { columns } from '@/components/buckets/bucketColumns'
 import BucketDescriptionCard from '@/components/buckets/bucketDescriptionCard'
+import { ShowToast } from '@/components/ShowToast'
 
 const initialBucketValue = {
   id: 0,
@@ -32,7 +32,6 @@ const BucketPage = ({ params: { id } }: { params: { id: string } }) => {
   const [bucketCompanies, setBucketCompanies] = useState<Company[]>()
   const [editCompanies, setEditCompanies] = useState(false)
   const [selectedCompanies, setSelectedCompanies] = useState<number[]>([])
-  const { toast } = useToast()
 
   useEffect(() => {
     BucketFunctions.getBucketById(+id)
@@ -66,19 +65,12 @@ const BucketPage = ({ params: { id } }: { params: { id: string } }) => {
     BucketFunctions.deleteBucket(+id)
       .then((res) => {
         if (res) {
-          toast({
-            title: 'Success',
-            description: 'Bucket is deleted successfully'
-          })
+          ShowToast('Success', 'Bucket deleted successfully')
           router.push('/')
         }
       })
       .catch(() => {
-        toast({
-          title: 'Error',
-          description: 'Failed to delete bucket',
-          variant: 'destructive'
-        })
+        ShowToast('Error', 'Failed to delete bucket', 'destructive')
       })
   }
 
@@ -86,28 +78,17 @@ const BucketPage = ({ params: { id } }: { params: { id: string } }) => {
     BucketFunctions.shareBucket(shareUsersList)
       .then((res) => {
         if (res) {
-          toast({
-            title: 'Success',
-            description: 'Bucket is shared successfully'
-          })
+          ShowToast('Success', 'Bucket is shared successfully')
         }
       })
       .catch(() => {
-        toast({
-          title: 'Error',
-          description: 'Failed to share the bucket',
-          variant: 'destructive'
-        })
+        ShowToast('Error', 'Failed to share the bucket', 'destructive')
       })
   }
 
   const removeCompanies = () => {
     if (selectedCompanies.length === 0) {
-      toast({
-        title: 'Error',
-        description: 'Please select at least one company',
-        variant: 'destructive'
-      })
+      ShowToast('Error', 'Please select at least one company', 'destructive')
       return
     }
     BucketFunctions.deleteCompaniesFromBucket(+id, selectedCompanies)
@@ -115,18 +96,11 @@ const BucketPage = ({ params: { id } }: { params: { id: string } }) => {
         if (res) {
           const filteredCompanies = bucketCompanies?.filter((company) => !res.includes(company.id))
           setBucketCompanies(filteredCompanies)
-          toast({
-            title: 'Success',
-            description: 'Companies are deleted successfully'
-          })
+          ShowToast('Success', 'Companies deleted successfully from the bucket')
         }
       })
       .catch(() => {
-        toast({
-          title: 'Error',
-          description: 'Failed to  delete companies from bucket',
-          variant: 'destructive'
-        })
+        ShowToast('Error', 'Failed to remove companies from the bucket', 'destructive')
       })
   }
 
@@ -143,18 +117,11 @@ const BucketPage = ({ params: { id } }: { params: { id: string } }) => {
             }
             return undefined
           })
-          toast({
-            title: 'Success',
-            description: 'Companies are added successfully'
-          })
+          ShowToast('Success', 'Companies added successfully')
         }
       })
       .catch(() => {
-        toast({
-          title: 'Error',
-          description: 'Failed to add companies to bucket',
-          variant: 'destructive'
-        })
+        ShowToast('Error', 'Failed to add companies to bucket', 'destructive')
       })
   }
   return (

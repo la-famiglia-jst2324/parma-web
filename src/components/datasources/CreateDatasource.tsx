@@ -3,7 +3,7 @@
 import React, { useState } from 'react'
 import { Frequency } from '@prisma/client'
 import { Label } from '../ui/label'
-import { useToast } from '@/components/ui/use-toast'
+import { ShowToast } from '../ShowToast'
 import {
   Dialog,
   DialogClose,
@@ -31,7 +31,6 @@ const CreateDatasource: React.FC<CreateDatasourceProps> = ({ triggerButton, isOp
   const [url, setUrl] = useState<string>('')
   const [description, setDescription] = useState<string>('')
   const [frequency, setFrequency] = useState<string>('')
-  const { toast } = useToast()
   const regex = /^[a-z0-9_-]+$/
 
   async function createDatasource(
@@ -44,38 +43,26 @@ const CreateDatasource: React.FC<CreateDatasourceProps> = ({ triggerButton, isOp
     event.preventDefault()
 
     if (frequency === null || frequency === '') {
-      toast({
-        title: 'Frequency is required',
-        description: 'Please select a frequency for the datasource',
-        duration: 5000
-      })
+      ShowToast('Frequency is required', 'Please select a frequency for the datasource', 'destructive')
       return
     }
 
     if (name === null || name === '') {
-      toast({
-        title: 'Name is required',
-        description: 'Please provide a name for the datasource',
-        duration: 5000
-      })
+      ShowToast('Name is required', 'Please provide a name for the datasource', 'destructive')
       return
     }
 
     if (!regex.test(name)) {
-      toast({
-        title: 'Invalid name format.',
-        description: 'Name is required and should only contain lowercase letters, numbers, underscores, and hyphens.',
-        duration: 5000
-      })
+      ShowToast(
+        'Invalid name format.',
+        'Name is required and should only contain lowercase letters, numbers, underscores, and hyphens.',
+        'destructive'
+      )
       return
     }
 
     if (url === null || url === '') {
-      toast({
-        title: 'URL is required',
-        description: 'Please provide a URL for the datasource',
-        duration: 5000
-      })
+      ShowToast('URL is required', 'Please provide a URL for the datasource', 'destructive')
       return
     }
 
@@ -94,19 +81,11 @@ const CreateDatasource: React.FC<CreateDatasourceProps> = ({ triggerButton, isOp
       const response = await createNewDatasource(dataSource)
 
       if (response.ok) {
-        toast({
-          title: 'Datasource created successfully',
-          description: 'New datasource has been created successfully',
-          duration: 5000
-        })
+        ShowToast('Success', 'Datasource created successfully')
       }
     } catch (error) {
       console.error('Error creating datasource:', error)
-      toast({
-        title: 'Datasource creation failed',
-        description: 'Failed to create new datasource',
-        duration: 5000
-      })
+      ShowToast('Error', 'Failed to create datasource', 'destructive')
     }
   }
   const handleInputChange = (

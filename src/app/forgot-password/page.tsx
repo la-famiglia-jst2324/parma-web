@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button'
 import { authResetPassword } from '@/lib/firebase/auth'
 import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
-import { toast } from '@/components/ui/use-toast'
+import { ShowToast } from '@/components/ShowToast'
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState('')
@@ -17,37 +17,21 @@ export default function ForgotPasswordPage() {
     try {
       // further form validation
       if (!email) {
-        toast({
-          title: 'Please enter your email.',
-          description: 'Please enter your email.',
-          duration: 1000
-        })
+        ShowToast('Please enter your email.', 'Please enter your email', 'destructive')
         return
       }
 
       // Add timeout
       timeoutId = setTimeout(() => {
-        toast({
-          title: 'Request is taking too long',
-          description: 'Please try again later',
-          duration: 5000
-        })
+        ShowToast('Request is taking too long', 'Please try again later', 'destructive')
       }, 10000)
 
       await authResetPassword(email)
       clearTimeout(timeoutId)
       timeoutId = null
-      toast({
-        title: 'Password reset email sent',
-        description: 'Please check your email for further instructions.',
-        duration: 5000
-      })
+      ShowToast('Password reset email sent', 'Please check your email for further instructions.')
     } catch (error) {
-      toast({
-        title: 'Error resetting password',
-        description: 'Please try again',
-        duration: 5000
-      })
+      ShowToast('Error resetting password', 'Please try again', 'destructive')
     } finally {
       if (timeoutId) {
         clearTimeout(timeoutId)

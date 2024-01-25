@@ -3,9 +3,9 @@
 import { useEffect, useState } from 'react'
 import { $Enums, type User } from '@prisma/client'
 import { Share2, Pencil, Check, Trash2, X, CheckIcon, ChevronDown } from 'lucide-react'
-import { useToast } from '../ui/use-toast'
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover'
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from '../ui/command'
+import { ShowToast } from '../ShowToast'
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import BucketFunctions from '@/app/services/bucket.service'
 import { Button } from '@/components/ui/button'
@@ -60,7 +60,6 @@ const ShareBucketModal: React.FC<ShareBucketModalProps> = ({ handleShare, id }) 
   const [invitees, setInvitees] = useState<Invitee[]>([])
   const [open, setOpen] = useState(false)
   const [userValue, setUserValue] = useState('')
-  const { toast } = useToast()
 
   useEffect(() => {
     BucketFunctions.getUsersForBucketAccess()
@@ -151,17 +150,10 @@ const ShareBucketModal: React.FC<ShareBucketModalProps> = ({ handleShare, id }) 
             return item
           })
         )
-        toast({
-          title: 'Success',
-          description: 'Invitee is updated successfully'
-        })
+        ShowToast('Success', 'Invitee is updated successfully')
       })
       .catch(() => {
-        toast({
-          title: 'Error',
-          description: 'Failed to update invitee',
-          variant: 'destructive'
-        })
+        ShowToast('Error', 'Failed to update invitee', 'destructive')
       })
   }
 
@@ -171,17 +163,10 @@ const ShareBucketModal: React.FC<ShareBucketModalProps> = ({ handleShare, id }) 
         if (res) {
           setInvitees((prev) => prev.filter((item) => item.inviteeId !== inviteeId))
         }
-        toast({
-          title: 'Success',
-          description: 'Invitee is deleted successfully'
-        })
+        ShowToast('Success', 'Invitee deleted successfully')
       })
       .catch(() => {
-        toast({
-          title: 'Error',
-          description: 'Failed to delete invitee',
-          variant: 'destructive'
-        })
+        ShowToast('Error', 'Failed to delete invitee', 'destructive')
       })
   }
   const onShareBucket = () => {

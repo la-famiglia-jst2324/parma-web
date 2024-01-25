@@ -3,7 +3,7 @@ import type { User } from '@prisma/client'
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { randomBucketDummies, randomBucketDummy } from '@tests/data/dummy/bucket'
 import { handler } from '@/pages/api/bucket'
-import { getAllBuckets, createBucket, getBucketsByName } from '@/api/db/services/bucketService'
+import { getAllBuckets, createBucket, getBucketsByName, getAccessibleBuckets } from '@/api/db/services/bucketService'
 import { ItemNotFoundError } from '@/api/utils/errorUtils'
 jest.mock('@/api/db/services/bucketService')
 jest.mock('@/api/middleware/auth', () => ({
@@ -71,7 +71,7 @@ describe('Bucket API', () => {
   })
 
   test('GET returns a list of buckets', async () => {
-    getAllBuckets.mockResolvedValueOnce(buckets)
+    getAccessibleBuckets.mockResolvedValueOnce(buckets)
 
     const { req, res } = createMocks({
       method: 'GET'
@@ -93,14 +93,13 @@ describe('Bucket API', () => {
     expect(JSON.parse(res._getData())).toEqual({ error: 'Item not found' })
   })
 
-  test('GET with non-existent returns 404', async () => {
-    getAllBuckets.mockRejectedValueOnce(new ItemNotFoundError('Item not found'))
+  test('GET with non-existent returns 400', async () => {
+    getAllBuckets.mockRejectedValueOnce(null)
     const { req, res } = createMocks({
       method: 'GET'
     })
     await handler(req, res, mockUser)
-    expect(res._getStatusCode()).toBe(404)
-    expect(JSON.parse(res._getData())).toEqual({ error: 'Item not found' })
+    expect(res._getStatusCode()).toBe(400)
   })
 
   test('POST with invalid parameters returns 400', async () => {

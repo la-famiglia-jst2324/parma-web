@@ -106,17 +106,6 @@ const ShareBucketModal: React.FC<ShareBucketModalProps> = ({ handleShare, id }) 
     }
   }
 
-  const prepareUserListToShare = (user: User, permission: string) => {
-    setListToPost((prev) => [
-      ...prev,
-      {
-        bucketId: +id,
-        inviteeId: user.id,
-        permission
-      }
-    ])
-  }
-
   const handleEditInviteeClick = (invitee: Invitee) => {
     setInvitees((prev) =>
       prev.map((item) => {
@@ -246,7 +235,14 @@ const ShareBucketModal: React.FC<ShareBucketModalProps> = ({ handleShare, id }) 
                   <div className="mb-4 flex flex-row items-center justify-between" key={user.id}>
                     {user.name}
                     <div className="flex items-center gap-2">
-                      <Select disabled={true} value="VIEWER" onValueChange={(val) => prepareUserListToShare(user, val)}>
+                      <Select
+                        value={listToPost.find((item) => item.inviteeId === user.id)?.permission || 'VIEWER'}
+                        onValueChange={(val) =>
+                          setListToPost((prev) =>
+                            prev.map((item) => (item.inviteeId === user.id ? { ...item, permission: val } : item))
+                          )
+                        }
+                      >
                         <SelectTrigger className="w-[180px]">
                           <SelectValue placeholder="Permission" />
                         </SelectTrigger>

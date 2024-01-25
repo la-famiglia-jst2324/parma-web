@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import type { Company, Bucket } from '@prisma/client'
+import type { User, BucketAccess, Company } from '@prisma/client'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import DeleteBucketModal from '@/components/buckets/DeleteBucketModal'
@@ -15,6 +15,7 @@ import { DataTable } from '@/components/DataTable/Table'
 import { columns } from '@/components/buckets/bucketColumns'
 import BucketDescriptionCard from '@/components/buckets/bucketDescriptionCard'
 import { ShowToast } from '@/components/ShowToast'
+import { getUsername } from '@/services/user/userService'
 
 const initialBucketValue = {
   id: 0,
@@ -26,12 +27,24 @@ const initialBucketValue = {
   modifiedAt: new Date()
 }
 
+interface BucketPageProps {
+  id: number
+  title: string
+  description: string | null
+  isPublic: boolean
+  ownerId: number
+  createdAt: Date
+  modifiedAt: Date
+  permissions?: BucketAccess[]
+}
 const BucketPage = ({ params: { id } }: { params: { id: string } }) => {
   const router = useRouter()
-  const [bucket, setBucket] = useState<Bucket>(initialBucketValue)
+  const [bucket, setBucket] = useState<BucketPageProps>(initialBucketValue)
   const [bucketCompanies, setBucketCompanies] = useState<Company[]>()
   const [editCompanies, setEditCompanies] = useState(false)
   const [selectedCompanies, setSelectedCompanies] = useState<number[]>([])
+  const [loggedInUser, setLoggedInUser] = useState<User>()
+
 
   useEffect(() => {
     BucketFunctions.getBucketById(+id)
@@ -49,6 +62,19 @@ const BucketPage = ({ params: { id } }: { params: { id: string } }) => {
         console.log(e)
       })
   }, [id])
+
+  useEffect(() => {
+    const getUser = async () => {
+      try {
+        const response = await getUsername()
+        setLoggedInUser(response)
+        return response
+      } catch (error) {
+        console.error('Error fetching userName:', error)
+      }
+    }
+    getUser()
+  }, [])
 
   const onSelectCheckbox = (companyId: number | number[]) => {
     if (!Array.isArray(companyId)) {
@@ -124,6 +150,22 @@ const BucketPage = ({ params: { id } }: { params: { id: string } }) => {
         ShowToast('Error', 'Failed to add companies to bucket', 'destructive')
       })
   }
+
+  const isModerator = () => {
+    if (loggedInUser) {
+      if (loggedInUser.id === bucket.ownerId) {
+        return true
+      }
+      if (bucket.permissions?.length) {
+        const invitee = bucket.permissions.find((permission) => permission.inviteeId === loggedInUser.id)
+        if (invitee && invitee.permission === 'MODERATOR') {
+          return true
+        }
+      }
+    }
+    return false
+  }
+
   return (
     <main className="m-4 flex h-screen flex-row items-start justify-start space-x-4" role="main">
       <div className="w-full">
@@ -133,16 +175,22 @@ const BucketPage = ({ params: { id } }: { params: { id: string } }) => {
               <h1 className="text-2xl font-bold">{bucket.title}</h1>
             </div>
           </div>
-          <div className="flex flex-row justify-evenly gap-2">
-            <ShareBucketModal
-              id={id}
-              handleShare={(shareUsersList: ShareBucketProps[]) => onHandleShare(shareUsersList)}
-            ></ShareBucketModal>
-            <DeleteBucketModal handleDelete={onDeleteBucket}></DeleteBucketModal>
-          </div>
+          {isModerator() && (
+            <div className="flex flex-row justify-evenly gap-2">
+              <ShareBucketModal
+                id={id}
+                handleShare={(shareUsersList: ShareBucketProps[]) => onHandleShare(shareUsersList)}
+              ></ShareBucketModal>
+              <DeleteBucketModal handleDelete={onDeleteBucket}></DeleteBucketModal>
+            </div>
+          )}
         </div>
         <div className="mb-12">
-          <BucketDescriptionCard handleSave={(val) => setBucket(val)} bucket={bucket}></BucketDescriptionCard>
+          <BucketDescriptionCard
+            handleSave={(val) => setBucket(val)}
+            bucket={bucket}
+            isModerator={isModerator()}
+          ></BucketDescriptionCard>
         </div>
 
         <div className="mb-12">
@@ -151,49 +199,51 @@ const BucketPage = ({ params: { id } }: { params: { id: string } }) => {
         {bucketCompanies && bucketCompanies.length > 0 && (
           <div className="flex items-center justify-between">
             <h1 className="mb-8 text-2xl font-bold">All companies in this bucket</h1>
-            <div className="flex flex-row items-center gap-4">
-              {!editCompanies && (
-                <Button
-                  className="mr-2 flex items-center border-gray-500"
-                  variant="outline"
-                  color="gray"
-                  onClick={() => setEditCompanies(true)}
-                >
-                  Edit Companies
-                </Button>
-              )}
-              {editCompanies && (
-                <AddCompaniesToBucket
-                  bucketCompanies={bucketCompanies}
-                  handleSave={(val) => addCompaniesToBucket(val)}
-                ></AddCompaniesToBucket>
-              )}
-              {editCompanies && (
-                <Button
-                  className="mr-2 flex items-center gap-2"
-                  variant="destructive"
-                  color="gray"
-                  onClick={removeCompanies}
-                >
-                  Remove Companies
-                </Button>
-              )}
-              {editCompanies && (
-                <Button
-                  className="mr-2 flex items-center border-gray-500"
-                  variant="outline"
-                  color="gray"
-                  onClick={() => setEditCompanies(false)}
-                >
-                  Cancel
-                </Button>
-              )}
-            </div>
+            {isModerator() && (
+              <div className="flex flex-row items-center gap-4">
+                {!editCompanies && (
+                  <Button
+                    className="mr-2 flex items-center border-gray-500"
+                    variant="outline"
+                    color="gray"
+                    onClick={() => setEditCompanies(true)}
+                  >
+                    Edit Companies
+                  </Button>
+                )}
+                {editCompanies && (
+                  <AddCompaniesToBucket
+                    bucketCompanies={bucketCompanies}
+                    handleSave={(val) => addCompaniesToBucket(val)}
+                  ></AddCompaniesToBucket>
+                )}
+                {editCompanies && (
+                  <Button
+                    className="mr-2 flex items-center gap-2"
+                    variant="destructive"
+                    color="gray"
+                    onClick={removeCompanies}
+                  >
+                    Remove Companies
+                  </Button>
+                )}
+                {editCompanies && (
+                  <Button
+                    className="mr-2 flex items-center border-gray-500"
+                    variant="outline"
+                    color="gray"
+                    onClick={() => setEditCompanies(false)}
+                  >
+                    Cancel
+                  </Button>
+                )}
+              </div>
+            )}
           </div>
         )}
 
         {bucketCompanies && bucketCompanies.length > 0 && (
-          <div>
+          <div className="mb-8">
             <DataTable
               columns={columns}
               data={bucketCompanies}
@@ -207,10 +257,12 @@ const BucketPage = ({ params: { id } }: { params: { id: string } }) => {
         {bucketCompanies && !(bucketCompanies.length > 0) && (
           <div className="flex items-center justify-between">
             <div className="ml-8 mt-4 text-gray-400">This bucket does not have any companies.</div>
-            <AddCompaniesToBucket
-              bucketCompanies={bucketCompanies}
-              handleSave={(val) => addCompaniesToBucket(val)}
-            ></AddCompaniesToBucket>
+            {isModerator() && (
+              <AddCompaniesToBucket
+                bucketCompanies={bucketCompanies}
+                handleSave={(val) => addCompaniesToBucket(val)}
+              ></AddCompaniesToBucket>
+            )}
           </div>
         )}
       </div>

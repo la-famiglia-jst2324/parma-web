@@ -7,10 +7,11 @@ import BucketFunctions from '@/app/services/bucket.service'
 
 interface BucketDescriptionCardProps {
   bucket: Bucket
+  isModerator: boolean
   handleSave(bucket: Bucket): void
 }
 
-const BucketDescriptionCard: React.FC<BucketDescriptionCardProps> = ({ bucket, handleSave }) => {
+const BucketDescriptionCard: React.FC<BucketDescriptionCardProps> = ({ bucket, handleSave, isModerator }) => {
   const saveBucket = (title: string, description: string | null, isPublic: boolean, id: number) => {
     BucketFunctions.updateBucket(title, description, id, isPublic)
       .then((res) => {
@@ -30,14 +31,16 @@ const BucketDescriptionCard: React.FC<BucketDescriptionCardProps> = ({ bucket, h
       <CardHeader>
         <div className="flex items-center justify-between">
           <CardTitle className="text-xl">Description</CardTitle>
-          <EditBucketModal
-            title={bucket.title}
-            description={bucket.description}
-            isPublic={bucket.isPublic}
-            handleSave={(title: string, description: string | null, isPublic: boolean) =>
-              saveBucket(title, description, isPublic, bucket.id)
-            }
-          ></EditBucketModal>
+          {isModerator && (
+            <EditBucketModal
+              title={bucket.title}
+              description={bucket.description}
+              isPublic={bucket.isPublic}
+              handleSave={(title: string, description: string | null, isPublic: boolean) =>
+                saveBucket(title, description, isPublic, bucket.id)
+              }
+            ></EditBucketModal>
+          )}
         </div>
       </CardHeader>
       <CardContent>

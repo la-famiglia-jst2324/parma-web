@@ -11,7 +11,7 @@
 
 ParmaAI webstack including frontend and REST API backend.
 
-[![Screenshot](./docs/images/parma_software.png)](https://parma.software)
+[![Screenshot](./docs/images/landing-page-parma.png)](https://parma.software)
 
 ## Deployment
 

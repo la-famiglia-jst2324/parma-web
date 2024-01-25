@@ -7,7 +7,6 @@ import {
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from '../ui/dropdown-menu'
@@ -66,15 +65,14 @@ const CompanyCommentsCard: React.FC<CompanyCommentsCardProps> = ({ companyId, me
       <CardHeader>
         <div className="flex items-start justify-between">
           <div className="space-y-1">
-            <CardTitle className="text-xl">Graph</CardTitle>
+            <CardTitle className="text-xl">Comments</CardTitle>
             <p className="text-sm">Selected Measurement: {selectedMeasurement}</p>
           </div>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="outline">Select measurements</Button>
+              <Button variant="outline">Select Measurement</Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-56">
-              <DropdownMenuLabel>Measurements</DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuGroup>
                 {measurements.map((measurement) => (

@@ -1,16 +1,14 @@
 import React, { useState, useEffect, useContext } from 'react'
-import { ArrowDown, ArrowUp, Link2Icon, PencilIcon } from 'lucide-react'
-import { useToast } from '../ui/use-toast'
+import { ArrowDown, ArrowUp, Link2Icon, FileCog } from 'lucide-react'
 import type { CompanyContextProps } from '../CompanyContext'
 import { CompanyContext } from '../CompanyContext'
 import { MultiSelect } from '../ui/multi-select'
 import { IdentifierModal } from '../datasources/Identifiers/IdentifierModal'
+import { ShowToast } from '../ShowToast'
 import {
   Dialog,
-  DialogClose,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger
@@ -49,7 +47,6 @@ const ConfigureDatasourcesModal: React.FC<ConfigureDatasourcesModalProps> = ({ c
   const [filteredDataSources, setFilteredDataSources] = useState<CompanyDataSource[]>([])
   const [selectedValues, setSelectedValues] = useState<string[]>([])
   const { companyDatasources, setCompanyDatasources } = useContext(CompanyContext) as CompanyContextProps
-  const { toast } = useToast()
 
   useEffect(() => {
     const fetchData = async () => {
@@ -79,10 +76,7 @@ const ConfigureDatasourcesModal: React.FC<ConfigureDatasourcesModalProps> = ({ c
     setAllDataSources(alldatasource.datasources)
     const companydatasources = await getDataSourcesByCompanyId(companyId)
     setCompanyDatasources(companydatasources)
-    toast({
-      title: `Datasource unlinked successfully`,
-      description: 'You have successfully unlinked a datasource from this company'
-    })
+    ShowToast('Success', 'Datasource unlinked successfully')
   }
 
   const handleAddDataSourceToCompany = async () => {
@@ -94,10 +88,7 @@ const ConfigureDatasourcesModal: React.FC<ConfigureDatasourcesModalProps> = ({ c
     setAllDataSources(alldatasource.datasources)
     const companydatasources = await getDataSourcesByCompanyId(companyId)
     setCompanyDatasources(companydatasources)
-    toast({
-      title: `Datasource/s linked successfully`,
-      description: 'You have successfully added a datasource to the company'
-    })
+    ShowToast('Success', 'Datasources linked successfully')
   }
 
   const data = filteredDataSources?.map((datasource) => {
@@ -111,15 +102,15 @@ const ConfigureDatasourcesModal: React.FC<ConfigureDatasourcesModalProps> = ({ c
     <Dialog>
       <DialogTrigger>
         <Button variant="outline">
-          <PencilIcon className="mr-2 h-4 w-4" />
-          Configure Datasources
+          <FileCog className="mr-2 h-4 w-4" />
+          Configure
         </Button>
       </DialogTrigger>
       <DialogContent className="flex h-3/5 flex-col">
         <DialogHeader>
-          <DialogTitle>Link/Unlink data sources with this company</DialogTitle>
+          <DialogTitle>Configure datasources with this company</DialogTitle>
           <DialogDescription>
-            Select data sources to link with the company and manage linked data sources.
+            Link or unlink datasources with this company. You can also configure identifiers for each datasource
           </DialogDescription>
         </DialogHeader>
         <div className="flex">
@@ -129,7 +120,7 @@ const ConfigureDatasourcesModal: React.FC<ConfigureDatasourcesModalProps> = ({ c
               selected={selectedValues}
               onChange={setSelectedValues}
               placeholder="Select Datasources"
-              width="w-80"
+              width="w-96"
             />
           </div>
           <div className="pl-3">
@@ -187,13 +178,6 @@ const ConfigureDatasourcesModal: React.FC<ConfigureDatasourcesModalProps> = ({ c
             )}
           </TableBody>
         </Table>
-        <DialogFooter className="sm:justify-end">
-          <DialogClose asChild>
-            <Button type="button" variant="outline">
-              Close
-            </Button>
-          </DialogClose>
-        </DialogFooter>
       </DialogContent>
     </Dialog>
   )

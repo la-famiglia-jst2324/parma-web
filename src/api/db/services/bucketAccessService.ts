@@ -26,9 +26,6 @@ const getBucketAccessByID = async (bucketId: number, inviteeId: number) => {
         }
       }
     })
-    if (!bucketAccess) {
-      throw new Error(`not found.`)
-    }
     return bucketAccess
   } catch (error) {
     console.error('Error getting by ID:', error)
@@ -52,15 +49,27 @@ const getInviteesByBucketId = async (bucketId: number) => {
         }
       }
     })
-    if (!membership) {
-      throw new Error(`invitees not found.`)
-    }
     return membership
   } catch (error) {
     console.error('Error getting by ID:', error)
     throw error
   }
 }
+
+const getInviteesIdsByBucketId = async (bucketId: number) => {
+  try {
+    const membership = await prisma.bucketAccess.findMany({
+      where: {
+        bucketId
+      }
+    })
+    return membership
+  } catch (error) {
+    console.error('Error getting by ID:', error)
+    throw error
+  }
+}
+
 const updateBucketAccess = async (
   bucketId: number,
   inviteeId: number,
@@ -103,4 +112,11 @@ const deleteBucketAccess = async (bucketId: number, inviteeId: number) => {
   }
 }
 
-export { createBucketAccess, getBucketAccessByID, getInviteesByBucketId, updateBucketAccess, deleteBucketAccess }
+export {
+  createBucketAccess,
+  getBucketAccessByID,
+  getInviteesByBucketId,
+  updateBucketAccess,
+  deleteBucketAccess,
+  getInviteesIdsByBucketId
+}

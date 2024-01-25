@@ -32,7 +32,7 @@ describe('searchCompaniesAndBuckets', () => {
   })
 
   it('returns combined and paginated results', async () => {
-    const result = await searchCompaniesAndBuckets('test', 1, 2)
+    const result = await searchCompaniesAndBuckets('test', 1, 2, userId)
 
     // Check the result, per default the names contain the key word test
     expect(result.data.length).toEqual(2)

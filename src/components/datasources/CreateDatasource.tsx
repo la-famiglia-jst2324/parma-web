@@ -2,7 +2,8 @@
 
 import React, { useState } from 'react'
 import { Frequency } from '@prisma/client'
-import { useToast } from '@/components/ui/use-toast'
+import { Label } from '../ui/label'
+import { ShowToast } from '../ShowToast'
 import {
   Dialog,
   DialogClose,
@@ -30,7 +31,6 @@ const CreateDatasource: React.FC<CreateDatasourceProps> = ({ triggerButton, isOp
   const [url, setUrl] = useState<string>('')
   const [description, setDescription] = useState<string>('')
   const [frequency, setFrequency] = useState<string>('')
-  const { toast } = useToast()
   const regex = /^[a-z0-9_-]+$/
 
   async function createDatasource(
@@ -43,38 +43,26 @@ const CreateDatasource: React.FC<CreateDatasourceProps> = ({ triggerButton, isOp
     event.preventDefault()
 
     if (frequency === null || frequency === '') {
-      toast({
-        title: 'Frequency is required',
-        description: 'Please select a frequency for the datasource',
-        duration: 5000
-      })
+      ShowToast('Frequency is required', 'Please select a frequency for the datasource', 'destructive')
       return
     }
 
     if (name === null || name === '') {
-      toast({
-        title: 'Name is required',
-        description: 'Please provide a name for the datasource',
-        duration: 5000
-      })
+      ShowToast('Name is required', 'Please provide a name for the datasource', 'destructive')
       return
     }
 
     if (!regex.test(name)) {
-      toast({
-        title: 'Invalid name format.',
-        description: 'Name is required and should only contain lowercase letters, numbers, underscores, and hyphens.',
-        duration: 5000
-      })
+      ShowToast(
+        'Invalid name format.',
+        'Name is required and should only contain lowercase letters, numbers, underscores, and hyphens.',
+        'destructive'
+      )
       return
     }
 
     if (url === null || url === '') {
-      toast({
-        title: 'URL is required',
-        description: 'Please provide a URL for the datasource',
-        duration: 5000
-      })
+      ShowToast('URL is required', 'Please provide a URL for the datasource', 'destructive')
       return
     }
 
@@ -93,19 +81,19 @@ const CreateDatasource: React.FC<CreateDatasourceProps> = ({ triggerButton, isOp
       const response = await createNewDatasource(dataSource)
 
       if (response.ok) {
-        toast({
-          title: 'Datasource created successfully',
-          description: 'New datasource has been created successfully',
-          duration: 5000
-        })
+        ShowToast('Success', 'Datasource created successfully')
       }
     } catch (error) {
       console.error('Error creating datasource:', error)
-      toast({
-        title: 'Datasource creation failed',
-        description: 'Failed to create new datasource',
-        duration: 5000
-      })
+
+      let errorMessage = 'Failed to create new datasource'
+
+      // If the error is an instance of Error
+      if (error instanceof Error) {
+        errorMessage = error.message
+      }
+
+      ShowToast('Datasource creation failed', errorMessage, 'destructive')
     }
   }
   const handleInputChange = (
@@ -121,33 +109,43 @@ const CreateDatasource: React.FC<CreateDatasourceProps> = ({ triggerButton, isOp
         <DialogTrigger asChild>{triggerButton}</DialogTrigger>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Create New Datasource</DialogTitle>
-            <DialogDescription>Please fill the following information</DialogDescription>
+            <DialogTitle>Create Datasource</DialogTitle>
+            <DialogDescription>Please fill the following information to create a new datasource</DialogDescription>
           </DialogHeader>
           <div className="grid gap-3 py-2">
             <div className="space-y-1">
+              <Label htmlFor="title">Name</Label>
               <Input
                 id="name"
-                placeholder="Name"
+                placeholder="Parma AI"
                 value={name}
                 onChange={(event) => handleInputChange(event, setName)}
               />
             </div>
             <div className="space-y-1">
+              <Label>Description</Label>
               <Textarea
                 id="description"
+                placeholder="Parma AI provides day to day information about recent trends in the market."
                 value={description}
-                placeholder="Description"
                 onChange={(event) => handleInputChange(event, setDescription)}
               />
             </div>
             <div className="space-y-1">
-              <Input id="url" value={url} onChange={(event) => handleInputChange(event, setUrl)} placeholder="URL" />
+              <Label>URL</Label>
+              <Input
+                id="url"
+                value={url}
+                onChange={(event) => handleInputChange(event, setUrl)}
+                placeholder="https://parma.software"
+              />
             </div>
             <div className="space-y-1">
+              <Label>Frequency</Label>
+
               <Select value={frequency} onValueChange={setFrequency}>
                 <SelectTrigger>
-                  <SelectValue placeholder="Frequency" />
+                  <SelectValue placeholder="Select the datasource frequency" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectGroup>
@@ -166,9 +164,15 @@ const CreateDatasource: React.FC<CreateDatasourceProps> = ({ triggerButton, isOp
                 Close
               </Button>
             </DialogClose>
-            <Button variant="secondary" onClick={(event) => createDatasource(event, name, description, url, frequency)}>
-              Create
-            </Button>
+            <DialogClose asChild>
+              <Button
+                type="submit"
+                variant="secondary"
+                onClick={(event) => createDatasource(event, name, description, url, frequency)}
+              >
+                Create
+              </Button>
+            </DialogClose>
           </DialogFooter>
         </DialogContent>
       </Dialog>

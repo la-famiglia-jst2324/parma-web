@@ -12,7 +12,6 @@ import {
   DialogFooter
 } from '../../ui/dialog'
 import { Button } from '../../ui/button'
-import { useToast } from '../../ui/use-toast'
 import IdentifierRow from './IdentifierRow'
 import { Table, TableBody, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import {
@@ -22,6 +21,7 @@ import {
 } from '@/services/datasource/datasourceService'
 import { Input } from '@/components/ui/input'
 import { getCompanyDataSourceId } from '@/services/company/companyService'
+import { ShowToast } from '@/components/ShowToast'
 
 interface IdentifierModalProps {
   companyId: string
@@ -33,7 +33,6 @@ export const IdentifierModal: React.FC<IdentifierModalProps> = ({ companyId, dat
   const [identifiers, setIdentifiers] = useState<CompanyDataSourceIdentifier[]>([])
   const [property, setProperty] = useState('')
   const [value, setValue] = useState('')
-  const { toast } = useToast()
 
   useEffect(() => {
     const fetchData = async () => {
@@ -66,22 +65,13 @@ export const IdentifierModal: React.FC<IdentifierModalProps> = ({ companyId, dat
 
       if (response.message === 'Identifier deleted successfully') {
         setIdentifiers(identifiers.filter((_, i) => i !== index))
-        toast({
-          title: 'Identifier deleted successfully',
-          description: 'You have successfully deleted an identifier'
-        })
+        ShowToast('Success', 'Identifier deleted successfully')
       } else {
-        toast({
-          title: 'Failed to delete identifier',
-          description: 'An error occurred while trying to delete the identifier'
-        })
+        ShowToast('Failed', 'An error occurred while trying to delete the identifier')
       }
     } catch (error) {
       console.error(error)
-      toast({
-        title: 'An error occurred',
-        description: 'An error occurred while deleting the identifier'
-      })
+      ShowToast('Failed', 'An error occurred while trying to delete the identifier')
     }
   }
 
@@ -100,16 +90,10 @@ export const IdentifierModal: React.FC<IdentifierModalProps> = ({ companyId, dat
     try {
       const createdIdentifier = await createCompanyDataSourceIdentifier(newIdentifier)
       setIdentifiers(identifiers ? [...identifiers, createdIdentifier] : [createdIdentifier])
-      toast({
-        title: 'Identifier added successfully',
-        description: 'You have successfully added an identifier'
-      })
+      ShowToast('Success', 'Identifier added successfully')
     } catch (error) {
       console.error('Failed to add identifier', error)
-      toast({
-        title: 'Failed to add identifier',
-        description: 'An error occurred while trying to add the identifier'
-      })
+      ShowToast('Failed', 'An error occurred while trying to add the identifier')
     }
   }
 

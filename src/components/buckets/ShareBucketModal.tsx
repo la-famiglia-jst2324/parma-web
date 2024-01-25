@@ -3,9 +3,9 @@
 import { useEffect, useState } from 'react'
 import { $Enums, type User } from '@prisma/client'
 import { Share2, Pencil, Check, Trash2, X, CheckIcon, ChevronDown } from 'lucide-react'
-import { useToast } from '../ui/use-toast'
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover'
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from '../ui/command'
+import { ShowToast } from '../ShowToast'
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import BucketFunctions from '@/app/services/bucket.service'
 import { Button } from '@/components/ui/button'
@@ -60,7 +60,6 @@ const ShareBucketModal: React.FC<ShareBucketModalProps> = ({ handleShare, id }) 
   const [invitees, setInvitees] = useState<Invitee[]>([])
   const [open, setOpen] = useState(false)
   const [userValue, setUserValue] = useState('')
-  const { toast } = useToast()
 
   useEffect(() => {
     BucketFunctions.getUsersForBucketAccess()
@@ -140,17 +139,10 @@ const ShareBucketModal: React.FC<ShareBucketModalProps> = ({ handleShare, id }) 
             return item
           })
         )
-        toast({
-          title: 'Success',
-          description: 'Invitee is updated successfully'
-        })
+        ShowToast('Success', 'Invitee is updated successfully')
       })
       .catch(() => {
-        toast({
-          title: 'Error',
-          description: 'Failed to update invitee',
-          variant: 'destructive'
-        })
+        ShowToast('Error', 'Failed to update invitee', 'destructive')
       })
   }
 
@@ -160,17 +152,10 @@ const ShareBucketModal: React.FC<ShareBucketModalProps> = ({ handleShare, id }) 
         if (res) {
           setInvitees((prev) => prev.filter((item) => item.inviteeId !== inviteeId))
         }
-        toast({
-          title: 'Success',
-          description: 'Invitee is deleted successfully'
-        })
+        ShowToast('Success', 'Invitee deleted successfully')
       })
       .catch(() => {
-        toast({
-          title: 'Error',
-          description: 'Failed to delete invitee',
-          variant: 'destructive'
-        })
+        ShowToast('Error', 'Failed to delete invitee', 'destructive')
       })
   }
   const onShareBucket = () => {
@@ -191,21 +176,20 @@ const ShareBucketModal: React.FC<ShareBucketModalProps> = ({ handleShare, id }) 
     <div>
       <Dialog>
         <DialogTrigger asChild onClick={getInvitees}>
-          <Button className="mr-2 flex items-center gap-2" variant="secondary">
-            <Share2 />
+          <Button variant="outline">
+            <Share2 className="mr-2 h-4 w-4" />
             Share
           </Button>
         </DialogTrigger>
-        <DialogContent className="m-2 sm:max-w-[500px]">
+        <DialogContent className="mt-1 sm:max-w-[500px]">
           <DialogHeader>
-            <DialogTitle>Share this bucket</DialogTitle>
+            <DialogTitle>Share Bucket</DialogTitle>
             <DialogDescription>
-              Only private buckets can be shared with others. Please make the bucket private if you want to share it
-              with other people. People can already search public buckets.
+              Private bucket can be shared with specific users. Public bucket is visible for everyone.
             </DialogDescription>
           </DialogHeader>
           <div>
-            <p className="mb-4 text-sm text-muted-foreground">
+            <p className="mb-1 text-sm text-muted-foreground">
               Search for user names to whom you want to share this bucket with.
             </p>
 
@@ -220,7 +204,7 @@ const ShareBucketModal: React.FC<ShareBucketModalProps> = ({ handleShare, id }) 
                 <PopoverContent className="w-[450px] p-0">
                   <Command>
                     <CommandInput placeholder="Select users..." className="h-9" />
-                    <CommandEmpty>No users found.</CommandEmpty>
+                    <CommandEmpty>No users found</CommandEmpty>
                     <CommandGroup>
                       {users.map((user) => (
                         <CommandItem
@@ -332,22 +316,21 @@ const ShareBucketModal: React.FC<ShareBucketModalProps> = ({ handleShare, id }) 
           </div>
           <DialogFooter>
             <DialogClose asChild>
-              <Button type="submit" className="mt-2" onClick={onShareBucket}>
-                Save
-              </Button>
-            </DialogClose>
-
-            <DialogClose asChild>
               <Button
                 type="submit"
                 className="mt-2"
-                variant="secondary"
+                variant="outline"
                 onClick={() => {
                   setUsersToShare([])
                   setUserValue('')
                 }}
               >
                 Cancel
+              </Button>
+            </DialogClose>
+            <DialogClose asChild>
+              <Button type="submit" className="mt-2" onClick={onShareBucket} variant="secondary">
+                Save
               </Button>
             </DialogClose>
           </DialogFooter>

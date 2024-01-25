@@ -21,6 +21,7 @@ import { CompanyContext } from '@/components/CompanyContext'
 import CompanyDescriptionCard from '@/components/companies/CompanyDescriptionCard'
 import CompanyHeader from '@/components/companies/CompanyHeader'
 import CompanyGraphCard from '@/components/companies/CompanyGraphCard'
+import { Label } from '@/components/ui/label'
 
 interface CompanyMeasurement {
   id: number
@@ -140,7 +141,7 @@ const CompanyPage: React.FC<CompanyPageProps> = ({ params: { companyId } }) => {
       <CompanyDescriptionCard companyId={companyId} />
       <div className="my-4 flex w-full flex-col">
         <div className="mb-3 w-full">
-          <h1 className="mb-1 text-lg font-medium">Please select a datasource to view all its measurements</h1>
+          <Label className="text-gray-300">Please select a datasource to view all its measurements</Label>
           <Select value={currentDatasource} onValueChange={handleDatasourceChange}>
             <SelectTrigger className="w-[250px]">
               <SelectValue placeholder="Select datasources" />

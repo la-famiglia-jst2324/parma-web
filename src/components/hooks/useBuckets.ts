@@ -7,13 +7,6 @@ const useBuckets = () => {
   const [buckets, setBuckets] = useState<Bucket[]>([])
   const user = useContext(AuthContext)
 
-  // useEffect(() => {
-  //   ;(async () => {
-  //     const data = await BucketFunctions.getMyOwnBuckets()
-  //     setBuckets(data)
-  //   	})().catch((error) => console.error('Error in useEffect:', error))
-
-  // }, [user])
   useEffect(() => {
     ;(async () => {
       const token = await getAuthToken(user)

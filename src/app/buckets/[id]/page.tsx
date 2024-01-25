@@ -11,10 +11,10 @@ import ShareBucketModal from '@/components/buckets/ShareBucketModal'
 import { MainLayoutWrapper } from '@/components/layout/MainLayout'
 import BucketGraph from '@/components/buckets/bucketGraph'
 import AddCompaniesToBucket from '@/components/buckets/addCompanies'
-import { useToast } from '@/components/ui/use-toast'
 import { DataTable } from '@/components/DataTable/Table'
 import { columns } from '@/components/buckets/bucketColumns'
 import BucketDescriptionCard from '@/components/buckets/bucketDescriptionCard'
+import { ShowToast } from '@/components/ShowToast'
 import { getUsername } from '@/services/user/userService'
 
 const initialBucketValue = {
@@ -44,7 +44,6 @@ const BucketPage = ({ params: { id } }: { params: { id: string } }) => {
   const [editCompanies, setEditCompanies] = useState(false)
   const [selectedCompanies, setSelectedCompanies] = useState<number[]>([])
   const [loggedInUser, setLoggedInUser] = useState<User>()
-  const { toast } = useToast()
 
   useEffect(() => {
     BucketFunctions.getBucketById(+id)
@@ -91,19 +90,12 @@ const BucketPage = ({ params: { id } }: { params: { id: string } }) => {
     BucketFunctions.deleteBucket(+id)
       .then((res) => {
         if (res) {
-          toast({
-            title: 'Success',
-            description: 'Bucket is deleted successfully'
-          })
+          ShowToast('Success', 'Bucket deleted successfully')
           router.push('/')
         }
       })
       .catch(() => {
-        toast({
-          title: 'Error',
-          description: 'Failed to delete bucket',
-          variant: 'destructive'
-        })
+        ShowToast('Error', 'Failed to delete bucket', 'destructive')
       })
   }
 
@@ -111,28 +103,17 @@ const BucketPage = ({ params: { id } }: { params: { id: string } }) => {
     BucketFunctions.shareBucket(shareUsersList)
       .then((res) => {
         if (res) {
-          toast({
-            title: 'Success',
-            description: 'Bucket is shared successfully'
-          })
+          ShowToast('Success', 'Bucket is shared successfully')
         }
       })
       .catch(() => {
-        toast({
-          title: 'Error',
-          description: 'Failed to share the bucket',
-          variant: 'destructive'
-        })
+        ShowToast('Error', 'Failed to share the bucket', 'destructive')
       })
   }
 
   const removeCompanies = () => {
     if (selectedCompanies.length === 0) {
-      toast({
-        title: 'Error',
-        description: 'Please select at least one company',
-        variant: 'destructive'
-      })
+      ShowToast('Error', 'Please select at least one company', 'destructive')
       return
     }
     BucketFunctions.deleteCompaniesFromBucket(+id, selectedCompanies)
@@ -140,18 +121,11 @@ const BucketPage = ({ params: { id } }: { params: { id: string } }) => {
         if (res) {
           const filteredCompanies = bucketCompanies?.filter((company) => !res.includes(company.id))
           setBucketCompanies(filteredCompanies)
-          toast({
-            title: 'Success',
-            description: 'Companies are deleted successfully'
-          })
+          ShowToast('Success', 'Companies deleted successfully from the bucket')
         }
       })
       .catch(() => {
-        toast({
-          title: 'Error',
-          description: 'Failed to  delete companies from bucket',
-          variant: 'destructive'
-        })
+        ShowToast('Error', 'Failed to remove companies from the bucket', 'destructive')
       })
   }
 
@@ -168,18 +142,11 @@ const BucketPage = ({ params: { id } }: { params: { id: string } }) => {
             }
             return undefined
           })
-          toast({
-            title: 'Success',
-            description: 'Companies are added successfully'
-          })
+          ShowToast('Success', 'Companies added successfully')
         }
       })
       .catch(() => {
-        toast({
-          title: 'Error',
-          description: 'Failed to add companies to bucket',
-          variant: 'destructive'
-        })
+        ShowToast('Error', 'Failed to add companies to bucket', 'destructive')
       })
   }
 
@@ -199,16 +166,16 @@ const BucketPage = ({ params: { id } }: { params: { id: string } }) => {
   }
 
   return (
-    <main className="m-4 flex h-screen flex-row items-start justify-start space-x-4" role="main">
+    <main className="flex h-screen flex-row items-start justify-start space-x-4" role="main">
       <div className="w-full">
         <div className="mb-4 flex items-center justify-between">
           <div className="mb-3 flex items-start justify-start space-x-4">
             <div className="flex flex-col">
-              <h1 className="text-2xl font-bold">{bucket.title}</h1>
+              <h1 className="text-3xl font-bold">{bucket.title}</h1>
             </div>
           </div>
           {isModerator() && (
-            <div className="flex flex-row justify-evenly gap-2">
+            <div className="flex flex-row justify-evenly gap-3 px-2">
               <ShareBucketModal
                 id={id}
                 handleShare={(shareUsersList: ShareBucketProps[]) => onHandleShare(shareUsersList)}
@@ -217,7 +184,7 @@ const BucketPage = ({ params: { id } }: { params: { id: string } }) => {
             </div>
           )}
         </div>
-        <div className="mb-12">
+        <div>
           <BucketDescriptionCard
             handleSave={(val) => setBucket(val)}
             bucket={bucket}
@@ -229,17 +196,12 @@ const BucketPage = ({ params: { id } }: { params: { id: string } }) => {
           <BucketGraph companies={bucketCompanies}></BucketGraph>
         </div>
         {bucketCompanies && bucketCompanies.length > 0 && (
-          <div className="flex items-center justify-between">
-            <h1 className="mb-8 text-2xl font-bold">All companies in this bucket</h1>
+          <div className="mb-5 flex items-center justify-between">
+            <h1 className="text-lg font-bold">All companies in this bucket</h1>
             {isModerator() && (
               <div className="flex flex-row items-center gap-4">
                 {!editCompanies && (
-                  <Button
-                    className="mr-2 flex items-center border-gray-500"
-                    variant="outline"
-                    color="gray"
-                    onClick={() => setEditCompanies(true)}
-                  >
+                  <Button variant="outline" onClick={() => setEditCompanies(true)}>
                     Edit Companies
                   </Button>
                 )}
@@ -250,22 +212,12 @@ const BucketPage = ({ params: { id } }: { params: { id: string } }) => {
                   ></AddCompaniesToBucket>
                 )}
                 {editCompanies && (
-                  <Button
-                    className="mr-2 flex items-center gap-2"
-                    variant="destructive"
-                    color="gray"
-                    onClick={removeCompanies}
-                  >
+                  <Button variant="destructive" onClick={removeCompanies}>
                     Remove Companies
                   </Button>
                 )}
                 {editCompanies && (
-                  <Button
-                    className="mr-2 flex items-center border-gray-500"
-                    variant="outline"
-                    color="gray"
-                    onClick={() => setEditCompanies(false)}
-                  >
+                  <Button variant="outline" onClick={() => setEditCompanies(false)}>
                     Cancel
                   </Button>
                 )}

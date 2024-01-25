@@ -2,7 +2,7 @@
 
 import { useContext } from 'react'
 import Sidebar from '../Sidebar'
-import LandingPage from '../LandingPage'
+import LandingPage from '../LandingPageV2'
 import Spinner from '../Spinner'
 import Header from '../Header'
 import { CompanyProvider } from '../CompanyContext'

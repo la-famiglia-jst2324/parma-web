@@ -176,8 +176,8 @@ const ShareBucketModal: React.FC<ShareBucketModalProps> = ({ handleShare, id }) 
     <div>
       <Dialog>
         <DialogTrigger asChild onClick={getInvitees}>
-          <Button className="mr-2 flex items-center gap-2" variant="outline">
-            <Share2 />
+          <Button variant="outline">
+            <Share2 className="mr-2 h-4 w-4" />
             Share
           </Button>
         </DialogTrigger>

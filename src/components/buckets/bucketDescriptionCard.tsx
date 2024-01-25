@@ -27,10 +27,10 @@ const BucketDescriptionCard: React.FC<BucketDescriptionCardProps> = ({ bucket, h
       })
   }
   return (
-    <Card>
-      <CardHeader>
+    <Card className="mb-5">
+      <CardHeader className="-mb-2 px-3 py-2">
         <div className="flex items-center justify-between">
-          <CardTitle className="text-xl">Description</CardTitle>
+          <CardTitle className="text-lg">Description</CardTitle>
           {isModerator && (
             <EditBucketModal
               title={bucket.title}
@@ -43,8 +43,8 @@ const BucketDescriptionCard: React.FC<BucketDescriptionCardProps> = ({ bucket, h
           )}
         </div>
       </CardHeader>
-      <CardContent>
-        <p className="mb-4 text-sm">{bucket.description}</p>
+      <CardContent className="px-3 py-2">
+        <p className="mb-2 text-sm">{bucket.description}</p>
       </CardContent>
     </Card>
   )

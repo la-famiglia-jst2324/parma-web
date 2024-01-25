@@ -32,12 +32,11 @@ async function getAnalyticsData(
 
 interface GraphChartProps {
   measurementId: string
-  measurementName: string
   companiesArray: string[]
   datepickerValue: DateRangePickerValue | null
 }
 
-const GraphChart: React.FC<GraphChartProps> = ({ measurementId, measurementName, companiesArray, datepickerValue }) => {
+const GraphChart: React.FC<GraphChartProps> = ({ measurementId, companiesArray, datepickerValue }) => {
   const [analyticsData, setAnalyticsData] = useState<DataItem[]>([])
 
   useEffect(() => {
@@ -70,9 +69,6 @@ const GraphChart: React.FC<GraphChartProps> = ({ measurementId, measurementName,
   const categories = extractCategories(analyticsData)
   return (
     <div className="mt-2 w-full">
-      <div>
-        <h1 className="ml-2 text-lg font-semibold text-gray-700">{measurementName}</h1>
-      </div>
       <AreaChart
         className="mt-2 h-72 w-full"
         data={analyticsData}

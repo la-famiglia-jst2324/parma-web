@@ -85,7 +85,15 @@ const CreateDatasource: React.FC<CreateDatasourceProps> = ({ triggerButton, isOp
       }
     } catch (error) {
       console.error('Error creating datasource:', error)
-      ShowToast('Error', 'Failed to create datasource', 'destructive')
+
+      let errorMessage = 'Failed to create new datasource'
+
+      // If the error is an instance of Error
+      if (error instanceof Error) {
+        errorMessage = error.message
+      }
+
+      ShowToast('Datasource creation failed', errorMessage, 'destructive')
     }
   }
   const handleInputChange = (

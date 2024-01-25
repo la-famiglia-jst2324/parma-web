@@ -64,7 +64,7 @@ describe('Bucket Model Tests', () => {
   })
 
   test('Retrieve a bucket by name', async () => {
-    const bucket = await getBucketsByName(createdbucket.title, 1, 10)
+    const bucket = await getBucketsByName(createdbucket.title, 1, 10, userId)
     expect(bucket).toBeTruthy()
   })
 

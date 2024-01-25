@@ -4,6 +4,7 @@ import type { User } from '@prisma/client'
 import { deleteBucket, getBucketById, updateBucket } from '@/api/db/services/bucketService'
 import { ItemNotFoundError } from '@/api/utils/errorUtils'
 import { getBucketAccessByID } from '@/api/db/services/bucketAccessService'
+import { withAuthValidation } from '@/api/middleware/auth'
 
 /**
  * @swagger
@@ -105,7 +106,7 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse, user: U
         }
         // check the user has access to bucket.
         const bucketAccess = await getBucketAccessByID(bucket.id, user.id)
-        if (bucketAccess) res.status(200).json(bucket)
+        if (bucket.ownerId === user.id || bucketAccess) res.status(200).json(bucket)
         else res.status(400).json({ error: 'Not authorized to view this bucket' })
       } catch (error) {
         if (error instanceof ItemNotFoundError) res.status(404).json({ error: error.message })
@@ -118,7 +119,7 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse, user: U
         const existingBucket = await getBucketById(Number(bucketId))
         if (existingBucket) {
           const bucketAccess = await getBucketAccessByID(existingBucket.id, user.id)
-          if (!bucketAccess || bucketAccess.permission !== 'MODERATOR') {
+          if (existingBucket.ownerId === user.id || !bucketAccess || bucketAccess.permission !== 'MODERATOR') {
             res.status(400).json({ error: 'Not authorized to update this bucket' })
           }
 
@@ -138,6 +139,11 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse, user: U
       try {
         const existingBucket = await getBucketById(Number(bucketId))
         if (existingBucket) {
+          const bucketAccess = await getBucketAccessByID(existingBucket.id, user.id)
+          if (existingBucket.ownerId === user.id || !bucketAccess || bucketAccess.permission !== 'MODERATOR') {
+            res.status(400).json({ error: 'Not authorized to update this bucket' })
+          }
+
           await deleteBucket(Number(bucketId))
           res.status(200).json({ message: 'Bucket successfully Deleted' })
         } else res.status(404).json({ error: 'Company not found' })
@@ -153,4 +159,4 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse, user: U
   }
 }
 
-export default handler // No auth
+export default withAuthValidation(handler)

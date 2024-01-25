@@ -38,15 +38,34 @@ const getBucketById = async (id: number) => {
   }
 }
 
-const getBucketsByName = async (title: string, page: number, pageSize: number) => {
+const getBucketsByName = async (title: string, page: number, pageSize: number, userId: number) => {
   try {
     const skip = (page - 1) * pageSize
+
     const buckets = await prisma.bucket.findMany({
       where: {
-        title: {
-          contains: title,
-          mode: 'insensitive'
-        }
+        AND: [
+          {
+            OR: [
+              {
+                ownerId: userId
+              },
+              {
+                permissions: {
+                  some: {
+                    inviteeId: userId
+                  }
+                }
+              }
+            ]
+          },
+          {
+            title: {
+              contains: title,
+              mode: 'insensitive'
+            }
+          }
+        ]
       },
       skip,
       take: pageSize
@@ -54,7 +73,28 @@ const getBucketsByName = async (title: string, page: number, pageSize: number) =
 
     const totalCount = await prisma.bucket.count({
       where: {
-        title
+        AND: [
+          {
+            OR: [
+              {
+                ownerId: userId
+              },
+              {
+                permissions: {
+                  some: {
+                    inviteeId: userId
+                  }
+                }
+              }
+            ]
+          },
+          {
+            title: {
+              contains: title,
+              mode: 'insensitive'
+            }
+          }
+        ]
       }
     })
     const totalPages = Math.ceil(totalCount / pageSize)
@@ -85,6 +125,59 @@ const getAllBuckets = async (page: number, pageSize: number) => {
       take: pageSize
     })
     const totalCount = await prisma.bucket.count()
+    const totalPages = Math.ceil(totalCount / pageSize)
+    return {
+      buckets,
+      pagination: {
+        currentPage: page,
+        pageSize,
+        totalPages,
+        totalCount
+      }
+    }
+  } catch (error) {
+    console.error('Error retrieving all buckets:', error)
+    throw new Error('Unable to retrieve buckets')
+  }
+}
+
+const getAccessibleBuckets = async (page: number, pageSize: number, userId: number) => {
+  try {
+    const skip = (page - 1) * pageSize
+    const buckets = await prisma.bucket.findMany({
+      where: {
+        OR: [
+          {
+            ownerId: userId
+          },
+          {
+            permissions: {
+              some: {
+                inviteeId: userId
+              }
+            }
+          }
+        ]
+      },
+      skip,
+      take: pageSize
+    })
+    const totalCount = await prisma.bucket.count({
+      where: {
+        OR: [
+          {
+            ownerId: userId
+          },
+          {
+            permissions: {
+              some: {
+                inviteeId: userId
+              }
+            }
+          }
+        ]
+      }
+    })
     const totalPages = Math.ceil(totalCount / pageSize)
     return {
       buckets,
@@ -160,4 +253,13 @@ const deleteBucket = async (id: number) => {
   }
 }
 
-export { createBucket, getBucketById, getBucketsByName, getAllBuckets, getOwnBuckets, updateBucket, deleteBucket }
+export {
+  createBucket,
+  getBucketById,
+  getBucketsByName,
+  getAllBuckets,
+  getOwnBuckets,
+  updateBucket,
+  deleteBucket,
+  getAccessibleBuckets
+}

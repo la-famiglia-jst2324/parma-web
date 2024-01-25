@@ -26,9 +26,6 @@ const getBucketAccessByID = async (bucketId: number, inviteeId: number) => {
         }
       }
     })
-    if (!bucketAccess) {
-      throw new Error(`not found.`)
-    }
     return bucketAccess
   } catch (error) {
     console.error('Error getting by ID:', error)
@@ -52,9 +49,6 @@ const getInviteesByBucketId = async (bucketId: number) => {
         }
       }
     })
-    if (!membership) {
-      throw new Error(`invitees not found.`)
-    }
     return membership
   } catch (error) {
     console.error('Error getting by ID:', error)
@@ -69,9 +63,6 @@ const getInviteesIdsByBucketId = async (bucketId: number) => {
         bucketId
       }
     })
-    if (!membership) {
-      throw new Error(`invitees not found.`)
-    }
     return membership
   } catch (error) {
     console.error('Error getting by ID:', error)

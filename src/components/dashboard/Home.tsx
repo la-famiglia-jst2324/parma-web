@@ -1,6 +1,7 @@
 'use client'
 import React, { useContext, useEffect, useState } from 'react'
 import Spinner from '../Spinner'
+import { Label } from '../ui/label'
 import NewsCard from '@/components/dashboard/NewsCard'
 import type NewsItem from '@/types/news'
 import { AuthContext } from '@/lib/firebase/auth'
@@ -34,7 +35,7 @@ export const Home = () => {
       <h1 className="text-center text-3xl font-semibold text-slate-200">Trending News</h1>
       <div className="flex justify-center">
         <div className="grid w-full max-w-4xl grid-cols-1 gap-4">
-          {news ? (
+          {news && news.length > 0 ? (
             news.map((item, index) => (
               <NewsCard
                 key={index}
@@ -49,7 +50,12 @@ export const Home = () => {
               />
             ))
           ) : (
-            <p>No news available</p>
+            <div className="flex h-full flex-col items-center justify-center">
+              <Label>There are currently no trending news or notification items.</Label>
+              <Label className="mt-4 text-blue-500">
+                Tip: Use <kbd>Ctrl</kbd> + <kbd>K</kbd> or <kbd>⌘</kbd> + <kbd>K</kbd> to open the command interface.
+              </Label>
+            </div>
           )}
         </div>
       </div>

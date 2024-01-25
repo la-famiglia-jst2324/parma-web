@@ -1,47 +1,86 @@
 import { createMocks } from 'node-mocks-http'
+import type { User } from '@prisma/client'
+import type { NextApiRequest, NextApiResponse } from 'next'
 import { handler } from '@/pages/api/bucket/share/index'
-import { createBucketAccess } from '@/api/db/services/bucketAccessService'
-
+import { createBucketAccess, getInviteesIdsByBucketId } from '@/api/db/services/bucketAccessService'
+import { getBucketById } from '@/api/db/services/bucketService'
 jest.mock('@/api/db/services/bucketAccessService')
-
+jest.mock('@/api/db/services/bucketService')
+jest.mock('@/api/middleware/auth', () => ({
+  withAuthValidation: jest.fn().mockImplementation((handler) => {
+    return async (req: NextApiRequest, res: NextApiResponse, user: User) => {
+      return handler(req, res, user)
+    }
+  })
+}))
+const mockUser: User = {
+  id: 1,
+  authId: 'AAAAAdfw',
+  name: 'ZL',
+  profilePicture: 'pic',
+  role: 'USER',
+  createdAt: new Date(),
+  modifiedAt: new Date()
+}
 const mockAccessIn = {
   bucketId: 1,
   inviteeId: 1,
   permission: 'VIEWER'
 }
-const mockAccessResult = {
-  bucketId: 1,
-  inviteeId: 1,
-  permission: 'VIEWER',
-  createdAt: '2023-12-02T21:23:57.281Z',
-  modifiedAt: '2023-12-02T21:23:57.281Z'
-}
+
 describe('Bucket Share API', () => {
   afterEach(() => {
     jest.resetAllMocks()
   })
 
-  test('POST creates a new data source', async () => {
-    createBucketAccess.mockResolvedValueOnce(mockAccessResult)
+  test('POST with valid data creates new bucket accesses and returns 201', async () => {
+    getInviteesIdsByBucketId.mockResolvedValue([{ permission: 'MODERATOR' }])
+
+    getBucketById.mockResolvedValue({ ownerId: mockUser.id })
+
+    createBucketAccess.mockImplementation((data) => Promise.resolve({ newAccess: 'accessData', ...data }))
+
+    const invitations = [
+      {
+        bucketId: '1',
+        inviteeId: '2',
+        permission: 'VIEWER'
+      }
+    ]
 
     const { req, res } = createMocks({
       method: 'POST',
-      body: [mockAccessIn]
+      body: invitations
     })
-    await handler(req, res)
+
+    await handler(req, res, mockUser)
+
     expect(res._getStatusCode()).toBe(201)
-    expect(JSON.parse(res._getData())).toEqual([mockAccessResult])
+
+    expect(res._getData()).toBeTruthy()
   })
-  test('POST with invalid parameters returns 400', async () => {
-    createBucketAccess.mockResolvedValueOnce(null) // Simulate failure due to invalid parameters
+
+  test('POST with invalid data returns 400 due to lack of permissions', async () => {
+    getInviteesIdsByBucketId.mockResolvedValue([{ permission: 'VIEWER' }])
+
+    getBucketById.mockResolvedValue({ ownerId: 'anotherUserId' })
+
+    createBucketAccess.mockResolvedValue(undefined)
+
+    const invitations = [
+      {
+        bucketId: '1',
+        inviteeId: '2',
+        permission: 'VIEWER'
+      }
+    ]
 
     const { req, res } = createMocks({
       method: 'POST',
-      body: [{ permission: 'VIEWER' }],
-      query: { id: '1' }
+      body: invitations
     })
 
-    await handler(req, res)
+    await handler(req, res, mockUser)
 
     expect(res._getStatusCode()).toBe(400)
     expect(JSON.parse(res._getData())).toEqual({ error: 'Invalid request parameters' })

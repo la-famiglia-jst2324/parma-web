@@ -1,7 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 
+import type { User } from '@prisma/client'
 import { deleteBucket, getBucketById, updateBucket } from '@/api/db/services/bucketService'
 import { ItemNotFoundError } from '@/api/utils/errorUtils'
+import { withAuthValidation } from '@/api/middleware/auth'
 
 /**
  * @swagger
@@ -90,7 +92,7 @@ import { ItemNotFoundError } from '@/api/utils/errorUtils'
  *       405:
  *         description: Method Not Allowed.
  */
-export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
+export const handler = async (req: NextApiRequest, res: NextApiResponse, user: User) => {
   const { method } = req
   const { bucketId } = req.query
 
@@ -98,9 +100,13 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     case 'GET':
       try {
         const bucket = await getBucketById(Number(bucketId))
-        if (bucket) res.status(200).json(bucket)
-        else res.status(400).json({ error: 'No Bucket found' })
-        // get all buckets
+        if (!bucket) {
+          res.status(400).json({ error: 'No Bucket found' })
+        }
+        // check the user has access to bucket.
+        const hasAccess = bucket.permissions.some((x) => x.inviteeId === user.id)
+        if (bucket.ownerId === user.id || hasAccess) res.status(200).json(bucket)
+        else res.status(400).json({ error: 'Not authorized to view this bucket' })
       } catch (error) {
         if (error instanceof ItemNotFoundError) res.status(404).json({ error: error.message })
         else res.status(500).json({ error: 'Internal Server Error' })
@@ -111,6 +117,13 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       try {
         const existingBucket = await getBucketById(Number(bucketId))
         if (existingBucket) {
+          const hasAccess = existingBucket.permissions.some(
+            (x) => x.inviteeId === user.id && x.permission === 'MODERATOR'
+          )
+          if (existingBucket.ownerId !== user.id && !hasAccess) {
+            res.status(400).json({ error: 'Not authorized to update this bucket' })
+          }
+
           // Update Bucket
           const updatedBucket = await updateBucket(Number(bucketId), req.body)
           res.status(200).json(updatedBucket)
@@ -127,6 +140,10 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       try {
         const existingBucket = await getBucketById(Number(bucketId))
         if (existingBucket) {
+          if (existingBucket.ownerId !== user.id) {
+            res.status(400).json({ error: 'Not authorized to delete this bucket' })
+          }
+
           await deleteBucket(Number(bucketId))
           res.status(200).json({ message: 'Bucket successfully Deleted' })
         } else res.status(404).json({ error: 'Company not found' })
@@ -142,4 +159,4 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 }
 
-export default handler // No auth
+export default withAuthValidation(handler)

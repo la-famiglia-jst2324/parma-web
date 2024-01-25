@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import type { User } from '@prisma/client'
-import { createBucket, getBucketByName, getAllBuckets } from '@/api/db/services/bucketService'
+import { createBucket, getBucketsByName, getAccessibleBuckets } from '@/api/db/services/bucketService'
 import { ItemNotFoundError } from '@/api/utils/errorUtils'
 import { withAuthValidation } from '@/api/middleware/auth'
 /**
@@ -125,15 +125,17 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse, user: U
     case 'GET':
       try {
         if (bucketName) {
-          const bucket = await getBucketByName(
+          const buckets = await getBucketsByName(
             String(bucketName),
             parseInt(page as string),
-            parseInt(pageSize as string)
+            parseInt(pageSize as string),
+            user.id
           )
-          if (bucket) res.status(200).json(bucket)
+
+          if (buckets) res.status(200).json(buckets)
           else res.status(400).json({ error: 'No Bucket found' })
         } else {
-          const buckets = await getAllBuckets(parseInt(page as string), parseInt(pageSize as string))
+          const buckets = await getAccessibleBuckets(parseInt(page as string), parseInt(pageSize as string), user.id)
           if (buckets) res.status(200).json(buckets)
           else res.status(400).json({ error: 'No Buckets found' })
         }

@@ -1,7 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 
-import { createBucketAccess } from '@/api/db/services/bucketAccessService'
+import type { User } from '@prisma/client'
+import { createBucketAccess, getInviteesIdsByBucketId } from '@/api/db/services/bucketAccessService'
 import { withAuthValidation } from '@/api/middleware/auth'
+import { getBucketById } from '@/api/db/services/bucketService'
 /**
  * @swagger
  * /api/bucket/share:
@@ -66,7 +68,7 @@ import { withAuthValidation } from '@/api/middleware/auth'
  *         modifiedAt:
  *           type: string
  */
-export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
+export const handler = async (req: NextApiRequest, res: NextApiResponse, user: User) => {
   const { method } = req
   switch (method) {
     // Share a bucket with other users
@@ -77,11 +79,19 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
           res.status(400).json({ error: 'Invalid request format' })
           break
         }
-        const createPromises = req.body.map((invite) => {
+
+        const createPromises = req.body.map(async (invite) => {
           const data = {
             bucketId: Number(invite.bucketId),
             inviteeId: Number(invite.inviteeId),
             permission: invite.permission
+          }
+
+          const bucketAccess = await getInviteesIdsByBucketId(Number(data.bucketId))
+          const userHasModeratorAccess = bucketAccess.some((access) => access.permission === 'MODERATOR')
+          const bucket = await getBucketById(Number(data.bucketId))
+          if (bucket.ownerId !== user.id && (!bucketAccess || (bucketAccess && userHasModeratorAccess))) {
+            return Promise.resolve() // return an empty promise.
           }
           return createBucketAccess(data)
         })

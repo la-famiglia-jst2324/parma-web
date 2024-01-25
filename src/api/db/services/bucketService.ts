@@ -38,29 +38,47 @@ const getBucketById = async (id: number) => {
   }
 }
 
-const getBucketByName = async (title: string, page: number, pageSize: number) => {
+const getBucketsByName = async (title: string, page: number, pageSize: number, userId: number) => {
   try {
-    const skip = (page - 1) * pageSize
-    const buckets = await prisma.bucket.findMany({
-      where: {
-        title: {
-          contains: title,
-          mode: 'insensitive'
+    const whereClause = {
+      OR: [
+        {
+          ownerId: userId
+        },
+        {
+          permissions: {
+            some: {
+              inviteeId: userId
+            }
+          }
+        },
+        {
+          isPublic: true
         }
-      },
-      skip,
-      take: pageSize
+      ]
+    }
+
+    // Workaround the not supported multi-level where clause.
+    const buckets = await prisma.bucket.findMany({
+      where: whereClause
     })
 
-    const totalCount = await prisma.bucket.count({
-      where: {
-        title
-      }
-    })
-    const totalPages = Math.ceil(totalCount / pageSize)
-    if (buckets) {
+    const allFilteredBuckets = buckets.filter((bucket) => bucket.title.toLowerCase().includes(title.toLowerCase()))
+
+    let paginatedBuckets
+    if (page && pageSize) {
+      const start = (page - 1) * pageSize
+      const end = start + pageSize
+      paginatedBuckets = allFilteredBuckets.slice(start, end)
+    } else {
+      paginatedBuckets = allFilteredBuckets
+    }
+
+    if (page && pageSize) {
+      const totalCount = allFilteredBuckets.length
+      const totalPages = Math.ceil(totalCount / pageSize)
       return {
-        buckets,
+        paginatedBuckets,
         pagination: {
           currentPage: page,
           pageSize,
@@ -69,11 +87,11 @@ const getBucketByName = async (title: string, page: number, pageSize: number) =>
         }
       }
     } else {
-      throw new Error(`Bucket with name ${title} not found.`)
+      return { allFilteredBuckets }
     }
   } catch (error) {
-    console.error('Error finding bucket by name:', error)
-    throw error
+    console.error('Error retrieving all buckets:', error)
+    throw new Error('Unable to retrieve buckets')
   }
 }
 
@@ -94,6 +112,61 @@ const getAllBuckets = async (page: number, pageSize: number) => {
         totalPages,
         totalCount
       }
+    }
+  } catch (error) {
+    console.error('Error retrieving all buckets:', error)
+    throw new Error('Unable to retrieve buckets')
+  }
+}
+
+const getAccessibleBuckets = async (page: number, pageSize: number, userId: number) => {
+  try {
+    const whereClause = {
+      OR: [
+        {
+          ownerId: userId
+        },
+        {
+          permissions: {
+            some: {
+              inviteeId: userId
+            }
+          }
+        },
+        {
+          isPublic: true
+        }
+      ]
+    }
+
+    let skip, take
+    if (page && pageSize) {
+      skip = (page - 1) * pageSize
+      take = pageSize
+    }
+
+    const buckets = await prisma.bucket.findMany({
+      where: whereClause,
+      skip,
+      take
+    })
+
+    if (page && pageSize) {
+      const totalCount = await prisma.bucket.count({
+        where: whereClause
+      })
+      const totalPages = Math.ceil(totalCount / pageSize)
+      return {
+        buckets,
+        pagination: {
+          currentPage: page,
+          pageSize,
+          totalPages,
+          totalCount
+        }
+      }
+    } else {
+      return { buckets }
     }
   } catch (error) {
     console.error('Error retrieving all buckets:', error)
@@ -160,4 +233,13 @@ const deleteBucket = async (id: number) => {
   }
 }
 
-export { createBucket, getBucketById, getBucketByName, getAllBuckets, getOwnBuckets, updateBucket, deleteBucket }
+export {
+  createBucket,
+  getBucketById,
+  getBucketsByName,
+  getAllBuckets,
+  getOwnBuckets,
+  updateBucket,
+  deleteBucket,
+  getAccessibleBuckets
+}

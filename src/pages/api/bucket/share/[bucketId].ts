@@ -1,5 +1,13 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { getInviteesByBucketId, updateBucketAccess, deleteBucketAccess } from '@/api/db/services/bucketAccessService'
+import type { User } from '@prisma/client'
+import {
+  getInviteesByBucketId,
+  updateBucketAccess,
+  deleteBucketAccess,
+  getInviteesIdsByBucketId
+} from '@/api/db/services/bucketAccessService'
+import { getBucketById } from '@/api/db/services/bucketService'
+import { withAuthValidation } from '@/api/middleware/auth'
 /**
  * @swagger
  * /api/bucket/share/id:
@@ -92,7 +100,7 @@ import { getInviteesByBucketId, updateBucketAccess, deleteBucketAccess } from '@
  *         description: Method Not Allowed.
  */
 
-export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
+export const handler = async (req: NextApiRequest, res: NextApiResponse, user: User) => {
   const { method } = req
   const { bucketId } = req.query
 
@@ -109,6 +117,12 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     case 'PUT':
       try {
         const { inviteeId, permission } = req.body
+        const bucketAccess = await getInviteesIdsByBucketId(Number(bucketId))
+        const userHasModeratorAccess = bucketAccess.some((access) => access.permission === 'MODERATOR')
+        const bucket = await getBucketById(Number(bucketId))
+        if (bucket.ownerId !== user.id && (!bucketAccess || (bucketAccess && userHasModeratorAccess))) {
+          res.status(401).json({ error: 'Not authorized to update access permissions.' })
+        }
         const updatedAccess = await updateBucketAccess(Number(bucketId), inviteeId, { permission })
         res.status(200).json(updatedAccess)
       } catch (error) {
@@ -130,4 +144,4 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 }
 
-export default handler // No auth
+export default withAuthValidation(handler)

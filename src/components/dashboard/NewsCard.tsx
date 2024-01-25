@@ -25,32 +25,30 @@ const NewsCard: React.FC<NewsCardProps> = ({
           <div className="flex-1">
             <Link href={`/companies/${companyId}`}>
               <CardTitle className="text-xl font-semibold text-gray-200 transition-colors hover:text-white">
-                {title}
+                {title || 'No title available'}
               </CardTitle>
             </Link>
           </div>
-          <div className="shrink-0">
-            <Badge variant="indigo">{triggerFactor}</Badge>
-          </div>
+          <div className="shrink-0">{triggerFactor && <Badge variant="indigo">{triggerFactor}</Badge>}</div>
         </div>
-        <CardDescription className="mt-2 text-gray-400">{dataSourceName}</CardDescription>
+        <CardDescription className="mt-2 text-gray-400">{dataSourceName || 'No data source name'}</CardDescription>
       </CardHeader>
       <CardContent className="pb-6 pt-3">
-        <p className="text-gray-300">{description}</p>
+        <p className="text-gray-300">{description || 'No description available'}</p>
       </CardContent>
       <CardFooter className="rounded-b-lg bg-slate-800 px-6 py-3">
         <div className="flex space-x-4 text-sm text-gray-300">
           <div className="flex items-center">
             <span className="mr-1 text-gray-400">Company:</span>
-            <span className="text-white">{companyName}</span>
+            <span className="text-white">{companyName || 'No company name'}</span>
           </div>
           <div className="flex items-center">
             <span className="mr-1 text-gray-400">Notification Date:</span>
-            <span className="text-white">{formattedDate}</span>
+            <span className="text-white">{formattedDate || 'No date available'}</span>
           </div>
           <div className="flex items-center">
             <span className="mr-1 text-gray-400">Trigger Factor:</span>
-            <span className="text-white">{triggerFactor}</span>
+            <span className="text-white">{triggerFactor || 'No trigger factor'}</span>
           </div>
         </div>
       </CardFooter>

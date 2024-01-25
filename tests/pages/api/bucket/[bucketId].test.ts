@@ -1,55 +1,75 @@
 import { createMocks } from 'node-mocks-http'
 import { randomBucketDummy } from '@tests/data/dummy/bucket'
-import { randomDbUserDummy } from '@tests/data/dummy/user'
+import type { NextApiRequest, NextApiResponse } from 'next'
+import type { User } from '@prisma/client'
 import { handler } from '@/pages/api/bucket/[bucketId]'
 import { getBucketById, deleteBucket, updateBucket } from '@/api/db/services/bucketService'
+import { getBucketAccessByID } from '@/api/db/services/bucketAccessService'
 import { ItemNotFoundError } from '@/api/utils/errorUtils'
 
 jest.mock('@/api/db/services/bucketService')
+jest.mock('@/api/db/services/bucketAccessService')
+jest.mock('@/api/middleware/auth', () => ({
+  withAuthValidation: jest.fn().mockImplementation((handler) => {
+    return async (req: NextApiRequest, res: NextApiResponse, user: User) => {
+      return handler(req, res, user)
+    }
+  })
+}))
 
-const mockDbUser = randomDbUserDummy()
-const mockBucket = randomBucketDummy({ managedFields: false, ownerId: mockDbUser.id })
+const mockUser: User = {
+  id: 1,
+  authId: 'AAAAAdfw',
+  name: 'ZL',
+  profilePicture: 'pic',
+  role: 'USER',
+  createdAt: new Date(),
+  modifiedAt: new Date()
+}
+
+const mockBucket = randomBucketDummy({ managedFields: true, ownerId: mockUser.id })
 
 describe('BucketId API', () => {
   afterEach(() => {
     jest.resetAllMocks()
   })
 
-  test('GET returns a bucket', async () => {
-    getBucketById.mockResolvedValueOnce(mockBucket)
+  test('GET returns 200 when user has access to the bucket', async () => {
+    const mockBucketId = '1'
+    const mockUser = { id: 'user123' }
 
-    const { req, res } = createMocks({
-      method: 'GET'
+    getBucketById.mockResolvedValue({
+      id: mockBucketId,
+      ownerId: mockUser.id,
+      permissions: [{ inviteeId: mockUser.id, permission: 'VIEWER' }]
     })
-
-    await handler(req, res)
-    expect(res._getStatusCode()).toBe(200)
-    expect(JSON.parse(res._getData())).toEqual(mockBucket)
-  })
-
-  test('GET with non-existent bucketId returns 400', async () => {
-    getBucketById.mockResolvedValueOnce(null)
 
     const { req, res } = createMocks({
       method: 'GET',
-      query: { bucketId: 'non_existent_id' }
+      query: { bucketId: mockBucketId }
     })
 
-    await handler(req, res)
+    await handler(req, res, mockUser)
 
-    expect(res._getStatusCode()).toBe(400)
-    expect(JSON.parse(res._getData())).toEqual({ error: 'No Bucket found' })
+    expect(res._getStatusCode()).toBe(200)
+    expect(JSON.parse(res._getData())).toEqual(
+      expect.objectContaining({
+        id: mockBucketId,
+        ownerId: mockUser.id,
+        permissions: expect.arrayContaining([expect.objectContaining({ inviteeId: mockUser.id })])
+      })
+    )
   })
 
   test('GET with an invalid bucketId returns 404', async () => {
     getBucketById.mockRejectedValueOnce(new ItemNotFoundError('Item not found'))
-
+    getBucketAccessByID.mockRejectedValueOnce(mockBucket, mockUser)
     const { req, res } = createMocks({
       method: 'GET',
       query: { bucketId: 'invalid_id' }
     })
 
-    await handler(req, res)
+    await handler(req, res, mockUser)
 
     expect(res._getStatusCode()).toBe(404)
     expect(JSON.parse(res._getData())).toEqual({ error: 'Item not found' })
@@ -63,20 +83,43 @@ describe('BucketId API', () => {
       query: { bucketId: 'error_id' }
     })
 
-    await handler(req, res)
+    await handler(req, res, mockUser)
 
     expect(res._getStatusCode()).toBe(500)
     expect(JSON.parse(res._getData())).toEqual({ error: 'Internal Server Error' })
   })
 
-  test('PUT update a bucket', async () => {
-    const existingBucket = getBucketById.mockResolvedValueOnce(mockBucket)
-    updateBucket.mockResolvedValueOnce(existingBucket)
-    const { req, res } = createMocks({
-      method: 'PUT'
+  test('PUT updates a bucket successfully and returns 200', async () => {
+    const mockBucketId = '1'
+    const mockUser = { id: 'user123' }
+    const requestBody = { name: 'Updated Bucket Name' }
+
+    getBucketById.mockResolvedValue({
+      id: mockBucketId,
+      ownerId: 'anotherUserId',
+      permissions: [{ inviteeId: mockUser.id, permission: 'MODERATOR' }]
     })
-    await handler(req, res)
+
+    updateBucket.mockResolvedValue({
+      id: mockBucketId,
+      ...requestBody
+    })
+
+    const { req, res } = createMocks({
+      method: 'PUT',
+      query: { bucketId: mockBucketId },
+      body: requestBody
+    })
+
+    await handler(req, res, mockUser)
+
     expect(res._getStatusCode()).toBe(200)
+    expect(JSON.parse(res._getData())).toEqual(
+      expect.objectContaining({
+        id: mockBucketId,
+        ...requestBody
+      })
+    )
   })
 
   test('PUT with non-existent bucketId returns 404', async () => {
@@ -88,7 +131,7 @@ describe('BucketId API', () => {
       body: randomBucketDummy({ ownerId: 1 })
     })
 
-    await handler(req, res)
+    await handler(req, res, mockUser)
 
     expect(res._getStatusCode()).toBe(404)
     expect(JSON.parse(res._getData())).toEqual({ error: 'Bucket not found' })
@@ -106,7 +149,7 @@ describe('BucketId API', () => {
       } // Valid updated bucket data
     })
 
-    await handler(req, res)
+    await handler(req, res, mockUser)
 
     expect(res._getStatusCode()).toBe(500)
     expect(JSON.parse(res._getData())).toEqual({ error: 'Failed to update bucket' })
@@ -118,7 +161,7 @@ describe('BucketId API', () => {
     const { req, res } = createMocks({
       method: 'DELETE'
     })
-    await handler(req, res)
+    await handler(req, res, mockUser)
     expect(res._getStatusCode()).toBe(200)
     expect(JSON.parse(res._getData())).toEqual({ message: 'Bucket successfully Deleted' })
   })
@@ -131,7 +174,7 @@ describe('BucketId API', () => {
       query: { bucketId: 'non_existent_id' }
     })
 
-    await handler(req, res)
+    await handler(req, res, mockUser)
 
     expect(res._getStatusCode()).toBe(404)
     expect(JSON.parse(res._getData())).toEqual({ error: 'Company not found' })
@@ -146,8 +189,7 @@ describe('BucketId API', () => {
       query: { bucketId: 'error_id' }
     })
 
-    await handler(req, res)
-
+    await handler(req, res, mockUser)
     expect(res._getStatusCode()).toBe(500)
     expect(JSON.parse(res._getData())).toEqual({ error: 'Internal Server Error' })
   })

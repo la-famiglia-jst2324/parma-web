@@ -1,7 +1,7 @@
-import { MultiSelect, MultiSelectItem } from '@tremor/react'
 import { useEffect, useState } from 'react'
 import type { Company } from '@prisma/client'
 import { DialogHeader, DialogFooter } from '../ui/dialog'
+import { MultiSelect } from '../ui/multi-select'
 import {
   Dialog,
   DialogTrigger,
@@ -19,7 +19,7 @@ interface AddCompaniesToBucketProps {
 }
 const AddCompaniesToBucket: React.FC<AddCompaniesToBucketProps> = ({ handleSave, bucketCompanies }) => {
   const [allCompanies, setAllCompanies] = useState<Company[]>([])
-  const [selectedCompanies, setSelectedCompanies] = useState<string[]>()
+  const [selectedCompanies, setSelectedCompanies] = useState<string[]>([])
   useEffect(() => {
     BucketFunctions.getAllCompanies()
       .then((res) => {
@@ -34,6 +34,13 @@ const AddCompaniesToBucket: React.FC<AddCompaniesToBucketProps> = ({ handleSave,
   const onSaveClick = () => {
     handleSave(selectedCompanies || [])
   }
+
+  const data = allCompanies?.map((company) => {
+    return {
+      value: String(company?.id),
+      label: company.name
+    }
+  })
   return (
     <div>
       <Dialog>
@@ -50,15 +57,16 @@ const AddCompaniesToBucket: React.FC<AddCompaniesToBucketProps> = ({ handleSave,
           <div>
             <div className="mb-8">
               <h1 className="mb-2 block text-sm font-bold text-gray-700">Add companies to the bucket</h1>
-              <MultiSelect onValueChange={(e) => setSelectedCompanies(e || [])}>
-                {allCompanies?.map((company: Company) => (
-                  <MultiSelectItem key={company.id} value={`${company.id}`}>
-                    {company.name}
-                  </MultiSelectItem>
-                ))}
-              </MultiSelect>
             </div>
           </div>
+
+          <MultiSelect
+            options={data}
+            selected={selectedCompanies}
+            onChange={setSelectedCompanies}
+            placeholder="Select companies"
+            width="w-[460px]"
+          />
           <DialogFooter className="sm:justify-end">
             <DialogClose asChild>
               <Button variant="default" onClick={onSaveClick}>

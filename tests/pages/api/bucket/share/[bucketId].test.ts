@@ -1,12 +1,39 @@
 import { createMocks } from 'node-mocks-http'
+import type { User } from '@prisma/client'
+import type { NextApiRequest, NextApiResponse } from 'next'
+import { randomBucketDummy } from '@tests/data/dummy/bucket'
 import { handler } from '@/pages/api/bucket/share/[bucketId]'
-import { getInviteesByBucketId, updateBucketAccess, deleteBucketAccess } from '@/api/db/services/bucketAccessService'
-
+import { getBucketById } from '@/api/db/services/bucketService'
+import {
+  getInviteesByBucketId,
+  updateBucketAccess,
+  deleteBucketAccess,
+  getInviteesIdsByBucketId
+} from '@/api/db/services/bucketAccessService'
 jest.mock('@/api/db/services/bucketAccessService')
+jest.mock('@/api/db/services/bucketService')
+jest.mock('@/api/middleware/auth', () => ({
+  withAuthValidation: jest.fn().mockImplementation((handler) => {
+    return async (req: NextApiRequest, res: NextApiResponse, user: User) => {
+      return handler(req, res, user)
+    }
+  })
+}))
+const mockUser: User = {
+  id: 1,
+  authId: 'AAAAAdfw',
+  name: 'ZL',
+  profilePicture: 'pic',
+  role: 'USER',
+  createdAt: new Date(),
+  modifiedAt: new Date()
+}
+
+const mockBucket = randomBucketDummy({ ownerId: mockUser.id, managedFields: true })
 const mockAccess = {
   bucketId: 1,
   inviteeId: 1,
-  permission: 'VIEWER',
+  permission: 'MODERATOR',
   createdAt: '2023-12-02T21:23:57.281Z',
   modifiedAt: '2023-12-02T21:23:57.281Z'
 }
@@ -23,7 +50,7 @@ describe('Bucket share bucketId API', () => {
       method: 'GET'
     })
 
-    await handler(req, res)
+    await handler(req, res, mockUser)
     expect(res._getStatusCode()).toBe(200)
   })
 
@@ -35,19 +62,32 @@ describe('Bucket share bucketId API', () => {
       query: { bucketId: '1' }
     })
 
-    await handler(req, res)
+    await handler(req, res, mockUser)
 
     expect(res._getStatusCode()).toBe(500)
     expect(JSON.parse(res._getData())).toEqual({ error: 'Internal Server Error' })
   })
 
-  test('PUT update a bucket access', async () => {
-    updateBucketAccess.mockResolvedValueOnce(mockAccess)
+  test('PUT updates bucket access permissions successfully and returns 200', async () => {
+    const requestBody = { inviteeId: 'user456', permission: 'VIEWER' }
+    getInviteesIdsByBucketId.mockResolvedValue([{ userId: mockUser.id, permission: 'MODERATOR' }])
+    getBucketById.mockResolvedValue(mockBucket)
+    updateBucketAccess.mockResolvedValue({ inviteeId: requestBody.inviteeId, permission: requestBody.permission })
+
     const { req, res } = createMocks({
-      method: 'PUT'
+      method: 'PUT',
+      body: requestBody
     })
-    await handler(req, res)
+
+    await handler(req, res, mockUser)
+
     expect(res._getStatusCode()).toBe(200)
+    expect(JSON.parse(res._getData())).toEqual(
+      expect.objectContaining({
+        inviteeId: requestBody.inviteeId,
+        permission: requestBody.permission
+      })
+    )
   })
 
   test('PUT with server error returns 500', async () => {
@@ -59,7 +99,7 @@ describe('Bucket share bucketId API', () => {
       body: { inviteeId: '123', permission: 'read' }
     })
 
-    await handler(req, res)
+    await handler(req, res, mockUser)
 
     expect(res._getStatusCode()).toBe(500)
     expect(JSON.parse(res._getData())).toEqual({ error: 'Internal Server Error' })
@@ -70,7 +110,7 @@ describe('Bucket share bucketId API', () => {
     const { req, res } = createMocks({
       method: 'DELETE'
     })
-    await handler(req, res)
+    await handler(req, res, mockUser)
     expect(res._getStatusCode()).toBe(200)
     expect(JSON.parse(res._getData())).toEqual({ message: 'Bucket access deleted successfully' })
   })
@@ -83,7 +123,7 @@ describe('Bucket share bucketId API', () => {
       body: { inviteeId: '123' }
     })
 
-    await handler(req, res)
+    await handler(req, res, mockUser)
 
     expect(res._getStatusCode()).toBe(500)
     expect(JSON.parse(res._getData())).toEqual({ error: 'Internal Server Error' })

@@ -1,9 +1,6 @@
 import type { ChangeEvent } from 'react'
 import React, { useEffect, useRef, useState } from 'react'
-import { Label } from '@radix-ui/react-dropdown-menu'
-import { Loader2Icon } from 'lucide-react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card'
-import { Input } from '../ui/input'
 import { Button } from '../ui/button'
 import { ShowToast } from '../ShowToast'
 import CompanyAttachment from './CompanyAttachment'
@@ -30,7 +27,6 @@ interface Attachment {
 }
 
 const CompanyUserAttachedDataCard: React.FC<CompanyUserAttachedDataCardProps> = ({ companyId }) => {
-  const [uploadLoading, setUploadLoading] = useState<boolean>(false)
   const fileInputRef = useRef<HTMLInputElement | null>(null)
   const [companyAttachments, setCompanyAttachments] = useState<Attachment[]>([])
 
@@ -49,7 +45,6 @@ const CompanyUserAttachedDataCard: React.FC<CompanyUserAttachedDataCardProps> = 
   }, [companyId])
 
   const handleUpload = async (file: File) => {
-    setUploadLoading(true)
     try {
       const data = new FormData()
       data.append('file', file)
@@ -61,7 +56,6 @@ const CompanyUserAttachedDataCard: React.FC<CompanyUserAttachedDataCardProps> = 
     } catch (error) {
       console.error('Error uploading the file:', error)
     }
-    setUploadLoading(false)
     if (fileInputRef.current) {
       fileInputRef.current.value = ''
     }
@@ -99,27 +93,19 @@ const CompanyUserAttachedDataCard: React.FC<CompanyUserAttachedDataCardProps> = 
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-xl">User Attached Data</CardTitle>
-        <CardDescription>Attach files in pdf, jpg and png format only</CardDescription>
+        <div className="flex items-start justify-between">
+          <div className="space-y-1">
+            <CardTitle className="text-xl">User Attached Data</CardTitle>
+            <CardDescription>Attach files in pdf, jpg and png format only</CardDescription>
+          </div>
+          <Button type="button" variant="outline">
+            <label htmlFor="picture">Upload</label>
+            <input id="picture" type="file" hidden onChange={uploadToClient} />
+          </Button>
+        </div>
       </CardHeader>
       <CardContent>
-        <div>
-          <div className="flex items-end space-x-2">
-            <div className="grid w-full max-w-sm items-center gap-1.5">
-              <Label>Choose file</Label>
-              <Input ref={fileInputRef} id="picture" type="file" name="attachment" onChange={uploadToClient} />
-            </div>
-            {uploadLoading === true ? (
-              <>
-                <Button disabled>
-                  <Loader2Icon className="mr-2 h-4 w-4 animate-spin" />
-                  Please wait
-                </Button>
-              </>
-            ) : null}
-          </div>
-        </div>
-        <div className="my-2 flex h-40 flex-wrap overflow-y-auto">
+        <div className="my-2 flex h-1/4 flex-wrap overflow-y-auto">
           {companyAttachments.length > 0
             ? companyAttachments?.map((attachment) => (
                 <CompanyAttachment

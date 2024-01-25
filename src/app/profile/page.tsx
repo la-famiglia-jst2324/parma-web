@@ -127,7 +127,7 @@ const ProfilePage: React.FC = () => {
                     </FormItem>
                   )}
                 />
-                <Button type="button" variant="secondary">
+                <Button type="button" variant="outline">
                   <label htmlFor="picture">Update</label>
                   <input id="picture" accept="image/*,.jpg" type="file" hidden onChange={fileUpload} />
                 </Button>

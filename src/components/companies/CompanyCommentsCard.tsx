@@ -89,7 +89,7 @@ const CompanyCommentsCard: React.FC<CompanyCommentsCardProps> = ({ companyId, me
         </div>
       </CardHeader>
       <CardContent>
-        <div className="my-2 flex h-1/4 flex-wrap overflow-y-auto">
+        <div className="my-2 flex h-72 flex-wrap overflow-y-auto">
           <Table>
             <TableHeader>
               <TableRow>

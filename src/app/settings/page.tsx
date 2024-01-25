@@ -69,7 +69,7 @@ function SettingsPage() {
 
   return (
     <main role="main">
-      <div className="">
+      <div className="mx-10 my-8">
         <div className="flex-col justify-center">
           <div className="mb-2 flex items-center">
             <Label className="text-base font-bold">Report and channel configuration</Label>

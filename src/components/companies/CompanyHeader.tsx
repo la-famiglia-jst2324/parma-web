@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { CheckCircle2Icon, FileDownIcon } from 'lucide-react'
+import { CheckCircle2Icon, Download } from 'lucide-react'
 import { Button } from '../ui/button'
 import { useToast } from '../ui/use-toast'
 import type { CompanyContextProps } from '../CompanyContext'
@@ -103,9 +103,9 @@ const CompanyHeader: React.FC<CompanyHeaderProps> = ({ companyId }) => {
             <Button onClick={handleSubscribe}>Subscribe</Button>
           )}
           <ConfigureDatasourcesModal companyId={companyId} />
-          <Button variant="secondary" onClick={() => handleExport(companyData.name)}>
-            <FileDownIcon className="mr-2 h-4 w-4" />
-            Download Data
+          <Button variant="outline" onClick={() => handleExport(companyData.name)}>
+            <Download className="mr-2 h-4 w-4" />
+            Download
           </Button>
         </div>
       </div>

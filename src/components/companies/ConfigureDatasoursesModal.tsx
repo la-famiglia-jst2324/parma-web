@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react'
-import { ArrowDown, ArrowUp, Link2Icon, PencilIcon } from 'lucide-react'
+import { ArrowDown, ArrowUp, Link2Icon, FileCog } from 'lucide-react'
 import { useToast } from '../ui/use-toast'
 import type { CompanyContextProps } from '../CompanyContext'
 import { CompanyContext } from '../CompanyContext'
@@ -7,10 +7,8 @@ import { MultiSelect } from '../ui/multi-select'
 import { IdentifierModal } from '../datasources/Identifiers/IdentifierModal'
 import {
   Dialog,
-  DialogClose,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger
@@ -111,15 +109,15 @@ const ConfigureDatasourcesModal: React.FC<ConfigureDatasourcesModalProps> = ({ c
     <Dialog>
       <DialogTrigger>
         <Button variant="outline">
-          <PencilIcon className="mr-2 h-4 w-4" />
-          Configure Datasources
+          <FileCog className="mr-2 h-4 w-4" />
+          Configure
         </Button>
       </DialogTrigger>
       <DialogContent className="flex h-3/5 flex-col">
         <DialogHeader>
-          <DialogTitle>Link/Unlink data sources with this company</DialogTitle>
+          <DialogTitle>Configure datasources with this company</DialogTitle>
           <DialogDescription>
-            Select data sources to link with the company and manage linked data sources.
+            Link or unlink datasources with this company. You can also configure identifiers for each datasource
           </DialogDescription>
         </DialogHeader>
         <div className="flex">
@@ -129,7 +127,7 @@ const ConfigureDatasourcesModal: React.FC<ConfigureDatasourcesModalProps> = ({ c
               selected={selectedValues}
               onChange={setSelectedValues}
               placeholder="Select Datasources"
-              width="w-80"
+              width="w-96"
             />
           </div>
           <div className="pl-3">
@@ -187,13 +185,6 @@ const ConfigureDatasourcesModal: React.FC<ConfigureDatasourcesModalProps> = ({ c
             )}
           </TableBody>
         </Table>
-        <DialogFooter className="sm:justify-end">
-          <DialogClose asChild>
-            <Button type="button" variant="outline">
-              Close
-            </Button>
-          </DialogClose>
-        </DialogFooter>
       </DialogContent>
     </Dialog>
   )

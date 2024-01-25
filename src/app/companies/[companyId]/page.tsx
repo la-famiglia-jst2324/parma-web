@@ -140,7 +140,7 @@ const CompanyPage: React.FC<CompanyPageProps> = ({ params: { companyId } }) => {
       <CompanyDescriptionCard companyId={companyId} />
       <div className="my-4 flex w-full flex-col">
         <div className="mb-3 w-full">
-          <h1 className="mb-1 text-lg font-medium">Please select a datasource to view all its measurements</h1>
+          <h1 className="mb-1 text-lg font-medium">Select a datasource and related measurements</h1>
           <Select value={currentDatasource} onValueChange={handleDatasourceChange}>
             <SelectTrigger className="w-[250px]">
               <SelectValue placeholder="Select datasources" />

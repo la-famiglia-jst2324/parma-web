@@ -106,7 +106,7 @@ const CompanyUserAttachedDataCard: React.FC<CompanyUserAttachedDataCardProps> = 
     <Card>
       <CardHeader>
         <CardTitle className="text-xl">User Attached Data</CardTitle>
-        <CardDescription>You can attach pdf, jpg, and png files to this company</CardDescription>
+        <CardDescription>Attach files in pdf, jpg and png format only</CardDescription>
       </CardHeader>
       <CardContent>
         <div>

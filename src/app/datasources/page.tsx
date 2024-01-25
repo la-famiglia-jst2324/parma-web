@@ -8,6 +8,7 @@ import CreateDatasource from '@/components/datasources/CreateDatasource'
 import { DataTable } from '@/components/DataTable/Table'
 import { columns } from '@/components/datasources/Table/Columns'
 import { Button } from '@/components/ui/button'
+import { Label } from '@/components/ui/label'
 
 function DatasourcesPage() {
   const [data, setData] = useState<DataSource[] | null>(null)
@@ -26,10 +27,12 @@ function DatasourcesPage() {
     <div className="px-6">
       <div className="mb-4 flex items-center justify-between">
         <div>
-          <h1 className="text-md text-justify text-gray-200">
-            A datasource is a location from which data is extracted or collected. In the context of data scraping, it
-            refers to websites or platforms like GitHub, LinkedIn, Reddit, etc., where data is gathered.
-          </h1>
+          <div className=" flex items-center">
+            <Label className="font-base text-base">
+              Datasources scrape the information related to subscribed buckets and companies. Find all the available
+              datasources below
+            </Label>
+          </div>
         </div>
         <div className="ml-10">
           <CreateDatasource

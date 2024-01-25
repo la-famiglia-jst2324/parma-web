@@ -9,6 +9,7 @@ import { TabComponent } from '@/components/datasources/DatasourceTabComponent'
 import { GoBackButton } from '@/components/GoBackButton'
 import DescriptionCard from '@/components/datasources/Card'
 import { getCompaniesByDatasourceId } from '@/services/company/companyService'
+import { Button } from '@/components/ui/button'
 
 function DatasourcePage({ params: { id } }: { params: { id: string } }) {
   const [data, setData] = useState<DataSource>()
@@ -104,9 +105,9 @@ function DatasourcePage({ params: { id } }: { params: { id: string } }) {
       <div className="w-full">
         <div className="mb-4 flex items-center justify-between">
           <div className="mb-3 flex items-center justify-center space-x-4">
-            <div className="mt-1">
+            <Button variant="ghost">
               <GoBackButton url="/datasources" />
-            </div>
+            </Button>
             <HeaderComponent data={data} />
           </div>
           <div className="flex items-center justify-end">

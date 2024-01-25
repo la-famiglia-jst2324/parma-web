@@ -48,7 +48,7 @@ export const columns: ColumnDef<DataSource>[] = [
         <div className="w-10">
           <Badge
             className={`${
-              isActive ? 'bg-blue-700 text-blue-100 hover:bg-blue-800' : 'bg-red-700 text-red-100 hover:bg-red-800'
+              isActive ? 'bg-lime-600 text-white hover:bg-lime-700' : 'bg-orange-600 text-white hover:bg-orange-700'
             } flex h-6 w-24 items-center justify-center`}
           >
             {isActive ? <WifiIcon className="mr-2 h-4 w-4" /> : <WifiOff className="mr-2 h-4 w-4" />}

@@ -47,11 +47,10 @@ const EditCompanyModal: React.FC<EditCompanyModalProps> = ({ companyName, compan
     <Dialog>
       <DialogTrigger>
         <Button variant="outline">
-          <PencilIcon className="mr-2 h-4 w-4" />
-          Edit
+          <PencilIcon className="h-4 w-4" />
         </Button>
       </DialogTrigger>
-      <DialogContent>
+      <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
           <DialogTitle>Edit Information</DialogTitle>
           <DialogDescription>Edit the company information here</DialogDescription>

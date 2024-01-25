@@ -18,7 +18,7 @@ const CompanyDescriptionCard: React.FC<CompanyDescriptionCardProps> = ({ company
       await editCompany(companyId, name, description)
       const data = await getCompanyData(companyId)
       setCompanyData(data)
-      ShowToast(`${data.name} edited successfully`, 'You have successfully edited this company')
+      ShowToast(`${data.name} edited successfully`)
     } catch (error) {
       console.error('Error in editing the company:', error)
       ShowToast(`Unable to edit ${name}`, 'An error has occurred. Please try again')

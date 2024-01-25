@@ -6,6 +6,7 @@ import { DialogDescription } from '@radix-ui/react-dialog'
 import { Label } from '../ui/label'
 import { Input } from '../ui/input'
 import { Checkbox } from '../ui/checkbox'
+import { ShowToast } from '../ShowToast'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -35,20 +36,23 @@ const EditBucketModal: React.FC<EditBucketModalProps> = ({
   const [isPublic, setIsPublic] = useState(isPublicProp)
 
   const handleSaveClick = () => {
-    handleSave(title, description, isPublic)
+    if (title === null || title === '') {
+      ShowToast('Title is required', 'Title cannot be empty', 'destructive')
+    } else {
+      handleSave(title, description, isPublic)
+    }
   }
   return (
     <div>
       <Dialog>
         <DialogTrigger asChild>
-          <Button className="mr-2 flex items-center border-gray-500" variant="outline" color="gray">
-            <PencilIcon className="mr-2 h-4 w-4" />
-            Edit
+          <Button className="mr-2 flex items-center" variant="outline" color="gray">
+            <PencilIcon className=" h-4 w-4" />
           </Button>
         </DialogTrigger>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>Edit bucket</DialogTitle>
+            <DialogTitle>Edit Bucket</DialogTitle>
             <DialogDescription className="text-sm text-gray-500">Edit the bucket information here</DialogDescription>
           </DialogHeader>
           <div>

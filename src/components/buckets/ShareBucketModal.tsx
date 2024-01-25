@@ -187,21 +187,20 @@ const ShareBucketModal: React.FC<ShareBucketModalProps> = ({ handleShare, id }) 
     <div>
       <Dialog>
         <DialogTrigger asChild onClick={getInvitees}>
-          <Button className="mr-2 flex items-center gap-2" variant="secondary">
+          <Button className="mr-2 flex items-center gap-2" variant="outline">
             <Share2 />
             Share
           </Button>
         </DialogTrigger>
-        <DialogContent className="m-2 sm:max-w-[500px]">
+        <DialogContent className="mt-1 sm:max-w-[500px]">
           <DialogHeader>
-            <DialogTitle>Share this bucket</DialogTitle>
+            <DialogTitle>Share Bucket</DialogTitle>
             <DialogDescription>
-              Only private buckets can be shared with others. Please make the bucket private if you want to share it
-              with other people. People can already search public buckets.
+              Private bucket can be shared with specific users. Public bucket is visible for everyone.
             </DialogDescription>
           </DialogHeader>
           <div>
-            <p className="mb-4 text-sm text-muted-foreground">
+            <p className="mb-1 text-sm text-muted-foreground">
               Search for user names to whom you want to share this bucket with.
             </p>
 
@@ -216,7 +215,7 @@ const ShareBucketModal: React.FC<ShareBucketModalProps> = ({ handleShare, id }) 
                 <PopoverContent className="w-[450px] p-0">
                   <Command>
                     <CommandInput placeholder="Select users..." className="h-9" />
-                    <CommandEmpty>No users found.</CommandEmpty>
+                    <CommandEmpty>No users found</CommandEmpty>
                     <CommandGroup>
                       {users.map((user) => (
                         <CommandItem
@@ -321,22 +320,21 @@ const ShareBucketModal: React.FC<ShareBucketModalProps> = ({ handleShare, id }) 
           </div>
           <DialogFooter>
             <DialogClose asChild>
-              <Button type="submit" className="mt-2" onClick={onShareBucket}>
-                Save
-              </Button>
-            </DialogClose>
-
-            <DialogClose asChild>
               <Button
                 type="submit"
                 className="mt-2"
-                variant="secondary"
+                variant="outline"
                 onClick={() => {
                   setUsersToShare([])
                   setUserValue('')
                 }}
               >
                 Cancel
+              </Button>
+            </DialogClose>
+            <DialogClose asChild>
+              <Button type="submit" className="mt-2" onClick={onShareBucket} variant="secondary">
+                Save
               </Button>
             </DialogClose>
           </DialogFooter>

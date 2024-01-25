@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useContext } from 'react'
 import { ArrowDown, ArrowUp, Link2Icon, FileCog } from 'lucide-react'
-import { useToast } from '../ui/use-toast'
 import type { CompanyContextProps } from '../CompanyContext'
 import { CompanyContext } from '../CompanyContext'
 import { MultiSelect } from '../ui/multi-select'
 import { IdentifierModal } from '../datasources/Identifiers/IdentifierModal'
+import { ShowToast } from '../ShowToast'
 import {
   Dialog,
   DialogContent,
@@ -47,7 +47,6 @@ const ConfigureDatasourcesModal: React.FC<ConfigureDatasourcesModalProps> = ({ c
   const [filteredDataSources, setFilteredDataSources] = useState<CompanyDataSource[]>([])
   const [selectedValues, setSelectedValues] = useState<string[]>([])
   const { companyDatasources, setCompanyDatasources } = useContext(CompanyContext) as CompanyContextProps
-  const { toast } = useToast()
 
   useEffect(() => {
     const fetchData = async () => {
@@ -77,10 +76,7 @@ const ConfigureDatasourcesModal: React.FC<ConfigureDatasourcesModalProps> = ({ c
     setAllDataSources(alldatasource.datasources)
     const companydatasources = await getDataSourcesByCompanyId(companyId)
     setCompanyDatasources(companydatasources)
-    toast({
-      title: `Datasource unlinked successfully`,
-      description: 'You have successfully unlinked a datasource from this company'
-    })
+    ShowToast('Success', 'Datasource unlinked successfully')
   }
 
   const handleAddDataSourceToCompany = async () => {
@@ -92,10 +88,7 @@ const ConfigureDatasourcesModal: React.FC<ConfigureDatasourcesModalProps> = ({ c
     setAllDataSources(alldatasource.datasources)
     const companydatasources = await getDataSourcesByCompanyId(companyId)
     setCompanyDatasources(companydatasources)
-    toast({
-      title: `Datasource/s linked successfully`,
-      description: 'You have successfully added a datasource to the company'
-    })
+    ShowToast('Success', 'Datasources linked successfully')
   }
 
   const data = filteredDataSources?.map((datasource) => {

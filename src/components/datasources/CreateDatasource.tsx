@@ -158,6 +158,7 @@ const CreateDatasource: React.FC<CreateDatasourceProps> = ({ triggerButton, isOp
             </DialogClose>
             <DialogClose asChild>
               <Button
+                type="submit"
                 variant="secondary"
                 onClick={(event) => createDatasource(event, name, description, url, frequency)}
               >

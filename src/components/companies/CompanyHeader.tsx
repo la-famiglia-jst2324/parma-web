@@ -1,9 +1,9 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { CheckCircle2Icon, Download } from 'lucide-react'
 import { Button } from '../ui/button'
-import { useToast } from '../ui/use-toast'
 import type { CompanyContextProps } from '../CompanyContext'
 import { CompanyContext } from '../CompanyContext'
+import { ShowToast } from '../ShowToast'
 import ConfigureDatasourcesModal from './ConfigureDatasoursesModal'
 import { getExportData, getSubscribedCompanies, postCompanySubscription } from '@/services/company/companyService'
 
@@ -22,7 +22,6 @@ interface SubscriptionResponse {
 
 const CompanyHeader: React.FC<CompanyHeaderProps> = ({ companyId }) => {
   const [isSubscribed, setIsSubscribed] = useState(false)
-  const { toast } = useToast()
   const { companyData } = useContext(CompanyContext) as CompanyContextProps
 
   const handleUnsubscribe = async () => {
@@ -30,10 +29,7 @@ const CompanyHeader: React.FC<CompanyHeaderProps> = ({ companyId }) => {
     try {
       await postCompanySubscription(companyId, subscribeValue)
       setIsSubscribed(subscribeValue)
-      toast({
-        title: `Company ${companyData.name} unsubscribed successfully`,
-        description: 'You have successfully unsubscribed to this company'
-      })
+      ShowToast(`${companyData.name} unsubscribed successfully`)
     } catch (error) {
       console.error('Error unsubscribing:', error)
     }
@@ -59,17 +55,16 @@ const CompanyHeader: React.FC<CompanyHeaderProps> = ({ companyId }) => {
     try {
       await postCompanySubscription(companyId, subscribeValue)
       setIsSubscribed(subscribeValue)
-      toast({
-        title: `Company ${companyData.name} subscribed successfully`,
-        description:
-          'You have successfully subscribed to this company. You will now receive information about this company on your dashboard. You can always unsubscribe by pressing the subscribed button at the top'
-      })
+      ShowToast(
+        `${companyData.name} subscribed successfully`,
+        'Update yourself with the latest information about this company'
+      )
     } catch (error) {
       console.error('Error subscribing:', error)
-      toast({
-        title: `Unable to subscribe to ${companyData.name}`,
-        description: 'An error occurred while subscribing to this company! Please try again'
-      })
+      ShowToast(
+        `Unable to subscribe ${companyData.name}`,
+        'An error occurred while subscribing to this company! Please try again'
+      )
     }
   }
 

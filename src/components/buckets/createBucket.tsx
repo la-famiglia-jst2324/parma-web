@@ -39,25 +39,30 @@ const CreateBucket: React.FC<CreateBucketProps> = ({ triggerButton, isOpen, setO
       isPublic,
       description
     }
+    if (title === null || title === '') {
+      ShowToast('Title is required', 'Please provide a title for the bucket', 'destructive')
+    } else if (selectedCompanies.length === 0) {
+      ShowToast('Companies are required', 'Please select companies for the bucket', 'destructive')
+    } else {
+      BucketFunctions.createBucket(bucket)
+        .then((data: Bucket) => {
+          // Add companies to the bucket
 
-    BucketFunctions.createBucket(bucket)
-      .then((data: Bucket) => {
-        // Add companies to the bucket
-
-        if (selectedCompanies.length > 0) {
-          const updatedCompanies = selectedCompanies.map((c) => {
-            return { bucketId: data.id + '', companyId: c }
-          })
-          BucketFunctions.addCompaniesToBucket(updatedCompanies)
-            .then((data) => console.log(data))
-            .catch((e) => console.log(e))
-        }
-        ShowToast('Success', 'Bucket created successfully')
-      })
-      .catch((error) => {
-        ShowToast('Error', 'Failed to create bucket', 'destructive')
-        console.error('Error:', error)
-      })
+          if (selectedCompanies.length > 0) {
+            const updatedCompanies = selectedCompanies.map((c) => {
+              return { bucketId: data.id + '', companyId: c }
+            })
+            BucketFunctions.addCompaniesToBucket(updatedCompanies)
+              .then((data) => console.log(data))
+              .catch((e) => console.log(e))
+          }
+          ShowToast('Success', 'Bucket created successfully')
+        })
+        .catch((error) => {
+          ShowToast('Error', 'Failed to create bucket', 'destructive')
+          console.error('Error:', error)
+        })
+    }
   }
 
   const getCompanies = () => {
@@ -118,11 +123,11 @@ const CreateBucket: React.FC<CreateBucketProps> = ({ triggerButton, isOpen, setO
                   options={data}
                   selected={selectedCompanies}
                   onChange={(e) => setSelectedCompanies(e || [])}
-                  placeholder="Select Datasources"
+                  placeholder="Select Companies"
                   width="w-80"
                 />
               </div>
-              <div className=" flex items-center space-x-4">
+              <div className="flex items-center space-x-4">
                 <Checkbox id="switch" name="isPublic" checked={isPublic} onCheckedChange={handleSwitchChange} />
                 <Label htmlFor="switch">Make this bucket publicly available</Label>
               </div>

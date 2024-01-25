@@ -96,7 +96,7 @@ describe('Bucket share bucketId API', () => {
     const { req, res } = createMocks({
       method: 'PUT',
       query: { bucketId: '1' },
-      body: { inviteeId: '123', permission: 'read' }
+      body: { inviteeId: '123', permission: 'VIEWER' }
     })
 
     await handler(req, res, mockUser)

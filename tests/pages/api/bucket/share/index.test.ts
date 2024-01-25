@@ -44,7 +44,7 @@ describe('Bucket Share API', () => {
       {
         bucketId: '1',
         inviteeId: '2',
-        permission: 'READ'
+        permission: 'VIEWER'
       }
     ]
 
@@ -61,7 +61,7 @@ describe('Bucket Share API', () => {
   })
 
   test('POST with invalid data returns 400 due to lack of permissions', async () => {
-    getInviteesIdsByBucketId.mockResolvedValue([{ permission: 'READ' }])
+    getInviteesIdsByBucketId.mockResolvedValue([{ permission: 'VIEWER' }])
 
     getBucketById.mockResolvedValue({ ownerId: 'anotherUserId' })
 
@@ -71,7 +71,7 @@ describe('Bucket Share API', () => {
       {
         bucketId: '1',
         inviteeId: '2',
-        permission: 'READ'
+        permission: 'VIEWER'
       }
     ]
 

@@ -34,26 +34,14 @@ describe('BucketId API', () => {
     jest.resetAllMocks()
   })
 
-  // test('GET returns a bucket', async () => {
-  //   getBucketById.mockResolvedValueOnce(mockBucket)
-
-  //   const { req, res } = createMocks({
-  //     method: 'GET'
-  //   })
-  //   await handler(req, res, mockUser)
-  //   expect(res._getStatusCode()).toBe(200)
-  //   expect(JSON.parse(res._getData())).toEqual(mockBucket)
-  // })
-
   test('GET returns 200 when user has access to the bucket', async () => {
     const mockBucketId = '1'
     const mockUser = { id: 'user123' }
 
-    // Mock getBucketById to resolve with a bucket object that the user has access to
     getBucketById.mockResolvedValue({
       id: mockBucketId,
-      ownerId: mockUser.id, // User is the owner of the bucket
-      permissions: [{ inviteeId: mockUser.id, permission: 'READ' }] // User has READ permission
+      ownerId: mockUser.id,
+      permissions: [{ inviteeId: mockUser.id, permission: 'VIEWER' }]
     })
 
     const { req, res } = createMocks({
@@ -101,29 +89,17 @@ describe('BucketId API', () => {
     expect(JSON.parse(res._getData())).toEqual({ error: 'Internal Server Error' })
   })
 
-  // test('PUT update a bucket', async () => {
-  //   const existingBucket = getBucketById.mockResolvedValueOnce(mockBucket)
-  //   updateBucket.mockResolvedValueOnce(existingBucket)
-  //   const { req, res } = createMocks({
-  //     method: 'PUT'
-  //   })
-  //   await handler(req, res, mockUser)
-  //   expect(res._getStatusCode()).toBe(200)
-  // })
-
   test('PUT updates a bucket successfully and returns 200', async () => {
     const mockBucketId = '1'
     const mockUser = { id: 'user123' }
     const requestBody = { name: 'Updated Bucket Name' }
 
-    // Mock getBucketById to return an existing bucket object where the user has 'MODERATOR' permission
     getBucketById.mockResolvedValue({
       id: mockBucketId,
       ownerId: 'anotherUserId',
       permissions: [{ inviteeId: mockUser.id, permission: 'MODERATOR' }]
     })
 
-    // Mock updateBucket to simulate successful bucket update
     updateBucket.mockResolvedValue({
       id: mockBucketId,
       ...requestBody
@@ -214,7 +190,6 @@ describe('BucketId API', () => {
     })
 
     await handler(req, res, mockUser)
-    console.log('zl     ' + res._getData())
     expect(res._getStatusCode()).toBe(500)
     expect(JSON.parse(res._getData())).toEqual({ error: 'Internal Server Error' })
   })

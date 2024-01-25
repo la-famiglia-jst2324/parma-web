@@ -25,7 +25,7 @@ export default function LandingPage() {
             onClick={() => {
               router.push('/signup')
             }}
-            className="bg-indigo-700 text-white hover:bg-indigo-800"
+            variant="indigo"
           >
             Sign up
           </Button>
@@ -42,7 +42,8 @@ export default function LandingPage() {
           onClick={() => {
             router.push('/signup')
           }}
-          className="mt-8 bg-indigo-700 text-white hover:bg-indigo-800"
+          className="mt-8"
+          variant="indigo"
         >
           Get started
           <ChevronRight className="ml-2 h-4 w-4" />

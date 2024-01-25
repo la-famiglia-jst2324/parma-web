@@ -45,7 +45,6 @@ const BucketPage = ({ params: { id } }: { params: { id: string } }) => {
   const [selectedCompanies, setSelectedCompanies] = useState<number[]>([])
   const [loggedInUser, setLoggedInUser] = useState<User>()
 
-
   useEffect(() => {
     BucketFunctions.getBucketById(+id)
       .then((data) => {

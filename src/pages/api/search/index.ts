@@ -1,6 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
+import type { User } from '@prisma/client'
 import { searchCompaniesAndBuckets } from '@/api/db/services/searchService'
 import { withAuthValidation } from '@/api/middleware/auth'
+
 /**
  * @swagger
  * tags:
@@ -61,7 +63,7 @@ import { withAuthValidation } from '@/api/middleware/auth'
  *             totalCount:
  *               type: integer
  */
-const handler = async (req: NextApiRequest, res: NextApiResponse) => {
+const handler = async (req: NextApiRequest, res: NextApiResponse, user: User) => {
   const { method } = req
   const { name, page, pageSize } = req.query
 
@@ -72,7 +74,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         const result = await searchCompaniesAndBuckets(
           searchString,
           parseInt(page as string),
-          parseInt(pageSize as string)
+          parseInt(pageSize as string),
+          user.id
         )
         res.status(200).json(result)
       } catch (error) {

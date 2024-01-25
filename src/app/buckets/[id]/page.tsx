@@ -166,16 +166,16 @@ const BucketPage = ({ params: { id } }: { params: { id: string } }) => {
   }
 
   return (
-    <main className="m-4 flex h-screen flex-row items-start justify-start space-x-4" role="main">
+    <main className="flex h-screen flex-row items-start justify-start space-x-4" role="main">
       <div className="w-full">
         <div className="mb-4 flex items-center justify-between">
           <div className="mb-3 flex items-start justify-start space-x-4">
             <div className="flex flex-col">
-              <h1 className="text-2xl font-bold">{bucket.title}</h1>
+              <h1 className="text-3xl font-bold">{bucket.title}</h1>
             </div>
           </div>
           {isModerator() && (
-            <div className="flex flex-row justify-evenly gap-2">
+            <div className="flex flex-row justify-evenly gap-3 px-2">
               <ShareBucketModal
                 id={id}
                 handleShare={(shareUsersList: ShareBucketProps[]) => onHandleShare(shareUsersList)}
@@ -184,7 +184,7 @@ const BucketPage = ({ params: { id } }: { params: { id: string } }) => {
             </div>
           )}
         </div>
-        <div className="mb-12">
+        <div>
           <BucketDescriptionCard
             handleSave={(val) => setBucket(val)}
             bucket={bucket}
@@ -196,17 +196,12 @@ const BucketPage = ({ params: { id } }: { params: { id: string } }) => {
           <BucketGraph companies={bucketCompanies}></BucketGraph>
         </div>
         {bucketCompanies && bucketCompanies.length > 0 && (
-          <div className="flex items-center justify-between">
-            <h1 className="mb-8 text-2xl font-bold">All companies in this bucket</h1>
+          <div className="mb-5 flex items-center justify-between">
+            <h1 className="text-lg font-bold">All companies in this bucket</h1>
             {isModerator() && (
               <div className="flex flex-row items-center gap-4">
                 {!editCompanies && (
-                  <Button
-                    className="mr-2 flex items-center border-gray-500"
-                    variant="outline"
-                    color="gray"
-                    onClick={() => setEditCompanies(true)}
-                  >
+                  <Button variant="outline" onClick={() => setEditCompanies(true)}>
                     Edit Companies
                   </Button>
                 )}
@@ -217,22 +212,12 @@ const BucketPage = ({ params: { id } }: { params: { id: string } }) => {
                   ></AddCompaniesToBucket>
                 )}
                 {editCompanies && (
-                  <Button
-                    className="mr-2 flex items-center gap-2"
-                    variant="destructive"
-                    color="gray"
-                    onClick={removeCompanies}
-                  >
+                  <Button variant="destructive" onClick={removeCompanies}>
                     Remove Companies
                   </Button>
                 )}
                 {editCompanies && (
-                  <Button
-                    className="mr-2 flex items-center border-gray-500"
-                    variant="outline"
-                    color="gray"
-                    onClick={() => setEditCompanies(false)}
-                  >
+                  <Button variant="outline" onClick={() => setEditCompanies(false)}>
                     Cancel
                   </Button>
                 )}

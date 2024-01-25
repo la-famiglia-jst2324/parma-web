@@ -26,10 +26,10 @@ const CompanyDescriptionCard: React.FC<CompanyDescriptionCardProps> = ({ company
   }
 
   return (
-    <Card>
-      <CardHeader>
+    <Card className="mb-5">
+      <CardHeader className="-mb-2 px-3 py-2">
         <div className="flex items-center justify-between">
-          <CardTitle className="text-xl">Description</CardTitle>
+          <CardTitle className="text-lg">Description</CardTitle>
           <EditCompanyModal
             companyName={companyData.name}
             companyDescription={companyData.description}
@@ -37,8 +37,8 @@ const CompanyDescriptionCard: React.FC<CompanyDescriptionCardProps> = ({ company
           />
         </div>
       </CardHeader>
-      <CardContent>
-        <p className="mb-4 text-sm">{companyData.description}</p>
+      <CardContent className="px-3 py-2">
+        <p className="mb-2 text-sm">{companyData.description}</p>
       </CardContent>
     </Card>
   )

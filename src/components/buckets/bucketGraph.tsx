@@ -7,6 +7,8 @@ import type { DateRange } from 'react-day-picker'
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover'
 import { Button } from '../ui/button'
 import { Calendar } from '../ui/calendar'
+import { Label } from '../ui/label'
+import { Card, CardContent, CardHeader, CardTitle } from '../ui/card'
 import GraphChart from '@/components/analytics/Graph'
 import { useMeasurementsCompanies } from '@/components/hooks/useMetrics'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
@@ -50,7 +52,7 @@ function BucketGraph({ companies }: { companies: Company[] | undefined }) {
       {metrics && (
         <div className="flex w-full flex-col items-start shadow-md">
           <div className="mb-6">
-            <h1 className="mb-2 text-2xl font-semibold text-gray-700">Compare</h1>
+            <Label className="text-gray-300">Please select a metric to compare companies</Label>
             <div className="flex justify-between">
               <div className="flex">
                 <div className="flex w-1/2 flex-row gap-4">
@@ -120,14 +122,30 @@ function BucketGraph({ companies }: { companies: Company[] | undefined }) {
           </div>
           <div></div>
           {graphData ? (
-            <GraphChart
-              measurementId={graphData.metric || ''}
-              companiesArray={graphData.companies}
-              measurementName={metricName || ''}
-              datepickerValue={datePickerValue || null}
-            />
+            <div className="w-full">
+              <Card>
+                <CardHeader>
+                  <div className="flex items-start justify-between">
+                    <div className="space-y-1">
+                      <CardTitle className="text-xl">Graph</CardTitle>
+                      <p className="text-sm">Selected Measurement: {metricName}</p>
+                    </div>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <GraphChart
+                    measurementId={graphData.metric || ''}
+                    companiesArray={graphData.companies}
+                    datepickerValue={datePickerValue || null}
+                  />
+                </CardContent>
+              </Card>
+            </div>
           ) : (
-            <p className="ml-2">Please select a metric to compare.</p>
+            <div className="flex h-96 w-full flex-col items-center justify-center">
+              <h1 className="text-2xl font-bold">No data to display</h1>
+              <p className="text-gray-500">Please select a metric to compare companies</p>
+            </div>
           )}
         </div>
       )}

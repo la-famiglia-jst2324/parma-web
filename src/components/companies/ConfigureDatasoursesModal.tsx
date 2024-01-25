@@ -106,7 +106,7 @@ const ConfigureDatasourcesModal: React.FC<ConfigureDatasourcesModalProps> = ({ c
           Configure
         </Button>
       </DialogTrigger>
-      <DialogContent className="flex h-3/5 flex-col">
+      <DialogContent className="flex h-3/5 flex-col sm:max-w-[600px]">
         <DialogHeader>
           <DialogTitle>Configure datasources with this company</DialogTitle>
           <DialogDescription>

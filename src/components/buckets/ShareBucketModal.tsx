@@ -2,10 +2,9 @@
 
 import { useEffect, useState } from 'react'
 import { $Enums, type User } from '@prisma/client'
-import { Share2, Pencil, Check, Trash2, X, CheckIcon, ChevronDown } from 'lucide-react'
-import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover'
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from '../ui/command'
+import { Share2, X } from 'lucide-react'
 import { ShowToast } from '../ShowToast'
+import { MultiSelect } from '../ui/multi-select'
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import BucketFunctions from '@/app/services/bucket.service'
 import { Button } from '@/components/ui/button'
@@ -19,7 +18,6 @@ import {
   DialogTrigger,
   DialogClose
 } from '@/components/ui/dialog'
-import { cn } from '@/utils/utils'
 interface ShareBucketModalProps {
   handleShare: (shareUsersList: ShareBucketProps[]) => void
   id: string
@@ -38,7 +36,7 @@ interface Invitee {
   inviteeId: number
   permission: string
   user: User
-  isEdit?: boolean
+  isChanged?: boolean
 }
 const initialValue: User[] = [
   {
@@ -58,12 +56,21 @@ const ShareBucketModal: React.FC<ShareBucketModalProps> = ({ handleShare, id }) 
   const [usersToShare, setUsersToShare] = useState<User[]>([])
   const [listToPost, setListToPost] = useState<ShareBucketProps[]>([])
   const [invitees, setInvitees] = useState<Invitee[]>([])
-  const [open, setOpen] = useState(false)
-  const [userValue, setUserValue] = useState('')
+  const [multiSelectUsers, setMultiSelectUers] = useState<{ value: string; label: string }[]>([]) // User data in multiselect
+  const [selectedUsersId, setSelectedUsersId] = useState<string[]>([]) // User ids that are selected
 
   useEffect(() => {
     BucketFunctions.getUsersForBucketAccess()
-      .then((res: User[]) => setUsers(res))
+      .then((res: User[]) => {
+        setUsers(res)
+        const multiSelectData = res.map((user) => {
+          return {
+            value: String(user.id),
+            label: user.name
+          }
+        })
+        setMultiSelectUers(multiSelectData)
+      })
       .catch((err) => console.log(err))
   }, [])
 
@@ -95,33 +102,32 @@ const ShareBucketModal: React.FC<ShareBucketModalProps> = ({ handleShare, id }) 
         })()
       )
       setUsersToShare(uniqueArray)
-      setListToPost((prev) => [
-        ...prev,
-        {
-          bucketId: +id,
-          inviteeId: user.id,
-          permission: 'VIEWER'
-        }
-      ])
+      if (!listToPost.some((item) => item.inviteeId === user.id)) {
+        setListToPost((prev) => [
+          ...prev,
+          {
+            bucketId: +id,
+            inviteeId: user.id,
+            permission: 'VIEWER'
+          }
+        ])
+      }
     }
   }
 
-  const handleEditInviteeClick = (invitee: Invitee) => {
-    setInvitees((prev) =>
-      prev.map((item) => {
-        if (item.inviteeId === invitee.inviteeId) {
-          return { ...item, isEdit: !invitee.isEdit }
-        }
-        return item
+  useEffect(() => {
+    if (selectedUsersId) {
+      selectedUsersId.forEach((id) => {
+        addUserToShareList(id)
       })
-    )
-  }
+    }
+  }, [selectedUsersId])
 
   const changeInvitePermission = (val: string, invitee: Invitee) => {
     setInvitees((prev) =>
       prev.map((item) => {
         if (item.inviteeId === invitee.inviteeId) {
-          return { ...item, permission: val }
+          return { ...item, permission: val, isChanged: !item.isChanged }
         }
         return item
       })
@@ -159,16 +165,19 @@ const ShareBucketModal: React.FC<ShareBucketModalProps> = ({ handleShare, id }) 
       })
   }
   const onShareBucket = () => {
+    invitees.forEach((invitee) => {
+      if (invitee.isChanged) {
+        updateInvitee(invitee)
+      }
+    })
     setInvitees([])
     setUsersToShare([])
-    setUserValue('')
+    setSelectedUsersId([])
     handleShare(listToPost)
+    setListToPost([])
   }
 
   const removeUserFromShareList = (user: User) => {
-    if (+userValue === user.id) {
-      setUserValue('')
-    }
     setListToPost((prev) => prev.filter((item) => item.inviteeId !== user.id))
     setUsersToShare((prev) => prev.filter((item) => item.id !== user.id))
   }
@@ -194,38 +203,13 @@ const ShareBucketModal: React.FC<ShareBucketModalProps> = ({ handleShare, id }) 
             </p>
 
             <div className="flex flex-row items-center gap-4">
-              <Popover open={open} onOpenChange={setOpen}>
-                <PopoverTrigger asChild>
-                  <Button variant="outline" role="combobox" aria-expanded={open} className="w-full justify-between">
-                    {userValue ? usersToShare.find((user) => +user.id === +userValue)?.name : 'Select users to share'}
-                    <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-[450px] p-0">
-                  <Command>
-                    <CommandInput placeholder="Select users..." className="h-9" />
-                    <CommandEmpty>No users found</CommandEmpty>
-                    <CommandGroup>
-                      {users.map((user) => (
-                        <CommandItem
-                          key={user.id}
-                          value={user.id + ''}
-                          onSelect={(currentValue) => {
-                            addUserToShareList(currentValue)
-                            setUserValue(currentValue)
-                            setOpen(false)
-                          }}
-                        >
-                          {user.name}
-                          <CheckIcon
-                            className={cn('ml-auto h-4 w-4', user.id === +userValue ? 'opacity-100' : 'opacity-0')}
-                          />
-                        </CommandItem>
-                      ))}
-                    </CommandGroup>
-                  </Command>
-                </PopoverContent>
-              </Popover>
+              <MultiSelect
+                options={multiSelectUsers}
+                selected={selectedUsersId}
+                onChange={setSelectedUsersId}
+                placeholder="Select users to share"
+                width="w-[460px]"
+              />
             </div>
 
             <div className="mt-8 h-[200px] max-h-[400px] overflow-auto pr-2 pt-2">
@@ -265,11 +249,10 @@ const ShareBucketModal: React.FC<ShareBucketModalProps> = ({ handleShare, id }) 
                   invitees.map((invitee) => (
                     <div className="mb-4 flex flex-row items-center justify-between" key={invitee.user.id}>
                       {invitee.user.name}
-                      <div className="flex w-2/3 flex-row items-center justify-end gap-2">
+                      <div className="flex items-center gap-2">
                         <Select
                           value={invitee.permission}
                           onValueChange={(val) => changeInvitePermission(val, invitee)}
-                          disabled={!invitee.isEdit}
                         >
                           <SelectTrigger className="w-[180px]">
                             <SelectValue placeholder="Permission" />
@@ -285,29 +268,12 @@ const ShareBucketModal: React.FC<ShareBucketModalProps> = ({ handleShare, id }) 
                             </SelectGroup>
                           </SelectContent>
                         </Select>
-                        {invitee.isEdit ? (
-                          <div className="flex w-16 flex-row gap-2">
-                            <Check
-                              color="green"
-                              className="cursor-pointer"
-                              onClick={() => {
-                                updateInvitee(invitee)
-                                handleEditInviteeClick(invitee)
-                              }}
-                            />
-                            <Trash2
-                              color="red"
-                              className="cursor-pointer"
-                              onClick={() => {
-                                deleteInvitee(invitee.inviteeId)
-                                handleEditInviteeClick(invitee)
-                              }}
-                            />
-                            <X className="cursor-pointer" onClick={() => handleEditInviteeClick(invitee)} />
-                          </div>
-                        ) : (
-                          <Pencil className="h-4 w-16 cursor-pointer" onClick={() => handleEditInviteeClick(invitee)} />
-                        )}
+                        <X
+                          className="h-4 w-16 cursor-pointer"
+                          onClick={() => {
+                            deleteInvitee(invitee.inviteeId)
+                          }}
+                        />
                       </div>
                     </div>
                   ))}
@@ -322,7 +288,6 @@ const ShareBucketModal: React.FC<ShareBucketModalProps> = ({ handleShare, id }) 
                 variant="outline"
                 onClick={() => {
                   setUsersToShare([])
-                  setUserValue('')
                 }}
               >
                 Cancel

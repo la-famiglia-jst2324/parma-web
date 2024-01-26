@@ -60,9 +60,7 @@ const transformNewsItems = (newsItems: NewsItem[]): NewsItemReturn[] => {
   }))
 }
 
-const getBaseNewsQuery = (page: number, pageSize: number, startDate?: Date, endDate?: Date) => {
-  const skip = (page - 1) * pageSize
-
+const getBaseNewsQuery = (page?: number, pageSize?: number, startDate?: Date, endDate?: Date) => {
   const where: NewsWhereInput = {}
 
   // Add conditional date range filtering
@@ -80,28 +78,36 @@ const getBaseNewsQuery = (page: number, pageSize: number, startDate?: Date, endD
     }
   }
 
+  // Calculate 'skip' and 'take' based on provided 'page' and 'pageSize'
+  let skip, take;
+
+  if (page !== undefined && pageSize !== undefined) {
+    // Both 'page' and 'pageSize' are provided
+    skip = (page - 1) * pageSize;
+    take = pageSize;
+  } else {
+    // Either 'page' or 'pageSize' is not provided, return all records
+    skip = 0;
+    take = Number.MAX_SAFE_INTEGER;
+  }
   return {
     skip,
-    take: pageSize,
+    take,
     where,
-    include: {
-      company: true, // Include related company data
-      dataSource: true // Include related dataSource data
-    }
+    include: { company: true, dataSource: true }
   }
 }
 
 const createReturnObject = (
   transformedNewsItems: NewsItemReturn[],
-  page: number,
-  pageSize: number,
   totalCount: number,
+  page?: number,
+  pageSize?: number,
   bucketName: string | null = null
 ) => {
-  const totalPages = Math.ceil(totalCount / pageSize)
   const returnObject: {
     newsItems: NewsItemReturn[]
-    pagination: {
+    pagination?: {
       currentPage: number
       pageSize: number
       totalPages: number
@@ -109,8 +115,12 @@ const createReturnObject = (
     }
     bucketName?: string
   } = {
-    newsItems: transformedNewsItems,
-    pagination: {
+    newsItems: transformedNewsItems
+  }
+
+  if (page !== undefined && pageSize !== undefined) {
+    const totalPages = Math.ceil(totalCount / pageSize)
+    returnObject.pagination = {
       currentPage: page,
       pageSize,
       totalPages,
@@ -145,8 +155,8 @@ const createNews = async (data: {
 }
 
 const getAllNews = async (
-  page: number,
-  pageSize: number,
+  page?: number,
+  pageSize?: number,
   companyId?: number,
   bucketId?: number,
   startDateStr?: string,
@@ -167,7 +177,7 @@ const getAllNews = async (
       })
       const transformedNewsItems = transformNewsItems(newsItems as NewsItem[])
 
-      return createReturnObject(transformedNewsItems, page, pageSize, totalCount)
+      return createReturnObject(transformedNewsItems, totalCount, page, pageSize)
     } else if (companyId) {
       await getCompanyByID(companyId)
 
@@ -185,7 +195,7 @@ const getAllNews = async (
       })
       // Transform the news items to match the required structure
       const transformedNewsItems = transformNewsItems(newsItems as NewsItem[])
-      return createReturnObject(transformedNewsItems, page, pageSize, totalCount)
+      return createReturnObject(transformedNewsItems, totalCount, page, pageSize)
     } else if (bucketId) {
       const bucket = await getBucketById(bucketId)
       const companies = await getCompaniesByBucketId(bucketId as number)
@@ -204,7 +214,7 @@ const getAllNews = async (
         }
       })
       const transformedNewsItems = transformNewsItems(newsItems as NewsItem[])
-      return createReturnObject(transformedNewsItems, page, pageSize, totalCount, bucket.title)
+      return createReturnObject(transformedNewsItems, totalCount, page, pageSize, bucket.title)
     } else throw new Error(`Something went wrong!`)
   } catch (error) {
     console.error('Error fetching all news:', error)

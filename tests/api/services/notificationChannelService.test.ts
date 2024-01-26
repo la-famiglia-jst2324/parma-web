@@ -21,6 +21,7 @@ describe('Notification Channel Model Tests', () => {
   })
 
   let channelId: number
+  let channelId2: number
 
   test('Create a new slack channel with valid details', async () => {
     const channel = await createNotificationChannel({
@@ -28,7 +29,7 @@ describe('Notification Channel Model Tests', () => {
       destination: 'la-famiglia-data-analytics',
       apiKey: 'my_key'
     })
-    channelId = channel.id
+    channelId2 = channel.id
     expect(channel).toHaveProperty('id')
     expect(channel.channelType).toBe(ChannelType.SLACK)
     expect(channel.destination).toBe('la-famiglia-data-analytics')
@@ -69,9 +70,14 @@ describe('Notification Channel Model Tests', () => {
 
   test('Delete a channel', async () => {
     await deleteNotificationChannel(channelId)
+    await deleteNotificationChannel(channelId2)
     const deletedChannel = await prisma.notificationChannel.findUnique({
       where: { id: channelId }
     })
+    const deletedChannel2 = await prisma.notificationChannel.findUnique({
+      where: { id: channelId2 }
+    })
     expect(deletedChannel).toBeNull()
+    expect(deletedChannel2).toBeNull()
   })
 })

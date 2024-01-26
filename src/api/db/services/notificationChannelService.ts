@@ -1,7 +1,7 @@
 import type { ChannelType } from '@prisma/client'
 import { v4 as uuid } from 'uuid'
 import { prisma } from '../prisma/prismaClient'
-import { getSecretManagerClient, storeSecret } from '@/api/gcp/secret_manager'
+import { deleteSecret, getSecretManagerClient, storeSecret } from '@/api/gcp/secret_manager'
 
 /**
  * The apiKey, if provided, is stored in the secret manager and a secretId
@@ -101,7 +101,7 @@ const deleteNotificationChannel = async (id: number) => {
     const notificationChannel = await getNotificationChannelById(id)
     if (notificationChannel.secretId) {
       const smClient = getSecretManagerClient()
-      await smClient.deleteSecret({ name: notificationChannel.secretId })
+      await deleteSecret(smClient, notificationChannel.secretId )
     }
 
     return await prisma.notificationChannel.delete({

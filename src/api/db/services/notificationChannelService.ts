@@ -9,12 +9,15 @@ import { getSecretManagerClient, storeSecret } from '@/api/gcp/secret_manager'
  * @param data
  * @returns
  */
-const createNotificationChannel = async (data: { channelType: ChannelType; destination: string; apiKey?: string }) => {
+const createNotificationChannel = async (
+  data: { channelType: ChannelType; destination: string; apiKey?: string },
+  secretPrefix: string = 'parma-analytics-notification-channel-key'
+) => {
   try {
     let secretId = null
     // create a secret if the request contains a key.
     if (data.apiKey) {
-      secretId = `parma-analytics-notification-channel-key-${uuid()}`
+      secretId = `${secretPrefix}-${uuid()}`
       const smClient = getSecretManagerClient()
       await storeSecret(smClient, secretId, data.apiKey)
     }
@@ -95,6 +98,12 @@ const updateNotificationChannel = async (
 }
 const deleteNotificationChannel = async (id: number) => {
   try {
+    const notificationChannel = await getNotificationChannelById(id)
+    if (notificationChannel.secretId) {
+      const smClient = getSecretManagerClient()
+      await smClient.deleteSecret({ name: notificationChannel.secretId })
+    }
+
     return await prisma.notificationChannel.delete({
       where: { id }
     })

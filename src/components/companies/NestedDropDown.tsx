@@ -11,6 +11,7 @@ import {
   DropdownMenuTrigger
 } from '../ui/dropdown-menu'
 import { Button } from '../ui/button'
+import { ScrollArea } from '../ui/scroll-area'
 
 interface NestedDropDownProps {
   measurements: CompanyMeasurement[]
@@ -40,9 +41,11 @@ const NestedDropDown: React.FC<NestedDropDownProps> = ({ measurements, handleCha
   })
 
   return (
-    <DropdownMenu modal={false}>
+    <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline">Select Measurement</Button>
+        <Button variant="outline" disabled={measurements?.length === 0}>
+          Select Measurement
+        </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56">
         <DropdownMenuGroup>
@@ -59,17 +62,30 @@ const NestedDropDown: React.FC<NestedDropDownProps> = ({ measurements, handleCha
             .filter((parentId) => parentId !== 'null')
             .map((parentId) => (
               <DropdownMenuSub key={parentId}>
-                <DropdownMenuSubTrigger>{parentId}</DropdownMenuSubTrigger>
+                <DropdownMenuSubTrigger>{measurementGroups[parentId][0]?.measurementName}</DropdownMenuSubTrigger>
                 <DropdownMenuPortal>
                   <DropdownMenuSubContent>
-                    {measurementGroups[parentId].map((measurement) => (
-                      <DropdownMenuItem
-                        key={measurement.id}
-                        onClick={() => handleChange(String(measurement.id), measurement.measurementName)}
-                      >
-                        {measurement.measurementName}
-                      </DropdownMenuItem>
-                    ))}
+                    {measurementGroups[parentId].length > 5 ? (
+                      <ScrollArea className="h-56 w-48">
+                        {measurementGroups[parentId].map((measurement) => (
+                          <DropdownMenuItem
+                            key={measurement.id}
+                            onClick={() => handleChange(String(measurement.id), measurement.measurementName)}
+                          >
+                            {measurement.measurementName}
+                          </DropdownMenuItem>
+                        ))}
+                      </ScrollArea>
+                    ) : (
+                      measurementGroups[parentId].map((measurement) => (
+                        <DropdownMenuItem
+                          key={measurement.id}
+                          onClick={() => handleChange(String(measurement.id), measurement.measurementName)}
+                        >
+                          {measurement.measurementName}
+                        </DropdownMenuItem>
+                      ))
+                    )}
                   </DropdownMenuSubContent>
                 </DropdownMenuPortal>
               </DropdownMenuSub>

@@ -101,7 +101,7 @@ const deleteNotificationChannel = async (id: number) => {
     const notificationChannel = await getNotificationChannelById(id)
     if (notificationChannel.secretId) {
       const smClient = getSecretManagerClient()
-      await deleteSecret(smClient, notificationChannel.secretId )
+      await deleteSecret(smClient, notificationChannel.secretId)
     }
 
     return await prisma.notificationChannel.delete({

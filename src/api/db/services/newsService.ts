@@ -79,16 +79,16 @@ const getBaseNewsQuery = (page?: number, pageSize?: number, startDate?: Date, en
   }
 
   // Calculate 'skip' and 'take' based on provided 'page' and 'pageSize'
-  let skip, take;
+  let skip, take
 
   if (page !== undefined && pageSize !== undefined) {
     // Both 'page' and 'pageSize' are provided
-    skip = (page - 1) * pageSize;
-    take = pageSize;
+    skip = (page - 1) * pageSize
+    take = pageSize
   } else {
     // Either 'page' or 'pageSize' is not provided, return all records
-    skip = 0;
-    take = Number.MAX_SAFE_INTEGER;
+    skip = 0
+    take = Number.MAX_SAFE_INTEGER
   }
   return {
     skip,

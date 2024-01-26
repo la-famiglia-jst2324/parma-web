@@ -23,7 +23,7 @@ const DeleteBucketModal: React.FC<DeleteBucketModalProps> = ({ handleDelete }) =
       <Dialog>
         <DialogTrigger asChild>
           <Button variant="destructive">
-            <Trash2 className="h-4 w-4" />
+            <Trash2 className="h-5 w-5" />
           </Button>
         </DialogTrigger>
         <DialogContent className="sm:max-w-md">

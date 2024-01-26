@@ -89,33 +89,35 @@ const CompanyCommentsCard: React.FC<CompanyCommentsCardProps> = ({ companyId, me
         </div>
       </CardHeader>
       <CardContent>
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Comment</TableHead>
-              <TableHead>Timestamp</TableHead>
-              <TableHead>Sentiment Score</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {comments.map((comment, index) => {
-              const commentData = comment[companyName]
-              let title = ''
-              let sentimentScore = 0
-              if (typeof commentData === 'object' && commentData !== null) {
-                title = (commentData as { value?: string }).value || ''
-                sentimentScore = (commentData as { sentimentScore?: number }).sentimentScore || 0
-              }
-              return (
-                <TableRow key={index}>
-                  <TableCell>{title}</TableCell>
-                  <TableCell>{comment.date}</TableCell>
-                  <TableCell>{sentimentScore}</TableCell>
-                </TableRow>
-              )
-            })}
-          </TableBody>
-        </Table>
+        <div className="my-2 flex h-72 flex-wrap overflow-y-auto">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Comment</TableHead>
+                <TableHead>Timestamp</TableHead>
+                <TableHead>Sentiment Score</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {comments.map((comment, index) => {
+                const commentData = comment[companyName]
+                let title = ''
+                let sentimentScore = 0
+                if (typeof commentData === 'object' && commentData !== null) {
+                  title = (commentData as { value?: string }).value || ''
+                  sentimentScore = (commentData as { sentimentScore?: number }).sentimentScore || 0
+                }
+                return (
+                  <TableRow key={index}>
+                    <TableCell>{title}</TableCell>
+                    <TableCell>{comment.date}</TableCell>
+                    <TableCell>{sentimentScore}</TableCell>
+                  </TableRow>
+                )
+              })}
+            </TableBody>
+          </Table>
+        </div>
       </CardContent>
     </Card>
   )

@@ -25,7 +25,7 @@ function DatasourcesPage() {
     <div className="px-6">
       <InformationCard />
       <div className="mb-8">
-        <h2 className="mb-4 text-xl font-bold text-gray-200">All Available Datasources</h2>
+        <h2 className="mb-4 text-xl font-bold text-gray-200">Available Datasources</h2>
         <div className="mx-auto overflow-auto rounded-lg border-0 shadow-md">
           <div className="w-full">
             {data ? (

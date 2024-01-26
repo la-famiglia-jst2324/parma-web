@@ -42,7 +42,7 @@ const ModalComponent: React.FC<ModalComponentProps> = ({ sourceName, description
       {isActive ? (
         <AlertDialog>
           <AlertDialogTrigger asChild>
-            <Button className="text-red-500" variant="secondary">
+            <Button className="text-red-500 hover:text-red-500" variant="outline">
               <PowerOff className="mr-2 h-4 w-4" color="#ef4444" />
               Disable
             </Button>
@@ -61,8 +61,8 @@ const ModalComponent: React.FC<ModalComponentProps> = ({ sourceName, description
           </AlertDialogContent>
         </AlertDialog>
       ) : (
-        <Button className="text-green-500" variant="secondary" onClick={handleDisable}>
-          <Power className="mr-2 h-4 w-4" color="#22c55e" />
+        <Button className="" onClick={handleDisable}>
+          <Power className="mr-2 h-4 w-4" color="black" />
           Enable
         </Button>
       )}

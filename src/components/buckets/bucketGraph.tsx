@@ -27,8 +27,8 @@ function BucketGraph({ companies }: { companies: Company[] | undefined }) {
   }>()
 
   useEffect(() => {
-    if (companies) {
-      setSelectedCompanies(companies.map((company) => company.id.toString()))
+    if (companies && companies.length) {
+      setSelectedCompanies(companies?.map((company) => company.id.toString()))
     }
   }, [companies])
 
@@ -38,7 +38,9 @@ function BucketGraph({ companies }: { companies: Company[] | undefined }) {
     }
   }, [selectedMetric])
 
-  const metrics = useMeasurementsCompanies(selectedCompanies)
+  const metrics = useMeasurementsCompanies(selectedCompanies).filter(
+    (metric) => metric.type === 'Int' || metric.type === 'Float'
+  )
 
   const changeDatePicker = (value: DateRange | undefined) => {
     console.log(value)

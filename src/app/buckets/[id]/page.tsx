@@ -16,6 +16,7 @@ import { columns } from '@/components/buckets/bucketColumns'
 import BucketDescriptionCard from '@/components/buckets/bucketDescriptionCard'
 import { ShowToast } from '@/components/ShowToast'
 import { getUsername } from '@/services/user/userService'
+import Spinner from '@/components/Spinner'
 
 const initialBucketValue = {
   id: 0,
@@ -44,7 +45,7 @@ const BucketPage = ({ params: { id } }: { params: { id: string } }) => {
   const [editCompanies, setEditCompanies] = useState(false)
   const [selectedCompanies, setSelectedCompanies] = useState<number[]>([])
   const [loggedInUser, setLoggedInUser] = useState<User>()
-
+  const [loading, setLoading] = useState(true)
   useEffect(() => {
     BucketFunctions.getBucketById(+id)
       .then((data) => {
@@ -52,13 +53,19 @@ const BucketPage = ({ params: { id } }: { params: { id: string } }) => {
         BucketFunctions.getCompaniesForBucket(+id)
           .then((res) => {
             setBucketCompanies(res)
+            setLoading(false)
           })
           .catch((e) => {
             console.log(e)
+            setLoading(false)
           })
       })
       .catch((e) => {
         console.log(e)
+        if (e.response.status === 400) {
+          ShowToast('Error', 'Bucket not found', 'destructive')
+          router.push('/')
+        }
       })
   }, [id])
 
@@ -167,89 +174,95 @@ const BucketPage = ({ params: { id } }: { params: { id: string } }) => {
 
   return (
     <main className="flex h-screen flex-row items-start justify-start space-x-4" role="main">
-      <div className="w-full">
-        <div className="mb-4 flex items-center justify-between">
-          <div className="mb-3 flex items-start justify-start space-x-4">
-            <div className="flex flex-col">
-              <h1 className="text-3xl font-bold">{bucket.title}</h1>
+      {!loading ? (
+        <div className="w-full">
+          <div className="mb-4 flex items-center justify-between">
+            <div className="mb-3 flex items-start justify-start space-x-4">
+              <div className="flex flex-col">
+                <h1 className="text-3xl font-bold">{bucket.title}</h1>
+              </div>
             </div>
-          </div>
-          {isModerator() && (
-            <div className="flex flex-row justify-evenly gap-3 px-2">
-              <ShareBucketModal
-                id={id}
-                handleShare={(shareUsersList: ShareBucketProps[]) => onHandleShare(shareUsersList)}
-              ></ShareBucketModal>
-              <DeleteBucketModal handleDelete={onDeleteBucket}></DeleteBucketModal>
-            </div>
-          )}
-        </div>
-        <div>
-          <BucketDescriptionCard
-            handleSave={(val) => setBucket(val)}
-            bucket={bucket}
-            isModerator={isModerator()}
-          ></BucketDescriptionCard>
-        </div>
-
-        <div className="mb-12">
-          <BucketGraph companies={bucketCompanies}></BucketGraph>
-        </div>
-        {bucketCompanies && bucketCompanies.length > 0 && (
-          <div className="mb-5 flex items-center justify-between">
-            <h1 className="text-lg font-bold">All companies in this bucket</h1>
             {isModerator() && (
-              <div className="flex flex-row items-center gap-4">
-                {!editCompanies && (
-                  <Button variant="outline" onClick={() => setEditCompanies(true)}>
-                    Edit Companies
-                  </Button>
-                )}
-                {editCompanies && (
-                  <AddCompaniesToBucket
-                    bucketCompanies={bucketCompanies}
-                    handleSave={(val) => addCompaniesToBucket(val)}
-                  ></AddCompaniesToBucket>
-                )}
-                {editCompanies && (
-                  <Button variant="destructive" onClick={removeCompanies}>
-                    Remove Companies
-                  </Button>
-                )}
-                {editCompanies && (
-                  <Button variant="outline" onClick={() => setEditCompanies(false)}>
-                    Cancel
-                  </Button>
-                )}
+              <div className="flex flex-row justify-evenly gap-3 px-2">
+                <ShareBucketModal
+                  id={id}
+                  handleShare={(shareUsersList: ShareBucketProps[]) => onHandleShare(shareUsersList)}
+                ></ShareBucketModal>
+                <DeleteBucketModal handleDelete={onDeleteBucket}></DeleteBucketModal>
               </div>
             )}
           </div>
-        )}
-
-        {bucketCompanies && bucketCompanies.length > 0 && (
-          <div className="mb-8">
-            <DataTable
-              columns={columns}
-              data={bucketCompanies}
-              type="companies"
-              toggleColumn={{ columnId: 'select', value: editCompanies }}
-              sendDataToParent={onSelectCheckbox}
-            ></DataTable>
+          <div>
+            <BucketDescriptionCard
+              handleSave={(val) => setBucket(val)}
+              bucket={bucket}
+              isModerator={isModerator()}
+            ></BucketDescriptionCard>
           </div>
-        )}
 
-        {bucketCompanies && !(bucketCompanies.length > 0) && (
-          <div className="flex items-center justify-between">
-            <div className="ml-8 mt-4 text-gray-400">This bucket does not have any companies.</div>
-            {isModerator() && (
-              <AddCompaniesToBucket
-                bucketCompanies={bucketCompanies}
-                handleSave={(val) => addCompaniesToBucket(val)}
-              ></AddCompaniesToBucket>
-            )}
+          <div className="mb-12">
+            <BucketGraph companies={bucketCompanies}></BucketGraph>
           </div>
-        )}
-      </div>
+          {bucketCompanies && bucketCompanies.length > 0 && (
+            <div className="mb-5 flex items-center justify-between">
+              <h1 className="text-lg font-bold">All companies in this bucket</h1>
+              {isModerator() && (
+                <div className="flex flex-row items-center gap-4">
+                  {!editCompanies && (
+                    <Button variant="outline" onClick={() => setEditCompanies(true)}>
+                      Edit Companies
+                    </Button>
+                  )}
+                  {editCompanies && (
+                    <AddCompaniesToBucket
+                      bucketCompanies={bucketCompanies}
+                      handleSave={(val) => addCompaniesToBucket(val)}
+                    ></AddCompaniesToBucket>
+                  )}
+                  {editCompanies && (
+                    <Button variant="destructive" onClick={removeCompanies}>
+                      Remove Companies
+                    </Button>
+                  )}
+                  {editCompanies && (
+                    <Button variant="outline" onClick={() => setEditCompanies(false)}>
+                      Cancel
+                    </Button>
+                  )}
+                </div>
+              )}
+            </div>
+          )}
+
+          {bucketCompanies && bucketCompanies.length > 0 && (
+            <div className="mb-8">
+              <DataTable
+                columns={columns}
+                data={bucketCompanies}
+                type="companies"
+                toggleColumn={{ columnId: 'select', value: editCompanies }}
+                sendDataToParent={onSelectCheckbox}
+              ></DataTable>
+            </div>
+          )}
+
+          {bucketCompanies && !(bucketCompanies.length > 0) && (
+            <div className="flex items-center justify-between">
+              <div className="ml-8 mt-4 text-gray-400">This bucket does not have any companies.</div>
+              {isModerator() && (
+                <AddCompaniesToBucket
+                  bucketCompanies={bucketCompanies}
+                  handleSave={(val) => addCompaniesToBucket(val)}
+                ></AddCompaniesToBucket>
+              )}
+            </div>
+          )}
+        </div>
+      ) : (
+        <div className="flex h-full w-full items-center justify-center">
+          <Spinner />
+        </div>
+      )}
     </main>
   )
 }

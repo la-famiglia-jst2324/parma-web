@@ -97,7 +97,15 @@ describe('CompanyDataSource Model Tests', () => {
   })
 
   // Create CompanyDataSource Test
-  test('Create a new CompanyDataSource with duplicate data', async () => {
+  test('Create a new CompanyDataSource, once with duplicate data', async () => {
+    await prisma.companyDataSource.create({
+      data: {
+        companyId,
+        dataSourceId,
+        isDataSourceActive: true,
+        healthStatus: 'UP'
+      }
+    })
     try {
       await prisma.companyDataSource.create({
         data: {
@@ -107,9 +115,11 @@ describe('CompanyDataSource Model Tests', () => {
           healthStatus: 'UP'
         }
       })
+
       // If the above line does not throw an error, fail the test
       expect('This should not be reached').toBe(false)
     } catch (error) {
+      console.log(error)
       // Check a validation error is thrown.
       expect(error).toBeInstanceOf(Prisma.PrismaClientKnownRequestError)
     }
@@ -127,8 +137,8 @@ describe('CompanyDataSource Model Tests', () => {
     })
 
     expect(companyDataSource).toBeTruthy()
-    expect(companyDataSource.companyId).toBe(companyId)
-    expect(companyDataSource.dataSourceId).toBe(dataSourceId)
+    expect(companyDataSource!.companyId).toBe(companyId)
+    expect(companyDataSource!.dataSourceId).toBe(dataSourceId)
   })
 
   // Update CompanyDataSource Test

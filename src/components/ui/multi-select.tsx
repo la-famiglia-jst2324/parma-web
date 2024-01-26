@@ -75,9 +75,9 @@ function MultiSelect({
       <PopoverContent className={`${width || 'w-full'} p-0`}>
         <Command className={className}>
           <CommandInput placeholder="Search ..." />
-          {options.length > 0 ? (
+          {options?.length > 0 ? (
             <CommandGroup className="max-h-64 overflow-auto">
-              {options.map((option) => (
+              {options?.map((option) => (
                 <CommandItem
                   key={option.value}
                   onSelect={() => {

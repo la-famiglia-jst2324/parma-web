@@ -30,7 +30,9 @@ const DescriptionCard: React.FC<DescriptionCardProps> = ({ data, handleSave }) =
       </CardHeader>
       <CardContent className="px-3 py-2">
         <p className="mb-2 text-sm">{data.description}</p>
-        <p className="mb-2 text-sm text-gray-500">{data.invocationEndpoint}</p>
+        <a href={data.invocationEndpoint} className="mb-2 text-sm text-gray-500">
+          {data.invocationEndpoint}
+        </a>
       </CardContent>
     </Card>
   )

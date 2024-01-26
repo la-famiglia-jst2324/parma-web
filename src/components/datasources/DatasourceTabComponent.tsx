@@ -20,7 +20,7 @@ export const TabComponent: React.FC<TabComponentProps> = ({ sourceId, tasksData,
   return (
     <Tabs defaultValue="Companies Monitored">
       <TabsList>
-        <TabsTrigger value="Companies Monitored">Companies Monitored</TabsTrigger>
+        <TabsTrigger value="Companies Monitored">Monitored Companies</TabsTrigger>
         <TabsTrigger value="Scheduled Tasks">Scheduled Tasks</TabsTrigger>
       </TabsList>
       {/* Companies Monitored */}

@@ -30,7 +30,7 @@ const Sidebar: React.FC = () => {
   const [clickCompany, setClickCompany] = useState(false)
 
   return (
-    <div className="fixed h-full w-72 flex-col overflow-auto border-r-2 border-gray-800">
+    <div className="fixed h-full w-72 flex-col overflow-hidden border-r-2 border-gray-800">
       <div className="">
         <div className="mx-4">
           <div className="my-4 flex items-center justify-between">
@@ -80,10 +80,10 @@ const Sidebar: React.FC = () => {
               </div>
               <CollapsibleContent>
                 <div className="ml-8">
-                  <ScrollArea className="mt-2 h-32 w-full">
+                  <ScrollArea className="mt-2 h-52 w-full">
                     <div className="pl-2">
                       {isBucket &&
-                        buckets.map((bucket) => (
+                        buckets?.map((bucket) => (
                           <div key={bucket.id}>
                             <Link href={`/buckets/${bucket.id}`} passHref>
                               <Button
@@ -129,7 +129,7 @@ const Sidebar: React.FC = () => {
               </div>
               <CollapsibleContent>
                 <div className="ml-8">
-                  <ScrollArea className="mt-2 h-32 w-full">
+                  <ScrollArea className="mt-2 h-52 w-full">
                     <div className="pl-2">
                       {isCompany &&
                         companies.map((company) => (

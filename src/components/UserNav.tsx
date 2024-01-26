@@ -51,6 +51,8 @@ const UserNav: React.FC = () => {
         console.warn('No user attachment available', error)
       }
     }
+    console.log('User attachment fetched')
+
     fetchUserAttachment()
   }, [])
 
@@ -67,30 +69,30 @@ const UserNav: React.FC = () => {
       <DropdownMenuContent className="w-52" align="start" forceMount>
         <DropdownMenuGroup>
           <DropdownMenuItem
-            className="flex justify-between hover:cursor-pointer"
+            className="group flex justify-between hover:cursor-pointer"
             onClick={() => router.push('/profile')}
           >
-            <div className="group flex">
+            <div className="flex">
               <UserIcon className="ml-2 mr-4 h-6 w-4 text-gray-500 group-hover:text-gray-200" />
               Profile
             </div>
             <div className="flex-row-reverse text-xs text-gray-400">⌘P</div>
           </DropdownMenuItem>
           <DropdownMenuItem
-            className="flex justify-between hover:cursor-pointer"
+            className="group flex justify-between hover:cursor-pointer"
             onClick={() => router.push('/datasources')}
           >
-            <div className="group flex">
+            <div className="flex">
               <RocketLaunchIcon className="ml-2 mr-4 h-6 w-4 text-gray-500 group-hover:text-gray-200" />
               Datasources
             </div>
             <div className="flex-row-reverse text-xs text-gray-400">⌘D</div>
           </DropdownMenuItem>
           <DropdownMenuItem
-            className="flex justify-between hover:cursor-pointer"
+            className="group flex justify-between hover:cursor-pointer"
             onClick={() => router.push('/settings')}
           >
-            <div className="group flex">
+            <div className=" flex">
               <Cog8ToothIcon className="ml-2 mr-4 h-6 w-4 text-gray-500 group-hover:text-gray-200" />
               Settings
             </div>

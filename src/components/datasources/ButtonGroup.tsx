@@ -36,9 +36,6 @@ export const ButtonGroup: React.FC<ButtonGroupProps> = ({ data, handleSave, refr
 
   return (
     <div className="mr-8 flex items-center justify-end space-x-4">
-      <Button className="text-green-500" variant="secondary" onClick={() => triggerDataSourceById(data.id.toString())}>
-        Schedule
-      </Button>
       <ModalComponent
         sourceName={data.sourceName}
         description={data.description || ''}
@@ -46,6 +43,9 @@ export const ButtonGroup: React.FC<ButtonGroupProps> = ({ data, handleSave, refr
         isActive={data.isActive}
         handleSave={handleSave}
       />
+      <Button className="" variant="outline" onClick={() => triggerDataSourceById(data.id.toString())}>
+        Schedule
+      </Button>
       <DeleteModal id={data.id.toString()} />
     </div>
   )

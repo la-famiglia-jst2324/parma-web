@@ -104,63 +104,61 @@ const ProfilePage: React.FC = () => {
   }
   return (
     <div className="items-center">
-      <div className="mx-16">
-        <div className="">
-          <div className="mt-6 flex-col justify-center font-bold">
-            <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)} className="w-2/3 space-y-6">
-                <FormField
-                  name="pic"
-                  render={() => (
-                    <FormItem>
-                      <FormLabel>Profile Picture</FormLabel>
-                      <FormControl>
-                        <Image
-                          className=" block h-[130px] w-[130px] rounded-full"
-                          src={userPhotoURL || profilePic}
-                          width={400}
-                          height={400}
-                          alt="Profile"
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <Button type="button" variant="secondary">
-                  <label htmlFor="picture">Update</label>
-                  <input id="picture" accept="image/*,.jpg" type="file" hidden onChange={fileUpload} />
-                </Button>
-                <FormField
-                  control={form.control}
-                  name="username"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Username</FormLabel>
-                      <FormControl>
-                        <Input placeholder={userName} {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  name="email"
-                  render={() => (
-                    <FormItem>
-                      <FormLabel>Email</FormLabel>
-                      <FormControl>
-                        <Input disabled type="email" placeholder={userMail || 'Email'} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+      <div className="mx-10 my-8">
+        <div className="mt-6 flex-col justify-center font-bold">
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="w-2/3 space-y-6">
+              <FormField
+                name="pic"
+                render={() => (
+                  <FormItem>
+                    <FormLabel>Profile Picture</FormLabel>
+                    <FormControl>
+                      <Image
+                        className=" block h-[130px] w-[130px] rounded-full"
+                        src={userPhotoURL || profilePic}
+                        width={400}
+                        height={400}
+                        alt="Profile"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <Button type="button" variant="outline">
+                <label htmlFor="picture">Update</label>
+                <input id="picture" accept="image/*,.jpg" type="file" hidden onChange={fileUpload} />
+              </Button>
+              <FormField
+                control={form.control}
+                name="username"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Username</FormLabel>
+                    <FormControl>
+                      <Input placeholder={userName} {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                name="email"
+                render={() => (
+                  <FormItem>
+                    <FormLabel>Email</FormLabel>
+                    <FormControl>
+                      <Input disabled type="email" placeholder={userMail || 'Email'} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-                <Button type="submit">Submit</Button>
-              </form>
-            </Form>
-          </div>
+              <Button type="submit">Submit</Button>
+            </form>
+          </Form>
         </div>
       </div>
     </div>

@@ -1,8 +1,23 @@
 import fetchClient from '@/services/fetchClient'
 
-export async function getNewsItems(page: number = 1, pageSize: number = 10) {
+export async function getNewsItems(page?: number, pageSize?: number) {
   try {
-    const response = await fetchClient.get(`/api/news?page=${page}&pageSize=${pageSize}`)
+    let url = '/api/news'
+    const params = new URLSearchParams()
+
+    if (page) {
+      params.append('page', page.toString())
+    }
+
+    if (pageSize) {
+      params.append('pageSize', pageSize.toString())
+    }
+
+    if (params.toString()) {
+      url += `?${params.toString()}`
+    }
+
+    const response = await fetchClient.get(url)
     return response.data
   } catch (error) {
     console.log('An error has occurred: ', error)

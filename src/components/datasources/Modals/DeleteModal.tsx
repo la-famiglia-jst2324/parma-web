@@ -40,7 +40,7 @@ const DeleteModal: React.FC<DeleteModalProps> = ({ id }) => {
       <AlertDialog>
         <AlertDialogTrigger asChild>
           <Button variant="destructive">
-            <Trash2 />
+            <Trash2 className="h-5 w-5" />
           </Button>
         </AlertDialogTrigger>
         <AlertDialogContent>

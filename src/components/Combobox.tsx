@@ -41,7 +41,7 @@ export function Combobox() {
       } else if (e.key === 'p' && (e.metaKey || e.ctrlKey)) {
         e.preventDefault()
         router.push('/profile')
-      } else if (e.key === 'o' && (e.metaKey || e.ctrlKey)) {
+      } else if (e.key === 'd' && (e.metaKey || e.ctrlKey)) {
         e.preventDefault()
         router.push('/datasources')
       }

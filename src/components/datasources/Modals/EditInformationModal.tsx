@@ -57,8 +57,7 @@ const EditInformationModal: React.FC<EditInformationModalProps> = ({
       <Dialog>
         <DialogTrigger asChild>
           <Button variant="outline">
-            <PencilIcon className="mr-2 h-4 w-4" />
-            Edit
+            <PencilIcon className=" h-4 w-4" />
           </Button>
         </DialogTrigger>
         <DialogContent>

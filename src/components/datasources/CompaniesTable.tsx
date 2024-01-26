@@ -3,7 +3,9 @@ import type { Company } from '@prisma/client'
 import React from 'react'
 import { useRouter } from 'next/navigation'
 import type { ColumnDef, Row } from '@tanstack/react-table'
+import { ArrowUpDown } from 'lucide-react'
 import { DataTable } from '../DataTable/Table'
+import { Button } from '../ui/button'
 import { IdentifierModal } from './Identifiers/IdentifierModal'
 
 interface CompaniesTableProps {
@@ -19,7 +21,14 @@ export const CompaniesTable = ({ datasourceId, companiesData }: CompaniesTablePr
   const columns: ColumnDef<Company>[] = [
     {
       accessorKey: 'name',
-      header: 'Name',
+      header: ({ column }) => {
+        return (
+          <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+            Name
+            <ArrowUpDown className="ml-2 h-4 w-4" />
+          </Button>
+        )
+      },
       cell: ({ row }: { row: Row<Company> }) => {
         const name = row.getValue('name') as string
         return (

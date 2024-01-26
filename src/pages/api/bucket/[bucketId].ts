@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 
 import { deleteBucket, getBucketById, updateBucket } from '@/api/db/services/bucketService'
 import { ItemNotFoundError } from '@/api/utils/errorUtils'
+import { User } from '@prisma/client'
 
 /**
  * @swagger
@@ -90,7 +91,7 @@ import { ItemNotFoundError } from '@/api/utils/errorUtils'
  *       405:
  *         description: Method Not Allowed.
  */
-export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
+export const handler = async (req: NextApiRequest, res: NextApiResponse, user: User) => {
   const { method } = req
   const { bucketId } = req.query
 
@@ -98,7 +99,14 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     case 'GET':
       try {
         const bucket = await getBucketById(Number(bucketId))
-        if (bucket) res.status(200).json(bucket)
+        if (bucket)
+        {
+          if (bucket.ownerId !== user.id && bucket.permissions.some(x => x.inviteeId === user.id))
+          {
+            res.status(401).json({ error: 'Unauthorized' })
+          }
+          res.status(200).json(bucket)
+        }
         else res.status(400).json({ error: 'No Bucket found' })
         // get all buckets
       } catch (error) {

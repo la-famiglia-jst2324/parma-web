@@ -11,7 +11,7 @@ export default function LandingPage() {
     'w-full max-w-sm p-2 bg-slate-900 rounded-lg overflow-hidden shadow-lg transition-transform hover:scale-105'
 
   return (
-    <div className="container mx-auto px-6 text-white">
+    <div className="container mx-auto flex h-screen  flex-col px-6 text-white">
       <nav className="flex items-center justify-between py-4">
         <Link href="/" className="flex items-center space-x-2">
           <Image src="/DALLE-logo.png" width={60} height={60} alt="" className="rounded-full" />
@@ -31,8 +31,8 @@ export default function LandingPage() {
           </Button>
         </div>
       </nav>
-      <header className="py-20 text-center">
-        <h1 className="bg-clip-text text-5xl font-semibold leading-tight">Empower Your Investments with ParmaAI</h1>
+      <header className="flex h-full flex-col items-center justify-center text-center">
+        <h1 className="text-5xl font-semibold leading-tight">Empower Your Investments with ParmaAI</h1>
         <p className="mt-6 text-xl text-gray-300">
           Where Data Meets Insight. Revolutionize Your Venture Capital Journey by Tracking,
           <br />

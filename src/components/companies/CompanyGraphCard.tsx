@@ -3,16 +3,8 @@ import { LineChart } from '@tremor/react'
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card'
 import { CompanyContext } from '../CompanyContext'
 import type { CompanyContextProps } from '../CompanyContext'
-import { Button } from '../ui/button'
+import NestedDropDown from './NestedDropDown'
 import { getAnalyticsDataForCompany } from '@/services/measurement/measurementService'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger
-} from '@/components/ui/dropdown-menu'
 
 interface CompanyMeasurement {
   id: number
@@ -52,8 +44,13 @@ const CompanyGraphCard: React.FC<CompanyGraphCardProps> = ({ companyId, measurem
   }
 
   useEffect(() => {
-    handleMeasurementChange(String(defaultMeasurement?.id), defaultMeasurement?.measurementName || '')
-  }, [defaultMeasurement?.id, companyId])
+    const measurementId = defaultMeasurement?.id
+    if (measurementId) {
+      handleMeasurementChange(String(measurementId), defaultMeasurement?.measurementName || '')
+    } else {
+      setGraphData([])
+    }
+  }, [defaultMeasurement?.id])
 
   return (
     <Card>
@@ -63,24 +60,7 @@ const CompanyGraphCard: React.FC<CompanyGraphCardProps> = ({ companyId, measurem
             <CardTitle className="text-xl">Graph</CardTitle>
             <p className="text-sm">Selected Measurement: {selectedMeasurement}</p>
           </div>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline">Select Measurement</Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-56">
-              <DropdownMenuSeparator />
-              <DropdownMenuGroup>
-                {measurements.map((measurement) => (
-                  <DropdownMenuItem
-                    key={measurement.id}
-                    onClick={() => handleMeasurementChange(String(measurement.id), measurement.measurementName)}
-                  >
-                    {measurement.measurementName}
-                  </DropdownMenuItem>
-                ))}
-              </DropdownMenuGroup>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <NestedDropDown measurements={measurements} handleChange={handleMeasurementChange} />
         </div>
       </CardHeader>
       <CardContent>

@@ -114,9 +114,11 @@ const CompanyPage: React.FC<CompanyPageProps> = ({ params: { companyId } }) => {
         const commentData: CompanyMeasurement[] = []
 
         data.forEach((item: CompanyMeasurement) => {
-          if (item.type === 'Int' || item.type === 'Float') {
+          const type = item.type.toLowerCase()
+          console.log(type)
+          if (type === 'int' || type === 'float') {
             graphData.push(item)
-          } else if (item.type === 'Comment') {
+          } else if (type === 'comment') {
             commentData.push(item)
           }
         })

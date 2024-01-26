@@ -16,6 +16,7 @@ import { columns } from '@/components/buckets/bucketColumns'
 import BucketDescriptionCard from '@/components/buckets/bucketDescriptionCard'
 import { ShowToast } from '@/components/ShowToast'
 import { getUsername } from '@/services/user/userService'
+import Spinner from '@/components/Spinner'
 
 const initialBucketValue = {
   id: 0,
@@ -44,7 +45,7 @@ const BucketPage = ({ params: { id } }: { params: { id: string } }) => {
   const [editCompanies, setEditCompanies] = useState(false)
   const [selectedCompanies, setSelectedCompanies] = useState<number[]>([])
   const [loggedInUser, setLoggedInUser] = useState<User>()
-
+  const [loading, setLoading] = useState(true)
   useEffect(() => {
     BucketFunctions.getBucketById(+id)
       .then((data) => {
@@ -52,9 +53,11 @@ const BucketPage = ({ params: { id } }: { params: { id: string } }) => {
         BucketFunctions.getCompaniesForBucket(+id)
           .then((res) => {
             setBucketCompanies(res)
+            setLoading(false)
           })
           .catch((e) => {
             console.log(e)
+            setLoading(false)
           })
       })
       .catch((e) => {
@@ -171,7 +174,7 @@ const BucketPage = ({ params: { id } }: { params: { id: string } }) => {
 
   return (
     <main className="flex h-screen flex-row items-start justify-start space-x-4" role="main">
-      {bucket && (
+      {!loading ? (
         <div className="w-full">
           <div className="mb-4 flex items-center justify-between">
             <div className="mb-3 flex items-start justify-start space-x-4">
@@ -254,6 +257,10 @@ const BucketPage = ({ params: { id } }: { params: { id: string } }) => {
               )}
             </div>
           )}
+        </div>
+      ) : (
+        <div className="flex h-full w-full items-center justify-center">
+          <Spinner />
         </div>
       )}
     </main>

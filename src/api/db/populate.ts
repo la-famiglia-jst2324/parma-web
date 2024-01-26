@@ -373,18 +373,15 @@ async function main() {
   }
 
   // Define possible values for type and measurementName
-  const possibleTypes = ['Int', 'Int', 'Int', 'Float', 'Paragraph', 'Text', 'Comment', 'Comment', 'Comment'] // Add more as needed
+  const possibleTypes = ['int', 'int', 'int', 'float', 'paragraph', 'text'] // Add more as needed
   const possibleMeasurementNames = [
     '# of Employees',
     '# of Stars',
     '# of followers',
     'Monthly Revenue',
     'Review',
-    'Event',
-    'User Comments',
-    'User Reviews',
-    'Customer Reviews',
-  ] // Add more as needed
+    'Event'
+  ]
 
   // Create SourceMeasurements for each data source
   const sourceMeasurements: SourceMeasurement[] = []
@@ -398,9 +395,6 @@ async function main() {
             sourceModuleId: dataSource.id,
             type: possibleTypes[random], // Random type
             measurementName: possibleMeasurementNames[random] // Random measurement name
-            // parentMeasurementId: null or some logic if you're handling hierarchy
-
-            // createdAt and modifiedAt will be set automatically
           }
         })
       )
@@ -476,16 +470,6 @@ async function main() {
           companyMeasurementId: csm.companyMeasurementId,
           value: `Sample paragraph value for measurement ${csm.companyMeasurementId}`,
           timestamp: randomDate(startDate, endDate) // Random timestamp within the fixed range
-          // createdAt and modifiedAt will be set automatically
-        }
-      })
-      //
-      await prisma.measurementCommentValue.create({
-        data: {
-          companyMeasurementId: csm.companyMeasurementId,
-          value: `Sample comment value for measurement ${csm.companyMeasurementId}`,
-          timestamp: randomDate(startDate, endDate), // Random timestamp within the fixed range
-          sentimentScore: randomSentimentScore()
           // createdAt and modifiedAt will be set automatically
         }
       })

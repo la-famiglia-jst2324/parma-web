@@ -98,6 +98,17 @@ describe('CompanyDataSource Model Tests', () => {
 
   // Create CompanyDataSource Test
   test('Create a new CompanyDataSource with duplicate data', async () => {
+    // First create a CompanyDataSource
+    await prisma.companyDataSource.create({
+      data: {
+        companyId,
+        dataSourceId,
+        isDataSourceActive: true,
+        healthStatus: 'UP'
+      }
+    })
+
+    // Now try to create a duplicate CompanyDataSource to trigger an error
     try {
       await prisma.companyDataSource.create({
         data: {

@@ -1,6 +1,6 @@
 import { prisma } from '../prisma/prismaClient'
 
-const searchCompaniesAndBuckets = async (searchString: string, page: number, pageSize: number) => {
+const searchCompaniesAndBuckets = async (searchString: string, page: number, pageSize: number, userId: number) => {
   try {
     const companies = await prisma.company.findMany({
       where: {
@@ -14,22 +14,35 @@ const searchCompaniesAndBuckets = async (searchString: string, page: number, pag
       }
     })
 
-    const buckets = await prisma.bucket.findMany({
-      where: {
-        title: {
-          contains: searchString,
-          mode: 'insensitive'
+    const whereClause = {
+      OR: [
+        {
+          ownerId: userId
+        },
+        {
+          permissions: {
+            some: {
+              inviteeId: userId
+            }
+          }
+        },
+        {
+          isPublic: true
         }
-      },
-      orderBy: {
-        title: 'asc'
-      }
+      ]
+    }
+
+    // Workaround the not supported multi-level where clause.
+    const buckets = await prisma.bucket.findMany({
+      where: whereClause
     })
+
+    const authBuckets = buckets.filter((bucket) => bucket.title.toLowerCase().includes(searchString.toLowerCase()))
 
     // Combine and sort the results
     const combined = [
       ...companies.map((c) => ({ ...c, type: 'company' })),
-      ...buckets.map((b) => ({ ...b, name: b.title, type: 'bucket' }))
+      ...authBuckets.map((b) => ({ ...b, name: b.title, type: 'bucket' }))
     ].sort((a, b) => a.name.localeCompare(b.name))
 
     if (!page || !pageSize) {

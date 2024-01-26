@@ -473,16 +473,6 @@ async function main() {
           // createdAt and modifiedAt will be set automatically
         }
       })
-      //
-      await prisma.measurementCommentValue.create({
-        data: {
-          companyMeasurementId: csm.companyMeasurementId,
-          value: `Sample comment value for measurement ${csm.companyMeasurementId}`,
-          timestamp: randomDate(startDate, endDate), // Random timestamp within the fixed range
-          sentimentScore: randomSentimentScore()
-          // createdAt and modifiedAt will be set automatically
-        }
-      })
     }
   }
 

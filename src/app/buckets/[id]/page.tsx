@@ -67,7 +67,7 @@ const BucketPage = ({ params: { id } }: { params: { id: string } }) => {
           router.push('/')
         }
       })
-  }, [id])
+  }, [id, router])
 
   useEffect(() => {
     const getUser = async () => {
@@ -80,7 +80,7 @@ const BucketPage = ({ params: { id } }: { params: { id: string } }) => {
       }
     }
     getUser()
-  }, [])
+  })
 
   const onSelectCheckbox = (companyId: number | number[]) => {
     if (!Array.isArray(companyId)) {

@@ -104,7 +104,7 @@ const CompanyPage: React.FC<CompanyPageProps> = ({ params: { companyId } }) => {
     }
 
     fetchData()
-  }, [])
+  })
 
   useEffect(() => {
     const fetchData = async () => {

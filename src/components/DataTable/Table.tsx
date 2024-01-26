@@ -30,11 +30,24 @@ export function DataTable<TData, TValue>({
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [selectedRows, setSelectedRows] = useState<number[]>([])
+  const table = useReactTable({
+    data,
+    columns,
+    getCoreRowModel: getCoreRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    onSortingChange: setSorting,
+    getSortedRowModel: getSortedRowModel(),
+    state: {
+      sorting
+    }
+  })
+
+  const router = useRouter()
 
   useEffect(() => {
     const col = table.getAllColumns().find((col) => col.id === toggleColumn?.columnId)
     if (col) col.toggleVisibility(toggleColumn?.value)
-  }, [toggleColumn?.value])
+  }, [table, toggleColumn?.columnId, toggleColumn?.value])
 
   const handleRowSelection = (
     event: React.MouseEvent<HTMLTableCellElement, MouseEvent>,
@@ -72,20 +85,6 @@ export function DataTable<TData, TValue>({
       }
     }
   }
-
-  const table = useReactTable({
-    data,
-    columns,
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    onSortingChange: setSorting,
-    getSortedRowModel: getSortedRowModel(),
-    state: {
-      sorting
-    }
-  })
-
-  const router = useRouter()
 
   return (
     <div className="rounded-md border">

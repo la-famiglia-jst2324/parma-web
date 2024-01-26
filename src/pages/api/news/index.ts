@@ -8,16 +8,18 @@ import { getAllNews } from '@/api/db/services/newsService'
 const NewsSchema = z.object({
   page: z
     .string()
-    .refine((val: string) => !isNaN(parseInt(val, 10)), {
-      message: 'ID must be a number'
+    .optional()
+    .refine((val: string | undefined) => val === undefined || !isNaN(parseInt(val, 10)), {
+      message: 'page must be a number'
     })
-    .transform((val: string) => parseInt(val, 10)),
+    .transform((val: string | undefined) => (val === undefined ? undefined : parseInt(val, 10))),
   pageSize: z
     .string()
-    .refine((val: string) => !isNaN(parseInt(val, 10)), {
-      message: 'ID must be a number'
+    .optional()
+    .refine((val: string | undefined) => val === undefined || !isNaN(parseInt(val, 10)), {
+      message: 'pageSize must be a number'
     })
-    .transform((val: string) => parseInt(val, 10)),
+    .transform((val: string | undefined) => (val === undefined ? undefined : parseInt(val, 10))),
   companyId: z
     .string()
     .optional()
@@ -70,12 +72,12 @@ export type NewsData = z.infer<typeof NewsSchema>
  *     parameters:
  *       - in: query
  *         name: page
- *         required: true
+ *         required: false
  *         schema:
  *           type: integer
  *       - in: query
  *         name: pageSize
- *         required: true
+ *         required: false
  *         schema:
  *           type: integer
  *       - in: query
@@ -109,8 +111,6 @@ export type NewsData = z.infer<typeof NewsSchema>
  *               type: array
  *               items:
  *                 $ref: '#/components/schemas/NewsResponse'
- *       400:
- *         description: No page and pageSize provided.
  *       404:
  *         description: No news items are found.
  *       500:
@@ -182,13 +182,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     case 'GET':
       try {
         const { page, pageSize, companyId, bucketId, startDate, endDate } = NewsSchema.parse(req.query)
-        if (page && pageSize) {
-          const news = await getAllNews(page, pageSize, companyId, bucketId, startDate, endDate)
-          if (news) res.status(200).json(news)
-          else res.status(404).json({ error: 'No News found' })
-        } else {
-          res.status(400).json({ error: 'page and pageSize are required!' })
-        }
+        const news = await getAllNews(page, pageSize, companyId, bucketId, startDate, endDate)
+        if (news) res.status(200).json(news)
+        else res.status(404).json({ error: 'No News found' })
       } catch (error) {
         if (error instanceof ItemNotFoundError) res.status(404).json({ error: error.message })
         else if (error instanceof z.ZodError) res.status(400).json({ error: formatZodErrors(error) })

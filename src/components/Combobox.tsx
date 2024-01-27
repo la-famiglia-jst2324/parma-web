@@ -33,8 +33,6 @@ export function Combobox() {
       } else if (e.key === 's' && (e.metaKey || e.ctrlKey)) {
         e.preventDefault()
         router.push('/settings')
-      } else if (e.key === 'c' && (e.metaKey || e.ctrlKey)) {
-        e.preventDefault()
       } else if (e.key === 'f' && (e.metaKey || e.ctrlKey)) {
         e.preventDefault()
         router.push('/search')

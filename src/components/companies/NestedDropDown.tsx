@@ -20,10 +20,10 @@ interface NestedDropDownProps {
 
 interface CompanyMeasurement {
   id: number
-  companyId: number
-  createdAt: string
+  companyId?: number
+  createdAt: string | Date
   measurementName: string
-  modifiedAt: string
+  modifiedAt: string | Date
   parentMeasurementId: number | null
   sourceModuleId: number
   type: string

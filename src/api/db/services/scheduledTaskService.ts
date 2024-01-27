@@ -107,11 +107,28 @@ const deleteScheduledTask = async (taskId: number) => {
   }
 }
 
+const deleteFutureScheduledTasks = async (dataSourceId: number) => {
+  try {
+    await prisma.scheduledTask.deleteMany({
+      where: {
+        dataSourceId,
+        scheduledAt: {
+          gt: new Date(Date.now() + 5 * 60000) // Current time + 5 minutes
+        }
+      }
+    })
+  } catch (error) {
+    console.error('Error deleting future scheduled tasks:', error)
+    throw error
+  }
+}
+
 export {
   createScheduledTask,
   getScheduledTaskByID,
   getAllScheduledTasks,
   updateScheduledTask,
   deleteScheduledTask,
-  getScheduledTaskByDatasourceID
+  getScheduledTaskByDatasourceID,
+  deleteFutureScheduledTasks
 }

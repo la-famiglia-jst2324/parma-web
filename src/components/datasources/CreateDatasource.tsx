@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react'
 import { Frequency } from '@prisma/client'
+import type { AxiosError } from 'axios'
 import { Label } from '../ui/label'
 import { ShowToast } from '../ShowToast'
 import {
@@ -84,16 +85,9 @@ const CreateDatasource: React.FC<CreateDatasourceProps> = ({ triggerButton, isOp
         ShowToast('Success', 'Datasource created successfully')
       }
     } catch (error) {
-      console.error('Error creating datasource:', error)
-
-      let errorMessage = 'Failed to create new datasource'
-
-      // If the error is an instance of Error
-      if (error instanceof Error) {
-        errorMessage = error.message
-      }
-
-      ShowToast('Datasource creation failed', errorMessage, 'destructive')
+      const axiosError = error as AxiosError
+      const errorMessage = axiosError.response?.statusText
+      ShowToast('Datasource creation failed', errorMessage || 'An unexpected error occurred', 'destructive')
     }
   }
   const handleInputChange = (

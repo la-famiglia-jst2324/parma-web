@@ -1,5 +1,6 @@
 import React from 'react'
 import { Button } from '../ui/button'
+import { ShowToast } from '../ShowToast'
 import ModalComponent from './Modals/DisableModal'
 import DeleteModal from './Modals/DeleteModal'
 import { triggerDataSource } from '@/services/datasource/datasourceService'
@@ -28,9 +29,9 @@ interface ButtonGroupProps {
 export const ButtonGroup: React.FC<ButtonGroupProps> = ({ data, handleSave, refreshData }) => {
   async function triggerDataSourceById(id: string) {
     try {
-      const response = await triggerDataSource(id)
-      console.log(response)
+      await triggerDataSource(id)
       refreshData()
+      ShowToast('Datasource triggered successfully', 'Please check the scheduled tasks table for more details')
     } catch (error) {
       console.error('Failed to trigger datasource:', error)
     }

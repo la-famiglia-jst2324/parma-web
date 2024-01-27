@@ -20,6 +20,9 @@ const Sidebar: React.FC = () => {
 
   const [isBucket, setIsBucket] = useState(buckets.length > 0)
   const [isCompany, setIsCompany] = useState(companies.length > 0)
+  const lenBuckets = buckets.length * 8
+  let height = 60
+  if (lenBuckets < 60) height = lenBuckets
   useEffect(() => {
     setIsBucket(buckets.length > 0)
   }, [buckets])
@@ -80,7 +83,7 @@ const Sidebar: React.FC = () => {
               </div>
               <CollapsibleContent>
                 <div className="ml-8">
-                  <ScrollArea className="mt-2 h-52 w-full">
+                  <ScrollArea className={`h- mt-2${height} w-full`}>
                     <div className="pl-2">
                       {isBucket &&
                         buckets?.map((bucket) => (
@@ -129,7 +132,7 @@ const Sidebar: React.FC = () => {
               </div>
               <CollapsibleContent>
                 <div className="ml-8">
-                  <ScrollArea className="mt-2 h-52 w-full">
+                  <ScrollArea className="mt-2 h-60 w-full">
                     <div className="pl-2">
                       {isCompany &&
                         companies.map((company) => (

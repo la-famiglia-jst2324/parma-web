@@ -102,30 +102,28 @@ function BucketGraph({ companies }: { companies: Company[] | undefined }) {
           </div>
           <div></div>
           {graphData ? (
-            <div className="w-full">
-              <Card>
-                <CardHeader>
-                  <div className="flex items-start justify-between">
-                    <div className="space-y-1">
-                      <CardTitle className="text-xl">Graph</CardTitle>
-                      <p className="text-sm">Selected Measurement: {metricName}</p>
-                    </div>
+            <Card className="w-full">
+              <CardHeader>
+                <div className="flex items-start justify-between">
+                  <div className="space-y-1">
+                    <CardTitle className="text-xl">Graph</CardTitle>
+                    <p className="text-sm">Selected Measurement: {metricName}</p>
                   </div>
-                </CardHeader>
-                <CardContent>
-                  <GraphChart
-                    measurementId={graphData.metric || ''}
-                    companiesArray={graphData.companies}
-                    datepickerValue={datePickerValue || null}
-                  />
-                </CardContent>
-              </Card>
-            </div>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <GraphChart
+                  measurementId={graphData.metric || ''}
+                  companiesArray={graphData.companies}
+                  datepickerValue={datePickerValue || null}
+                />
+              </CardContent>
+            </Card>
           ) : (
-            <div className="flex h-96 w-full flex-col items-center justify-center">
+            <Card className="flex h-96 w-full flex-col items-center justify-center">
               <h1 className="text-2xl font-bold">No data to display</h1>
               <p className="text-gray-500">Please select a metric to compare companies</p>
-            </div>
+            </Card>
           )}
         </div>
       )}

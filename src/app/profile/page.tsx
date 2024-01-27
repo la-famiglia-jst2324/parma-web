@@ -8,7 +8,7 @@ import * as z from 'zod'
 import { Button } from '@/components/ui/button'
 import profilePic from '@/../../public/Default_pfp.jpg'
 import { MainLayoutWrapper } from '@/components/layout/MainLayout'
-import { AuthContext } from '@/lib/firebase/auth'
+import { AuthContext, getAuthToken } from '@/lib/firebase/auth'
 import {
   getUserAttachment,
   getUsername,
@@ -39,7 +39,11 @@ const ProfilePage: React.FC = () => {
   useEffect(() => {
     const fetchUserAttachment = async () => {
       try {
-        const response = await getUserAttachment()
+        const token = await getAuthToken(user)
+        if (!token) {
+          return
+        }
+        const response = await getUserAttachment(token)
         setUserPhotoURL(response.fileUrl)
       } catch (error) {
         console.warn('No user attachment available', error)
@@ -59,7 +63,7 @@ const ProfilePage: React.FC = () => {
       }
     }
     fetchUserName()
-  })
+  }, [])
 
   const fileUpload = (event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files.length > 0) {

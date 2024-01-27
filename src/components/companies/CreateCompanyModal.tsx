@@ -28,6 +28,10 @@ const CreateCompanyModal: React.FC<CreateCompanyProps> = ({ triggerButton, isOpe
   const [description, setDescription] = useState('')
 
   const handleCompanyCreation = async () => {
+    if (!title) {
+      ShowToast('Error', 'Please enter a company name', 'destructive')
+      return
+    }
     try {
       await postCompany(title, description)
       ShowToast('Success', 'Company created successfully')

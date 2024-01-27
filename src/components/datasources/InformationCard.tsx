@@ -1,10 +1,12 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Plus } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card'
 import { Button } from '../ui/button'
 import CreateDatasource from './CreateDatasource'
 
 const InformationCard = () => {
+  const [isOpen, setIsOpen] = useState(false)
+
   return (
     <Card className="mb-5">
       <CardHeader className="-mb-2 px-3 py-2">
@@ -17,6 +19,8 @@ const InformationCard = () => {
                 Create
               </Button>
             }
+            setOpen={setIsOpen}
+            isOpen={isOpen}
           />
         </div>
       </CardHeader>

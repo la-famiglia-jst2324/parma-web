@@ -38,56 +38,51 @@ const CreateDatasource: React.FC<CreateDatasourceProps> = ({ triggerButton, isOp
   const [frequency, setFrequency] = useState<string>('')
   const regex = /^[a-z0-9_-]+$/
 
-  async function createDatasource(
-    event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-    name: string,
-    description: string,
-    url: string,
-    frequency: string
-  ) {
-    event.preventDefault()
-
-    if (frequency === null || frequency === '') {
-      ShowToast('Frequency is required', 'Please select a frequency for the datasource', 'destructive')
-      return
-    }
-
-    if (name === null || name === '') {
-      ShowToast('Name is required', 'Please provide a name for the datasource', 'destructive')
-      return
-    }
-
-    if (!regex.test(name)) {
-      ShowToast(
-        'Invalid name format.',
-        'Name is required and should only contain lowercase letters, numbers, underscores, and hyphens.',
-        'destructive'
-      )
-      return
-    }
-
-    if (url === null || url === '') {
-      ShowToast('URL is required', 'Please provide a URL for the datasource', 'destructive')
-      return
-    }
-
-    const frequencyEnum = Frequency[frequency as keyof typeof Frequency]
-
-    const dataSource = {
-      sourceName: name,
-      isActive: true,
-      frequency: frequencyEnum,
-      healthStatus: 'UP',
-      modifiedAt: new Date().toISOString(),
-      invocationEndpoint: url,
-      description
-    }
+  async function createDatasource() {
     try {
+      if (frequency === null || frequency === '') {
+        ShowToast('Frequency is required', 'Please select a frequency for the datasource', 'destructive')
+        return
+      }
+
+      if (name === null || name === '') {
+        ShowToast('Name is required', 'Please provide a name for the datasource', 'destructive')
+        return
+      }
+
+      if (!regex.test(name)) {
+        ShowToast(
+          'Invalid name format.',
+          'Name is required and should only contain lowercase letters, numbers, underscores, and hyphens.',
+          'destructive'
+        )
+        return
+      }
+
+      if (url === null || url === '') {
+        ShowToast('URL is required', 'Please provide a URL for the datasource', 'destructive')
+        return
+      }
+
+      const frequencyEnum = Frequency[frequency as keyof typeof Frequency]
+
+      const dataSource = {
+        sourceName: name,
+        isActive: true,
+        frequency: frequencyEnum,
+        healthStatus: 'UP',
+        modifiedAt: new Date().toISOString(),
+        invocationEndpoint: url,
+        description
+      }
+
       const response = await createNewDatasource(dataSource)
 
       if (response.id) {
         ShowToast('Success', 'Datasource created successfully')
-        if (setOpen) setOpen(false)
+        if (setOpen) {
+          setOpen(false)
+        }
       }
     } catch (error) {
       const axiosError = error as AxiosError
@@ -96,6 +91,7 @@ const CreateDatasource: React.FC<CreateDatasourceProps> = ({ triggerButton, isOp
       ShowToast('Datasource creation failed', errorMessage || 'An unexpected error occurred', 'destructive')
     }
   }
+
   const handleInputChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
     setState: React.Dispatch<React.SetStateAction<string>>
@@ -164,15 +160,9 @@ const CreateDatasource: React.FC<CreateDatasourceProps> = ({ triggerButton, isOp
                 Cancel
               </Button>
             </DialogClose>
-            <DialogClose asChild>
-              <Button
-                type="submit"
-                variant="secondary"
-                onClick={(event) => createDatasource(event, name, description, url, frequency)}
-              >
-                Create
-              </Button>
-            </DialogClose>
+            <Button type="submit" variant="secondary" onClick={createDatasource}>
+              Create
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

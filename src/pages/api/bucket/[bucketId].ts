@@ -100,11 +100,13 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse, user: U
     case 'GET':
       try {
         const bucket = await getBucketById(Number(bucketId))
-        if (bucket) {
-          if (bucket.ownerId !== user.id && !bucket.permissions.some((x) => x.inviteeId === user.id)) {
-            res.status(401).json({ error: 'Not authorized to view this bucket' })
-          } else res.status(200).json(bucket)
-        } else res.status(400).json({ error: 'No Bucket found' })
+        if (!bucket) {
+          res.status(400).json({ error: 'No Bucket found' })
+        }
+        // check the user has access to bucket.
+        const hasAccess = bucket.permissions.some((x) => x.inviteeId === user.id)
+        if (bucket.ownerId === user.id || hasAccess) res.status(200).json(bucket)
+        else res.status(400).json({ error: 'Not authorized to view this bucket' })
       } catch (error) {
         if (error instanceof ItemNotFoundError) res.status(404).json({ error: error.message })
         else res.status(500).json({ error: 'Internal Server Error' })

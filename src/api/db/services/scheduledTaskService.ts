@@ -113,7 +113,7 @@ const deleteFutureScheduledTasks = async (dataSourceId: number) => {
       where: {
         dataSourceId,
         scheduledAt: {
-          gt: new Date()
+          gt: new Date(Date.now() + 5 * 60000) // Current time + 5 minutes
         }
       }
     })

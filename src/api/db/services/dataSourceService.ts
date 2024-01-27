@@ -140,10 +140,8 @@ async function handleDataSourceFrequencyUpdate(
     throw new Error('Data source not found')
   }
 
-  const frequencyInDB: Frequency = existingDataSource.frequency
-
   // Check if new frequency is different from the current value
-  if (updatedFrequency !== frequencyInDB) {
+  if (updatedFrequency !== existingDataSource.frequency) {
     // If so, delete all future scheduled tasks
     await deleteFutureScheduledTasks(dataSourceId)
   }

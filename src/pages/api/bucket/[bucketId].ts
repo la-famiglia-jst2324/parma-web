@@ -1,8 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 
+import type { User } from '@prisma/client'
 import { deleteBucket, getBucketById, updateBucket } from '@/api/db/services/bucketService'
 import { ItemNotFoundError } from '@/api/utils/errorUtils'
-import { User } from '@prisma/client'
 
 /**
  * @swagger
@@ -99,15 +99,11 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse, user: U
     case 'GET':
       try {
         const bucket = await getBucketById(Number(bucketId))
-        if (bucket)
-        {
-          if (bucket.ownerId !== user.id && bucket.permissions.some(x => x.inviteeId === user.id))
-          {
+        if (bucket) {
+          if (bucket.ownerId !== user.id && bucket.permissions.some((x) => x.inviteeId === user.id)) {
             res.status(401).json({ error: 'Unauthorized' })
-          }
-          res.status(200).json(bucket)
-        }
-        else res.status(400).json({ error: 'No Bucket found' })
+          } else res.status(200).json(bucket)
+        } else res.status(400).json({ error: 'No Bucket found' })
         // get all buckets
       } catch (error) {
         if (error instanceof ItemNotFoundError) res.status(404).json({ error: error.message })

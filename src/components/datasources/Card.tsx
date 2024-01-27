@@ -9,6 +9,7 @@ interface DescriptionCardProps {
     newName: string
     newDescription: string
     newUrl: string
+    newFrequency: string
     newStatus: boolean
   }) => Promise<void>
 }

@@ -21,6 +21,10 @@ import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { createNewDatasource } from '@/services/datasource/datasourceService'
 
+interface ErrorResponse {
+  error: string
+}
+
 interface CreateDatasourceProps {
   triggerButton?: React.ReactNode
   isOpen?: boolean
@@ -81,12 +85,14 @@ const CreateDatasource: React.FC<CreateDatasourceProps> = ({ triggerButton, isOp
     try {
       const response = await createNewDatasource(dataSource)
 
-      if (response.ok) {
+      if (response.id) {
         ShowToast('Success', 'Datasource created successfully')
+        if (setOpen) setOpen(false)
       }
     } catch (error) {
       const axiosError = error as AxiosError
-      const errorMessage = axiosError.response?.statusText
+      const errorResponse = axiosError?.response?.data as ErrorResponse
+      const errorMessage = errorResponse?.error
       ShowToast('Datasource creation failed', errorMessage || 'An unexpected error occurred', 'destructive')
     }
   }
@@ -155,7 +161,7 @@ const CreateDatasource: React.FC<CreateDatasourceProps> = ({ triggerButton, isOp
           <DialogFooter className="sm:justify-end">
             <DialogClose asChild>
               <Button type="button" variant="outline">
-                Close
+                Cancel
               </Button>
             </DialogClose>
             <DialogClose asChild>

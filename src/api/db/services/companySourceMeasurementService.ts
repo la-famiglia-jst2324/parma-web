@@ -128,10 +128,7 @@ const deleteCompanySourceMeasurement = async (id: number) => {
 const getMeasurementValueCompanyId = async (companyId: number) => {
   try {
     const measurementNames = ['# of Employees', 'Monthly Revenue']
-    const companySourceMeasurement = await prisma.companySourceMeasurement.findMany({
-      where: { companyId }
-    })
-    const uniqueSourceMeasurementIds = [...new Set(companySourceMeasurement.map((item) => item.sourceMeasurementId))]
+
     const sourceMeasurementDetails = await prisma.sourceMeasurement.findMany({
       where: {
         measurementName: measurementNames ? { in: measurementNames } : undefined,
@@ -171,8 +168,8 @@ const getMeasurementValueCompanyId = async (companyId: number) => {
       }
     }
 
-    if (!companySourceMeasurement) {
-      throw new ItemNotFoundError(`Company with ID ${companyId} not found.`)
+    if (!sourceMeasurementDetails) {
+      throw new ItemNotFoundError(`Company with id ${companyId} not found.`)
     }
     return resultObject
   } catch (error) {

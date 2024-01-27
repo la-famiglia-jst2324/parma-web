@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { UserIcon, Cog8ToothIcon, RocketLaunchIcon } from '@heroicons/react/20/solid'
 import { LogOutIcon } from 'lucide-react'
+import Link from 'next/link'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -68,36 +69,33 @@ const UserNav: React.FC = () => {
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-52" align="start" forceMount>
         <DropdownMenuGroup>
-          <DropdownMenuItem
-            className="group flex justify-between hover:cursor-pointer"
-            onClick={() => router.push('/profile')}
-          >
-            <div className="flex">
-              <UserIcon className="ml-2 mr-4 h-6 w-4 text-gray-500 group-hover:text-gray-200" />
-              Profile
-            </div>
-            <div className="flex-row-reverse text-xs text-gray-400">⌘P</div>
-          </DropdownMenuItem>
-          <DropdownMenuItem
-            className="group flex justify-between hover:cursor-pointer"
-            onClick={() => router.push('/datasources')}
-          >
-            <div className="flex">
-              <RocketLaunchIcon className="ml-2 mr-4 h-6 w-4 text-gray-500 group-hover:text-gray-200" />
-              Datasources
-            </div>
-            <div className="flex-row-reverse text-xs text-gray-400">⌘D</div>
-          </DropdownMenuItem>
-          <DropdownMenuItem
-            className="group flex justify-between hover:cursor-pointer"
-            onClick={() => router.push('/settings')}
-          >
-            <div className=" flex">
-              <Cog8ToothIcon className="ml-2 mr-4 h-6 w-4 text-gray-500 group-hover:text-gray-200" />
-              Settings
-            </div>
-            <div className="flex-row-reverse text-xs text-gray-400">⌘S</div>
-          </DropdownMenuItem>
+          <Link href="/profile">
+            <DropdownMenuItem className="group flex justify-between hover:cursor-pointer">
+              <div className="flex">
+                <UserIcon className="ml-2 mr-4 h-6 w-4 text-gray-500 group-hover:text-gray-200" />
+                Profile
+              </div>
+              <div className="flex-row-reverse text-xs text-gray-400">⌘P</div>
+            </DropdownMenuItem>
+          </Link>
+          <Link href="/datasources">
+            <DropdownMenuItem className="group flex justify-between hover:cursor-pointer">
+              <div className="flex">
+                <RocketLaunchIcon className="ml-2 mr-4 h-6 w-4 text-gray-500 group-hover:text-gray-200" />
+                Datasources
+              </div>
+              <div className="flex-row-reverse text-xs text-gray-400">⌘D</div>
+            </DropdownMenuItem>
+          </Link>
+          <Link href="/settings">
+            <DropdownMenuItem className="group flex justify-between hover:cursor-pointer">
+              <div className=" flex">
+                <Cog8ToothIcon className="ml-2 mr-4 h-6 w-4 text-gray-500 group-hover:text-gray-200" />
+                Settings
+              </div>
+              <div className="flex-row-reverse text-xs text-gray-400">⌘S</div>
+            </DropdownMenuItem>
+          </Link>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuItem className="group hover:cursor-pointer" onClick={handleLogoutClick}>

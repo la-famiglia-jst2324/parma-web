@@ -70,3 +70,24 @@ export const storeSecret = async (client: SecretManagerServiceClient, secretId: 
   // sleep 1 second
   await new Promise((resolve) => setTimeout(resolve, 1000))
 }
+
+/**
+ * Deletes a secret from the GCP Secret Manager service.
+ *
+ * @param client The Secret Manager client (see getSecretManagerClient)
+ * @param secretId The ID of the secret to delete
+ * @throws Error if the secret does not exist
+ */
+export const deleteSecret = async (client: SecretManagerServiceClient, secretId: string) => {
+  try {
+    await client.deleteSecret({
+      name: client.secretPath(PROJECT_ID, secretId)
+    })
+  } catch (e) {
+    if (e instanceof Error && e.message.includes('NOT_FOUND: Secret')) {
+      console.log(`Secret ${secretId} not found`)
+    } else {
+      throw e
+    }
+  }
+}

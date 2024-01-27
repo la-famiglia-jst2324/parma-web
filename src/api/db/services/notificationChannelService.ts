@@ -1,7 +1,7 @@
 import type { ChannelType } from '@prisma/client'
 import { v4 as uuid } from 'uuid'
 import { prisma } from '../prisma/prismaClient'
-import { getSecretManagerClient, storeSecret } from '@/api/gcp/secret_manager'
+import { deleteSecret, getSecretManagerClient, storeSecret } from '@/api/gcp/secret_manager'
 
 /**
  * The apiKey, if provided, is stored in the secret manager and a secretId
@@ -9,12 +9,15 @@ import { getSecretManagerClient, storeSecret } from '@/api/gcp/secret_manager'
  * @param data
  * @returns
  */
-const createNotificationChannel = async (data: { channelType: ChannelType; destination: string; apiKey?: string }) => {
+const createNotificationChannel = async (
+  data: { channelType: ChannelType; destination: string; apiKey?: string },
+  secretPrefix: string = 'parma-analytics-notification-channel-key'
+) => {
   try {
     let secretId = null
     // create a secret if the request contains a key.
     if (data.apiKey) {
-      secretId = `parma-analytics-notification-channel-key-${uuid()}`
+      secretId = `${secretPrefix}-${uuid()}`
       const smClient = getSecretManagerClient()
       await storeSecret(smClient, secretId, data.apiKey)
     }
@@ -95,6 +98,12 @@ const updateNotificationChannel = async (
 }
 const deleteNotificationChannel = async (id: number) => {
   try {
+    const notificationChannel = await getNotificationChannelById(id)
+    if (notificationChannel.secretId) {
+      const smClient = getSecretManagerClient()
+      await deleteSecret(smClient, notificationChannel.secretId)
+    }
+
     return await prisma.notificationChannel.delete({
       where: { id }
     })

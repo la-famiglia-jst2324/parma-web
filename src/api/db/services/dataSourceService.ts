@@ -1,6 +1,7 @@
 import type { Frequency, HealthStatus } from '@prisma/client'
 import { prisma } from '../prisma/prismaClient'
 import { ItemNotFoundError } from '@/api/utils/errorUtils'
+import { deleteFutureScheduledTasks } from '@/api/db/services/scheduledTaskService'
 
 const createDataSource = async (data: {
   sourceName: string
@@ -109,6 +110,10 @@ const updateDataSource = async (
   }
 ) => {
   try {
+    if (data.frequency) {
+      await handleDataSourceFrequencyUpdate(id, data.frequency)
+    }
+
     return await prisma.dataSource.update({
       where: { id },
       data: {
@@ -118,6 +123,29 @@ const updateDataSource = async (
   } catch (error) {
     console.error('Error updating data source:', error)
     throw error
+  }
+}
+
+async function handleDataSourceFrequencyUpdate(
+  dataSourceId: number,
+  updatedFrequency: Frequency | undefined
+): Promise<void> {
+  // Check if frequency is updated
+  if (!updatedFrequency) {
+    return
+  }
+
+  const existingDataSource = await getDataSourceByID(dataSourceId)
+  if (!existingDataSource) {
+    throw new Error('Data source not found')
+  }
+
+  const frequencyInDB: Frequency = existingDataSource.frequency
+
+  // Check if new frequency is different from the current value
+  if (updatedFrequency !== frequencyInDB) {
+    // If so, delete all future scheduled tasks
+    await deleteFutureScheduledTasks(dataSourceId)
   }
 }
 

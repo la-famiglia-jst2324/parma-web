@@ -9,9 +9,9 @@ import { Button } from '../ui/button'
 import { Calendar } from '../ui/calendar'
 import { Label } from '../ui/label'
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card'
+import NestedDropDown from '../companies/NestedDropDown'
 import GraphChart from '@/components/analytics/Graph'
 import { useMeasurementsCompanies } from '@/components/hooks/useMetrics'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { cn } from '@/utils/utils'
 
 function BucketGraph({ companies }: { companies: Company[] | undefined }) {
@@ -58,29 +58,7 @@ function BucketGraph({ companies }: { companies: Company[] | undefined }) {
             <div className="flex justify-between">
               <div className="flex">
                 <div className="flex w-1/2 flex-row gap-4">
-                  <Select
-                    onValueChange={(selectedName) => {
-                      setSelectedMetric(selectedName)
-                    }}
-                    value={selectedMetric}
-                  >
-                    <SelectTrigger className="min-w-[10rem]">
-                      <SelectValue placeholder="Metrics" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {metrics ? (
-                        metrics.map((metric, index) => (
-                          <SelectItem key={index} value={metric.id.toString()}>
-                            {metric.measurementName}
-                          </SelectItem>
-                        ))
-                      ) : (
-                        <SelectItem value="null" className="px-2 py-1 text-sm text-slate-600">
-                          No metrics available
-                        </SelectItem>
-                      )}
-                    </SelectContent>
-                  </Select>
+                  <NestedDropDown measurements={metrics} handleChange={(val) => setSelectedMetric(val)} />
                   <div className={cn('grid gap-2')}>
                     <Popover>
                       <PopoverTrigger asChild>

@@ -1,4 +1,5 @@
 import { prisma } from '../prisma/prismaClient'
+import { ItemNotFoundError } from '@/api/utils/errorUtils'
 
 const createCompanySourceMeasurement = async (data: { sourceMeasurementId: number; companyId: number }) => {
   try {
@@ -124,6 +125,46 @@ const deleteCompanySourceMeasurement = async (id: number) => {
   }
 }
 
+const getMeasurementValueCompanyId = async (companyId: number) => {
+  try {
+    const companySourceMeasurement = await prisma.companySourceMeasurement.findMany({
+      where: {
+        companyId
+      },
+      include: {
+        company: {
+          select: {
+            id: true,
+            name: true,
+            description: true
+          }
+        },
+        sourceMeasurement: {
+          select: {
+            id: true,
+            measurementName: true,
+            type: true
+          }
+        },
+        measurementIntValues: {
+          orderBy: { timestamp: 'desc' },
+          take: 1
+        },
+        measurementFloatValues: {
+          orderBy: { timestamp: 'desc' },
+          take: 1
+        }
+      }
+    })
+    if (!companySourceMeasurement) {
+      throw new ItemNotFoundError(`Company with ID ${companyId} not found.`)
+    }
+    return companySourceMeasurement
+  } catch (error) {
+    console.error('Error getting a company source measurement by company id:', error)
+    throw error
+  }
+}
 export {
   createCompanySourceMeasurement,
   getCompanySourceMeasurementByID,
@@ -131,5 +172,6 @@ export {
   getCompanySourceMeasurementByCompanyId,
   getAllCompanySourceMeasurements,
   updateCompanySourceMeasurement,
-  deleteCompanySourceMeasurement
+  deleteCompanySourceMeasurement,
+  getMeasurementValueCompanyId
 }

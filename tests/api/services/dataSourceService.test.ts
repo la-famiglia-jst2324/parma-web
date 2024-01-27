@@ -1,4 +1,4 @@
-import { Frequency, HealthStatus, PrismaClient } from '@prisma/client'
+import { Frequency, HealthStatus, PrismaClient, ScheduleType, TaskStatus } from '@prisma/client'
 import {
   createDataSource,
   deleteDataSource,
@@ -6,6 +6,7 @@ import {
   getDataSourceByID,
   updateDataSource
 } from '@/api/db/services/dataSourceService'
+import { createScheduledTask } from '@/api/db/services/scheduledTaskService'
 
 const prisma = new PrismaClient()
 
@@ -93,5 +94,51 @@ describe('Data Source Model Tests', () => {
       where: { id: dataSourceId }
     })
     expect(deletedDataSource).toBeNull()
+  })
+
+  test('Update data source frequency triggers task deletion', async () => {
+    // Create a data source
+    const dataSource = await createDataSource({
+      sourceName: 'Test Source',
+      isActive: true,
+      frequency: Frequency.DAILY,
+      healthStatus: HealthStatus.UP,
+      description: 'Test data source',
+      invocationEndpoint: 'test endpoint'
+    })
+    dataSourceId = dataSource.id
+
+    // Create a few scheduled tasks for the data source
+    const tasksToCreate = [
+      { scheduleType: ScheduleType.REGULAR, timeOffset: 10 * 60000 }, // 10 minutes in the future
+      { scheduleType: ScheduleType.REGULAR, timeOffset: -5 * 60000 } // 5 minutes in the past
+    ]
+
+    for (const task of tasksToCreate) {
+      const createdTask = await createScheduledTask({
+        dataSourceId,
+        scheduleType: task.scheduleType,
+        status: TaskStatus.PENDING
+      })
+
+      await prisma.scheduledTask.update({
+        where: { taskId: createdTask.taskId },
+        data: { scheduledAt: new Date(Date.now() + task.timeOffset) }
+      })
+    }
+
+    // Update the frequency of the data source
+    await updateDataSource(dataSourceId, { frequency: Frequency.WEEKLY })
+
+    // Retrieve remaining tasks
+    const remainingTasks = await prisma.scheduledTask.findMany({
+      where: { dataSourceId }
+    })
+
+    // Verify that tasks scheduled beyond 5 minutes from now are deleted
+    remainingTasks.forEach((task) => {
+      expect(task.scheduledAt.getTime()).toBeLessThanOrEqual(Date.now() + 5 * 60000)
+    })
+    expect(remainingTasks.length).toBe(1)
   })
 })

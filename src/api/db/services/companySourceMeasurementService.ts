@@ -150,13 +150,17 @@ const getMeasurementValueCompanyId = async (companyId: number) => {
         value = await prisma.measurementIntValue.findMany({
           where: {
             companyMeasurementId: csm
-          }
+          },
+          orderBy: { timestamp: 'desc' },
+          take: 1
         })
       } else if (sourceMeasurementDetail.type === 'float') {
         value = await prisma.measurementFloatValue.findMany({
           where: {
             companyMeasurementId: csm
-          }
+          },
+          orderBy: { timestamp: 'desc' },
+          take: 1
         })
       }
       if (value) {

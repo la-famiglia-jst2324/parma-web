@@ -106,7 +106,7 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse, user: U
         // check the user has access to bucket.
         const hasAccess = bucket.permissions.some((x) => x.inviteeId === user.id)
         if (bucket.ownerId === user.id || hasAccess) res.status(200).json(bucket)
-        else res.status(400).json({ error: 'Not authorized to view this bucket' })
+        else res.status(401).json({ error: 'Not authorized to view this bucket' })
       } catch (error) {
         if (error instanceof ItemNotFoundError) res.status(404).json({ error: error.message })
         else res.status(500).json({ error: 'Internal Server Error' })
@@ -121,7 +121,7 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse, user: U
             (x) => x.inviteeId === user.id && x.permission === 'MODERATOR'
           )
           if (existingBucket.ownerId !== user.id && !hasAccess) {
-            res.status(400).json({ error: 'Not authorized to update this bucket' })
+            res.status(401).json({ error: 'Not authorized to update this bucket' })
           }
 
           // Update Bucket
@@ -141,7 +141,7 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse, user: U
         const existingBucket = await getBucketById(Number(bucketId))
         if (existingBucket) {
           if (existingBucket.ownerId !== user.id) {
-            res.status(400).json({ error: 'Not authorized to delete this bucket' })
+            res.status(401).json({ error: 'Not authorized to delete this bucket' })
           }
 
           await deleteBucket(Number(bucketId))

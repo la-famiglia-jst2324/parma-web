@@ -99,6 +99,7 @@ describe('CompanyDataSource Model Tests', () => {
   // Create CompanyDataSource Test
   test('Create a new CompanyDataSource, once with duplicate data', async () => {
     try {
+      // This is already automatically created by the triggers.
       await prisma.companyDataSource.create({
         data: {
           companyId,

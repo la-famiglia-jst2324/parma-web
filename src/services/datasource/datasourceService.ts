@@ -117,12 +117,8 @@ export async function createNewDatasource(dataSource: {
   invocationEndpoint: string
   description: string
 }) {
-  try {
-    const res = await fetchClient.post('/api/dataSources', dataSource)
-    return res.data
-  } catch (error) {
-    console.error(error)
-  }
+  const res = await fetchClient.post('/api/dataSources', dataSource)
+  return res.data
 }
 
 export async function deleteDatasource(id: string) {

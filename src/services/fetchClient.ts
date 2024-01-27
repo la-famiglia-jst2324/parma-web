@@ -7,7 +7,6 @@ const fetchClient = (() => {
     try {
       return await user.currentUser?.getIdToken()
     } catch (err) {
-      console.log('getAuthToken', err)
       return null
     }
   }
@@ -22,7 +21,6 @@ const fetchClient = (() => {
   instance.interceptors.response.use(
     (response) => response,
     (error) => {
-      console.log('An error has occurred: ', error)
       return Promise.reject(error)
     }
   )

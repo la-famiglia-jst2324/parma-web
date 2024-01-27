@@ -8,6 +8,7 @@ interface DataProps {
   sourceName: string
   description: string | null
   invocationEndpoint: string
+  newFrequency?: string
   isActive: boolean
   id: number
 }
@@ -19,6 +20,7 @@ interface ButtonGroupProps {
     newName: string
     newDescription: string
     newUrl: string
+    newFrequency?: string
     newStatus: boolean
   }) => Promise<void>
 }

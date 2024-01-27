@@ -1,4 +1,4 @@
-import type { IdentifierType } from '@prisma/client'
+import type { IdentifierType, Frequency } from '@prisma/client'
 import fetchClient from '@/services/fetchClient'
 
 export async function getDataSourcesByCompanyId(companyId: string) {
@@ -70,6 +70,7 @@ export async function editDatasource(
     sourceName?: string
     isActive?: boolean
     description?: string
+    frequency?: Frequency
     invocationEndpoint?: string
   }
 ) {

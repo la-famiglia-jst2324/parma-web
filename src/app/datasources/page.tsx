@@ -31,7 +31,7 @@ function DatasourcesPage() {
             {data ? (
               <DataTable columns={columns} data={data} type="datasources" />
             ) : (
-              <Label className="text-md text-gray-300">No datasources available yet. Start by creating one.</Label>
+              <Label className="text-gray-300">No datasources available yet. Start by creating one.</Label>
             )}
           </div>
         </div>

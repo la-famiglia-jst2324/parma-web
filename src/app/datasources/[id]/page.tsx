@@ -1,6 +1,7 @@
 'use client'
 import React, { useEffect, useState } from 'react'
 import type { DataSource, ScheduledTask, Company } from '@prisma/client'
+import { Frequency } from '@prisma/client'
 import { editDatasource, getDatasourceById, getScheduledTasks } from '@/services/datasource/datasourceService'
 import { MainLayoutWrapper } from '@/components/layout/MainLayout'
 import { HeaderComponent } from '@/components/datasources/DatasourcePageHeader'
@@ -79,13 +80,17 @@ function DatasourcePage({ params: { id } }: { params: { id: string } }) {
     newName: string,
     newDescription: string,
     newInvocationEndpoint: string,
+    newFrequency: string,
     newStatus: boolean
   ) => {
+    const frequencyEnum = Frequency[newFrequency as keyof typeof Frequency]
+
     try {
       const updatedDatasource = await editDatasource(id, {
         sourceName: newName,
         isActive: newStatus,
         description: newDescription,
+        frequency: frequencyEnum,
         invocationEndpoint: newInvocationEndpoint
       })
       if (data && data.id === Number(id)) {
@@ -113,7 +118,13 @@ function DatasourcePage({ params: { id } }: { params: { id: string } }) {
           <div className="flex items-center justify-end">
             <ButtonGroup
               handleSave={(updates) =>
-                handleSave(updates.newName, updates.newDescription, updates.newUrl, updates.newStatus)
+                handleSave(
+                  updates.newName,
+                  updates.newDescription,
+                  updates.newUrl,
+                  updates.newFrequency || '',
+                  updates.newStatus
+                )
               }
               data={data}
               refreshData={refreshData}
@@ -123,7 +134,7 @@ function DatasourcePage({ params: { id } }: { params: { id: string } }) {
         <DescriptionCard
           data={data}
           handleSave={(updates) =>
-            handleSave(updates.newName, updates.newDescription, updates.newUrl, updates.newStatus)
+            handleSave(updates.newName, updates.newDescription, updates.newUrl, updates.newFrequency, updates.newStatus)
           }
         />
         <TabComponent tasksData={tasksData || []} companiesData={companiesData || []} sourceId={data.id.toString()} />

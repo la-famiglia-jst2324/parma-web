@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { ChevronRight } from 'lucide-react'
+import { ChevronRight, LineChart, DatabaseZap, Newspaper } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
@@ -32,7 +32,7 @@ export default function LandingPage() {
           </Button>
         </div>
       </nav>
-      <header className="flex h-full flex-col items-center justify-center text-center">
+      <div className="flex h-full flex-col items-center justify-center text-center">
         <h1 className="text-5xl font-semibold leading-tight">Empower Your Investments with ParmaAI</h1>
         <p className="mt-6 text-xl text-gray-300">
           Where Data Meets Insight. Revolutionize Your Venture Capital Journey by Tracking,
@@ -51,18 +51,21 @@ export default function LandingPage() {
         </Button>
         <div className="mt-8 flex flex-wrap justify-center gap-4">
           <Card className={cardClasses}>
+            <LineChart className="h-12 w-full" />
             <CardHeader className="mb-2 text-lg font-bold text-white">Advanced Analytics</CardHeader>
             <CardContent className="text-gray-300">
               Compare companies at a glance! Uncover insights, spot trends, and make informed decisions effortlessly.
             </CardContent>
           </Card>
           <Card className={cardClasses}>
+            <Newspaper className="h-12 w-full" />
             <CardHeader className="mb-2 text-lg font-bold text-white">Real-time News</CardHeader>
             <CardContent className="text-gray-300">
               Stay ahead in the fast-paced world of venture capital. Receive instant updates on subscribed companies.
             </CardContent>
           </Card>
           <Card className={cardClasses}>
+            <DatabaseZap className="h-12 w-full" />
             <CardHeader className="mb-2 text-lg font-bold text-white">Data Sourcing</CardHeader>
             <CardContent className="text-gray-300">
               Tailor your information stream, effortlessly integrating new data sources to expand your company tracking
@@ -70,7 +73,7 @@ export default function LandingPage() {
             </CardContent>
           </Card>
         </div>
-      </header>
+      </div>
     </div>
   )
 }

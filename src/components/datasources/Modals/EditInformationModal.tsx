@@ -20,7 +20,12 @@ interface EditInformationModalProps {
   description: string
   url: string
   frequency: string
-  handleSave: (updates: { newName: string; newDescription: string; newUrl: string }) => Promise<void>
+  handleSave: (updates: {
+    newName: string
+    newDescription: string
+    newUrl: string
+    newFrequency: string
+  }) => Promise<void>
 }
 
 const EditInformationModal: React.FC<EditInformationModalProps> = ({
@@ -46,7 +51,8 @@ const EditInformationModal: React.FC<EditInformationModalProps> = ({
     handleSave({
       newName: sourceName,
       newDescription: description,
-      newUrl: url
+      newUrl: url,
+      newFrequency: frequency
     }).catch((error) => {
       console.error('An error occurred:', error)
     })

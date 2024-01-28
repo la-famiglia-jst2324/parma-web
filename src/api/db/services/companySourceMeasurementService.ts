@@ -209,18 +209,18 @@ const getMeasurementValueCompanyId = async (companyIds: number[]) => {
 
     for (const key in groupedCompanies) {
       if (Object.prototype.hasOwnProperty.call(groupedCompanies, key)) {
-        const array = groupedCompanies[key];
-        const measurements: Measurement[] = [];
-        let companyName = '';
+        const array = groupedCompanies[key]
+        const measurements: Measurement[] = []
+        let companyName = ''
         array.forEach((item: Result) => {
-          if (item.measurement.value) measurements.push(item.measurement);
-          companyName = item.companyName;
-        });
+          if (item.measurement.value) measurements.push(item.measurement)
+          companyName = item.companyName
+        })
         resultObject.push({
           companyId: key,
           companyName,
-          measurements,
-        });
+          measurements
+        })
       }
     }
 

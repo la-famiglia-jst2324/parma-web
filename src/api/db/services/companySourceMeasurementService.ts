@@ -2,14 +2,14 @@ import { prisma } from '../prisma/prismaClient'
 import { ItemNotFoundError } from '@/api/utils/errorUtils'
 
 interface Result {
-  companyName: string;
+  companyName: string
   measurement: Measurement
 }
 
 interface Measurement {
-  metricName: string;
-  value: number;
-  date: Date | null;
+  metricName: string
+  value: number
+  date: Date | null
 }
 
 const createCompanySourceMeasurement = async (data: { sourceMeasurementId: number; companyId: number }) => {
@@ -149,73 +149,78 @@ const getMeasurementValueCompanyId = async (companyIds: number[]) => {
       }
     })
     const resultObject = []
-    const groupedCompanies = await companySourceMeasurements.reduce(async (accPromise, item) => {
-      const acc = await accPromise;
-      const company = item.company;
-      const measurementName = item.sourceMeasurement.measurementName
-      let value: number = 0;
-      let date: Date = new Date();
+    const groupedCompanies = await companySourceMeasurements.reduce(
+      async (accPromise, item) => {
+        const acc = await accPromise
+        const company = item.company
+        const measurementName = item.sourceMeasurement.measurementName
+        let value: number = 0
+        let date: Date = new Date()
 
-      if (item.sourceMeasurement.type === 'int' && measurementNames.includes(item.sourceMeasurement.measurementName)) {
-        const res = await prisma.measurementIntValue.findMany({
-          where: {
-            companyMeasurementId: item.companyMeasurementId
-          },
-          orderBy: { timestamp: 'desc' },
-          take: 1
-        });
-        if (res.length > 0) {
-          value = res[0].value;
-          date = res[0].timestamp;
+        if (
+          item.sourceMeasurement.type === 'int' &&
+          measurementNames.includes(item.sourceMeasurement.measurementName)
+        ) {
+          const res = await prisma.measurementIntValue.findMany({
+            where: {
+              companyMeasurementId: item.companyMeasurementId
+            },
+            orderBy: { timestamp: 'desc' },
+            take: 1
+          })
+          if (res.length > 0) {
+            value = res[0].value
+            date = res[0].timestamp
+          }
+        } else if (
+          item.sourceMeasurement.type === 'float' &&
+          measurementNames.includes(item.sourceMeasurement.measurementName)
+        ) {
+          const res = await prisma.measurementFloatValue.findMany({
+            where: {
+              companyMeasurementId: item.companyMeasurementId
+            },
+            orderBy: { timestamp: 'desc' },
+            take: 1
+          })
+          if (res.length > 0) {
+            value = res[0].value
+            date = res[0].timestamp
+          }
         }
-      } else if (item.sourceMeasurement.type === 'float' && measurementNames.includes(item.sourceMeasurement.measurementName)) {
-        const res = await prisma.measurementFloatValue.findMany({
-          where: {
-            companyMeasurementId: item.companyMeasurementId
-          },
-          orderBy: { timestamp: 'desc' },
-          take: 1
-        });
-        if (res.length > 0) {
-          value = res[0].value;
-          date = res[0].timestamp;
+
+        const result: Result = {
+          companyName: company.name,
+          measurement: {
+            metricName: measurementName,
+            value,
+            date
+          }
         }
-      }
-
-      const result: Result = {
-        companyName: company.name,
-        measurement:
-        {
-          metricName: measurementName,
-          value: value,
-          date: date
+        if (!acc[company.id]) {
+          acc[company.id] = []
         }
-      }
-      if (!acc[company.id]) {
-        acc[company.id] = []
-      }
-      acc[company.id].push(result)
+        acc[company.id].push(result)
 
-
-      return acc;
-    }, Promise.resolve({} as Record<number, Result[]>));
-
+        return acc
+      },
+      Promise.resolve({} as Record<number, Result[]>)
+    )
 
     for (const key in groupedCompanies) {
       if (groupedCompanies.hasOwnProperty(key)) {
-        const array = groupedCompanies[key];
-        const measurements: Measurement[] = [];
-        let companyName = '';
+        const array = groupedCompanies[key]
+        const measurements: Measurement[] = []
+        let companyName = ''
         array.forEach((item: Result) => {
-          if (item.measurement.value)
-            measurements.push(item.measurement);
-          companyName = item.companyName;
-        });
+          if (item.measurement.value) measurements.push(item.measurement)
+          companyName = item.companyName
+        })
         resultObject.push({
           companyId: key,
-          companyName: companyName,
-          measurements: measurements,
-        });
+          companyName,
+          measurements
+        })
       }
     }
 

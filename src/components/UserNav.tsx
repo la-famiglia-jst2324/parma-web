@@ -13,7 +13,7 @@ import {
 } from './ui/dropdown-menu'
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar'
 import { Button } from './ui/button'
-import { AuthContext, authLogout, getAuthToken } from '@/lib/firebase/auth'
+import { AuthContext, authLogout } from '@/lib/firebase/auth'
 import { getUserAttachment } from '@/services/user/userService'
 import profilePic from '@/../../public/Default_pfp.jpg'
 
@@ -46,16 +46,14 @@ const UserNav: React.FC = () => {
   useEffect(() => {
     const fetchUserAttachment = async () => {
       try {
-        const token = await getAuthToken(user)
-        if (!token) {
-          return
-        }
-        const response = await getUserAttachment(token)
+        const response = await getUserAttachment()
         setUserPhotoURL(response.fileUrl)
       } catch (error) {
         console.warn('No user attachment available', error)
       }
     }
+    console.log('User attachment fetched')
+
     fetchUserAttachment()
   }, [])
 

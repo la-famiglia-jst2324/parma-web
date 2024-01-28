@@ -21,19 +21,10 @@ export async function postUserAttachment(data: FormData) {
   }
 }
 
-export async function getUserAttachment(idToken: string) {
+export async function getUserAttachment() {
   try {
-    const response = await fetch(`/api/user/pic`, {
-      method: 'GET',
-      cache: 'no-cache',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: idToken
-      }
-    })
-    // const response = await fetchClient.get(`/api/user/pic`)
-    const data = await response.json()
-    return data
+    const response = await fetchClient.get(`/api/user/pic`)
+    return response.data
   } catch (error) {
     console.log('An error has occurred: ', error)
     throw error

@@ -83,7 +83,7 @@ const Sidebar: React.FC = () => {
               </div>
               <CollapsibleContent>
                 <div className="ml-8">
-                  <ScrollArea className={`h- mt-2${height} w-full`}>
+                  <ScrollArea className={`h-${height} mt-2 w-full`}>
                     <div className="pl-2">
                       {isBucket &&
                         buckets?.map((bucket) => (

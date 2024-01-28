@@ -24,7 +24,6 @@ export async function postUserAttachment(data: FormData) {
 export async function getUserAttachment() {
   try {
     const response = await fetchClient.get(`/api/user/pic`)
-    console.log('d', response.data)
     return response.data
   } catch (error) {
     console.log('An error has occurred: ', error)

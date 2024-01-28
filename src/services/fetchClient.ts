@@ -14,7 +14,10 @@ const fetchClient = (() => {
   const instance = axios.create({})
 
   instance.interceptors.request.use(async (config) => {
-    config.headers.Authorization = await getAuthToken()
+    const token = await getAuthToken()
+    if (token) {
+      config.headers.Authorization = token
+    }
     return config
   })
 

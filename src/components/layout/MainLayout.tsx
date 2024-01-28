@@ -7,6 +7,7 @@ import Spinner from '../Spinner'
 import Header from '../Header'
 import { CompanyProvider } from '../CompanyContext'
 import { Combobox } from '../Combobox'
+import { SideBarProvider } from '../SidebarContext'
 import StartLayout from './StartLayout'
 import { AuthContext } from '@/lib/firebase/auth'
 
@@ -24,16 +25,18 @@ function _AuthLayout({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="flex min-h-screen">
-      <Sidebar />
-      <div className="ml-72 grow">
-        <Combobox />
-        <div className="flex w-full flex-col">
-          <Header />
-          <CompanyProvider>
-            <main className="grow p-4">{content}</main>
-          </CompanyProvider>
+      <SideBarProvider>
+        <Sidebar />
+        <div className="ml-72 grow">
+          <Combobox />
+          <div className="flex w-full flex-col">
+            <Header />
+            <CompanyProvider>
+              <main className="grow p-4">{content}</main>
+            </CompanyProvider>
+          </div>
         </div>
-      </div>
+      </SideBarProvider>
     </div>
   )
 }

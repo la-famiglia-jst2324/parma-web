@@ -1,4 +1,4 @@
-import type { IdentifierType } from '@prisma/client'
+import type { IdentifierType, Frequency } from '@prisma/client'
 import fetchClient from '@/services/fetchClient'
 
 export async function getDataSourcesByCompanyId(companyId: string) {
@@ -70,6 +70,7 @@ export async function editDatasource(
     sourceName?: string
     isActive?: boolean
     description?: string
+    frequency?: Frequency
     invocationEndpoint?: string
   }
 ) {
@@ -116,12 +117,8 @@ export async function createNewDatasource(dataSource: {
   invocationEndpoint: string
   description: string
 }) {
-  try {
-    const res = await fetchClient.post('/api/dataSources', dataSource)
-    return res.data
-  } catch (error) {
-    console.error(error)
-  }
+  const res = await fetchClient.post('/api/dataSources', dataSource)
+  return res.data
 }
 
 export async function deleteDatasource(id: string) {

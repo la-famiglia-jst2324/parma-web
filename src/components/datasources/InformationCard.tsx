@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '../ui/card'
 import { Button } from '../ui/button'
 import CreateDatasource from './CreateDatasource'
 
-const InformationCard = () => {
+function InformationCard({ onDatasourceCreated }: { onDatasourceCreated: () => void }) {
   const [isOpen, setIsOpen] = useState(false)
 
   return (
@@ -21,6 +21,7 @@ const InformationCard = () => {
             }
             setOpen={setIsOpen}
             isOpen={isOpen}
+            onDatasourceCreated={onDatasourceCreated}
           />
         </div>
       </CardHeader>

@@ -1,7 +1,7 @@
 'use client'
 
 import type { Bucket, Company } from '@prisma/client'
-import { useState } from 'react'
+import { useContext, useState } from 'react'
 import { MultiSelect } from '../ui/multi-select'
 import { DialogHeader, DialogFooter } from '../ui/dialog'
 import { Input } from '../ui/input'
@@ -9,6 +9,7 @@ import { Label } from '../ui/label'
 import { Textarea } from '../ui/textarea'
 import { Checkbox } from '../ui/checkbox'
 import { ShowToast } from '../ShowToast'
+import { SideBarContext } from '../SidebarContext'
 import BucketFunctions from '@/app/services/bucket.service'
 import {
   Dialog,
@@ -31,7 +32,7 @@ const CreateBucket: React.FC<CreateBucketProps> = ({ triggerButton, isOpen, setO
   const [description, setDescription] = useState('')
   const [isPublic, setIsPublic] = useState(true)
   const [selectedCompanies, setSelectedCompanies] = useState<string[]>([])
-  const [allCompaniesPaginated, setCompaniesPaginated] = useState([])
+  const { companies, setBuckets } = useContext(SideBarContext)
 
   const createBucket = async () => {
     const bucket = {
@@ -39,45 +40,37 @@ const CreateBucket: React.FC<CreateBucketProps> = ({ triggerButton, isOpen, setO
       isPublic,
       description
     }
+
     if (title === null || title === '') {
       ShowToast('Title is required', 'Please provide a title for the bucket', 'destructive')
     } else if (selectedCompanies.length === 0) {
       ShowToast('Companies are required', 'Please select companies for the bucket', 'destructive')
     } else {
-      BucketFunctions.createBucket(bucket)
-        .then((data: Bucket) => {
-          // Add companies to the bucket
+      try {
+        const createdBucket: Bucket = await BucketFunctions.createBucket(bucket)
+        if (selectedCompanies.length > 0) {
+          const updatedCompanies = selectedCompanies.map((companyId) => ({
+            bucketId: createdBucket.id + '',
+            companyId
+          }))
 
-          if (selectedCompanies.length > 0) {
-            const updatedCompanies = selectedCompanies.map((c) => {
-              return { bucketId: data.id + '', companyId: c }
-            })
-            BucketFunctions.addCompaniesToBucket(updatedCompanies)
-              .then((data) => console.log(data))
-              .catch((e) => console.log(e))
-          }
-          ShowToast('Success', 'Bucket created successfully')
-        })
-        .catch((error) => {
-          ShowToast('Error', 'Failed to create bucket', 'destructive')
-          console.error('Error:', error)
-        })
+          await BucketFunctions.addCompaniesToBucket(updatedCompanies)
+          setBuckets((prevBuckets) => [...prevBuckets, createdBucket])
+        }
+
+        ShowToast('Success', 'Bucket created successfully')
+      } catch (error) {
+        ShowToast('Error', 'Failed to create bucket', 'destructive')
+        console.error('Error:', error)
+      }
     }
-  }
-
-  const getCompanies = () => {
-    BucketFunctions.getAllCompanies()
-      .then(setCompaniesPaginated)
-      .catch((error) => {
-        console.error('Failed to fetch companies:', error)
-      })
   }
 
   const handleSwitchChange = (value: boolean) => {
     setIsPublic(value)
   }
 
-  const data = allCompaniesPaginated?.map((company: Company) => {
+  const data = companies?.map((company: Company) => {
     return {
       value: String(company?.id),
       label: company?.name
@@ -85,9 +78,7 @@ const CreateBucket: React.FC<CreateBucketProps> = ({ triggerButton, isOpen, setO
   })
   return (
     <Dialog open={isOpen} onOpenChange={setOpen}>
-      <DialogTrigger asChild onClick={getCompanies}>
-        {triggerButton}
-      </DialogTrigger>
+      <DialogTrigger asChild>{triggerButton}</DialogTrigger>
       <DialogContent className="m-2 sm:max-w-[500px]">
         <DialogHeader>
           <DialogTitle>Create Bucket</DialogTitle>

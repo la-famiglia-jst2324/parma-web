@@ -19,6 +19,7 @@ import profilePic from '@/../../public/Default_pfp.jpg'
 
 const UserNav: React.FC = () => {
   const user = useContext(AuthContext)
+  const uid = user !== 'loading' && user !== null ? user.uid : ''
   const router = useRouter()
   const [userPhotoURL, setUserPhotoURL] = useState<string | null>(profilePic.toString())
 
@@ -52,10 +53,9 @@ const UserNav: React.FC = () => {
         console.warn('No user attachment available', error)
       }
     }
-    console.log('User attachment fetched')
 
     fetchUserAttachment()
-  }, [])
+  }, [uid])
 
   return (
     <DropdownMenu>

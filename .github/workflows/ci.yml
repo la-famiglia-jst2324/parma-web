@@ -68,7 +68,9 @@ jobs:
       - name: Db model generation
         run: pnpx prisma generate
       - name: Run migrations
-        run: pnpx prisma migrate dev
+        run: |
+          pnpx prisma migrate dev
+          pnpm run manual-db-migration
       - name: Run CI tests
         run: pnpm run test:ci
         env:

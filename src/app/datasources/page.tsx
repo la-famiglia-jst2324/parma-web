@@ -1,5 +1,5 @@
 'use client'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useCallback } from 'react'
 import type { DataSource } from '@prisma/client'
 import { getDataSources as getDatasources } from '@/services/datasource/datasourceService'
 import { MainLayoutWrapper } from '@/components/layout/MainLayout'
@@ -11,7 +11,7 @@ import { Label } from '@/components/ui/label'
 function DatasourcesPage() {
   const [data, setData] = useState<DataSource[] | null>(null)
 
-  useEffect(() => {
+  const fetchDatasources = useCallback(() => {
     getDatasources()
       .then((response) => {
         setData(response.datasources)
@@ -21,9 +21,13 @@ function DatasourcesPage() {
       })
   }, [])
 
+  useEffect(() => {
+    fetchDatasources()
+  }, [fetchDatasources])
+
   return (
     <div className="px-6">
-      <InformationCard />
+      <InformationCard onDatasourceCreated={fetchDatasources} />
       <div className="mb-8">
         <h2 className="mb-4 text-xl font-bold text-gray-200">Available Datasources</h2>
         <div className="mx-auto overflow-auto rounded-lg border-0 shadow-md">

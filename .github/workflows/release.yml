@@ -40,7 +40,9 @@ jobs:
       - name: Db model generation
         run: pnpx prisma generate
       - name: Run migrations
-        run: pnpx prisma migrate deploy
+        run: |
+          pnpx prisma migrate deploy
+          pnpm run manual-db-migration
         env:
           POSTGRES_URL: ${{ github.event_name == 'release' && secrets.PROD_POSTGRES_URL || secrets.STAGING_POSTGRES_URL }}
 

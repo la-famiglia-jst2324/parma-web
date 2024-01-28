@@ -6,9 +6,9 @@ import { Client } from 'pg'
 describe('Database connection', () => {
   it('should be reachable', async () => {
     expect(true).toBe(true)
-    expect('postgresql://parma-prod-db:parma-prod-db@localhost:9000/parma-prod-db').toBeDefined()
+    expect(process.env.POSTGRES_URL).toBeDefined()
     const client = new Client({
-      connectionString: 'postgresql://parma-prod-db:parma-prod-db@localhost:9000/parma-prod-db'
+      connectionString: process.env.POSTGRES_URL
     })
     await client.connect()
 

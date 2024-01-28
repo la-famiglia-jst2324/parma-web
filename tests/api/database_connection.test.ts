@@ -1,21 +1,17 @@
-import { Client } from 'ts-postgres'
+import { Client } from 'pg'
 
 describe('Database connection', () => {
   it('should be reachable', async () => {
     const client = new Client({
-      host: process.env.POSTGRES_HOST,
-      port: parseInt(process.env.POSTGRES_PORT ?? '-1'),
-      user: process.env.POSTGRES_USER,
-      password: process.env.POSTGRES_PASSWORD,
-      database: process.env.POSTGRES_DB
+      connectionString: process.env.POSTGRES_URL
     })
     await client.connect()
 
     try {
-      const result = client.query("SELECT 'Hello ' || $1 || '!' AS message", ['world'])
+      const result = await client.query("SELECT 'Hello ' || $1 || '!' AS message", ['world'])
 
-      for await (const row of result) {
-        expect(row.get('message')).toEqual('Hello world!')
+      for await (const row of result.rows) {
+        expect(row.message).toBe('Hello world!')
       }
     } finally {
       await client.end()

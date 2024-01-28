@@ -108,11 +108,7 @@ The following steps will get you started with the project.
 
    ```bash
    export NEXT_PUBLIC_ENV="staging"
-   export POSTGRES_HOST=localhost
-   export POSTGRES_PORT=9000
-   export POSTGRES_USER=parma-prod-db
-   export POSTGRES_PASSWORD=parma-prod-db
-   export POSTGRES_DB=parma-prod-db
+   export POSTGRES_URL="postgresql://parma-prod-db:parma-prod-db@localhost:9000/parma-prod-db"
    ```
 
    ```bash

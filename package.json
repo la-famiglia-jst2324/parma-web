@@ -15,7 +15,8 @@
     "test": "jest",
     "test:ci": "jest --ci --json --coverage",
     "cypress": "echo 'not set up'",
-    "make-badges": "istanbul-badges-readme"
+    "make-badges": "istanbul-badges-readme",
+    "manual-db-migration": "npx tsc src/api/db/prisma/manual_migrations.ts && pnpx ts-node src/api/db/prisma/manual_migrations.js"
   },
   "dependencies": {
     "@google-cloud/secret-manager": "^5.0.1",

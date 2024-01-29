@@ -51,22 +51,22 @@ export default function LandingPage() {
         </Button>
         <div className="mt-8 flex flex-wrap justify-center gap-4">
           <Card className={cardClasses}>
-            <LineChart className="h-12 w-full" />
-            <CardHeader className="mb-2 text-lg font-bold text-white">Advanced Analytics</CardHeader>
+            <LineChart className="h-12 w-full pt-4" />
+            <CardHeader className="mb-1 text-lg font-bold text-white">Advanced Analytics</CardHeader>
             <CardContent className="text-gray-300">
               Compare companies at a glance! Uncover insights, spot trends, and make informed decisions effortlessly.
             </CardContent>
           </Card>
           <Card className={cardClasses}>
-            <Newspaper className="h-12 w-full" />
-            <CardHeader className="mb-2 text-lg font-bold text-white">Real-time News</CardHeader>
+            <Newspaper className="h-12 w-full pt-4" />
+            <CardHeader className="mb-1 text-lg font-bold text-white">Real-time News</CardHeader>
             <CardContent className="text-gray-300">
               Stay ahead in the fast-paced world of venture capital. Receive instant updates on subscribed companies.
             </CardContent>
           </Card>
           <Card className={cardClasses}>
-            <DatabaseZap className="h-12 w-full" />
-            <CardHeader className="mb-2 text-lg font-bold text-white">Data Sourcing</CardHeader>
+            <DatabaseZap className="h-12 w-full pt-4" />
+            <CardHeader className="mb-1 text-lg font-bold text-white">Data Sourcing</CardHeader>
             <CardContent className="text-gray-300">
               Tailor your information stream, effortlessly integrating new data sources to expand your company tracking
               horizon.

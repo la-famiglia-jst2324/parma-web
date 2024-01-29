@@ -16,7 +16,7 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/component
 const Sidebar: React.FC = () => {
   const { companies, buckets } = useContext(SideBarContext)
 
-  const lenBuckets = buckets.length * 8
+  const lenBuckets = buckets?.length * 8
   let height = 60
   if (lenBuckets < 60) height = lenBuckets
 
@@ -53,7 +53,7 @@ const Sidebar: React.FC = () => {
           <Collapsible>
             <div className="mb-4">
               <div className="flex items-center justify-between">
-                <CollapsibleTrigger disabled={buckets?.length === 0}>
+                <CollapsibleTrigger disabled={!buckets || buckets?.length === 0}>
                   <Button
                     variant="ghost"
                     className="group flex w-40 justify-start rounded text-base hover:text-white"
@@ -102,7 +102,7 @@ const Sidebar: React.FC = () => {
           <Collapsible>
             <div className="mb-4">
               <div className="flex items-center justify-between">
-                <CollapsibleTrigger disabled={companies?.length === 0}>
+                <CollapsibleTrigger disabled={!companies || companies?.length === 0}>
                   <Button
                     variant="ghost"
                     className="group flex w-40 shrink-0 justify-start text-base  hover:text-white"

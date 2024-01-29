@@ -29,9 +29,10 @@ interface CreateDatasourceProps {
   triggerButton?: React.ReactNode
   isOpen?: boolean
   setOpen?: React.Dispatch<React.SetStateAction<boolean>>
+  onDatasourceCreated?: () => void
 }
 
-const CreateDatasource: React.FC<CreateDatasourceProps> = ({ triggerButton, isOpen, setOpen }) => {
+const CreateDatasource: React.FC<CreateDatasourceProps> = ({ triggerButton, isOpen, setOpen, onDatasourceCreated }) => {
   const [name, setName] = useState<string>('')
   const [url, setUrl] = useState<string>('')
   const [description, setDescription] = useState<string>('')
@@ -83,6 +84,10 @@ const CreateDatasource: React.FC<CreateDatasourceProps> = ({ triggerButton, isOp
         if (setOpen) {
           setOpen(false)
         }
+      }
+
+      if (onDatasourceCreated) {
+        onDatasourceCreated()
       }
     } catch (error) {
       const axiosError = error as AxiosError

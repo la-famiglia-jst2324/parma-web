@@ -1,11 +1,12 @@
 'use client'
-import { useState } from 'react'
+import { useContext, useState } from 'react'
 import { DialogHeader, DialogFooter } from '../ui/dialog'
 import { Input } from '../ui/input'
 import { Label } from '../ui/label'
 import { Textarea } from '../ui/textarea'
 
 import { ShowToast } from '../ShowToast'
+import { SideBarContext } from '../SidebarContext'
 import {
   Dialog,
   DialogTrigger,
@@ -26,6 +27,7 @@ interface CreateCompanyProps {
 const CreateCompanyModal: React.FC<CreateCompanyProps> = ({ triggerButton, isOpen, setOpen }) => {
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
+  const { setCompanies } = useContext(SideBarContext)
 
   const handleCompanyCreation = async () => {
     if (!title) {
@@ -33,11 +35,15 @@ const CreateCompanyModal: React.FC<CreateCompanyProps> = ({ triggerButton, isOpe
       return
     }
     try {
-      await postCompany(title, description)
-      ShowToast('Success', 'Company created successfully')
+      if (title !== '') {
+        const data = await postCompany(title, description)
+        setCompanies((prev) => [...prev, data])
+        ShowToast('Success', 'Company created successfully')
+      } else {
+        ShowToast('Title is required', 'Please provide a title for the company', 'destructive')
+      }
     } catch (error) {
       ShowToast('Error', 'Failed to create company', 'destructive')
-      console.error('Error:', error)
     }
   }
 

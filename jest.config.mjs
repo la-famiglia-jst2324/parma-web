@@ -21,6 +21,7 @@ const config = {
     // the following elements are excluded from coverage
     "!src/app/**/*.{js,jsx,ts,tsx}",
     "!src/components/**/*.{js,jsx,ts,tsx}",
+    "!src/api/db/prisma/**/*",
     // "!src/pages/api/**/*.{js,jsx,ts,tsx}",
     "!**/node_modules/**",
     "!**/vendor/**"

@@ -7,7 +7,7 @@
 [![Major Tag](https://github.com/la-famiglia-jst2324/parma-web/actions/workflows/tag-major.yml/badge.svg)](https://github.com/la-famiglia-jst2324/parma-web/actions/workflows/tag-major.yml)
 
 ![Functions](https://img.shields.io/badge/functions-43.55%25-red.svg?style=flat)
-![Lines](https://img.shields.io/badge/lines-45.79%25-red.svg?style=flat)
+![Lines](https://img.shields.io/badge/lines-45.77%25-red.svg?style=flat)
 
 ParmaAI webstack including frontend and REST API backend.
 
@@ -108,11 +108,7 @@ The following steps will get you started with the project.
 
    ```bash
    export NEXT_PUBLIC_ENV="staging"
-   export POSTGRES_HOST=localhost
-   export POSTGRES_PORT=9000
-   export POSTGRES_USER=parma-prod-db
-   export POSTGRES_PASSWORD=parma-prod-db
-   export POSTGRES_DB=parma-prod-db
+   export POSTGRES_URL="postgresql://parma-prod-db:parma-prod-db@localhost:9000/parma-prod-db"
    ```
 
    ```bash

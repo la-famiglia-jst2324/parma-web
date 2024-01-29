@@ -3,32 +3,23 @@ import Link from 'next/link'
 import { Squares2X2Icon, FolderIcon, BuildingOffice2Icon, MagnifyingGlassIcon } from '@heroicons/react/20/solid'
 import { ChevronRight, ChevronDown, Plus } from 'lucide-react'
 import Image from 'next/image'
-import { useEffect, useState } from 'react'
+import { useContext, useState } from 'react'
 import UserNav from './UserNav'
-import useCompanies from './hooks/useCompanies'
-import useBuckets from './hooks/useBuckets'
 import { Button } from './ui/button'
 import CreateBucket from './buckets/createBucket'
 import CreateCompanyModal from './companies/CreateCompanyModal'
+import { SideBarContext } from './SidebarContext'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Separator } from '@/components/ui/separator'
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible'
 
 const Sidebar: React.FC = () => {
-  const buckets = useBuckets()
-  const companies = useCompanies()
+  const { companies, buckets } = useContext(SideBarContext)
 
-  const [isBucket, setIsBucket] = useState(buckets.length > 0)
-  const [isCompany, setIsCompany] = useState(companies.length > 0)
   const lenBuckets = buckets.length * 8
   let height = 60
   if (lenBuckets < 60) height = lenBuckets
-  useEffect(() => {
-    setIsBucket(buckets.length > 0)
-  }, [buckets])
-  useEffect(() => {
-    setIsCompany(companies.length > 0)
-  }, [companies])
+
   const [clickBucket, setClickBucket] = useState(false)
   const [clickCompany, setClickCompany] = useState(false)
 
@@ -62,7 +53,7 @@ const Sidebar: React.FC = () => {
           <Collapsible>
             <div className="mb-4">
               <div className="flex items-center justify-between">
-                <CollapsibleTrigger disabled={!isBucket}>
+                <CollapsibleTrigger disabled={buckets?.length === 0}>
                   <Button
                     variant="ghost"
                     className="group flex w-40 justify-start rounded text-base hover:text-white"
@@ -85,7 +76,7 @@ const Sidebar: React.FC = () => {
                 <div className="ml-8">
                   <ScrollArea className={`h-${height} mt-2 w-full`}>
                     <div className="pl-2">
-                      {isBucket &&
+                      {buckets?.length > 0 &&
                         buckets?.map((bucket) => (
                           <div key={bucket.id}>
                             <Link href={`/buckets/${bucket.id}`} passHref>
@@ -111,7 +102,7 @@ const Sidebar: React.FC = () => {
           <Collapsible>
             <div className="mb-4">
               <div className="flex items-center justify-between">
-                <CollapsibleTrigger disabled={!isCompany}>
+                <CollapsibleTrigger disabled={companies?.length === 0}>
                   <Button
                     variant="ghost"
                     className="group flex w-40 shrink-0 justify-start text-base  hover:text-white"
@@ -134,7 +125,7 @@ const Sidebar: React.FC = () => {
                 <div className="ml-8">
                   <ScrollArea className="mt-2 h-60 w-full">
                     <div className="pl-2">
-                      {isCompany &&
+                      {companies?.length > 0 &&
                         companies.map((company) => (
                           <div key={company.id}>
                             <Link href={`/companies/${company.id}`} passHref>

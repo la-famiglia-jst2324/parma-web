@@ -50,7 +50,7 @@ const UserNav: React.FC = () => {
         const response = await getUserAttachment()
         setUserPhotoURL(response.fileUrl)
       } catch (error) {
-        console.warn('No user attachment available', error)
+        console.log('No user attachment available')
       }
     }
 

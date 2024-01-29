@@ -42,7 +42,7 @@ const ProfilePage: React.FC = () => {
         const response = await getUserAttachment()
         setUserPhotoURL(response.fileUrl)
       } catch (error) {
-        console.log('No user attachment available', error)
+        console.log('No user attachment available')
       }
     }
     fetchUserAttachment()
@@ -55,7 +55,7 @@ const ProfilePage: React.FC = () => {
         setUserName(response.username)
         return response.username
       } catch (error) {
-        console.error('Error fetching userName:', error)
+        console.log('Error fetching userName:')
       }
     }
     fetchUserName()

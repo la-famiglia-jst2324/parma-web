@@ -5,7 +5,7 @@ export async function getMeasurements() {
     const response = await fetchClient.get(`/api/measurements`)
     return response.data
   } catch (error) {
-    console.log('An error has occurred: ', error)
+    console.log('An error has occurred in getMeasurements')
     return []
   }
 }
@@ -15,7 +15,7 @@ export async function getMeasurementDataById(measurementId: string) {
     const response = await fetchClient.get(`/api/measurements/${measurementId}`)
     return response.data
   } catch (error) {
-    console.log('An error has occurred: ', error)
+    console.log('An error has occurred in getMeasurementDataById')
     return []
   }
 }
@@ -25,7 +25,7 @@ export async function getAnalyticsDataForCompany(measurementId: string, companyI
     const response = await fetchClient.get(`/api/analytics?measurementId=${measurementId}&companies=${companyId}`)
     return response.data
   } catch (error) {
-    console.log('An error has occurred: ', error)
+    console.log('An error has occurred in getAnalyticsDataForCompany')
     return []
   }
 }
@@ -36,7 +36,7 @@ export async function getMeasurementsForCompanies(companiesArray: string[]) {
     const response = await fetchClient.get(`/api/measurements?${companiesQuery}`)
     return response.data
   } catch (error) {
-    console.log('An error has occurred: ', error)
+    console.log('An error has occurred in getMeasurementsForCompanies')
     return []
   }
 }
@@ -46,7 +46,7 @@ export async function getMeasurementsForCompany(dataSourceId: string, companyId:
     const response = await fetchClient.get(`/api/dataSources/${dataSourceId}/?companyId=${companyId}`)
     return response.data
   } catch (error) {
-    console.log('An error has occurred: ', error)
+    console.log('An error has occurred in getMeasurementsForCompany')
     return []
   }
 }

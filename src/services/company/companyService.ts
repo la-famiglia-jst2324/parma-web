@@ -18,7 +18,7 @@ export async function getAllCompanies(idToken: string): Promise<Company[]> {
     const json = await res.json()
     return json
   } catch (error) {
-    console.log('An error has occurred: ', error)
+    console.log('An error has occurred in getAllCompanies')
     return []
   }
 }
@@ -28,7 +28,7 @@ export async function getSubscribedCompanies() {
     const response = await fetchClient.get('/api/company/subscribed')
     return response.data
   } catch (error) {
-    console.log('An error has occurred: ', error)
+    console.log('An error has occurred in getSubscribedCompanies')
     throw error
   }
 }
@@ -41,7 +41,7 @@ export async function postCompanySubscription(companyId: string, subscribe: bool
 
     return response.data
   } catch (error) {
-    console.log('An error has occurred: ', error)
+    console.log('An error has occurred in postCompanySubscription')
     throw error
   }
 }
@@ -51,7 +51,7 @@ export async function getCompanyData(companyId: string) {
     const response = await fetchClient.get(`/api/company/${companyId}`)
     return response.data
   } catch (error) {
-    console.log('An error has occurred: ', error)
+    console.log('An error has occurred in getCompanyData')
     throw error
   }
 }
@@ -61,7 +61,7 @@ export async function getCompanyAttachments(companyId: string) {
     const response = await fetchClient.get(`/api/company/attachment?companyId=${companyId}`)
     return response.data
   } catch (error) {
-    console.log('An error has occurred: ', error)
+    console.log('An error has occurred in getCompanyAttachments')
     throw error
   }
 }
@@ -71,7 +71,7 @@ export async function deleteCompanyAttachment(companyId: string, attachmentId: s
     const response = await fetchClient.delete(`/api/company/${companyId}/attachment/${attachmentId}`)
     return response.data
   } catch (error) {
-    console.log('An error has occurred: ', error)
+    console.log('An error has occurred in deleteCompanyAttachment')
     throw error
   }
 }
@@ -81,7 +81,7 @@ export async function getCompanyAttachmentData(companyId: string, attachmentId: 
     const response = await fetchClient.get(`/api/company/${companyId}/attachment/${attachmentId}`)
     return response.data
   } catch (error) {
-    console.log('An error has occurred: ', error)
+    console.log('An error has occurred in getCompanyAttachmentData')
     throw error
   }
 }
@@ -91,7 +91,7 @@ export async function postCompanyAttachment(companyId: string, data: FormData) {
     const response = await fetchClient.post(`/api/company/${companyId}/attachment`, data)
     return response.data
   } catch (error) {
-    console.log('An error has occurred: ', error)
+    console.log('An error has occurred in postCompanyAttachment')
     throw error
   }
 }
@@ -107,7 +107,7 @@ export async function postCompany(companyName: string, companyDescription: strin
 
     return response.data
   } catch (error) {
-    console.log('An error has occurred: ', error)
+    console.log('An error has occurred in postCompany')
     throw error
   }
 }
@@ -125,7 +125,7 @@ export async function editCompany(companyId: string, companyName: string, compan
 
     return response.data
   } catch (error) {
-    console.log('An error has occurred: ', error)
+    console.log('An error has occurred in editCompany')
     throw error
   }
 }
@@ -135,7 +135,7 @@ export async function getCompanies(offset: number, pageSize: number) {
     const response = await fetchClient.get(`/api/company?page=${offset}&pageSize=${pageSize}`)
     return response.data?.companies || []
   } catch (error) {
-    console.log('An error has occurred: ', error)
+    console.log('An error has occurred in getCompanies')
     return []
   }
 }
@@ -146,7 +146,7 @@ export async function getCompaniesByName(companyName: string) {
     console.log(response)
     return response.data?.company || []
   } catch (error) {
-    console.log('An error has occurred: ', error)
+    console.log('An error has occurred in getCompaniesByName')
     return []
   }
 }
@@ -156,7 +156,7 @@ export async function getExportData(companyId: string) {
     const response = await fetchClient.get(`/api/company/${companyId}/rawData`)
     return response.data
   } catch (error) {
-    console.log('An error has occurred: ', error)
+    console.log('An error has occurred in getExportData')
     return ''
   }
 }
@@ -166,7 +166,7 @@ export async function getCompaniesByDatasourceId(dataSourceId: string) {
     const response = await fetchClient.get(`/api/companyDataSourceRelation?dataSourceId=${dataSourceId}`)
     return response.data
   } catch (error) {
-    console.error('Error:', error)
+    console.log('An error has occurred in getCompaniesByDatasourceId')
   }
 }
 
@@ -177,6 +177,6 @@ export async function getCompanyDataSourceId(dataSourceId: string, companyId: st
     )
     return response.data
   } catch (error) {
-    console.error('Error:', error)
+    console.log('An error has occurred in getCompanyDataSourceId')
   }
 }

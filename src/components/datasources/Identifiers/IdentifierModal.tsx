@@ -60,9 +60,6 @@ export const IdentifierModal: React.FC<IdentifierModalProps> = ({ companyId, dat
   async function deleteIdentifier(index: number) {
     try {
       const response = await deleteIdentifierById(identifiers[index].id.toString())
-
-      console.log(response)
-
       if (response.message === 'Identifier deleted successfully') {
         setIdentifiers(identifiers.filter((_, i) => i !== index))
         ShowToast('Success', 'Identifier deleted successfully')

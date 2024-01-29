@@ -68,15 +68,12 @@ jobs:
       - name: Db model generation
         run: pnpx prisma generate
       - name: Run migrations
-        run: pnpx prisma migrate dev
+        run: |
+          pnpx prisma migrate dev
+          pnpm run manual-db-migration
       - name: Run CI tests
         run: pnpm run test:ci
         env:
-          POSTGRES_HOST: localhost
-          POSTGRES_PORT: 5432
-          POSTGRES_USER: parma-prod-db
-          POSTGRES_PASSWORD: parma-prod-db
-          POSTGRES_DB: parma-prod-db
           FIREBASE_ADMINSDK_CERTIFICATE: ${{ secrets.STAGING_FIREBASE_ADMINSDK_CERTIFICATE}}
           GCP_SECRET_MANAGER_CERTIFICATE: ${{ secrets.GCP_SECRET_MANAGER_KEY }}
           PARMA_ANALYTICS_BASE_URL: http://127.0.0.1:8000

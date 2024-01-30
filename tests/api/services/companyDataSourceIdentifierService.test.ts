@@ -10,7 +10,7 @@ import {
 } from '@/api/db/services/companyDataSourceIdentifierService'
 import { createCompany, deleteCompany } from '@/api/db/services/companyService'
 import { createDataSource } from '@/api/db/services/dataSourceService'
-import { createCompanyDataSource, deleteCompanyDataSource } from '@/api/db/services/companyDataSourceService'
+import { getCompanyDataSourceByIds, deleteCompanyDataSource } from '@/api/db/services/companyDataSourceService'
 import { createUser, deleteUser } from '@/api/db/services/userService'
 
 const prisma = new PrismaClient()
@@ -33,17 +33,10 @@ describe('Company Datasource Identifier Model Tests', () => {
       description: 'a new data source',
       invocationEndpoint: 'dummy endpoint'
     })
-
-    const companyDataSource = await createCompanyDataSource({
-      dataSourceId: dataSource.id,
-      companyId: company.id,
-      isDataSourceActive: true,
-      healthStatus: HealthStatus.UP
-    })
-
     userId = user.id
     companyId = company.id
     dataSourceId = dataSource.id
+    const companyDataSource = await getCompanyDataSourceByIds(dataSourceId, companyId)
     companyDataSourceId = companyDataSource.id
     await prisma.$connect()
   })

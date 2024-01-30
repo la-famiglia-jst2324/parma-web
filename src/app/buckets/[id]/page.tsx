@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import type { User, BucketAccess, Company } from '@prisma/client'
 import { useRouter } from 'next/navigation'
+import { EraserIcon, PencilIcon } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import DeleteBucketModal from '@/components/buckets/DeleteBucketModal'
 import BucketFunctions from '@/app/services/bucket.service'
@@ -17,6 +18,8 @@ import BucketDescriptionCard from '@/components/buckets/bucketDescriptionCard'
 import { ShowToast } from '@/components/ShowToast'
 import { getUsername } from '@/services/user/userService'
 import Spinner from '@/components/Spinner'
+import { Label } from '@/components/ui/label'
+import { Card } from '@/components/ui/card'
 
 const initialBucketValue = {
   id: 0,
@@ -38,14 +41,29 @@ interface BucketPageProps {
   modifiedAt: Date
   permissions?: BucketAccess[]
 }
+
+interface Measurement {
+  metricName: string
+  value: number
+  date: string | Date
+}
+
+export interface CompanyMeasurement {
+  companyId: string
+  companyName: string
+  measurements: Measurement[]
+}
+
 const BucketPage = ({ params: { id } }: { params: { id: string } }) => {
   const router = useRouter()
   const [bucket, setBucket] = useState<BucketPageProps>(initialBucketValue)
   const [bucketCompanies, setBucketCompanies] = useState<Company[]>()
+  const [companiesMeasurements, setCompaniesMeasurements] = useState<CompanyMeasurement[]>([])
   const [editCompanies, setEditCompanies] = useState(false)
   const [selectedCompanies, setSelectedCompanies] = useState<number[]>([])
   const [loggedInUser, setLoggedInUser] = useState<User>()
   const [loading, setLoading] = useState(true)
+
   useEffect(() => {
     BucketFunctions.getBucketById(+id)
       .then((data) => {
@@ -59,6 +77,9 @@ const BucketPage = ({ params: { id } }: { params: { id: string } }) => {
             console.log(e)
             setLoading(false)
           })
+
+        // Here we get companies with Measurements for the table.
+        getBucketWithMeasurements()
       })
       .catch((e) => {
         console.log(e)
@@ -82,6 +103,10 @@ const BucketPage = ({ params: { id } }: { params: { id: string } }) => {
     getUser()
   }, [])
 
+  useEffect(() => {
+    getBucketWithMeasurements()
+  }, [bucketCompanies])
+
   const onSelectCheckbox = (companyId: number | number[]) => {
     if (!Array.isArray(companyId)) {
       if (selectedCompanies.includes(companyId)) {
@@ -92,6 +117,32 @@ const BucketPage = ({ params: { id } }: { params: { id: string } }) => {
     } else {
       setSelectedCompanies(companyId)
     }
+  }
+
+  const getBucketWithMeasurements = () => {
+    BucketFunctions.getCompaniesForBucketWithMeasurements(+id)
+      .then((res: CompanyMeasurement[]) => {
+        // Take only one measurement with the same metricName that has the last date
+
+        res.forEach((company: CompanyMeasurement) => {
+          const latestMeasurements: { [key: string]: Measurement } = {}
+
+          company.measurements.forEach((measurement: Measurement) => {
+            const existing = latestMeasurements[measurement.metricName]
+            if (!existing || new Date(measurement.date) > new Date(existing.date)) {
+              latestMeasurements[measurement.metricName] = measurement
+            }
+          })
+
+          company.measurements = Object.values(latestMeasurements)
+        })
+        setCompaniesMeasurements(res)
+        setLoading(false)
+      })
+      .catch((e) => {
+        console.log(e)
+        setLoading(false)
+      })
   }
   const onDeleteBucket = () => {
     BucketFunctions.deleteBucket(+id)
@@ -120,7 +171,7 @@ const BucketPage = ({ params: { id } }: { params: { id: string } }) => {
 
   const removeCompanies = () => {
     if (selectedCompanies.length === 0) {
-      ShowToast('Error', 'Please select at least one company', 'destructive')
+      ShowToast('Error', 'Select at least one company to remove', 'destructive')
       return
     }
     BucketFunctions.deleteCompaniesFromBucket(+id, selectedCompanies)
@@ -149,7 +200,7 @@ const BucketPage = ({ params: { id } }: { params: { id: string } }) => {
             }
             return undefined
           })
-          ShowToast('Success', 'Companies added successfully')
+          ShowToast('Success', 'Companies added to bucket successfully')
         }
       })
       .catch(() => {
@@ -205,12 +256,12 @@ const BucketPage = ({ params: { id } }: { params: { id: string } }) => {
           </div>
           {bucketCompanies && bucketCompanies.length > 0 && (
             <div className="mb-5 flex items-center justify-between">
-              <h1 className="text-lg font-bold">All companies in this bucket</h1>
+              <h1 className="text-lg font-bold">Companies in this bucket</h1>
               {isModerator() && (
                 <div className="flex flex-row items-center gap-4">
                   {!editCompanies && (
                     <Button variant="outline" onClick={() => setEditCompanies(true)}>
-                      Edit Companies
+                      <PencilIcon className="h-4 w-4" />
                     </Button>
                   )}
                   {editCompanies && (
@@ -220,8 +271,9 @@ const BucketPage = ({ params: { id } }: { params: { id: string } }) => {
                     ></AddCompaniesToBucket>
                   )}
                   {editCompanies && (
-                    <Button variant="destructive" onClick={removeCompanies}>
-                      Remove Companies
+                    <Button variant="outline" className="text-red-500 hover:text-red-500" onClick={removeCompanies}>
+                      <EraserIcon className=" mr-2 h-4 w-4" />
+                      Remove
                     </Button>
                   )}
                   {editCompanies && (
@@ -238,7 +290,7 @@ const BucketPage = ({ params: { id } }: { params: { id: string } }) => {
             <div className="mb-8">
               <DataTable
                 columns={columns}
-                data={bucketCompanies}
+                data={companiesMeasurements}
                 type="companies"
                 toggleColumn={{ columnId: 'select', value: editCompanies }}
                 sendDataToParent={onSelectCheckbox}
@@ -247,14 +299,20 @@ const BucketPage = ({ params: { id } }: { params: { id: string } }) => {
           )}
 
           {bucketCompanies && !(bucketCompanies.length > 0) && (
-            <div className="flex items-center justify-between">
-              <div className="ml-8 mt-4 text-gray-400">This bucket does not have any companies.</div>
-              {isModerator() && (
-                <AddCompaniesToBucket
-                  bucketCompanies={bucketCompanies}
-                  handleSave={(val) => addCompaniesToBucket(val)}
-                ></AddCompaniesToBucket>
-              )}
+            <div className="mb-10 flex-col">
+              <Label className="text-gray-300">Add the companies below to this bucket.</Label>
+              <div className="mb-6 flex">
+                {isModerator() && (
+                  <AddCompaniesToBucket
+                    bucketCompanies={bucketCompanies}
+                    handleSave={(val) => addCompaniesToBucket(val)}
+                  ></AddCompaniesToBucket>
+                )}
+              </div>
+              <Card className="flex h-32 w-full flex-col items-center justify-center">
+                <h1 className="text-2xl font-bold">No company to display</h1>
+                <p className="text-gray-500">Please select companies </p>
+              </Card>
             </div>
           )}
         </div>

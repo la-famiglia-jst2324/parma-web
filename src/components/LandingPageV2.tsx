@@ -16,7 +16,7 @@ export default function LandingPage() {
         <Link href="/" className="flex items-center space-x-2">
           <Image src="/DALLE-logo.png" width={60} height={60} alt="" className="rounded-full" />
           <span className="text-2xl font-semibold">ParmaAI</span>
-          {process.env.NEXT_PUBLIC_ENV !== 'production' && <span>v0.3.1</span>}
+          {process.env.NEXT_PUBLIC_ENV !== 'production' && <span>v0.4.3</span>}
         </Link>
         <div className="flex items-center space-x-4">
           <Link href="/login" className="text-gray-300 hover:text-white">
@@ -51,22 +51,28 @@ export default function LandingPage() {
         </Button>
         <div className="mt-8 flex flex-wrap justify-center gap-4">
           <Card className={cardClasses}>
-            <LineChart className="h-12 w-full" />
-            <CardHeader className="mb-2 text-lg font-bold text-white">Advanced Analytics</CardHeader>
+            <CardHeader className="text-lg font-bold text-white">
+              <LineChart className="mb-4 h-12 w-full" />
+              Advanced Analytics
+            </CardHeader>
             <CardContent className="text-gray-300">
               Compare companies at a glance! Uncover insights, spot trends, and make informed decisions effortlessly.
             </CardContent>
           </Card>
           <Card className={cardClasses}>
-            <Newspaper className="h-12 w-full" />
-            <CardHeader className="mb-2 text-lg font-bold text-white">Real-time News</CardHeader>
+            <CardHeader className="text-lg font-bold text-white">
+              <Newspaper className="mb-4 h-12 w-full" />
+              Real-time News
+            </CardHeader>
             <CardContent className="text-gray-300">
               Stay ahead in the fast-paced world of venture capital. Receive instant updates on subscribed companies.
             </CardContent>
           </Card>
           <Card className={cardClasses}>
-            <DatabaseZap className="h-12 w-full" />
-            <CardHeader className="mb-2 text-lg font-bold text-white">Data Sourcing</CardHeader>
+            <CardHeader className=" text-lg font-bold text-white">
+              <DatabaseZap className="mb-4 h-12 w-full" />
+              Data Sourcing
+            </CardHeader>
             <CardContent className="text-gray-300">
               Tailor your information stream, effortlessly integrating new data sources to expand your company tracking
               horizon.

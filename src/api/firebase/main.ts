@@ -2,7 +2,7 @@ import { existsSync, readFileSync } from 'fs'
 import * as admin from 'firebase-admin'
 
 if (admin.apps && admin.apps.length === 0) {
-  const certFilePath = 'src/api/.secrets/la-famiglia-parma-ai-firebase-adminsdk.json'
+  const certFilePath = './src/api/.secrets/la-famiglia-parma-ai-firebase-adminsdk.json'
 
   let certString = null
   if (existsSync(certFilePath)) {

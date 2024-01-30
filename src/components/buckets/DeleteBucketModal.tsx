@@ -1,17 +1,18 @@
 'use client'
 
 import { Trash2 } from 'lucide-react'
-import { Button } from '@/components/ui/button'
 import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger
-} from '@/components/ui/dialog'
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger
+} from '../ui/alert-dialog'
+import { Button } from '@/components/ui/button'
 
 interface DeleteBucketModalProps {
   handleDelete: () => void
@@ -20,34 +21,25 @@ interface DeleteBucketModalProps {
 const DeleteBucketModal: React.FC<DeleteBucketModalProps> = ({ handleDelete }) => {
   return (
     <div>
-      <Dialog>
-        <DialogTrigger asChild>
+      <AlertDialog>
+        <AlertDialogTrigger asChild>
           <Button variant="destructive">
             <Trash2 className="h-5 w-5" />
           </Button>
-        </DialogTrigger>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle>Delete this bucket</DialogTitle>
-            <DialogDescription>
-              Are you sure you want to delete the bucket? This will permanently remove it and this cannot be undone.
-            </DialogDescription>
-          </DialogHeader>
-          <div className="flex items-center space-x-2"></div>
-          <DialogFooter className="sm:justify-end">
-            <DialogClose asChild>
-              <Button variant="destructive" onClick={handleDelete}>
-                Delete permanently
-              </Button>
-            </DialogClose>
-            <DialogClose asChild>
-              <Button type="button" variant="secondary">
-                Cancel
-              </Button>
-            </DialogClose>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+        </AlertDialogTrigger>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete this bucket</AlertDialogTitle>
+            <AlertDialogDescription>
+              This will permanently remove this bucket from the system and this action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={handleDelete}>Delete</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   )
 }

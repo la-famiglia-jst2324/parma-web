@@ -80,11 +80,11 @@ export default function SignupPage() {
           <div className="grid gap-4">
             <div className="grid gap-2">
               <Label htmlFor="email">Name</Label>
-              <Input placeholder="Viet Le" onChange={(e) => handleInputChange(e, setName)} />
+              <Input placeholder="Max Lee" onChange={(e) => handleInputChange(e, setName)} />
             </div>
             <div className="grid gap-2">
               <Label htmlFor="email">Email</Label>
-              <Input placeholder="name@example.com" onChange={(e) => handleInputChange(e, setEmail)} />
+              <Input placeholder="Max.Lee@example.com" onChange={(e) => handleInputChange(e, setEmail)} />
             </div>
             <div className="grid gap-2">
               <Label htmlFor="password">Password</Label>

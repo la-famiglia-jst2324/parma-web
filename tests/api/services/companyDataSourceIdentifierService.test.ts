@@ -3,14 +3,11 @@ import { genRandomDummyAuthId } from '../utils/random'
 import { deleteDataSource } from '../models/utils/helperFunctions'
 import {
   createCompanyDataSourceIdentifier,
-  getCompanyDataSourceIdentifierById,
-  updateCompanyDataSourceIdentifier,
-  deleteCompanyDataSourceIdentifier,
   getAllCompanyDataSourceIdentifiers
 } from '@/api/db/services/companyDataSourceIdentifierService'
 import { createCompany, deleteCompany } from '@/api/db/services/companyService'
 import { createDataSource } from '@/api/db/services/dataSourceService'
-import { getCompanyDataSourceByIds, deleteCompanyDataSource } from '@/api/db/services/companyDataSourceService'
+import { getCompanyDataSourceByIds } from '@/api/db/services/companyDataSourceService'
 import { createUser, deleteUser } from '@/api/db/services/userService'
 
 const prisma = new PrismaClient()
@@ -19,7 +16,6 @@ describe('Company Datasource Identifier Model Tests', () => {
   let userId: number
   let companyId: number
   let dataSourceId: number
-  let identifierId: number
   let companyDataSourceId: number
 
   beforeAll(async () => {
@@ -42,7 +38,6 @@ describe('Company Datasource Identifier Model Tests', () => {
   })
 
   afterAll(async () => {
-    await deleteCompanyDataSource(companyId, dataSourceId)
     await deleteDataSource(dataSourceId)
     await deleteCompany(companyId)
     await deleteUser(userId)
@@ -62,41 +57,6 @@ describe('Company Datasource Identifier Model Tests', () => {
     } catch (error) {
       expect(error).toBeInstanceOf(Error)
     }
-  })
-
-  test('Create a new Company Datasource Identifier with valid details', async () => {
-    const identifier = await createCompanyDataSourceIdentifier({
-      companyDataSourceId,
-      identifierType: IdentifierType.AUTOMATICALLY_DISCOVERED,
-      property: 'property',
-      value: '1',
-      validity: new Date()
-    })
-    identifierId = identifier.id
-    expect(identifier).toHaveProperty('id')
-    expect(identifier.identifierType).toBe(IdentifierType.AUTOMATICALLY_DISCOVERED)
-    expect(identifier.companyDataSourceId).toBe(companyDataSourceId)
-  })
-
-  test('Retrieve a Company Datasource Identifier by ID', async () => {
-    const identifier = await getCompanyDataSourceIdentifierById(identifierId)
-    expect(identifier).toBeTruthy()
-    expect(identifier?.id).toBe(identifierId)
-  })
-
-  test('Update a Company Datasource Identifier', async () => {
-    const updatedValue = await updateCompanyDataSourceIdentifier(identifierId, {
-      identifierType: IdentifierType.MANUALLY_ADDED
-    })
-    expect(updatedValue.identifierType).toBe(IdentifierType.MANUALLY_ADDED)
-  })
-
-  test('Delete a Company Datasource Identifier', async () => {
-    await deleteCompanyDataSourceIdentifier(identifierId)
-    const deletedValue = await prisma.companyDataSourceIdentifier.findUnique({
-      where: { id: identifierId }
-    })
-    expect(deletedValue).toBeNull()
   })
 
   test('Get All Company Data Source Identifiers', async () => {

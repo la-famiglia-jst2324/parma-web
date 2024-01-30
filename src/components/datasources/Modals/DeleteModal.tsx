@@ -45,9 +45,9 @@ const DeleteModal: React.FC<DeleteModalProps> = ({ id }) => {
         </AlertDialogTrigger>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+            <AlertDialogTitle>Delete this datasource</AlertDialogTitle>
             <AlertDialogDescription>
-              Do you really want to delete this datasource? This action cannot be undone.
+              This will permanently remove this datasource from the system and this action cannot be undone.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

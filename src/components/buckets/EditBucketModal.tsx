@@ -95,7 +95,7 @@ const EditBucketModal: React.FC<EditBucketModalProps> = ({
                   }
                 }}
               />
-              <Label htmlFor="isPublic">Make this bucket publicly available</Label>
+              <p className="text-sm text-slate-300">Make this bucket publicly available</p>
             </div>
           </div>
           <DialogFooter>

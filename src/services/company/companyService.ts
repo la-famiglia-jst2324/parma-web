@@ -118,11 +118,7 @@ export async function editCompany(companyId: string, companyName: string, compan
       name: companyName,
       description: companyDescription
     }
-
-    console.log(body)
-
     const response = await fetchClient.put(`/api/company/${companyId}`, body)
-
     return response.data
   } catch (error) {
     console.log('An error has occurred in editCompany')

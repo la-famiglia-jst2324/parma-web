@@ -76,7 +76,7 @@ const BucketPage = ({ params: { id } }: { params: { id: string } }) => {
         setLoggedInUser(response)
         return response
       } catch (error) {
-        console.error('Error fetching userName:', error)
+        console.log('Error fetching userName')
       }
     }
     getUser()

@@ -73,7 +73,7 @@ const ConfigureDatasourcesModal: React.FC<ConfigureDatasourcesModalProps> = ({ c
   const handleUnlinkDataSource = async (dataSourceId: string) => {
     await deleteCompanyDataSource(companyId, dataSourceId)
     const alldatasource = await getDataSources()
-    setAllDataSources(alldatasource.datasources)
+    setAllDataSources(alldatasource?.datasources)
     const companydatasources = await getDataSourcesByCompanyId(companyId)
     setCompanyDatasources(companydatasources)
     ShowToast('Success', 'Datasource unlinked successfully')

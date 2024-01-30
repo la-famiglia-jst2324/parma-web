@@ -57,7 +57,6 @@ export function DataTable<TData, TValue>({
   const selectAllRows = () => {
     const ids = data.map((row) => ((row as Bucket) || (row as Company) || (row as DataSource)).id)
     const isIncluded = ids.every((element) => selectedRows.includes(element))
-    console.log(isIncluded)
     if (isIncluded) {
       setSelectedRows([])
       table.toggleAllPageRowsSelected(false)

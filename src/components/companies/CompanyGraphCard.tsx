@@ -29,9 +29,10 @@ interface DataItem {
 
 const CompanyGraphCard: React.FC<CompanyGraphCardProps> = ({ companyId, measurements = [] }) => {
   const [graphData, setGraphData] = useState<DataItem[]>([])
-  const [selectedMeasurement, setSelectedMeasurement] = useState<string>(measurements[0]?.measurementName || '')
   const { companyData } = useContext(CompanyContext) as CompanyContextProps
-  const defaultMeasurement = measurements[0]
+  const defaultMeasurement = measurements.find((measurement) => measurement.type !== 'nested') || {}
+  const [selectedMeasurement, setSelectedMeasurement] = useState<string>('')
+  const { id, measurementName } = defaultMeasurement as CompanyMeasurement
 
   const handleMeasurementChange = async (value: string, measurementName: string) => {
     try {
@@ -44,13 +45,12 @@ const CompanyGraphCard: React.FC<CompanyGraphCardProps> = ({ companyId, measurem
   }
 
   useEffect(() => {
-    const measurementId = defaultMeasurement?.id
-    if (measurementId) {
-      handleMeasurementChange(String(measurementId), defaultMeasurement?.measurementName || '')
+    if (id) {
+      handleMeasurementChange(String(id), measurementName || '')
     } else {
       setGraphData([])
     }
-  }, [defaultMeasurement?.id])
+  }, [id])
 
   return (
     <Card>

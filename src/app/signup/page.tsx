@@ -24,9 +24,7 @@ export default function SignupPage() {
   }
 
   const handleSubmit = async (): Promise<void> => {
-    console.log(name, email, password, confirm)
     try {
-      // Further form validation
       if (!name || !email || !password || !confirm) {
         ShowToast('All fields are required', 'Please fill out all fields', 'destructive')
         return
@@ -37,19 +35,15 @@ export default function SignupPage() {
         return
       }
 
-      // Add timeout for server response
       const timeoutId = setTimeout(() => {}, 10000)
 
-      // Attempt signup
       try {
         await authSignup(name, email, password)
-        console.log('done')
-
         clearTimeout(timeoutId)
         ShowToast('Account created successfully', 'Please check your email to verify your account')
       } catch (signupError) {
         clearTimeout(timeoutId)
-        // Handle specific signup errors
+
         if (signupError instanceof Error) {
           const errorCode = (signupError as firebase.FirebaseError).code
           if (errorCode === 'auth/email-already-in-use') {
@@ -70,7 +64,6 @@ export default function SignupPage() {
         }
       }
     } catch (error) {
-      // Handle general errors
       console.error('Error signing up:', error)
       ShowToast('Signup failed', error instanceof Error ? error.message : 'Something went wrong.', 'destructive')
     }

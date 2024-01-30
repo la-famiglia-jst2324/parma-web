@@ -6,7 +6,7 @@ export async function getDataSourcesByCompanyId(companyId: string) {
     const response = await fetchClient.get(`/api/companyDataSourceRelation?companyId=${companyId}`)
     return response.data
   } catch (error) {
-    console.log('An error has occurred: ', error)
+    console.log('An error has occurred in getDataSourcesByCompanyId')
     return []
   }
 }
@@ -23,7 +23,7 @@ export async function addDatasourceToCompany(companyId: string, dataSourceId: st
     const response = await fetchClient.post('/api/companyDataSourceRelation', body)
     return response.data
   } catch (error) {
-    console.log('An error has occurred: ', error)
+    console.log('An error has occurred in addDatasourceToCompany')
     throw error
   }
 }
@@ -35,7 +35,7 @@ export async function deleteCompanyDataSource(companyId: string, dataSourceId: s
     )
     return response.data
   } catch (error) {
-    console.log('An error has occurred: ', error)
+    console.log('An error has occurred in deleteCompanyDataSource')
     throw error
   }
 }
@@ -45,7 +45,7 @@ export async function getDataSources() {
     const response = await fetchClient.get('/api/dataSources')
     return response.data
   } catch (error) {
-    console.log('An error has occurred: ', error)
+    console.log('An error has occurred in getDataSources')
     throw error
   }
 }
@@ -59,7 +59,7 @@ export async function getDataSourcesPagination(page: number, size: number) {
       pagination: json.pagination
     }
   } catch (error) {
-    console.error('An error has occurred: ', error)
+    console.log('An error has occurred in getDataSourcesPagination')
     throw error
   }
 }
@@ -78,7 +78,7 @@ export async function editDatasource(
     const response = await fetchClient.put(`/api/dataSources/${id}`, updates)
     return response.data
   } catch (error) {
-    console.log('An error has occurred: ', error)
+    console.log('An error has occurred in editDatasource')
     throw error
   }
 }
@@ -88,7 +88,7 @@ export async function getDatasourceById(id: string) {
     const response = await fetchClient.get(`/api/dataSources/${id}`)
     return response.data
   } catch (error) {
-    console.log('An error has occurred: ', error)
+    console.log('An error has occurred in getDatasourceById')
     throw error
   }
 }
@@ -100,11 +100,10 @@ export async function getScheduledTasks(dataSourceId: string) {
       return response.data
     })
     .then((data) => {
-      console.log(data)
       return data
     })
-    .catch((error) => {
-      console.error('Error:', error)
+    .catch(() => {
+      console.log('An error has occurred in getScheduledTasks')
     })
 }
 
@@ -126,7 +125,7 @@ export async function deleteDatasource(id: string) {
     const res = await fetchClient.delete(`/api/dataSources/${id}`)
     return res.data
   } catch (error) {
-    console.log('An error has occurred: ', error)
+    console.log('An error has occurred in deleteDatasource')
   }
 }
 
@@ -135,7 +134,7 @@ export async function getCompanyDataSourceIdentifiers(companyDataSourceId: strin
     const res = await fetchClient.get(`/api/companyDataSourceIdentifier?companyDataSourceId=${companyDataSourceId}`)
     return res.data
   } catch (error) {
-    console.log('An error has occurred: ', error)
+    console.log('An error has occurred in getCompanyDataSourceIdentifiers')
   }
 }
 
@@ -150,7 +149,7 @@ export async function createCompanyDataSourceIdentifier(body: {
     const res = await fetchClient.post(`/api/companyDataSourceIdentifier`, body)
     return res.data
   } catch (error) {
-    console.log('An error has occurred: ', error)
+    console.log('An error has occurred in createCompanyDataSourceIdentifier')
   }
 }
 
@@ -165,7 +164,7 @@ export async function editCompanyDataSourceIdentifier(body: {
     const res = await fetchClient.put(`/api/companyDataSourceIdentifier`, body)
     return res.data
   } catch (error) {
-    console.log('An error has occurred: ', error)
+    console.log('An error has occurred in editCompanyDataSourceIdentifier')
   }
 }
 
@@ -174,7 +173,7 @@ export async function deleteCompanyDataSourceIdentifierById(id: string) {
     const res = await fetchClient.delete(`/api/companyDataSourceIdentifier?id=${id}`)
     return res.data
   } catch (error) {
-    console.log('An error has occurred: ', error)
+    console.log('An error has occurred in deleteCompanyDataSourceIdentifierById')
   }
 }
 
@@ -183,6 +182,6 @@ export async function triggerDataSource(dataSourceId: string) {
     const res = await fetchClient.post(`/api/triggerDataSource/${dataSourceId}`)
     return res.data
   } catch (error) {
-    console.log('An error has occurred: ', error)
+    console.log('An error has occurred in triggerDataSource')
   }
 }

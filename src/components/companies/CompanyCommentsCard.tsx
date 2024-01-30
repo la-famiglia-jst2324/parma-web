@@ -33,10 +33,11 @@ interface Comment {
 
 const CompanyCommentsCard: React.FC<CompanyCommentsCardProps> = ({ companyId, measurements }) => {
   const [comments, setComments] = useState<Comment[]>([])
-  const [selectedMeasurement, setSelectedMeasurement] = useState<string>(measurements[0]?.measurementName || '')
   const { companyData } = useContext(CompanyContext) as CompanyContextProps
-  const companyName = companyData.name
-  const defaultMeasurement = measurements[0]
+  const companyName = companyData.name || ''
+  const defaultMeasurement = measurements.find((measurement) => measurement.type !== 'nested') || {}
+  const [selectedMeasurement, setSelectedMeasurement] = useState<string>('')
+  const { id, measurementName } = defaultMeasurement as CompanyMeasurement
 
   const handleMeasurementChange = async (value: string, measurementName: string) => {
     try {
@@ -49,13 +50,12 @@ const CompanyCommentsCard: React.FC<CompanyCommentsCardProps> = ({ companyId, me
   }
 
   useEffect(() => {
-    const measurementId = defaultMeasurement?.id
-    if (measurementId) {
-      handleMeasurementChange(String(measurementId), defaultMeasurement?.measurementName || '')
+    if (id) {
+      handleMeasurementChange(String(id), measurementName || '')
     } else {
       setComments([])
     }
-  }, [defaultMeasurement?.id])
+  }, [id])
 
   return (
     <Card>

@@ -6,7 +6,7 @@ export async function putUserAttachment(data: FormData) {
     const response = await fetchClient.put(`/api/user/pic`, data)
     return response.data
   } catch (error) {
-    console.log('An error has occurred: ', error)
+    console.log('An error has occurred in putUserAttachment')
     throw error
   }
 }
@@ -16,7 +16,7 @@ export async function postUserAttachment(data: FormData) {
     const response = await fetchClient.post(`/api/user/pic`, data)
     return response.data
   } catch (error) {
-    console.log('An error has occurred: ', error)
+    console.log('An error has occurred in postUserAttachment')
     throw error
   }
 }
@@ -26,7 +26,7 @@ export async function getUserAttachment() {
     const response = await fetchClient.get(`/api/user/pic`)
     return response.data
   } catch (error) {
-    console.log('An error has occurred: ', error)
+    console.log('An error has occurred in getUserAttachment')
     throw error
   }
 }
@@ -36,7 +36,7 @@ export async function putUsername(username?: string, role?: Role, profilePicture
     const response = await fetchClient.put(`/api/profile`, { username, role, profilePicture })
     return response.data
   } catch (error) {
-    console.log('An error has occurred: ', error)
+    console.log('An error has occurred in putUsername')
     throw error
   }
 }
@@ -46,7 +46,7 @@ export async function getUsername() {
     const response = await fetchClient.get(`/api/profile`)
     return response.data
   } catch (error) {
-    console.log('An error has occurred: ', error)
+    console.log('An error has occurred in getUsername')
     throw error
   }
 }

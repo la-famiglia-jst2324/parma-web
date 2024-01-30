@@ -43,14 +43,13 @@ export const IdentifierModal: React.FC<IdentifierModalProps> = ({ companyId, dat
         const identifierData = await getCompanyDataSourceIdentifiers(data[0].id)
 
         if (!identifierData || identifierData.message === 'There is no identifier with the id you provide') {
-          console.error('No identifiers found')
-          // Handle the case when no identifiers are found
+          console.log('No identifiers found')
           setIdentifiers([])
         } else {
           setIdentifiers(identifierData)
         }
       } catch (error) {
-        console.error('Failed to fetch identifiers:', error)
+        console.log('Failed to fetch identifiers:')
       }
     }
 
@@ -60,9 +59,6 @@ export const IdentifierModal: React.FC<IdentifierModalProps> = ({ companyId, dat
   async function deleteIdentifier(index: number) {
     try {
       const response = await deleteIdentifierById(identifiers[index].id.toString())
-
-      console.log(response)
-
       if (response.message === 'Identifier deleted successfully') {
         setIdentifiers(identifiers.filter((_, i) => i !== index))
         ShowToast('Success', 'Identifier deleted successfully')

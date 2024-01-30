@@ -20,7 +20,6 @@ const CompanyDescriptionCard: React.FC<CompanyDescriptionCardProps> = ({ company
       setCompanyData(data)
       ShowToast(`${data.name} edited successfully`)
     } catch (error) {
-      console.error('Error in editing the company:', error)
       ShowToast(`Unable to edit ${name}`, 'An error has occurred. Please try again')
     }
   }

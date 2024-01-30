@@ -38,12 +38,11 @@ function BucketGraph({ companies }: { companies: Company[] | undefined }) {
     }
   }, [selectedMetric])
 
-  const metrics = useMeasurementsCompanies(selectedCompanies).filter(
-    (metric) => metric.type === 'Int' || metric.type === 'Float'
+  const metrics = useMeasurementsCompanies(selectedCompanies).filter((metric) =>
+    ['int', 'float', 'nested'].includes(metric.type.toLowerCase())
   )
 
   const changeDatePicker = (value: DateRange | undefined) => {
-    console.log(value)
     if (value?.from && value?.to) {
       setDatePickerValue(value)
     }

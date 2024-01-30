@@ -70,8 +70,8 @@ describe('nested value Model Tests', () => {
   test('Create a new sourceMeasurement and companyMeasurement with valid details', async () => {
     const sourceMeasurement = await createSourceMeasurement({
       sourceModuleId: dataSourceId,
-      type: 'int',
-      measurementName: 'intMea'
+      type: 'nested',
+      measurementName: 'nestedMea'
     })
 
     sourceMeasurementId = sourceMeasurement.id

@@ -70,8 +70,8 @@ describe('image value Model Tests', () => {
   test('Create a new sourceMeasurement and companyMeasurement with valid details', async () => {
     const sourceMeasurement = await createSourceMeasurement({
       sourceModuleId: dataSourceId,
-      type: 'int',
-      measurementName: 'intMea'
+      type: 'image',
+      measurementName: 'imageMea'
     })
 
     sourceMeasurementId = sourceMeasurement.id

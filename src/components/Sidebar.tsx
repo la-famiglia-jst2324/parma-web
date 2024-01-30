@@ -9,10 +9,11 @@ import { Button } from './ui/button'
 import CreateBucket from './buckets/createBucket'
 import CreateCompanyModal from './companies/CreateCompanyModal'
 import { SideBarContext } from './SidebarContext'
+import { ScrollArea } from '@/components/ui/scroll-area'
 import { Separator } from '@/components/ui/separator'
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible'
-import BucketFunctions from '@/app/services/bucket.service'
 import { AuthContext } from '@/lib/firebase/auth'
+import BucketFunctions from '@/app/services/bucket.service'
 
 const Sidebar: React.FC = () => {
   const { companies, setCompanies, buckets, setBuckets } = useContext(SideBarContext)
@@ -21,6 +22,10 @@ const Sidebar: React.FC = () => {
 
   const user = useContext(AuthContext)
   const uid = user !== 'loading' && user !== null ? user.uid : ''
+
+  const lenBuckets = buckets?.length * 8
+  let height = 60
+  if (lenBuckets < 60) height = lenBuckets
 
   useEffect(() => {
     const fetchData = async () => {
@@ -80,12 +85,12 @@ const Sidebar: React.FC = () => {
           <Collapsible>
             <div className="mb-4">
               <div className="flex items-center justify-between">
-                <CollapsibleTrigger disabled={buckets?.length === 0}>
+                <CollapsibleTrigger disabled={!buckets || buckets?.length === 0}>
                   <div
-                    className="flex items-center justify-center whitespace-nowrap rounded-md px-3 py-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground "
+                    className="group inline-flex h-10 w-40 items-center justify-start whitespace-nowrap rounded-md px-4 py-2 text-sm font-medium ring-offset-background transition-colors hover:bg-accent hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
                     onClick={() => setClickBucket(!clickBucket)}
                   >
-                    <FolderIcon className={`ml-1 mr-2 h-4 w-4 text-gray-500 group-hover:text-gray-200`} />
+                    <FolderIcon className={`mr-2 h-4 w-4 text-gray-500 group-hover:text-gray-200`} />
                     <p className="text-base font-medium text-gray-200">Buckets </p>
                     {clickBucket ? (
                       <ChevronDown className="ml-2 h-3 w-3 text-gray-500" />
@@ -99,17 +104,27 @@ const Sidebar: React.FC = () => {
                 />
               </div>
               <CollapsibleContent>
-                <div className="ml-10">
-                  <div className={`mt-2 w-full ${buckets && buckets.length > 6 ? 'h-52 overflow-y-auto' : ''}`}>
-                    {buckets?.map((bucket) => (
-                      <div key={bucket.id}>
-                        <Link href={`/buckets/${bucket.id}`} passHref>
-                          <p className="text-sm font-medium text-slate-400 hover:text-white">{bucket.title}</p>
-                        </Link>
-                        <Separator className="my-2" />
-                      </div>
-                    ))}
-                  </div>
+                <div className="ml-8">
+                  <ScrollArea className={`h-${height} mt-2 w-full`}>
+                    <div className="pl-2">
+                      {buckets?.length > 0 &&
+                        buckets?.map((bucket) => (
+                          <div key={bucket.id}>
+                            <Link href={`/buckets/${bucket.id}`} passHref>
+                              <Button
+                                variant="ghost"
+                                className="group flex h-5 w-full justify-start rounded px-3 text-base"
+                              >
+                                <p className="text-sm font-medium text-slate-400 group-hover:text-gray-200">
+                                  {bucket.title}
+                                </p>
+                              </Button>
+                            </Link>
+                            <Separator className="my-2" />
+                          </div>
+                        ))}
+                    </div>
+                  </ScrollArea>
                 </div>
               </CollapsibleContent>
             </div>
@@ -118,17 +133,17 @@ const Sidebar: React.FC = () => {
           <Collapsible>
             <div className="mb-4">
               <div className="flex items-center justify-between">
-                <CollapsibleTrigger disabled={companies?.length === 0}>
+                <CollapsibleTrigger disabled={!companies || companies?.length === 0}>
                   <div
-                    className="flex items-center justify-center whitespace-nowrap rounded-md px-3 py-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground "
+                    className="group inline-flex h-10 w-40 shrink-0 items-center justify-center whitespace-nowrap rounded-md px-4 py-2 text-sm font-medium ring-offset-background transition-colors hover:bg-accent hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none  disabled:opacity-50"
                     onClick={() => setClickCompany(!clickCompany)}
                   >
-                    <BuildingOffice2Icon className={`ml-1 mr-2 h-4 w-4 text-gray-500 group-hover:text-gray-200`} />
-                    <p className="text-base font-medium text-gray-200">Companies </p>
-                    {clickBucket ? (
-                      <ChevronDown className="ml-2 h-3 w-3 text-gray-500" />
+                    <BuildingOffice2Icon className="mr-2 h-4 w-6 text-gray-500 group-hover:text-gray-200" />
+                    <p className="text-base font-medium text-gray-200">Companies</p>
+                    {clickCompany ? (
+                      <ChevronDown className="ml-2 h-4 w-4 text-gray-500" />
                     ) : (
-                      <ChevronRight className="ml-2 h-3 w-3 text-gray-500" />
+                      <ChevronRight className="ml-2 h-6 w-4 text-gray-500" />
                     )}
                   </div>
                 </CollapsibleTrigger>
@@ -137,17 +152,27 @@ const Sidebar: React.FC = () => {
                 />
               </div>
               <CollapsibleContent>
-                <div className="ml-10">
-                  <div className={`mt-2 w-full ${companies && companies.length > 6 ? 'h-52 overflow-y-auto' : ''}`}>
-                    {companies?.map((company) => (
-                      <div key={company.id}>
-                        <Link href={`/companies/${company.id}`} passHref>
-                          <p className="text-sm font-medium text-slate-400 hover:text-white">{company.name}</p>
-                        </Link>
-                        <Separator className="my-2" />
-                      </div>
-                    ))}
-                  </div>
+                <div className="ml-8">
+                  <ScrollArea className="mt-2 h-60 w-full">
+                    <div className="pl-2">
+                      {companies?.length > 0 &&
+                        companies.map((company) => (
+                          <div key={company.id}>
+                            <Link href={`/companies/${company.id}`} passHref>
+                              <Button
+                                variant="ghost"
+                                className="group flex h-5 w-full justify-start rounded px-3 text-base"
+                              >
+                                <p className="text-sm font-medium text-slate-400 group-hover:text-gray-200">
+                                  {company.name}
+                                </p>
+                              </Button>
+                            </Link>
+                            <Separator className="my-2" />
+                          </div>
+                        ))}
+                    </div>
+                  </ScrollArea>
                 </div>
               </CollapsibleContent>
             </div>

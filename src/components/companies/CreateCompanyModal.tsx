@@ -30,6 +30,10 @@ const CreateCompanyModal: React.FC<CreateCompanyProps> = ({ triggerButton, isOpe
   const { setCompanies } = useContext(SideBarContext)
 
   const handleCompanyCreation = async () => {
+    if (!title) {
+      ShowToast('Error', 'Please enter a company name', 'destructive')
+      return
+    }
     try {
       if (title !== '') {
         const data = await postCompany(title, description)

@@ -2,7 +2,7 @@ import { existsSync, readFileSync } from 'fs'
 
 export const PROJECT_ID = '447443547509'
 
-const certFilePath = '../../../src/api/.secrets/la-famiglia-parma-ai-secret-manager.json'
+const certFilePath = './src/api/.secrets/la-famiglia-parma-ai-secret-manager.json'
 
 export const getGcpCertificate = () => {
   let certString: string | undefined | null = null

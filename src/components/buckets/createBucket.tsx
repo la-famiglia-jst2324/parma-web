@@ -2,6 +2,7 @@
 
 import type { Bucket, Company } from '@prisma/client'
 import { useContext, useState } from 'react'
+import { Loader2 } from 'lucide-react'
 import { MultiSelect } from '../ui/multi-select'
 import { DialogHeader, DialogFooter } from '../ui/dialog'
 import { Input } from '../ui/input'
@@ -34,6 +35,8 @@ const CreateBucket: React.FC<CreateBucketProps> = ({ triggerButton, isOpen, setO
   const [selectedCompanies, setSelectedCompanies] = useState<string[]>([])
   const { companies, setBuckets } = useContext(SideBarContext)
 
+  const [createBucketBlocked, setCreateBucketBlocked] = useState<boolean>(false)
+
   const createBucket = async () => {
     const bucket = {
       title,
@@ -41,10 +44,14 @@ const CreateBucket: React.FC<CreateBucketProps> = ({ triggerButton, isOpen, setO
       description
     }
 
+    setCreateBucketBlocked(true)
+
     if (title === null || title === '') {
       ShowToast('Title is required', 'Please provide a title for the bucket', 'destructive')
+      setCreateBucketBlocked(false)
     } else if (selectedCompanies.length === 0) {
       ShowToast('Companies are required', 'Please select companies for the bucket', 'destructive')
+      setCreateBucketBlocked(false)
     } else {
       try {
         const createdBucket: Bucket = await BucketFunctions.createBucket(bucket)
@@ -59,9 +66,15 @@ const CreateBucket: React.FC<CreateBucketProps> = ({ triggerButton, isOpen, setO
         }
 
         ShowToast('Success', 'Bucket created successfully')
+
+        if (setOpen) {
+          setOpen(false)
+        }
       } catch (error) {
         ShowToast('Error', 'Failed to create bucket', 'destructive')
         console.error('Error:', error)
+      } finally {
+        setCreateBucketBlocked(false)
       }
     }
   }
@@ -131,11 +144,16 @@ const CreateBucket: React.FC<CreateBucketProps> = ({ triggerButton, isOpen, setO
               Cancel
             </Button>
           </DialogClose>
-          <DialogClose asChild>
-            <Button type="submit" className="mt-2" variant="secondary" onClick={createBucket}>
-              <div className="flex items-center gap-0.5 ">Create</div>
-            </Button>
-          </DialogClose>
+          <Button
+            type="submit"
+            className="mt-2"
+            variant="secondary"
+            onClick={createBucket}
+            disabled={createBucketBlocked}
+          >
+            {createBucketBlocked && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+            <div className="flex items-center gap-0.5 ">Create</div>
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

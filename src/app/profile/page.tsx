@@ -55,7 +55,7 @@ const ProfilePage: React.FC = () => {
         setUserName(response.username)
         return response.username
       } catch (error) {
-        console.log('Error fetching userName:')
+        console.log('Error fetching userName')
       }
     }
     fetchUserName()
@@ -80,7 +80,7 @@ const ProfilePage: React.FC = () => {
       setUserPhotoURL(response.profilePicture)
       ShowToast('Upload successful', 'your profile picture is successfully uploaded')
     } catch (error) {
-      console.error('Error uploading the profile picture:', error)
+      console.log('Error uploading the profile picture:', error)
       ShowToast('Error uploading the profile picture', 'Please upload file in jpg format only', 'destructive')
     }
   }

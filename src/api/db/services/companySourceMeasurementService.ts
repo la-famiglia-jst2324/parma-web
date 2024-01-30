@@ -1,4 +1,16 @@
 import { prisma } from '../prisma/prismaClient'
+import { ItemNotFoundError } from '@/api/utils/errorUtils'
+
+interface Result {
+  companyName: string
+  measurement: Measurement
+}
+
+interface Measurement {
+  metricName: string
+  value: number
+  date: Date | null
+}
 
 const createCompanySourceMeasurement = async (data: { sourceMeasurementId: number; companyId: number }) => {
   try {
@@ -124,6 +136,103 @@ const deleteCompanySourceMeasurement = async (id: number) => {
   }
 }
 
+const getMeasurementValueCompanyId = async (companyIds: number[]) => {
+  try {
+    const measurementNames = ['# of Employees', 'Monthly Revenue']
+    const companySourceMeasurements = await prisma.companySourceMeasurement.findMany({
+      where: {
+        companyId: companyIds ? { in: companyIds } : undefined
+      },
+      include: {
+        sourceMeasurement: true,
+        company: true
+      }
+    })
+    const resultObject = []
+    const groupedCompanies = await companySourceMeasurements.reduce(
+      async (accPromise, item) => {
+        const acc = await accPromise
+        const company = item.company
+        const measurementName = item.sourceMeasurement.measurementName
+        let value: number = 0
+        let date: Date = new Date()
+
+        if (
+          item.sourceMeasurement.type === 'int' &&
+          measurementNames.includes(item.sourceMeasurement.measurementName)
+        ) {
+          const res = await prisma.measurementIntValue.findMany({
+            where: {
+              companyMeasurementId: item.companyMeasurementId
+            },
+            orderBy: { timestamp: 'desc' },
+            take: 1
+          })
+          if (res.length > 0) {
+            value = res[0].value
+            date = res[0].timestamp
+          }
+        } else if (
+          item.sourceMeasurement.type === 'float' &&
+          measurementNames.includes(item.sourceMeasurement.measurementName)
+        ) {
+          const res = await prisma.measurementFloatValue.findMany({
+            where: {
+              companyMeasurementId: item.companyMeasurementId
+            },
+            orderBy: { timestamp: 'desc' },
+            take: 1
+          })
+          if (res.length > 0) {
+            value = res[0].value
+            date = res[0].timestamp
+          }
+        }
+
+        const result: Result = {
+          companyName: company.name,
+          measurement: {
+            metricName: measurementName,
+            value,
+            date
+          }
+        }
+        if (!acc[company.id]) {
+          acc[company.id] = []
+        }
+        acc[company.id].push(result)
+
+        return acc
+      },
+      Promise.resolve({} as Record<number, Result[]>)
+    )
+
+    for (const key in groupedCompanies) {
+      if (Object.prototype.hasOwnProperty.call(groupedCompanies, key)) {
+        const array = groupedCompanies[key]
+        const measurements: Measurement[] = []
+        let companyName = ''
+        array.forEach((item: Result) => {
+          if (item.measurement.value) measurements.push(item.measurement)
+          companyName = item.companyName
+        })
+        resultObject.push({
+          companyId: key,
+          companyName,
+          measurements
+        })
+      }
+    }
+
+    if (!companySourceMeasurements) {
+      throw new ItemNotFoundError(`Company source measurement with ID ${companyIds} not found.`)
+    }
+    return resultObject
+  } catch (error) {
+    console.error('Error getting a company source measurement value by ID:', error)
+    throw error
+  }
+}
 export {
   createCompanySourceMeasurement,
   getCompanySourceMeasurementByID,
@@ -131,5 +240,6 @@ export {
   getCompanySourceMeasurementByCompanyId,
   getAllCompanySourceMeasurements,
   updateCompanySourceMeasurement,
-  deleteCompanySourceMeasurement
+  deleteCompanySourceMeasurement,
+  getMeasurementValueCompanyId
 }

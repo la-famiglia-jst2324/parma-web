@@ -86,7 +86,7 @@ const CompanyPage: React.FC<CompanyPageProps> = ({ params: { companyId } }) => {
           setCurrentDatasource(defaultDatasource)
         }
       } catch (error) {
-        console.error('Failed to fetch data sources:', error)
+        console.log('Failed to fetch data sources')
       }
     }
 
@@ -96,29 +96,16 @@ const CompanyPage: React.FC<CompanyPageProps> = ({ params: { companyId } }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const data = await getDataSourcesByCompanyId(companyId)
-        setCompanyDatasources(data)
-      } catch (error) {
-        console.error('Failed to fetch data sources:', error)
-      }
-    }
-
-    fetchData()
-  }, [])
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
         const data = await getMeasurementsForCompany(currentDatasource, companyId)
         const graphData: CompanyMeasurement[] = []
         const commentData: CompanyMeasurement[] = []
 
-        data.forEach((item: CompanyMeasurement) => {
+        data?.forEach((item: CompanyMeasurement) => {
           const type = item.type.toLowerCase()
-          console.log(type)
-          if (type === 'int' || type === 'float') {
+          if (type === 'int' || type === 'float' || type === 'nested') {
             graphData.push(item)
-          } else if (type === 'comment') {
+          }
+          if (type === 'comment' || type === 'nested') {
             commentData.push(item)
           }
         })
@@ -126,7 +113,7 @@ const CompanyPage: React.FC<CompanyPageProps> = ({ params: { companyId } }) => {
         setCompanyGraphMeasurements(graphData)
         setCompanyCommentMeasurements(commentData)
       } catch (error) {
-        console.error('Failed to fetch data sources:', error)
+        console.log('Failed to fetch data sources')
       }
     }
 

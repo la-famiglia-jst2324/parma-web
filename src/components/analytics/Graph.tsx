@@ -48,19 +48,16 @@ const GraphChart: React.FC<GraphChartProps> = ({ measurementId, companiesArray, 
         const existingItem = groupedArray.find((groupedItem) => groupedItem.date === item.date)
 
         if (existingItem) {
-          // Merge the values if the date already exists in the grouped array
           Object.keys(item).forEach((key) => {
             if (key !== 'date') {
               existingItem[key] = (+existingItem[key] || 0) + +item[key]
             }
           })
         } else {
-          // Add a new entry if the date doesn't exist in the grouped array
           groupedArray.push({ ...item })
         }
       })
 
-      console.log(groupedArray)
       setAnalyticsData(groupedArray)
     }
     fetchAnalyticsData()

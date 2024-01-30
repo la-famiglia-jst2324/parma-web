@@ -28,8 +28,7 @@ interface ButtonGroupProps {
 export const ButtonGroup: React.FC<ButtonGroupProps> = ({ data, handleSave, refreshData }) => {
   async function triggerDataSourceById(id: string) {
     try {
-      const response = await triggerDataSource(id)
-      console.log(response)
+      await triggerDataSource(id)
       refreshData()
     } catch (error) {
       console.error('Failed to trigger datasource:', error)

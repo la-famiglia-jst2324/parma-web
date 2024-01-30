@@ -132,7 +132,6 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
           const commonSourceMeasurementIds = Object.keys(sourceMeasurementMap)
             .filter((id) => sourceMeasurementMap[+id] === companyIds.length)
             .map((id) => +id)
-          console.log(commonSourceMeasurementIds)
           const result: SourceMeasurement[] = []
           for (const id of commonSourceMeasurementIds) {
             for (const item of relation) {

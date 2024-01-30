@@ -118,9 +118,9 @@ const CreateBucket: React.FC<CreateBucketProps> = ({ triggerButton, isOpen, setO
                   width="w-80"
                 />
               </div>
-              <div className="flex items-center space-x-4">
+              <div className="flex items-center space-x-2">
                 <Checkbox id="switch" name="isPublic" checked={isPublic} onCheckedChange={handleSwitchChange} />
-                <Label htmlFor="switch">Make this bucket publicly available</Label>
+                <p className="text-sm text-slate-300">Make this bucket publicly available</p>
               </div>
             </form>
           </div>

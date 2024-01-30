@@ -46,14 +46,15 @@ const UserNav: React.FC = () => {
 
   useEffect(() => {
     const fetchUserAttachment = async () => {
-      try {
-        const response = await getUserAttachment()
-        setUserPhotoURL(response.fileUrl)
-      } catch (error) {
-        console.warn('No user attachment available', error)
+      if (uid) {
+        try {
+          const response = await getUserAttachment()
+          setUserPhotoURL(response.fileUrl)
+        } catch (error) {
+          console.log('No user attachment available')
+        }
       }
     }
-
     fetchUserAttachment()
   }, [uid])
 

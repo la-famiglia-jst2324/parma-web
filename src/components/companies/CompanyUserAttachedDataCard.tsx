@@ -37,7 +37,7 @@ const CompanyUserAttachedDataCard: React.FC<CompanyUserAttachedDataCardProps> = 
         const returnData = data || []
         setCompanyAttachments(returnData)
       } catch (error) {
-        console.error('Failed to fetch company attachments', error)
+        console.log('Failed to fetch company attachments')
       }
     }
 
@@ -54,7 +54,8 @@ const CompanyUserAttachedDataCard: React.FC<CompanyUserAttachedDataCardProps> = 
       setCompanyAttachments(returnData)
       ShowToast('Success', 'Attachment uploaded successfully')
     } catch (error) {
-      console.error('Error uploading the file:', error)
+      console.log('Error uploading the file')
+      ShowToast('Error', 'Unable to attach this file')
     }
     if (fileInputRef.current) {
       fileInputRef.current.value = ''
@@ -69,7 +70,7 @@ const CompanyUserAttachedDataCard: React.FC<CompanyUserAttachedDataCardProps> = 
       setCompanyAttachments(returnData)
       ShowToast('Success', 'Attachment deleted successfully')
     } catch (error) {
-      console.error('Error deleting the attachment:', error)
+      console.log('Error deleting the attachment:')
       ShowToast('Error', 'Failed to delete attachment', 'destructive')
     }
   }

@@ -37,10 +37,12 @@ const EditCompanyModal: React.FC<EditCompanyModalProps> = ({ companyName, compan
     setState(event.target.value)
   }
 
-  const handleSaveClick = () => {
-    handleSave(name, description).catch((error) => {
-      console.error('An error occurred:', error)
-    })
+  const handleSaveClick = async () => {
+    try {
+      await handleSave(name, description)
+    } catch (error) {
+      console.log('An error occurred while editing a company:')
+    }
   }
 
   return (

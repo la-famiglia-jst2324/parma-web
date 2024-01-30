@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { Squares2X2Icon, FolderIcon, BuildingOffice2Icon, MagnifyingGlassIcon } from '@heroicons/react/20/solid'
 import { ChevronRight, ChevronDown, Plus } from 'lucide-react'
 import Image from 'next/image'
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import UserNav from './UserNav'
 import { Button } from './ui/button'
 import CreateBucket from './buckets/createBucket'
@@ -12,16 +12,48 @@ import { SideBarContext } from './SidebarContext'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Separator } from '@/components/ui/separator'
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible'
+import { AuthContext } from '@/lib/firebase/auth'
+import BucketFunctions from '@/app/services/bucket.service'
 
 const Sidebar: React.FC = () => {
-  const { companies, buckets } = useContext(SideBarContext)
+  const { companies, setCompanies, buckets, setBuckets } = useContext(SideBarContext)
+  const [clickBucket, setClickBucket] = useState(false)
+  const [clickCompany, setClickCompany] = useState(false)
+
+  const user = useContext(AuthContext)
+  const uid = user !== 'loading' && user !== null ? user.uid : ''
 
   const lenBuckets = buckets?.length * 8
   let height = 60
   if (lenBuckets < 60) height = lenBuckets
 
-  const [clickBucket, setClickBucket] = useState(false)
-  const [clickCompany, setClickCompany] = useState(false)
+  useEffect(() => {
+    const fetchData = async () => {
+      if (uid) {
+        try {
+          const companiesData = await BucketFunctions.getAllCompanies()
+          setCompanies(companiesData)
+        } catch (error) {
+          console.log('Failed to fetch companies')
+        }
+      }
+    }
+    fetchData()
+  }, [uid])
+
+  useEffect(() => {
+    const fetchBuckets = async () => {
+      if (uid) {
+        try {
+          const bucketsData = await BucketFunctions.getMyOwnBuckets()
+          setBuckets(bucketsData)
+        } catch (error) {
+          console.log('Error in fetching buckets')
+        }
+      }
+    }
+    fetchBuckets()
+  }, [uid])
 
   return (
     <div className="fixed h-full w-72 flex-col overflow-hidden border-r-2 border-gray-800">

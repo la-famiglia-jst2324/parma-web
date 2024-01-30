@@ -38,14 +38,29 @@ interface BucketPageProps {
   modifiedAt: Date
   permissions?: BucketAccess[]
 }
+
+interface Measurement {
+  metricName: string
+  value: number
+  date: string | Date
+}
+
+export interface CompanyMeasurement {
+  companyId: string
+  companyName: string
+  measurements: Measurement[]
+}
+
 const BucketPage = ({ params: { id } }: { params: { id: string } }) => {
   const router = useRouter()
   const [bucket, setBucket] = useState<BucketPageProps>(initialBucketValue)
   const [bucketCompanies, setBucketCompanies] = useState<Company[]>()
+  const [companiesMeasurements, setCompaniesMeasurements] = useState<CompanyMeasurement[]>([])
   const [editCompanies, setEditCompanies] = useState(false)
   const [selectedCompanies, setSelectedCompanies] = useState<number[]>([])
   const [loggedInUser, setLoggedInUser] = useState<User>()
   const [loading, setLoading] = useState(true)
+
   useEffect(() => {
     BucketFunctions.getBucketById(+id)
       .then((data) => {
@@ -59,6 +74,9 @@ const BucketPage = ({ params: { id } }: { params: { id: string } }) => {
             console.log(e)
             setLoading(false)
           })
+
+        // Here we get companies with Measurements for the table.
+        getBucketWithMeasurements()
       })
       .catch((e) => {
         console.log(e)
@@ -82,6 +100,10 @@ const BucketPage = ({ params: { id } }: { params: { id: string } }) => {
     getUser()
   }, [])
 
+  useEffect(() => {
+    getBucketWithMeasurements()
+  }, [bucketCompanies])
+
   const onSelectCheckbox = (companyId: number | number[]) => {
     if (!Array.isArray(companyId)) {
       if (selectedCompanies.includes(companyId)) {
@@ -92,6 +114,32 @@ const BucketPage = ({ params: { id } }: { params: { id: string } }) => {
     } else {
       setSelectedCompanies(companyId)
     }
+  }
+
+  const getBucketWithMeasurements = () => {
+    BucketFunctions.getCompaniesForBucketWithMeasurements(+id)
+      .then((res: CompanyMeasurement[]) => {
+        // Take only one measurement with the same metricName that has the last date
+
+        res.forEach((company: CompanyMeasurement) => {
+          const latestMeasurements: { [key: string]: Measurement } = {}
+
+          company.measurements.forEach((measurement: Measurement) => {
+            const existing = latestMeasurements[measurement.metricName]
+            if (!existing || new Date(measurement.date) > new Date(existing.date)) {
+              latestMeasurements[measurement.metricName] = measurement
+            }
+          })
+
+          company.measurements = Object.values(latestMeasurements)
+        })
+        setCompaniesMeasurements(res)
+        setLoading(false)
+      })
+      .catch((e) => {
+        console.log(e)
+        setLoading(false)
+      })
   }
   const onDeleteBucket = () => {
     BucketFunctions.deleteBucket(+id)
@@ -238,7 +286,7 @@ const BucketPage = ({ params: { id } }: { params: { id: string } }) => {
             <div className="mb-8">
               <DataTable
                 columns={columns}
-                data={bucketCompanies}
+                data={companiesMeasurements}
                 type="companies"
                 toggleColumn={{ columnId: 'select', value: editCompanies }}
                 sendDataToParent={onSelectCheckbox}

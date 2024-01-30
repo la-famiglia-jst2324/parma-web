@@ -1,10 +1,21 @@
 import type { ColumnDef } from '@tanstack/react-table'
 import { ArrowUpDown } from 'lucide-react'
-import type { Company } from '@prisma/client'
 import { Checkbox } from '../ui/checkbox'
 import { Button } from '@/components/ui/button'
 
-export const columns: ColumnDef<Company>[] = [
+interface Measurement {
+  metricName: string
+  value: number
+  date: string | Date
+}
+
+interface CompanyMeasurement {
+  companyId: string
+  companyName: string
+  measurements: Measurement[]
+}
+
+export const columns: ColumnDef<CompanyMeasurement>[] = [
   {
     id: 'select',
     header: ({ table }) => (
@@ -25,12 +36,12 @@ export const columns: ColumnDef<Company>[] = [
     enableHiding: true
   },
   {
-    accessorKey: 'id',
+    accessorKey: 'companyId',
     header: 'ID',
-    cell: ({ row }) => <div>{row.getValue('id')}</div>
+    cell: ({ row }) => <div>{row.getValue('companyId')}</div>
   },
   {
-    accessorKey: 'name',
+    accessorKey: 'companyName',
     header: ({ column }) => {
       return (
         <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
@@ -39,11 +50,28 @@ export const columns: ColumnDef<Company>[] = [
         </Button>
       )
     },
-    cell: ({ row }) => <div className="w-36">{row.getValue('name')}</div>
+    cell: ({ row }) => <div className="w-36">{row.getValue('companyName')}</div>
   },
   {
-    accessorKey: 'description',
-    header: 'Description',
-    cell: ({ row }) => <div>{row.getValue('description')}</div>
+    accessorKey: 'metricName',
+    header: '# of Employees',
+    cell: ({ row }) => {
+      if (row.original.measurements[0]?.value) {
+        return <div>{row.original.measurements[0]?.value.toFixed(2)}</div>
+      } else {
+        return <div></div>
+      }
+    }
+  },
+  {
+    accessorKey: 'metricNameTwo',
+    header: 'Monthly Revenue',
+    cell: ({ row }) => {
+      if (row.original.measurements[1]?.value) {
+        return <div>€{row.original.measurements[1]?.value.toFixed(2)}</div>
+      } else {
+        return <div></div>
+      }
+    }
   }
 ]

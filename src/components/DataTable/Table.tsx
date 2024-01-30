@@ -9,9 +9,10 @@ import {
   useReactTable
 } from '@tanstack/react-table'
 import { useRouter } from 'next/navigation'
-import type { Bucket, Company, DataSource } from '@prisma/client'
+import type { Bucket, DataSource } from '@prisma/client'
 import { DataTablePagination } from './DataTablePagination'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
+import type { CompanyMeasurement } from '@/app/buckets/[id]/page'
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
@@ -55,7 +56,13 @@ export function DataTable<TData, TValue>({
   }
 
   const selectAllRows = () => {
-    const ids = data.map((row) => ((row as Bucket) || (row as Company) || (row as DataSource)).id)
+    const ids = data.map((row) => {
+      if (type === 'companies') {
+        return +(row as CompanyMeasurement).companyId
+      } else {
+        return ((row as Bucket) || (row as DataSource)).id
+      }
+    })
     const isIncluded = ids.every((element) => selectedRows.includes(element))
     if (isIncluded) {
       setSelectedRows([])
@@ -113,7 +120,7 @@ export function DataTable<TData, TValue>({
         <TableBody>
           {table.getRowModel().rows?.length ? (
             table.getRowModel().rows.map((row) => {
-              const id = row.getValue('id') as number
+              const id = type && type === 'companies' ? row.getValue('companyId') : (row.getValue('id') as number)
               const key = type ? `${id}-${type}` : `${id}`
               return (
                 <TableRow
@@ -143,7 +150,9 @@ export function DataTable<TData, TValue>({
                       return (
                         <TableCell
                           key={cell.id}
-                          onClick={(e) => handleRowSelection(e, (cell.row.original as Company).id, row)}
+                          onClick={(e) =>
+                            handleRowSelection(e, +(cell.row.original as CompanyMeasurement).companyId, row)
+                          }
                         >
                           {flexRender(cell.column.columnDef.cell, cell.getContext())}
                         </TableCell>

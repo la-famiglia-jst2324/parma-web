@@ -66,6 +66,14 @@ const getCompaniesForBucket = async (bucketId: number) => {
   }
 }
 
+const getCompaniesForBucketWithMeasurements = async (bucketId: number) => {
+  try {
+    const res = await fetchClient.get(`/api/companyBucketRelation/companyMetric/${bucketId}`)
+    return res.data
+  } catch (e) {
+    return e
+  }
+}
 const updateBucket = async (title: string, description: string | null, id: number, isPublic: boolean) => {
   try {
     const res = await fetchClient.put(`/api/bucket/${id}`, { title, description, isPublic })
@@ -147,5 +155,6 @@ export default {
   getMyOwnBuckets,
   deleteCompaniesFromBucket,
   updateInvitee,
-  deleteInvitee
+  deleteInvitee,
+  getCompaniesForBucketWithMeasurements
 }

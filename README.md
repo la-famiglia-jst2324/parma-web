@@ -9,7 +9,13 @@
 ![Functions](https://img.shields.io/badge/functions-57.11%25-red.svg?style=flat)
 ![Lines](https://img.shields.io/badge/lines-55.61%25-red.svg?style=flat)
 
-ParmaAI webstack including frontend and REST API backend.
+## Project Description
+
+ParmaAI is a sophisticated platform combining advanced data mining with comprehensive analytics. At its core, Parma Analytics orchestrates the data lifecycle, scheduling and managing data mining modules, and processing the extracted data using tools like ChatGPT for in-depth analysis and report generation. Complementing this, Parma Web provides a user-friendly interface for data management and visualization, making the system's complex functionalities accessible and intuitive. Together, they form a powerful solution for businesses to monitor, analyze, and respond to corporate anomalies, leveraging data-driven insights for strategic decision-making.
+
+### parma-web
+
+Parma Web is the interactive user interface of the ParmaAI platform, designed for efficient data source management and visualization. It not only serves as a gateway for users to add, edit, and delete data sources but also ensures that these sources are seamlessly integrated into the platform once they are independently deployed. The repository is crucial for enhancing the user experience, providing clear visualization of analytics results, and facilitating interaction with the backend analytics system. Ideal for contributors focusing on front-end development, Parma Web combines usability and functionality, making complex data insights accessible and understandable for all users.
 
 [![Screenshot](./docs/images/landing-page-parma.png)](https://parma.software)
 

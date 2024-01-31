@@ -45,17 +45,38 @@ export const columns: ColumnDef<ScheduledTask>[] = [
   },
   {
     accessorKey: 'scheduledAt',
-    header: 'Scheduled At',
+    header: ({ column }) => {
+      return (
+        <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+          Scheduled At
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      )
+    },
     cell: ({ row }) => <div>{formatDate(row.getValue('scheduledAt'))}</div>
   },
   {
     accessorKey: 'startedAt',
-    header: 'Started At',
+    header: ({ column }) => {
+      return (
+        <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+          Started At
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      )
+    },
     cell: ({ row }) => <div>{formatDate(row.getValue('startedAt'))}</div>
   },
   {
     accessorKey: 'endedAt',
-    header: 'Ended At',
+    header: ({ column }) => {
+      return (
+        <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+          Ended At
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      )
+    },
     cell: ({ row }) => <div>{formatDate(row.getValue('endedAt'))}</div>
   }
 ]

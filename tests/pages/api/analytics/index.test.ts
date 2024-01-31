@@ -31,4 +31,23 @@ describe('Get measurement value', () => {
     expect(res._getStatusCode()).toBe(404)
     expect(JSON.parse(res._getData())).toEqual({ error: 'Item not found' })
   })
+
+  test('GET - Internal server error (500 status)', async () => {
+    const { req, res } = createMocks({
+      method: 'GET',
+      query: { measurementId: '1', companies: ['company1'] }
+    })
+    getValueByMeasurementIdCompanyId.mockRejectedValueOnce(new Error('Internal Server Error'))
+    await handler(req, res)
+    expect(res._getStatusCode()).toBe(500)
+  })
+
+  test('Unsupported method (405 status)', async () => {
+    const { req, res } = createMocks({
+      method: 'POST',
+      query: { measurementId: '1', companies: ['company1'] }
+    })
+    await handler(req, res)
+    expect(res._getStatusCode()).toBe(405)
+  })
 })

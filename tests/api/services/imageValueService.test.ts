@@ -9,20 +9,20 @@ import {
 import { createCompany } from '@/api/db/services/companyService'
 import { createDataSource } from '@/api/db/services/dataSourceService'
 import {
-  createFloatValue,
-  deleteFloatValue,
-  getFloatValueByID,
-  updateFloatValue
-} from '@/api/db/services/floatValueService'
+  createImageValue,
+  getImageValueByID,
+  getAllImageValues,
+  updateImageValue,
+  deleteImageValue
+} from '@/api/db/services/imageValueService'
 import { createSourceMeasurement } from '@/api/db/services/sourceMeasurementService'
 import { createUser } from '@/api/db/services/userService'
-
 const prisma = new PrismaClient()
 
-describe('float value Model Tests', () => {
-  let floatValueId: number
-  let companyMeasurementId: number
+describe('image value Model Tests', () => {
+  let imageValueId: number
   let sourceMeasurementId: number
+  let companyMeasurementId: number
   let companyId: number
   let dataSourceId: number
   let userId: number
@@ -44,11 +44,11 @@ describe('float value Model Tests', () => {
   })
   test('Create a new company with valid details', async () => {
     const company = await createCompany({ name: 'google', description: 'Test Company', addedBy: userId })
+    companyId = company.id
     expect(company).toHaveProperty('id')
     expect(company.name).toBe('google')
     expect(company.description).toBe('Test Company')
     expect(company.addedBy).toBe(userId)
-    companyId = company.id
   })
 
   test('Create a new data source with valid details', async () => {
@@ -67,46 +67,54 @@ describe('float value Model Tests', () => {
     expect(dataSource.healthStatus).toBe(HealthStatus.UP)
   })
 
-  test('Create a new sourceMeasurement with valid details', async () => {
+  test('Create a new sourceMeasurement and companyMeasurement with valid details', async () => {
     const sourceMeasurement = await createSourceMeasurement({
       sourceModuleId: dataSourceId,
-      type: 'float',
-      measurementName: 'floatMea'
+      type: 'image',
+      measurementName: 'imageMea'
     })
 
     sourceMeasurementId = sourceMeasurement.id
     const companyMeasurement = await createCompanySourceMeasurement(sourceMeasurementId, companyId)
     companyMeasurementId = companyMeasurement.companyMeasurementId
+
     expect(companyMeasurement).toHaveProperty('companyMeasurementId')
+    expect(companyMeasurement.sourceMeasurementId).toBe(sourceMeasurementId)
     expect(companyMeasurement.companyId).toBe(companyId)
   })
 
-  test('Create a new float value with valid details', async () => {
-    const floatValue = await createFloatValue({ companyMeasurementId, value: 1.1, timestamp: new Date() })
-    floatValueId = floatValue.id
-    expect(floatValue).toHaveProperty('id')
-    expect(floatValue.companyMeasurementId).toBe(companyMeasurementId)
-    expect(floatValue.value).toBe(1.1)
+  test('Create a new image value with valid details', async () => {
+    const imageValue = await createImageValue({ companyMeasurementId, value: 'image', timestamp: new Date() })
+    imageValueId = imageValue.id
+    expect(imageValue).toHaveProperty('id')
+    expect(imageValue.companyMeasurementId).toBe(companyMeasurementId)
+    expect(imageValue.value).toBe('image')
   })
 
-  test('Retrieve a float value by ID', async () => {
-    const floatValue = await getFloatValueByID(floatValueId)
-    expect(floatValue).toBeTruthy()
-    expect(floatValue?.id).toBe(floatValueId)
+  test('Retrieve a image value by ID', async () => {
+    const imageValue = await getImageValueByID(imageValueId)
+    expect(imageValue).toBeTruthy()
+    expect(imageValue?.id).toBe(imageValueId)
   })
 
-  test('Update a float value name', async () => {
-    const updatedValue = await updateFloatValue(floatValueId, {
+  test('Retrieve all image values', async () => {
+    const imageValues = await getAllImageValues()
+    expect(imageValues).toBeTruthy()
+    expect(imageValues[0]?.id).toBe(imageValueId)
+  })
+
+  test('Update a image value', async () => {
+    const updatedValue = await updateImageValue(imageValueId, {
       companyMeasurementId,
-      value: 2.0
+      value: 'updated image'
     })
-    expect(updatedValue.value).toBe(2.0)
+    expect(updatedValue.value).toBe('updated image')
   })
 
-  test('Delete an int value', async () => {
-    await deleteFloatValue(floatValueId)
-    const deletedValue = await prisma.measurementFloatValue.findUnique({
-      where: { id: floatValueId }
+  test('Delete a image value', async () => {
+    await deleteImageValue(imageValueId)
+    const deletedValue = await prisma.measurementImageValue.findUnique({
+      where: { id: imageValueId }
     })
     expect(deletedValue).toBeNull()
   })

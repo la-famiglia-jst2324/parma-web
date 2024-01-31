@@ -14,6 +14,7 @@ import { Separator } from '@/components/ui/separator'
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible'
 import { AuthContext } from '@/lib/firebase/auth'
 import BucketFunctions from '@/app/services/bucket.service'
+import { getSubscribedCompanies } from '@/services/company/companyService'
 
 const Sidebar: React.FC = () => {
   const { companies, setCompanies, buckets, setBuckets } = useContext(SideBarContext)
@@ -33,7 +34,7 @@ const Sidebar: React.FC = () => {
     const fetchData = async () => {
       if (uid) {
         try {
-          const companiesData = await BucketFunctions.getAllCompanies()
+          const companiesData = await getSubscribedCompanies()
           setCompanies(companiesData)
         } catch (error) {
           console.log('Failed to fetch companies')

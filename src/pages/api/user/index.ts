@@ -101,8 +101,7 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse, user: U
       try {
         // Gets a user
         const users = await getAllUsers()
-        if (users.length > 0) res.status(200).json(users)
-        else res.status(400).json({ error: 'No users found' })
+        res.status(200).json(users)
       } catch (error) {
         if (error instanceof ItemNotFoundError) res.status(404).json({ error: error.message })
         else res.status(500).json({ error: 'Internal Server Error' })

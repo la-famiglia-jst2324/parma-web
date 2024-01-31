@@ -14,6 +14,7 @@ import {
   DialogTrigger
 } from '@/components/ui/dialog'
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { ShowToast } from '@/components/ShowToast'
 
 interface EditInformationModalProps {
   sourceName: string
@@ -53,9 +54,13 @@ const EditInformationModal: React.FC<EditInformationModalProps> = ({
       newDescription: description,
       newUrl: url,
       newFrequency: frequency
-    }).catch((error) => {
-      console.error('An error occurred:', error)
     })
+      .then(() => {
+        ShowToast('Success', 'Datasource information has been updated', 'default')
+      })
+      .catch((error) => {
+        throw error
+      })
   }
 
   return (

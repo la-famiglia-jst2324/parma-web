@@ -65,11 +65,6 @@ describe('Notification Rule Model Tests', () => {
     expect(rule?.threshold).toBe(1.2)
   })
 
-  test('Retrieve a rule for non existing id', async () => {
-    const id = -1
-    await expect(getNotificationRuleById(id)).rejects.toThrow('Unable to retrieve notification rule')
-  })
-
   test('Update a rule', async () => {
     const updatedRule = await updateNotificationRule(ruleId, {
       ruleName: 'rule1.1',

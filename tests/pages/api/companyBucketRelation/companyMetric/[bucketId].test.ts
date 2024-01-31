@@ -32,7 +32,7 @@ describe('Membership API Handler Tests', () => {
     expect(res._getStatusCode()).toBe(200)
   })
 
-  test('GET - No measurement value for company id found (400 status)', async () => {
+  test('GET - No measurement value for company id found (404 status)', async () => {
     getCompaniesByBucketId.mockResolvedValueOnce([{ id: 1 }])
     getMeasurementValueCompanyId.mockResolvedValueOnce(null)
     const { req, res } = createMocks({
@@ -41,7 +41,7 @@ describe('Membership API Handler Tests', () => {
     })
 
     await handler(req, res)
-    expect(res._getStatusCode()).toBe(400)
+    expect(res._getStatusCode()).toBe(404)
   })
 
   test('GET - Item not found error (404 status)', async () => {

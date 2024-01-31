@@ -48,7 +48,7 @@ describe('company subscribed API', () => {
     expect(JSON.parse(res._getData())).toEqual(mockSubscription)
   })
 
-  test('GET with no subscription found returns 400', async () => {
+  test('GET with no subscription found returns 200', async () => {
     getUserCompanySubscriptions.mockResolvedValueOnce(null) // Simulate no subscription found
 
     const { req, res } = createMocks({
@@ -57,8 +57,8 @@ describe('company subscribed API', () => {
     })
 
     await handler(req, res, mockUser)
-    expect(res._getStatusCode()).toBe(400)
-    expect(JSON.parse(res._getData())).toEqual({ error: 'subscription not found' })
+    expect(res._getStatusCode()).toBe(200)
+    expect(JSON.parse(res._getData())).toBeNull()
   })
 
   test('GET with server error returns 500', async () => {

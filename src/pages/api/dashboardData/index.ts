@@ -78,8 +78,7 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
           companyMeasurements = await getMeasurementsOfCompaniesBySourceId(newsSourceId)
         }
 
-        if (companyMeasurements) res.status(200).json(companyMeasurements)
-        else res.status(400).json({ error: 'No data found' })
+        res.status(200).json(companyMeasurements)
       } catch (error) {
         res.status(500).json({ error: 'Internal Server Error' })
       }

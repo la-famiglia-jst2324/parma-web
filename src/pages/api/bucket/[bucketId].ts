@@ -101,7 +101,7 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse, user: U
       try {
         const bucket = await getBucketById(Number(bucketId))
         if (!bucket) {
-          res.status(400).json({ error: 'No Bucket found' })
+          res.status(404).json({ error: `Bucket with id: ${bucketId} not found` })
         }
         // check the user has access to bucket.
         const hasAccess = bucket.permissions.some((x) => x.inviteeId === user.id)
@@ -128,7 +128,7 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse, user: U
           const updatedBucket = await updateBucket(Number(bucketId), req.body)
           res.status(200).json(updatedBucket)
         } else {
-          res.status(404).json({ error: 'Bucket not found' })
+          res.status(404).json({ error: `Bucket with id: ${bucketId} not found` })
         }
       } catch (error) {
         if (error instanceof ItemNotFoundError) res.status(404).json({ error: error.message })
@@ -146,7 +146,8 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse, user: U
 
           await deleteBucket(Number(bucketId))
           res.status(200).json({ message: 'Bucket successfully Deleted' })
-        } else res.status(404).json({ error: 'Company not found' })
+        }
+        res.status(404).json({ error: `Bucket with id: ${bucketId} not found` })
       } catch (error) {
         if (error instanceof ItemNotFoundError) res.status(404).json({ error: error.message })
         else res.status(500).json({ error: 'Internal Server Error' })

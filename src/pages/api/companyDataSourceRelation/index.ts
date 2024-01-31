@@ -168,13 +168,11 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       try {
         if (dataSourceId && companyId) {
           const companyDataSource = await getCompanyDataSourceByIds(dataSourceId, companyId)
-          if (companyDataSource) res.status(200).json(companyDataSource)
-          else res.status(400).json({ error: 'No CompanyDataSource found' })
+          res.status(200).json(companyDataSource)
         }
         if (dataSourceId) {
           const companies = await getCompaniesByDataSourceId(dataSourceId)
-          if (companies.length > 0) res.status(200).json(companies)
-          else res.status(400).json({ error: 'No Companies found' })
+          res.status(200).json(companies)
         } else if (companyId) {
           const buckets = await getDataSourcesByCompanyId(companyId)
           if (buckets.length > 0) res.status(200).json(buckets)

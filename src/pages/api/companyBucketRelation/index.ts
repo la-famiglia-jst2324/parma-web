@@ -182,15 +182,13 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse, user: U
           await getBucketById(bucketId)
 
           const companies = await getCompaniesByBucketId(bucketId)
-          if (companies) res.status(200).json(companies)
-          else res.status(404).json({ error: 'No Companies found' })
+          res.status(200).json(companies)
         } else if (companyId) {
           // check if the company exists
           await getCompanyByID(companyId)
 
           const buckets = await getBucketsByCompanyId(companyId)
-          if (buckets) res.status(200).json(buckets)
-          else res.status(404).json({ error: 'No Buckets found' })
+          res.status(200).json(buckets)
         } else res.status(400).json({ error: 'Invalid Arguments' })
       } catch (error) {
         if (error instanceof ZodError) res.status(400).json({ error: formatZodErrors(error) })

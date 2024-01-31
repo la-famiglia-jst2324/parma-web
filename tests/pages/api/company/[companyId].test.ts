@@ -43,7 +43,7 @@ describe('CompanyId API', () => {
     await handler(req, res)
 
     expect(res._getStatusCode()).toBe(404)
-    expect(JSON.parse(res._getData()).error).toContain('No company with id')
+    expect(JSON.parse(res._getData()).error).toContain('Company not found')
   })
 
   test('GET with invalid companyId returns 404', async () => {

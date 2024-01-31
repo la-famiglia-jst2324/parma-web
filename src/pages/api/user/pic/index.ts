@@ -7,7 +7,7 @@ import {
   generateFileUrl,
   deleteFileFromFirebaseStorage
 } from '@/pages/api/lib/utils/firebaseStorage'
-import { getUserById, updateUser } from '@/api/db/services/userService'
+import { updateUser } from '@/api/db/services/userService'
 import { ItemNotFoundError } from '@/api/utils/errorUtils'
 
 export const config = {

@@ -72,7 +72,7 @@ const ProfilePage: React.FC = () => {
       const data = new FormData()
       data.append('file', file)
       let response = null
-      if (userPhotoURL !== null) {
+      if (userPhotoURL && userPhotoURL !== '') {
         response = await putUserAttachment(data)
       } else {
         response = await postUserAttachment(data)

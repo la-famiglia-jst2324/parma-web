@@ -2,9 +2,7 @@
 import type { ChangeEvent } from 'react'
 import React, { useContext, useEffect, useState } from 'react'
 import Image from 'next/image'
-import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
-import * as z from 'zod'
 import { Button } from '@/components/ui/button'
 import profilePic from '@/../../public/Default_pfp.jpg'
 import { MainLayoutWrapper } from '@/components/layout/MainLayout'
@@ -23,7 +21,7 @@ import { Input } from '@/components/ui/input'
 
 const ProfilePage: React.FC = () => {
   const user = useContext(AuthContext)
-  const [userName, setUserName] = useState('')
+  const [userName, setUserName] = useState<string>('')
   const [userPhotoURL, setUserPhotoURL] = useState<string | null>('')
   const userMail = user === 'loading' ? null : user?.email
   const saveProfileData = async (name: string) => {
@@ -59,7 +57,7 @@ const ProfilePage: React.FC = () => {
       }
     }
     fetchUserName()
-  })
+  }, [])
 
   const fileUpload = (event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files.length > 0) {
@@ -85,21 +83,12 @@ const ProfilePage: React.FC = () => {
     }
   }
 
-  const FormSchema = z.object({
-    username: z.string().min(1, {
-      message: 'Username cannot be empty.'
-    })
-  })
-
-  const form = useForm<z.infer<typeof FormSchema>>({
-    resolver: zodResolver(FormSchema),
-    defaultValues: {
-      username: userName
-    }
-  })
-  function onSubmit(values: z.infer<typeof FormSchema>) {
-    if (values.username !== '') {
-      saveProfileData(values.username)
+  const form = useForm()
+  function onSubmit() {
+    if (userName !== '') {
+      saveProfileData(userName)
+    } else {
+      ShowToast('Error updating profile', 'Please enter a username', 'destructive')
     }
   }
   return (
@@ -131,13 +120,12 @@ const ProfilePage: React.FC = () => {
                 <input id="picture" accept="image/*,.jpg" type="file" hidden onChange={fileUpload} />
               </Button>
               <FormField
-                control={form.control}
                 name="username"
-                render={({ field }) => (
+                render={() => (
                   <FormItem>
                     <FormLabel>Username</FormLabel>
                     <FormControl>
-                      <Input placeholder={userName} {...field} />
+                      <Input value={userName} onChange={(e) => setUserName(e.target.value)} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -149,7 +137,7 @@ const ProfilePage: React.FC = () => {
                   <FormItem>
                     <FormLabel>Email</FormLabel>
                     <FormControl>
-                      <Input disabled type="email" placeholder={userMail || 'Email'} />
+                      <Input disabled type="email" value={userMail || 'Email'} placeholder="name@email.com" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

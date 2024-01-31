@@ -16,7 +16,7 @@ export default function LandingPage() {
         <Link href="/" className="flex items-center space-x-2">
           <Image src="/DALLE-logo.png" width={60} height={60} alt="" className="rounded-full" />
           <span className="text-2xl font-semibold">ParmaAI</span>
-          {process.env.NEXT_PUBLIC_ENV !== 'production' && <span>v0.4.3</span>}
+          {process.env.NEXT_PUBLIC_ENV !== 'production' && <span>v0.4.4</span>}
         </Link>
         <div className="flex items-center space-x-4">
           <Link href="/login" className="text-gray-300 hover:text-white">

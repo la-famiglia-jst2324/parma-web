@@ -31,8 +31,9 @@ export const CompaniesTable = ({ datasourceId, companiesData }: CompaniesTablePr
       },
       cell: ({ row }: { row: Row<Company> }) => {
         const name = row.getValue('name') as string
+        const id = row.getValue('id') as string
         return (
-          <div onClick={() => router.push(`/companies/${name}`)} style={{ cursor: 'pointer' }}>
+          <div onClick={() => router.push(`/companies/${id}`)} style={{ cursor: 'pointer' }}>
             {name}
           </div>
         )
@@ -43,8 +44,9 @@ export const CompaniesTable = ({ datasourceId, companiesData }: CompaniesTablePr
       header: 'Description',
       cell: ({ row }: { row: Row<Company> }) => {
         const description = row.getValue('description') as string
+        const id = row.getValue('id') as string
         return (
-          <div onClick={() => router.push(`/companies/${description}`)} style={{ cursor: 'pointer' }}>
+          <div onClick={() => router.push(`/companies/${id}`)} style={{ cursor: 'pointer' }}>
             {description}
           </div>
         )

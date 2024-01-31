@@ -96,7 +96,7 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         // get a single company
         const company = await getCompanyByID(Number(companyId))
         if (company) res.status(200).json(company)
-        else res.status(400).json({ error: 'No Company found' })
+        else res.status(404).json({ error: `No company with id: ${companyId} found` })
       } catch (error) {
         if (error instanceof ItemNotFoundError) res.status(404).json({ error: error.message })
         else res.status(500).json({ error: 'Internal Server Error' })
@@ -110,7 +110,7 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
           // Update Company
           const updatedCompany = await updateCompany(Number(companyId), req.body)
           res.status(200).json(updatedCompany)
-        } else res.status(404).json({ error: 'Company not Found' })
+        } else res.status(204).json({ error: `No company with id: ${companyId} found` })
       } catch (error) {
         if (error instanceof ItemNotFoundError) res.status(404).json({ error: error.message })
         else res.status(500).json({ error: 'Internal Server Error' })
@@ -125,7 +125,7 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
           await deleteCompany(Number(companyId))
           res.status(200).json({ message: 'Company successfully Deleted' })
         } else {
-          res.status(404).json({ error: 'Company not found' })
+          res.status(204).json({ error: `No company with id: ${companyId} found` })
         }
       } catch (error) {
         if (error instanceof ItemNotFoundError) res.status(404).json({ error: error.message })

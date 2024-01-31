@@ -42,8 +42,8 @@ describe('attachmentId API', () => {
 
     await handler(req, res)
 
-    expect(res._getStatusCode()).toBe(400)
-    expect(JSON.parse(res._getData())).toEqual({ error: 'No attachment found' })
+    expect(res._getStatusCode()).toBe(404)
+    expect(JSON.parse(res._getData()).error).toContain('No attachment with id')
   })
 
   test('GET with an invalid bucketId returns 404', async () => {
@@ -95,8 +95,7 @@ describe('attachmentId API', () => {
 
     await handler(req, res)
 
-    expect(res._getStatusCode()).toBe(404)
-    expect(JSON.parse(res._getData())).toEqual({ error: 'attachment not found' })
+    expect(res._getStatusCode()).toBe(204)
   })
 
   test('DELETE with server error returns 500', async () => {

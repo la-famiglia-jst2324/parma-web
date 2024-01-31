@@ -102,8 +102,7 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
           parseInt(page as string),
           parseInt(pageSize as string)
         )
-        if (companySourceMeasurements) res.status(200).json(companySourceMeasurements)
-        else res.status(400).json({ error: 'No company source measurements found' })
+        res.status(200).json(companySourceMeasurements)
       } catch (error) {
         if (error instanceof ItemNotFoundError) res.status(404).json({ error: error.message })
         else res.status(500).json({ error: 'Internal Server Error' })

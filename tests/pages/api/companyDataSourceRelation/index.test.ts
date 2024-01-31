@@ -107,7 +107,7 @@ describe('Company DataSource Membership API', () => {
     expect(JSON.parse(res._getData())).toEqual({ error: 'Internal Server Error' })
   })
 
-  test('GET with both dataSourceId and companyId returns 500', async () => {
+  test('GET with both dataSourceId and companyId returns 200', async () => {
     const { req, res } = createMocks({
       method: 'GET',
       query: { dataSourceId: '1', companyId: '1' } // Both parameters provided

@@ -32,7 +32,7 @@ describe('CompanyId API', () => {
     expect(JSON.parse(res._getData())).toEqual(mockCompany)
   })
 
-  test('GET without a valid company returns 400', async () => {
+  test('GET without a valid company returns 404', async () => {
     getCompanyByID.mockResolvedValueOnce(null) // Simulate no company found
 
     const { req, res } = createMocks({
@@ -42,8 +42,8 @@ describe('CompanyId API', () => {
 
     await handler(req, res)
 
-    expect(res._getStatusCode()).toBe(400)
-    expect(JSON.parse(res._getData())).toEqual({ error: 'No Company found' })
+    expect(res._getStatusCode()).toBe(404)
+    expect(JSON.parse(res._getData())).toEqual({ error: 'No company with id' })
   })
 
   test('GET with invalid companyId returns 404', async () => {
@@ -97,8 +97,8 @@ describe('CompanyId API', () => {
 
     await handler(req, res)
 
-    expect(res._getStatusCode()).toBe(404)
-    expect(JSON.parse(res._getData())).toEqual({ error: 'Company not Found' })
+    expect(res._getStatusCode()).toBe(204)
+    expect(JSON.parse(res._getData()).error).toContain('No company')
   })
 
   test('PUT with server error during update returns 500', async () => {
@@ -141,8 +141,7 @@ describe('CompanyId API', () => {
 
     await handler(req, res)
 
-    expect(res._getStatusCode()).toBe(404)
-    expect(JSON.parse(res._getData())).toEqual({ error: 'Company not found' })
+    expect(res._getStatusCode()).toBe(204)
   })
 
   test('DELETE with server error returns 500', async () => {

@@ -32,8 +32,7 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse, user: U
     case 'GET':
       try {
         const buckets = await getOwnBuckets(userId)
-        if (buckets) res.status(200).json(buckets)
-        else res.status(400).json({ error: 'No your own buckets found' })
+        return res.status(200).json(buckets)
       } catch (error) {
         if (error instanceof ItemNotFoundError) res.status(404).json({ error: error.message })
         else res.status(500).json({ error: 'Internal Server Error' })

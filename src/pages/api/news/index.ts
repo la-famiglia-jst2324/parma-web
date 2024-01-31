@@ -183,8 +183,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       try {
         const { page, pageSize, companyId, bucketId, startDate, endDate } = NewsSchema.parse(req.query)
         const news = await getAllNews(page, pageSize, companyId, bucketId, startDate, endDate)
-        if (news) res.status(200).json(news)
-        else res.status(404).json({ error: 'No News found' })
+        res.status(200).json(news)
       } catch (error) {
         if (error instanceof ItemNotFoundError) res.status(404).json({ error: error.message })
         else if (error instanceof z.ZodError) res.status(400).json({ error: formatZodErrors(error) })

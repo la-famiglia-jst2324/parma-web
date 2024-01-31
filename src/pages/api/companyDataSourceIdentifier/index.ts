@@ -19,21 +19,18 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       try {
         if (id) {
           const identifier = await getCompanyDataSourceIdentifierById(parseInt(id as string))
-          if (identifier) res.status(200).json(identifier)
-          else res.status(400).json({ error: 'No Identifier found' })
+          res.status(200).json(identifier)
         } else if (companyDataSourceId) {
           const identifiers = await getCompanyDataSourceIdentifiersByDataSourceId(
             parseInt(companyDataSourceId as string)
           )
-          if (identifiers) res.status(200).json(identifiers)
-          else res.status(400).json({ error: 'No Identifiers found' })
+          res.status(200).json(identifiers)
         } else {
           const identifiers = await getAllCompanyDataSourceIdentifiers(
             parseInt(page as string),
             parseInt(pageSize as string)
           )
-          if (identifiers) res.status(200).json(identifiers)
-          else res.status(400).json({ error: 'No Identifiers found' })
+          res.status(200).json(identifiers)
         }
       } catch (error) {
         if (error instanceof ItemNotFoundError)

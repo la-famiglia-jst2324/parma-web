@@ -81,7 +81,7 @@ describe('Company Bucket Membership API', () => {
     expect(JSON.parse(res._getData())).toEqual(mockCompany)
   })
 
-  test('GET with valid bucketId but no companies returns 404', async () => {
+  test('GET with valid bucketId but no companies returns 200', async () => {
     getCompaniesByBucketId.mockResolvedValueOnce(null) // Simulate no companies found
 
     const { req, res } = createMocks({
@@ -91,8 +91,7 @@ describe('Company Bucket Membership API', () => {
 
     await handler(req, res, mockUser)
 
-    expect(res._getStatusCode()).toBe(404)
-    expect(JSON.parse(res._getData())).toEqual({ error: 'No Companies found' })
+    expect(res._getStatusCode()).toBe(200)
   })
 
   test('GET with server error returns 500', async () => {

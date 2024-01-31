@@ -153,8 +153,7 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
           parseInt(size as string),
           searchString
         )
-        if (dataSourcesPagination.datasources.length > 0) res.status(200).json(dataSourcesPagination)
-        else res.status(400).json({ error: 'No Data Sources found' })
+        res.status(200).json(dataSourcesPagination)
       } catch (error) {
         res.status(500).json({ error: 'Internal Server Error' })
       }

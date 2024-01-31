@@ -25,7 +25,7 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
           const companyIds = companies.map((company) => company.id)
           const companySourceMeasurement = await getMeasurementValueCompanyId(companyIds)
           if (companySourceMeasurement) res.status(200).json(companySourceMeasurement)
-          else res.status(400).json({ error: 'No measurement value for a company id found' })
+          else res.status(404).json({ error: 'No measurement value for a company id found' })
         } else res.status(400).json({ error: 'No company id was provided' })
       } catch (error) {
         if (error instanceof ItemNotFoundError) res.status(404).json({ error: error.message })

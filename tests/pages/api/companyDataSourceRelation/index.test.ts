@@ -107,7 +107,7 @@ describe('Company DataSource Membership API', () => {
     expect(JSON.parse(res._getData())).toEqual({ error: 'Internal Server Error' })
   })
 
-  test('GET with both dataSourceId and companyId returns 500', async () => {
+  test('GET with both dataSourceId and companyId returns 200', async () => {
     const { req, res } = createMocks({
       method: 'GET',
       query: { dataSourceId: '1', companyId: '1' } // Both parameters provided
@@ -115,10 +115,10 @@ describe('Company DataSource Membership API', () => {
 
     await handler(req, res)
 
-    expect(res._getStatusCode()).toBe(500)
+    expect(res._getStatusCode()).toBe(200)
   })
 
-  test('GET with valid dataSourceId but no companies returns 400', async () => {
+  test('GET with valid dataSourceId but no companies returns 200', async () => {
     getCompaniesByDataSourceId.mockResolvedValueOnce([]) // Simulate no companies found
 
     const { req, res } = createMocks({
@@ -128,8 +128,8 @@ describe('Company DataSource Membership API', () => {
 
     await handler(req, res)
 
-    expect(res._getStatusCode()).toBe(400)
-    expect(JSON.parse(res._getData())).toEqual({ error: 'No Companies found' })
+    expect(res._getStatusCode()).toBe(200)
+    expect(JSON.parse(res._getData())).toEqual([])
   })
 
   test('GET with server error returns 500', async () => {

@@ -37,7 +37,7 @@ describe('Attachment API', () => {
     jest.resetAllMocks()
   })
 
-  test('GET with no attachments returns 400', async () => {
+  test('GET with no attachments returns 200', async () => {
     getAllAttachmentsForCompany.mockResolvedValueOnce([]) // Simulate no attachments found
 
     const { req, res } = createMocks({
@@ -47,8 +47,8 @@ describe('Attachment API', () => {
 
     await handler(req, res, mockUser)
 
-    expect(res._getStatusCode()).toBe(400)
-    expect(JSON.parse(res._getData())).toEqual({ error: 'No Attachments found' })
+    expect(res._getStatusCode()).toBe(200)
+    expect(JSON.parse(res._getData())).toEqual([])
   })
 
   test('GET with invalid companyId returns 404', async () => {

@@ -165,8 +165,7 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
           else res.status(400).json({ error: 'No measurements found' })
         } else {
           const dataSource = await getDataSourceByID(Number(dataSourceId))
-          if (dataSource) res.status(200).json(dataSource)
-          else res.status(400).json({ error: 'No Data Source found' })
+          res.status(200).json(dataSource)
         }
       } catch (error) {
         res.status(500).json({ error: 'Internal Server Error' })

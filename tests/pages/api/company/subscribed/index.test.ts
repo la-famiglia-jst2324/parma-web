@@ -62,8 +62,8 @@ describe('company subscribed API', () => {
 
     await handler(req, res, mockUser)
 
-    expect(res._getStatusCode()).toBe(400)
-    expect(JSON.parse(res._getData())).toEqual({ error: 'No subscribed companies found' })
+    expect(res._getStatusCode()).toBe(200)
+    expect(JSON.parse(res._getData())).toBeNull()
   })
 
   test('GET with invalid userId returns 404', async () => {

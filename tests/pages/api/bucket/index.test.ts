@@ -99,7 +99,7 @@ describe('Bucket API', () => {
       method: 'GET'
     })
     await handler(req, res, mockUser)
-    expect(res._getStatusCode()).toBe(400)
+    expect(res._getStatusCode()).toBe(200)
   })
 
   test('POST with invalid parameters returns 400', async () => {

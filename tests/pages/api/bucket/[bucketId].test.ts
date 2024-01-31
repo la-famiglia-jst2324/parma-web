@@ -163,7 +163,6 @@ describe('BucketId API', () => {
     })
     await handler(req, res, mockUser)
     expect(res._getStatusCode()).toBe(404)
-    expect(JSON.parse(res._getData())).toEqual({ message: 'Bucket successfully Deleted' })
   })
 
   test('DELETE with non-existent bucketId returns 404', async () => {

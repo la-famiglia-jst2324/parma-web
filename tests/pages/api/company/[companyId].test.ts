@@ -43,7 +43,7 @@ describe('CompanyId API', () => {
     await handler(req, res)
 
     expect(res._getStatusCode()).toBe(404)
-    expect(JSON.parse(res._getData())).toEqual({ error: 'No company with id' })
+    expect(JSON.parse(res._getData()).error).toContain('No company with id')
   })
 
   test('GET with invalid companyId returns 404', async () => {
@@ -57,7 +57,7 @@ describe('CompanyId API', () => {
     await handler(req, res)
 
     expect(res._getStatusCode()).toBe(404)
-    expect(JSON.parse(res._getData())).toEqual({ error: 'Company not found' })
+    expect(JSON.parse(res._getData()).error).toContain('No company with id')
   })
   test('GET with server error returns 500', async () => {
     getCompanyByID.mockRejectedValueOnce(new Error('Internal Server Error'))

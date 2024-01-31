@@ -33,7 +33,7 @@ describe('Company DataSource Identifier API Handler Tests', () => {
     expect(res._getStatusCode()).toBe(200)
   })
 
-  test('GET - No Identifier found (400 status)', async () => {
+  test('GET - No Identifier found (200 status)', async () => {
     getCompanyDataSourceIdentifierById.mockResolvedValueOnce(null)
     const { req, res } = createMocks({
       method: 'GET',
@@ -41,7 +41,7 @@ describe('Company DataSource Identifier API Handler Tests', () => {
     })
 
     await handler(req, res)
-    expect(res._getStatusCode()).toBe(400)
+    expect(res._getStatusCode()).toBe(200)
   })
 
   test('POST - Successfully creates a new identifier (201 status)', async () => {

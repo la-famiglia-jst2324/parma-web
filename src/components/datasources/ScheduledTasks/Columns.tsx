@@ -45,7 +45,14 @@ export const columns: ColumnDef<ScheduledTask>[] = [
   },
   {
     accessorKey: 'scheduledAt',
-    header: 'Scheduled At',
+    header: ({ column }) => {
+      return (
+        <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+          Scheduled At
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      )
+    },
     cell: ({ row }) => <div>{formatDate(row.getValue('scheduledAt'))}</div>
   },
   {

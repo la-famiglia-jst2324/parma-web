@@ -121,12 +121,8 @@ export async function createNewDatasource(dataSource: {
 }
 
 export async function deleteDatasource(id: string) {
-  try {
-    const res = await fetchClient.delete(`/api/dataSources/${id}`)
-    return res.data
-  } catch (error) {
-    console.log('An error has occurred in deleteDatasource')
-  }
+  const res = await fetchClient.delete(`/api/dataSources/${id}`)
+  return res.data
 }
 
 export async function getCompanyDataSourceIdentifiers(companyDataSourceId: string) {

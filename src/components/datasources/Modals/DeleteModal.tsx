@@ -2,6 +2,7 @@
 import React from 'react'
 import { useRouter } from 'next/navigation'
 import { Trash2 } from 'lucide-react'
+import type { AxiosError } from 'axios'
 import { Button } from '../../ui/button'
 
 import {
@@ -18,6 +19,10 @@ import {
 import { deleteDatasource } from '@/services/datasource/datasourceService'
 import { ShowToast } from '@/components/ShowToast'
 
+interface ErrorResponse {
+  error: string
+}
+
 interface DeleteModalProps {
   id: string
 }
@@ -27,12 +32,27 @@ const DeleteModal: React.FC<DeleteModalProps> = ({ id }) => {
 
   const handleDelete = async () => {
     try {
-      await deleteDatasource(id)
-      router.push('/datasources')
+      const response = await deleteDatasource(id)
+      if (response.message === 'Data Source successfully Deleted') {
+        router.push('/datasources')
+        ShowToast('Datasource deleted successfully', 'The datasource has been successfully deleted.', 'default')
+      } else {
+        handleErrorResponse(response)
+      }
     } catch (error) {
-      console.error('Failed to delete datasource:', error)
-      ShowToast('Failed to delete datasource', 'An error occurred while deleting the datasource')
+      const axiosError = error as AxiosError
+      handleErrorResponse(axiosError)
     }
+  }
+
+  const handleErrorResponse = (error: AxiosError) => {
+    const errorResponse = error?.response?.data as ErrorResponse
+    const errorMessage = errorResponse?.error
+    ShowToast(
+      'Failed to delete datasource',
+      errorMessage || 'An error occurred while deleting the datasource',
+      'destructive'
+    )
   }
 
   return (

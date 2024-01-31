@@ -20,6 +20,8 @@ const Sidebar: React.FC = () => {
   const { companies, setCompanies, buckets, setBuckets } = useContext(SideBarContext)
   const [clickBucket, setClickBucket] = useState(false)
   const [clickCompany, setClickCompany] = useState(false)
+  const [companyOpen, setCompanyOpen] = useState(false)
+  const [bucketOpen, setBucketOpen] = useState(false)
 
   const user = useContext(AuthContext)
   const uid = user !== 'loading' && user !== null ? user.uid : ''
@@ -102,6 +104,8 @@ const Sidebar: React.FC = () => {
                 </CollapsibleTrigger>
                 <CreateBucket
                   triggerButton={<Plus className="mr-2 h-4 w-4 cursor-pointer text-gray-500 hover:text-gray-200" />}
+                  isOpen={bucketOpen}
+                  setOpen={setBucketOpen}
                 />
               </div>
               <CollapsibleContent>
@@ -150,6 +154,8 @@ const Sidebar: React.FC = () => {
                 </CollapsibleTrigger>
                 <CreateCompanyModal
                   triggerButton={<Plus className="mr-2 h-4 w-4 cursor-pointer text-gray-500 hover:text-gray-200" />}
+                  isOpen={companyOpen}
+                  setOpen={setCompanyOpen}
                 />
               </div>
               <CollapsibleContent>

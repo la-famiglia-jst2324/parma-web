@@ -3,6 +3,7 @@
 import React, { useState } from 'react'
 import { Frequency } from '@prisma/client'
 import type { AxiosError } from 'axios'
+import { Loader2 } from 'lucide-react'
 import { Label } from '../ui/label'
 import { ShowToast } from '../ShowToast'
 import {
@@ -39,15 +40,21 @@ const CreateDatasource: React.FC<CreateDatasourceProps> = ({ triggerButton, isOp
   const [frequency, setFrequency] = useState<string>('')
   const regex = /^[a-z0-9_-]+$/
 
+  const [createDataSourceBlocked, setCreateDataSourceBlocked] = useState<boolean>(false)
+
   async function createDatasource() {
     try {
+      setCreateDataSourceBlocked(true)
+
       if (frequency === null || frequency === '') {
         ShowToast('Frequency is required', 'Please select a frequency for the datasource', 'destructive')
+        setCreateDataSourceBlocked(false)
         return
       }
 
       if (name === null || name === '') {
         ShowToast('Name is required', 'Please provide a name for the datasource', 'destructive')
+        setCreateDataSourceBlocked(false)
         return
       }
 
@@ -57,11 +64,13 @@ const CreateDatasource: React.FC<CreateDatasourceProps> = ({ triggerButton, isOp
           'Name is required and should only contain lowercase letters, numbers, underscores, and hyphens.',
           'destructive'
         )
+        setCreateDataSourceBlocked(false)
         return
       }
 
       if (url === null || url === '') {
         ShowToast('URL is required', 'Please provide a URL for the datasource', 'destructive')
+        setCreateDataSourceBlocked(false)
         return
       }
 
@@ -94,6 +103,8 @@ const CreateDatasource: React.FC<CreateDatasourceProps> = ({ triggerButton, isOp
       const errorResponse = axiosError?.response?.data as ErrorResponse
       const errorMessage = errorResponse?.error
       ShowToast('Datasource creation failed', errorMessage || 'An unexpected error occurred', 'destructive')
+    } finally {
+      setCreateDataSourceBlocked(false)
     }
   }
 
@@ -165,7 +176,8 @@ const CreateDatasource: React.FC<CreateDatasourceProps> = ({ triggerButton, isOp
                 Cancel
               </Button>
             </DialogClose>
-            <Button type="submit" variant="secondary" onClick={createDatasource}>
+            <Button type="submit" variant="secondary" onClick={createDatasource} disabled={createDataSourceBlocked}>
+              {createDataSourceBlocked && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               Create
             </Button>
           </DialogFooter>

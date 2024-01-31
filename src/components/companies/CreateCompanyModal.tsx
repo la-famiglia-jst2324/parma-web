@@ -1,5 +1,6 @@
 'use client'
 import { useContext, useState } from 'react'
+import { Loader2 } from 'lucide-react'
 import { DialogHeader, DialogFooter } from '../ui/dialog'
 import { Input } from '../ui/input'
 import { Label } from '../ui/label'
@@ -29,9 +30,14 @@ const CreateCompanyModal: React.FC<CreateCompanyProps> = ({ triggerButton, isOpe
   const [description, setDescription] = useState('')
   const { setCompanies } = useContext(SideBarContext)
 
+  const [createCompaniesBlocked, setCreateCompaniesBlocked] = useState<boolean>(false)
+
   const handleCompanyCreation = async () => {
+    setCreateCompaniesBlocked(true)
+
     if (!title) {
       ShowToast('Error', 'Please enter a company name', 'destructive')
+      setCreateCompaniesBlocked(false)
       return
     }
     try {
@@ -39,11 +45,16 @@ const CreateCompanyModal: React.FC<CreateCompanyProps> = ({ triggerButton, isOpe
         const data = await postCompany(title, description)
         setCompanies((prev) => [...prev, data])
         ShowToast('Success', 'Company created successfully')
+        if (setOpen) {
+          setOpen(false)
+        }
       } else {
         ShowToast('Title is required', 'Please provide a title for the company', 'destructive')
       }
     } catch (error) {
       ShowToast('Error', 'Failed to create company', 'destructive')
+    } finally {
+      setCreateCompaniesBlocked(false)
     }
   }
 
@@ -88,11 +99,10 @@ const CreateCompanyModal: React.FC<CreateCompanyProps> = ({ triggerButton, isOpe
               Cancel
             </Button>
           </DialogClose>
-          <DialogClose asChild>
-            <Button type="submit" variant="secondary" onClick={handleCompanyCreation}>
-              Create
-            </Button>
-          </DialogClose>
+          <Button type="submit" variant="secondary" onClick={handleCompanyCreation} disabled={createCompaniesBlocked}>
+            {createCompaniesBlocked && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+            Create
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

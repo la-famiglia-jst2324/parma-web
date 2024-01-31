@@ -131,13 +131,10 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse, user: U
             parseInt(pageSize as string),
             user.id
           )
-
-          if (buckets) res.status(200).json(buckets)
-          else res.status(400).json({ error: 'No Bucket found' })
+          res.status(200).json(buckets)
         } else {
           const buckets = await getAccessibleBuckets(parseInt(page as string), parseInt(pageSize as string), user.id)
-          if (buckets) res.status(200).json(buckets)
-          else res.status(400).json({ error: 'No Buckets found' })
+          res.status(200).json(buckets)
         }
       } catch (error) {
         if (error instanceof ItemNotFoundError) res.status(404).json({ error: error.message })

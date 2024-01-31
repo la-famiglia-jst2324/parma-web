@@ -61,8 +61,7 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse, user: U
     case 'GET':
       try {
         const subscription = await getUserCompanySubscriptions(userId, Number(companyId))
-        if (subscription) res.status(200).json(subscription)
-        else res.status(400).json({ error: 'subscription not found' })
+        res.status(200).json(subscription)
       } catch (error) {
         if (error instanceof ItemNotFoundError) res.status(404).json({ error: error.message })
         else res.status(500).json({ error: 'Internal Server Error' })

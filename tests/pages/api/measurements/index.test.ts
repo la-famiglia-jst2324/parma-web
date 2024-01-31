@@ -102,7 +102,7 @@ describe('Notification API', () => {
     expect(JSON.parse(res._getData())).toEqual({ error: 'No relation found' })
   })
 
-  test('GET with no data source measurements found returns 400', async () => {
+  test('GET with no data source measurements found returns 200', async () => {
     getAllSourceMeasurements.mockResolvedValueOnce([]) // Simulate no measurements found
 
     const { req, res } = createMocks({
@@ -112,8 +112,7 @@ describe('Notification API', () => {
 
     await handler(req, res)
 
-    expect(res._getStatusCode()).toBe(400)
-    expect(JSON.parse(res._getData())).toEqual({ error: 'No Data Sources Measurements found' })
+    expect(res._getStatusCode()).toBe(200)
   })
   test('GET with server error returns 500', async () => {
     getCompanySourceMeasurementByCompanyId.mockRejectedValueOnce(new Error('Internal Server Error'))

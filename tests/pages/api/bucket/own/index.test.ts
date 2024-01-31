@@ -41,14 +41,14 @@ describe('Own Buckets API Handler Tests', () => {
     expect(res._getStatusCode()).toBe(200)
   })
 
-  test('GET - No buckets found (400 status)', async () => {
+  test('GET - No buckets found (200 status)', async () => {
     getOwnBuckets.mockResolvedValueOnce(null)
     const { req, res } = createMocks({
       method: 'GET'
     })
 
     await handler(req, res, mockUser)
-    expect(res._getStatusCode()).toBe(400)
+    expect(res._getStatusCode()).toBe(200)
   })
 
   test('GET - Item not found error (404 status)', async () => {

@@ -7,7 +7,7 @@ import {
   generateFileUrl,
   deleteFileFromFirebaseStorage
 } from '@/pages/api/lib/utils/firebaseStorage'
-import { getUserById, updateUser } from '@/api/db/services/userService'
+import { updateUser } from '@/api/db/services/userService'
 import { ItemNotFoundError } from '@/api/utils/errorUtils'
 
 export const config = {
@@ -41,13 +41,10 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse, user: U
       break
     case 'GET':
       try {
-        const user = await getUserById(Number(userId))
-        if (user) {
-          if (user.profilePicture) {
-            const fileUrl = await generateFileUrl(user.profilePicture)
-            res.status(200).json({ fileUrl })
-          } else res.status(404).json({ error: 'Profile picture not found' })
-        } else res.status(404).json({ error: 'User not Found!' })
+        if (user.profilePicture) {
+          const fileUrl = await generateFileUrl(user.profilePicture)
+          res.status(200).json({ fileUrl })
+        } else res.status(200).json({ message: 'Profile picture not found' })
       } catch (error) {
         if (error instanceof ItemNotFoundError) res.status(404).json({ error: error.message })
         else if (error instanceof Error) res.status(500).json({ error: error.message || 'Internal Server Error' })
@@ -55,7 +52,6 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse, user: U
       break
     case 'DELETE':
       try {
-        const user = await getUserById(Number(userId))
         if (user && user.profilePicture) {
           await deleteFileFromFirebaseStorage(user.profilePicture)
           await updateUser(userId, {
@@ -70,7 +66,6 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse, user: U
       break
     case 'PUT':
       try {
-        const user = await getUserById(Number(userId))
         if (user && user.profilePicture) {
           const fileDestPrefix = `user/${userId}/pic/`
           const { incomingFile, name, type } = await fileValidation(req)

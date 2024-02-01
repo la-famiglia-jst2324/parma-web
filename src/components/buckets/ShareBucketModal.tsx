@@ -63,6 +63,7 @@ const ShareBucketModal: React.FC<ShareBucketModalProps> = ({ handleShare, id }) 
     BucketFunctions.getUsersForBucketAccess()
       .then((res: User[]) => {
         setUsers(res)
+
         const multiSelectData = res.map((user) => {
           return {
             value: String(user.id),
@@ -80,6 +81,14 @@ const ShareBucketModal: React.FC<ShareBucketModalProps> = ({ handleShare, id }) 
         res.map((item: Invitee[]) => {
           return { ...item, isEdit: false }
         })
+        const filteredUsers = users.filter((user) => res.every((item: Invitee) => item.inviteeId !== user.id))
+        const multiSelectData = filteredUsers.map((user) => {
+          return {
+            value: String(user.id),
+            label: user.name
+          }
+        })
+        setMultiSelectUers(multiSelectData)
         setInvitees(res)
       })
       .catch((err) => console.log(err))
@@ -121,6 +130,7 @@ const ShareBucketModal: React.FC<ShareBucketModalProps> = ({ handleShare, id }) 
         addUserToShareList(id)
       })
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedUsersId])
 
   const changeInvitePermission = (val: string, invitee: Invitee) => {
@@ -171,8 +181,6 @@ const ShareBucketModal: React.FC<ShareBucketModalProps> = ({ handleShare, id }) 
       }
     })
     setInvitees([])
-    setUsersToShare([])
-    setSelectedUsersId([])
     handleShare(listToPost)
     setListToPost([])
   }
@@ -184,7 +192,14 @@ const ShareBucketModal: React.FC<ShareBucketModalProps> = ({ handleShare, id }) 
   return (
     <div>
       <Dialog>
-        <DialogTrigger asChild onClick={getInvitees}>
+        <DialogTrigger
+          asChild
+          onClick={() => {
+            getInvitees()
+            setSelectedUsersId([])
+            setUsersToShare([])
+          }}
+        >
           <Button variant="outline">
             <Share2 className="mr-2 h-4 w-4" />
             Share
@@ -282,14 +297,7 @@ const ShareBucketModal: React.FC<ShareBucketModalProps> = ({ handleShare, id }) 
           </div>
           <DialogFooter>
             <DialogClose asChild>
-              <Button
-                type="submit"
-                className="mt-2"
-                variant="outline"
-                onClick={() => {
-                  setUsersToShare([])
-                }}
-              >
+              <Button type="submit" className="mt-2" variant="outline">
                 Cancel
               </Button>
             </DialogClose>

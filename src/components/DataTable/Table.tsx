@@ -35,6 +35,7 @@ export function DataTable<TData, TValue>({
   useEffect(() => {
     const col = table.getAllColumns().find((col) => col.id === toggleColumn?.columnId)
     if (col) col.toggleVisibility(toggleColumn?.value)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [toggleColumn?.value])
 
   const handleRowSelection = (

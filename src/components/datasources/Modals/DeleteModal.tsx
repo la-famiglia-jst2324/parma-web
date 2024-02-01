@@ -1,7 +1,7 @@
 'use client'
-import React from 'react'
+import React, { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Trash2 } from 'lucide-react'
+import { Trash2, Loader2 } from 'lucide-react'
 import type { AxiosError } from 'axios'
 import { Button } from '../../ui/button'
 
@@ -18,7 +18,6 @@ import {
 } from '@/components/ui/alert-dialog'
 import { deleteDatasource } from '@/services/datasource/datasourceService'
 import { ShowToast } from '@/components/ShowToast'
-
 interface ErrorResponse {
   error: string
 }
@@ -29,15 +28,19 @@ interface DeleteModalProps {
 
 const DeleteModal: React.FC<DeleteModalProps> = ({ id }) => {
   const router = useRouter()
+  const [deleteBlocked, setDeleteBlocked] = useState<boolean>(false)
 
   const handleDelete = async () => {
     try {
+      setDeleteBlocked(true)
       const response = await deleteDatasource(id)
       if (response.message === 'Data Source successfully Deleted') {
+        setDeleteBlocked(false)
         router.push('/datasources')
         ShowToast('Datasource deleted successfully', 'The datasource has been successfully deleted.', 'default')
       } else {
         handleErrorResponse(response)
+        setDeleteBlocked(false)
       }
     } catch (error) {
       const axiosError = error as AxiosError
@@ -59,7 +62,8 @@ const DeleteModal: React.FC<DeleteModalProps> = ({ id }) => {
     <>
       <AlertDialog>
         <AlertDialogTrigger asChild>
-          <Button variant="destructive">
+          <Button variant="destructive" disabled={deleteBlocked}>
+            {deleteBlocked && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
             <Trash2 className="h-5 w-5" />
           </Button>
         </AlertDialogTrigger>

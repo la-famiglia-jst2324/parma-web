@@ -30,6 +30,7 @@ const AddCompaniesToBucket: React.FC<AddCompaniesToBucketProps> = ({ handleSave,
       .catch((error) => {
         console.error('Failed to fetch companies:', error)
       })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const onSaveClick = () => {

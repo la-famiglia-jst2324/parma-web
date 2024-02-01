@@ -50,6 +50,7 @@ const CompanyGraphCard: React.FC<CompanyGraphCardProps> = ({ companyId, measurem
     } else {
       setGraphData([])
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id])
 
   return (

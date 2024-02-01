@@ -88,6 +88,7 @@ const BucketPage = ({ params: { id } }: { params: { id: string } }) => {
           router.push('/')
         }
       })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id])
 
   useEffect(() => {
@@ -105,6 +106,7 @@ const BucketPage = ({ params: { id } }: { params: { id: string } }) => {
 
   useEffect(() => {
     getBucketWithMeasurements()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [bucketCompanies])
 
   const onSelectCheckbox = (companyId: number | number[]) => {

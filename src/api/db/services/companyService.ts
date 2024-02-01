@@ -123,7 +123,7 @@ const updateCompany = async (
 
 const deleteCompany = async (id: number) => {
   try {
-    const result = await prisma.$transaction(async (prisma: any) => {
+    const result = await prisma.$transaction(async (prisma) => {
       //  delete its relationship with bucket
       await prisma.companyBucketMembership.deleteMany({
         where: {

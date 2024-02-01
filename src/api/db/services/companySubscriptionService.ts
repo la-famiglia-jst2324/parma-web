@@ -1,5 +1,9 @@
-import type { CompanySubscription } from '@prisma/client'
+import type { Company, CompanySubscription } from '@prisma/client'
 import { prisma } from '../prisma/prismaClient'
+
+type CompanySubscriptionWithCompany = CompanySubscription & {
+  company: Company
+}
 
 const createCompanySubscription = async (data: { userId: number; companyId: number }) => {
   try {
@@ -56,7 +60,7 @@ const getUserCompanySubscriptions = async (userId: number, companyId?: number) =
       if (subscriptions.length === 0) {
         throw new Error(`User ${userId} does not have any subscriptions.`)
       }
-      return subscriptions.map((subscription: CompanySubscription) => subscription.company)
+      return subscriptions.map((subscription: CompanySubscriptionWithCompany) => subscription.company)
     }
   } catch (error) {
     console.error('Error retrieving company subscriptions:', error)

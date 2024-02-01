@@ -113,7 +113,7 @@ const updateUser = async (
 
 const deleteUser = async (id: number) => {
   try {
-    const transaction = await prisma.$transaction(async (prisma: any) => {
+    const transaction = await prisma.$transaction(async (prisma) => {
       // delete associated data
       await prisma.newsSubscription.deleteMany({ where: { userId: id } })
       await prisma.userImportantMeasurementPreference.deleteMany({ where: { userId: id } })

@@ -1,4 +1,4 @@
-import { Bucket, Company } from '@prisma/client'
+import type { Bucket, Company } from '@prisma/client'
 import { prisma } from '../prisma/prismaClient'
 
 const searchCompaniesAndBuckets = async (searchString: string, page: number, pageSize: number, userId: number) => {

@@ -46,7 +46,7 @@ const NestedDropDown: React.FC<NestedDropDownProps> = ({ measurements, handleCha
   }
 
   return (
-    <DropdownMenu>
+    <DropdownMenu modal={false}>
       <DropdownMenuTrigger asChild>
         <Button variant="outline" disabled={measurements?.length === 0}>
           Select Measurement

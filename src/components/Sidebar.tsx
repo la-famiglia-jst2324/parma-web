@@ -75,7 +75,7 @@ const Sidebar: React.FC = () => {
           {/* Newsfeed */}
           <div className="mb-4 mt-8 flex items-center justify-between">
             <Link href="/">
-              <Button variant="ghost" className="group flex w-40 justify-start rounded text-base">
+              <Button variant="ghost" className="group flex w-48 justify-start rounded text-base">
                 <Squares2X2Icon className="mr-2 h-4 w-4 text-gray-500 group-hover:text-gray-200" />
                 <p className="text-base font-medium text-gray-200">Newsfeed</p>
               </Button>
@@ -90,11 +90,11 @@ const Sidebar: React.FC = () => {
               <div className="flex items-center justify-between">
                 <CollapsibleTrigger disabled={!buckets || buckets?.length === 0}>
                   <div
-                    className="group inline-flex h-10 w-40 items-center justify-start whitespace-nowrap rounded-md px-4 py-2 text-sm font-medium ring-offset-background transition-colors hover:bg-accent hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
+                    className="group inline-flex h-10 w-48 items-center justify-start whitespace-nowrap rounded-md px-4 py-2 text-sm font-medium ring-offset-background transition-colors hover:bg-accent hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
                     onClick={() => setClickBucket(!clickBucket)}
                   >
                     <FolderIcon className={`mr-2 h-4 w-4 text-gray-500 group-hover:text-gray-200`} />
-                    <p className="text-base font-medium text-gray-200">Buckets </p>
+                    <p className="text-base font-medium text-gray-200">My Buckets </p>
                     {clickBucket ? (
                       <ChevronDown className="ml-2 h-3 w-3 text-gray-500" />
                     ) : (
@@ -140,11 +140,11 @@ const Sidebar: React.FC = () => {
               <div className="flex items-center justify-between">
                 <CollapsibleTrigger disabled={!companies || companies?.length === 0}>
                   <div
-                    className="group inline-flex h-10 w-40 shrink-0 items-center justify-center whitespace-nowrap rounded-md px-4 py-2 text-sm font-medium ring-offset-background transition-colors hover:bg-accent hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none  disabled:opacity-50"
+                    className="group inline-flex h-10 w-48 shrink-0 items-center justify-center whitespace-nowrap rounded-md px-4 py-2 text-sm font-medium ring-offset-background transition-colors hover:bg-accent hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none  disabled:opacity-50"
                     onClick={() => setClickCompany(!clickCompany)}
                   >
                     <BuildingOffice2Icon className="mr-2 h-4 w-6 text-gray-500 group-hover:text-gray-200" />
-                    <p className="text-base font-medium text-gray-200">Companies</p>
+                    <p className="text-base font-medium text-gray-200">My Companies</p>
                     {clickCompany ? (
                       <ChevronDown className="ml-2 h-4 w-4 text-gray-500" />
                     ) : (

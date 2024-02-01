@@ -42,6 +42,7 @@ const Sidebar: React.FC = () => {
       }
     }
     fetchData()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [uid])
 
   useEffect(() => {
@@ -56,6 +57,7 @@ const Sidebar: React.FC = () => {
       }
     }
     fetchBuckets()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [uid])
 
   return (

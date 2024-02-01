@@ -74,6 +74,7 @@ const CompanyPage: React.FC<CompanyPageProps> = ({ params: { companyId } }) => {
     }
 
     fetchData()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [companyId])
 
   useEffect(() => {
@@ -91,6 +92,7 @@ const CompanyPage: React.FC<CompanyPageProps> = ({ params: { companyId } }) => {
     }
 
     fetchData()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [companyId])
 
   useEffect(() => {
@@ -118,6 +120,7 @@ const CompanyPage: React.FC<CompanyPageProps> = ({ params: { companyId } }) => {
     }
 
     fetchData()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentDatasource])
 
   const handleDatasourceChange = async (value: string) => {

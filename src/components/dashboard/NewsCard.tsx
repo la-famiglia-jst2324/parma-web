@@ -31,23 +31,30 @@ const NewsCard: React.FC<NewsCardProps> = ({
           </div>
           <div className="shrink-0">{triggerFactor && <Badge variant="indigo">{triggerFactor}</Badge>}</div>
         </div>
-        <CardDescription className="mt-2 text-gray-500">
-          Data source: {dataSourceName || 'No data source available'}
-        </CardDescription>
+        {dataSourceName && (
+          <CardDescription className="mt-2 text-gray-500">
+            Datasource:
+            <span className="ml-1 text-gray-300">{dataSourceName || 'No data source available'}</span>
+          </CardDescription>
+        )}
       </CardHeader>
       <CardContent className="pb-6 pt-3">
         <p className="text-gray-400">{description || 'No description available'}</p>
       </CardContent>
       <CardFooter className="rounded-b-lg bg-gray-800 px-6 py-3">
-        <div className="flex space-x-4 text-sm text-gray-400">
-          <div className="flex items-center">
-            <span className="mr-1 text-gray-500">Company:</span>
-            <span className="text-gray-300">{companyName || 'No company name'}</span>
-          </div>
-          <div className="flex items-center">
-            <span className="mr-1 text-gray-500">Notification Date:</span>
-            <span className="text-gray-300">{formattedDate || 'No date available'}</span>
-          </div>
+        <div className="flex space-x-12 text-sm text-gray-400">
+          {companyName && (
+            <div className="flex items-center">
+              <span className="mr-1 text-gray-500">Company:</span>
+              <span className="text-gray-300">{companyName || 'No company name'}</span>
+            </div>
+          )}
+          {formattedDate && (
+            <div className="flex items-center">
+              <span className="mr-1 text-gray-500">Date:</span>
+              <span className="text-gray-300">{formattedDate || 'No date available'}</span>
+            </div>
+          )}
         </div>
       </CardFooter>
     </Card>

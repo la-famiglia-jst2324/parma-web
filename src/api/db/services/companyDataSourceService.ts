@@ -1,4 +1,4 @@
-import type { HealthStatus } from '@prisma/client'
+import type { CompanyDataSource, HealthStatus } from '@prisma/client'
 import { prisma } from '../prisma/prismaClient'
 const createCompanyDataSource = async (data: {
   dataSourceId: number
@@ -48,7 +48,7 @@ const getDataSourcesByCompanyId = async (companyId: number) => {
       throw new Error(`company${companyId} does not have any data sources.`)
     }
     // list data sources
-    return membership.map((membership) => membership.dataSources)
+    return membership.map((membership: CompanyDataSource) => membership.dataSources)
   } catch (error) {
     console.error('Error getting data sources in this company:', error)
     throw error
@@ -86,7 +86,7 @@ const getCompaniesByDataSourceId = async (dataSourceId: number) => {
       throw new Error(`the data source${dataSourceId} does not have any company.`)
     }
     // list all company
-    return membership.map((membership) => membership.companies)
+    return membership.map((membership: CompanyDataSource) => membership.companies)
   } catch (error) {
     console.error('Error retrieving companies from data source:', error)
     throw error

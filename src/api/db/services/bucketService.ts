@@ -1,3 +1,4 @@
+import type { Bucket } from '@prisma/client'
 import { prisma } from '../prisma/prismaClient'
 import { ItemNotFoundError } from '@/api/utils/errorUtils'
 
@@ -63,7 +64,9 @@ const getBucketsByName = async (title: string, page: number, pageSize: number, u
       where: whereClause
     })
 
-    const allFilteredBuckets = buckets.filter((bucket) => bucket.title.toLowerCase().includes(title.toLowerCase()))
+    const allFilteredBuckets = buckets.filter((bucket: Bucket) =>
+      bucket.title.toLowerCase().includes(title.toLowerCase())
+    )
 
     let paginatedBuckets
     if (page && pageSize) {
@@ -214,7 +217,7 @@ const updateBucket = async (
 
 const deleteBucket = async (id: number) => {
   try {
-    const result = await prisma.$transaction(async (prisma) => {
+    const result = await prisma.$transaction(async (prisma: any) => {
       //  delete its relationship with company
       await prisma.companyBucketMembership.deleteMany({
         where: {

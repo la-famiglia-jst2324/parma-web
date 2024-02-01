@@ -150,7 +150,7 @@ const getMeasurementValueCompanyId = async (companyIds: number[]) => {
     })
     const resultObject = []
     const groupedCompanies = await companySourceMeasurements.reduce(
-      async (accPromise, item) => {
+      async (accPromise: any, item: any) => {
         const acc = await accPromise
         const company = item.company
         const measurementName = item.sourceMeasurement.measurementName

@@ -1,3 +1,4 @@
+import { CompanySourceMeasurement, SourceMeasurement } from '@prisma/client'
 import { prisma } from '../prisma/prismaClient'
 import { ItemNotFoundError } from '@/api/utils/errorUtils'
 
@@ -82,11 +83,11 @@ const getMeasurementsOfCompaniesBySourceId = async (sourceModuleId: number, comp
     })
 
     // add the companyMeasurementId and companyId to the result.
-    const flattenedMeasurements = measurements.flatMap((measurement) =>
-      measurement.companySourceMeasurements.map((csm) => {
+    const flattenedMeasurements = measurements.flatMap((measurement: SourceMeasurement) =>
+      measurement.companySourceMeasurements.map((csm: CompanySourceMeasurement) => {
         // here we want to filter out companySourceMeasurements from the output
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const { companySourceMeasurements, ...rest } = { ...measurement, ...csm }
+        const { companySourceMeasurements, ...rest } = { measurement, ...csm }  // TODO: fix this
         return rest
       })
     )

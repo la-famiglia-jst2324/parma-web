@@ -38,7 +38,9 @@ const searchCompaniesAndBuckets = async (searchString: string, page: number, pag
       where: whereClause
     })
 
-    const authBuckets = buckets.filter((bucket: Bucket) => bucket.title.toLowerCase().includes(searchString.toLowerCase()))
+    const authBuckets = buckets.filter((bucket: Bucket) =>
+      bucket.title.toLowerCase().includes(searchString.toLowerCase())
+    )
 
     // Combine and sort the results
     const combined = [

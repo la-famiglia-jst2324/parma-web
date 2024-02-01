@@ -1,10 +1,10 @@
-import { CompanySourceMeasurement, SourceMeasurement } from '@prisma/client';
+import type { CompanySourceMeasurement, SourceMeasurement } from '@prisma/client'
 import { prisma } from '../prisma/prismaClient'
 import { ItemNotFoundError } from '@/api/utils/errorUtils'
 
 type SourceMeasurementWithCSMs = SourceMeasurement & {
-  companySourceMeasurements: CompanySourceMeasurement[];
-};
+  companySourceMeasurements: CompanySourceMeasurement[]
+}
 
 const createSourceMeasurement = async (data: {
   sourceModuleId: number
@@ -153,9 +153,9 @@ const getMeasurementsByCompanyIdSourceId = async (sourceModuleId: number, compan
     const flattenedMeasurements = measurements.flatMap((measurement: SourceMeasurementWithCSMs) =>
       measurement.companySourceMeasurements.map((csm: CompanySourceMeasurement) => {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const { companySourceMeasurements, ...measurementWithoutCompanySourceMeasurements } = measurement;
-        const rest = { ...measurementWithoutCompanySourceMeasurements, ...csm };
-        return rest;
+        const { companySourceMeasurements, ...measurementWithoutCompanySourceMeasurements } = measurement
+        const rest = { ...measurementWithoutCompanySourceMeasurements, ...csm }
+        return rest
       })
     )
     return flattenedMeasurements

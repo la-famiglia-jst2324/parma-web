@@ -1,4 +1,4 @@
-import { Frequency, HealthStatus, PrismaClient, Role } from '@prisma/client'
+import { CompanySourceMeasurement, Frequency, HealthStatus, PrismaClient, Role } from '@prisma/client'
 import { genRandomDummyAuthId } from '../utils/random'
 import { deleteDataSource } from '../models/utils/helperFunctions'
 import {
@@ -72,7 +72,7 @@ describe('Company Source Measurement Model Tests', () => {
     const id: number[] = []
     id.push(companyId)
     const relation = await getCompanySourceMeasurementByCompanyId(id)
-    expect(relation.some((companySourceMeasurement) => companySourceMeasurement.companyId === companyId)).toBe(true)
+    expect(relation.some((companySourceMeasurement: CompanySourceMeasurement) => companySourceMeasurement.companyId === companyId)).toBe(true)
   })
 
   test('Update a Company Source Measurement Relation', async () => {

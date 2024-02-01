@@ -1,9 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { MeasurementCommentValue, MeasurementFloatValue, MeasurementIntValue } from '@prisma/client'
+import type { MeasurementCommentValue, MeasurementFloatValue, MeasurementIntValue } from '@prisma/client'
 import { getValueByMeasurementIdCompanyId } from '@/api/db/services/companySourceMeasurementService'
 import { ItemNotFoundError } from '@/api/utils/errorUtils'
 import { withAuthValidation } from '@/api/middleware/auth'
-
 
 /**
  * @swagger

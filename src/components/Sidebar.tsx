@@ -17,7 +17,7 @@ import BucketFunctions from '@/app/services/bucket.service'
 import { getSubscribedCompanies } from '@/services/company/companyService'
 
 const Sidebar: React.FC = () => {
-  const { companies, setCompanies, buckets, setBuckets } = useContext(SideBarContext)
+  const { subscribedCompanies, setSubscribedCompanies, setCompanies, buckets, setBuckets } = useContext(SideBarContext)
   const [clickBucket, setClickBucket] = useState(false)
   const [clickCompany, setClickCompany] = useState(false)
   const [companyOpen, setCompanyOpen] = useState(false)
@@ -34,8 +34,8 @@ const Sidebar: React.FC = () => {
     const fetchData = async () => {
       if (uid) {
         try {
-          const companiesData = await getSubscribedCompanies()
-          setCompanies(companiesData)
+          const companiesResult = await BucketFunctions.getAllCompanies()
+          setCompanies(companiesResult)
         } catch (error) {
           console.log('Failed to fetch companies')
         }
@@ -43,6 +43,20 @@ const Sidebar: React.FC = () => {
     }
     fetchData()
     // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [uid])
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (uid) {
+        try {
+          const companiesData = await getSubscribedCompanies()
+          setSubscribedCompanies(companiesData)
+        } catch (error) {
+          console.log('Failed to fetch subscribed companies')
+        }
+      }
+    }
+    fetchData()
   }, [uid])
 
   useEffect(() => {
@@ -140,7 +154,7 @@ const Sidebar: React.FC = () => {
           <Collapsible>
             <div className="mb-4">
               <div className="flex items-center justify-between">
-                <CollapsibleTrigger disabled={!companies || companies?.length === 0}>
+                <CollapsibleTrigger disabled={!subscribedCompanies || subscribedCompanies?.length === 0}>
                   <div
                     className="group inline-flex h-10 w-48 shrink-0 items-center justify-center whitespace-nowrap rounded-md px-4 py-2 text-sm font-medium ring-offset-background transition-colors hover:bg-accent hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none  disabled:opacity-50"
                     onClick={() => setClickCompany(!clickCompany)}
@@ -164,8 +178,8 @@ const Sidebar: React.FC = () => {
                 <div className="ml-8">
                   <ScrollArea className="mt-2 h-60 w-full">
                     <div className="pl-2">
-                      {companies?.length > 0 &&
-                        companies.map((company) => (
+                      {subscribedCompanies?.length > 0 &&
+                        subscribedCompanies.map((company) => (
                           <div key={company.id}>
                             <Link href={`/companies/${company.id}`} passHref>
                               <Button

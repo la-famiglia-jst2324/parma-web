@@ -172,7 +172,7 @@ model ScheduledTask {
   attempts      Int          @default(0)
 
   // Relations
-  dataSource DataSource @relation(fields: [dataSourceId], references: [id])
+  dataSource DataSource @relation(fields: [dataSourceId], references: [id], onDelete: Cascade)
 
   @@map("scheduled_task")
 }

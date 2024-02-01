@@ -106,7 +106,7 @@ export const IdentifierModal: React.FC<IdentifierModalProps> = ({ companyId, dat
       <DialogContent className="sm:max-w-[800px]">
         <DialogHeader>
           <DialogTitle>Configure Identifiers</DialogTitle>
-          <DialogDescription>You can add, edit or remove identifiers. Click save when you're done.</DialogDescription>
+          <DialogDescription>You can add new identifiers or remove existing ones.</DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-4">
           <Table>

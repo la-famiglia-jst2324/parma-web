@@ -121,6 +121,7 @@ const ShareBucketModal: React.FC<ShareBucketModalProps> = ({ handleShare, id }) 
         addUserToShareList(id)
       })
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedUsersId])
 
   const changeInvitePermission = (val: string, invitee: Invitee) => {

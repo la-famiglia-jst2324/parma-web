@@ -55,6 +55,7 @@ const CompanyCommentsCard: React.FC<CompanyCommentsCardProps> = ({ companyId, me
     } else {
       setComments([])
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id])
 
   return (

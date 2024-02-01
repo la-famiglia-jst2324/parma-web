@@ -63,11 +63,10 @@ jobs:
           git checkout -B staging origin/main
           git push -f origin staging
 
-  # represents the main branch, but not deployed on merge (see vercel.json)
   prod-deployment:
     name: Publish release
     runs-on: ubuntu-latest
     if: github.event_name == 'release'
     steps:
       - name: Trigger deploy webhook
-        run: curl ${{ secrets.VERCEL_DEPLOY_HOOK_URL_RELEASE }}
+        run: curl ${{ github.event_name == 'release' && secrets.PROD_VERCEL_DEPLOY_HOOK_URL || secrets.STAGING_VERCEL_DEPLOY_HOOK_URL}}

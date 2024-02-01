@@ -123,20 +123,9 @@ const updateCompany = async (
 
 const deleteCompany = async (id: number) => {
   try {
-    const result = await prisma.$transaction(async (prisma) => {
-      //  delete its relationship with bucket
-      await prisma.companyBucketMembership.deleteMany({
-        where: {
-          companyId: id
-        }
-      })
-
-      // delete company record
-      return await prisma.company.delete({
-        where: { id }
-      })
+    return await prisma.company.delete({
+      where: { id }
     })
-    return result
   } catch (error) {
     console.error('Error deleting company:', error)
     throw error

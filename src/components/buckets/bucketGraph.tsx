@@ -36,6 +36,7 @@ function BucketGraph({ companies }: { companies: Company[] | undefined }) {
     if (selectedMetric) {
       setGraphData({ companies: selectedCompanies, metric: selectedMetric })
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedMetric])
 
   const metrics = useMeasurementsCompanies(selectedCompanies).filter((metric) =>

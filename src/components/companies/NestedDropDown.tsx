@@ -33,11 +33,13 @@ const NestedDropDown: React.FC<NestedDropDownProps> = ({ measurements, handleCha
   const measurementGroups: { [key: string]: CompanyMeasurement[] } = {}
 
   measurements.forEach((measurement) => {
-    const parentId = measurement.parentMeasurementId !== null ? String(measurement.parentMeasurementId) : 'null'
-    if (!measurementGroups[parentId]) {
-      measurementGroups[parentId] = []
+    if (measurement.type !== 'nested') {
+      const parentId = measurement.parentMeasurementId !== null ? String(measurement.parentMeasurementId) : 'null'
+      if (!measurementGroups[parentId]) {
+        measurementGroups[parentId] = []
+      }
+      measurementGroups[parentId].push(measurement)
     }
-    measurementGroups[parentId].push(measurement)
   })
 
   const getMeasurementNameById = (id: string): string => {
@@ -46,7 +48,7 @@ const NestedDropDown: React.FC<NestedDropDownProps> = ({ measurements, handleCha
   }
 
   return (
-    <DropdownMenu>
+    <DropdownMenu modal={false}>
       <DropdownMenuTrigger asChild>
         <Button variant="outline" disabled={measurements?.length === 0}>
           Select Measurement

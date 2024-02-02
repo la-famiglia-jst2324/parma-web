@@ -1,4 +1,5 @@
-import { Company, Frequency, HealthStatus, PrismaClient, Role } from '@prisma/client'
+import type { Company } from '@prisma/client'
+import { Frequency, HealthStatus, PrismaClient, Role } from '@prisma/client'
 import { genRandomDummyAuthId } from '../utils/random'
 import { deleteDataSource } from '../models/utils/helperFunctions'
 import {
@@ -9,7 +10,7 @@ import {
 import { createCompany, deleteCompany } from '@/api/db/services/companyService'
 import { createDataSource } from '@/api/db/services/dataSourceService'
 import { createUser, deleteUser } from '@/api/db/services/userService'
-import Datasource from '@/types/datasource'
+import type Datasource from '@/types/datasource'
 
 const prisma = new PrismaClient()
 

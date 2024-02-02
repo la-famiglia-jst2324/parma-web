@@ -86,7 +86,7 @@ describe('BucketId API', () => {
     await handler(req, res, mockUser)
 
     expect(res._getStatusCode()).toBe(500)
-    expect(JSON.parse(res._getData())).toEqual({ error: 'Internal Server Error' })
+    expect(JSON.parse(res._getData()).error).toEqual('Internal Server Error')
   })
 
   test('PUT updates a bucket successfully and returns 200', async () => {

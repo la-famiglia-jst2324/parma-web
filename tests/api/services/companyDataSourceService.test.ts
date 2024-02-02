@@ -1,3 +1,4 @@
+import type { Company } from '@prisma/client'
 import { Frequency, HealthStatus, PrismaClient, Role } from '@prisma/client'
 import { genRandomDummyAuthId } from '../utils/random'
 import { deleteDataSource } from '../models/utils/helperFunctions'
@@ -9,6 +10,7 @@ import {
 import { createCompany, deleteCompany } from '@/api/db/services/companyService'
 import { createDataSource } from '@/api/db/services/dataSourceService'
 import { createUser, deleteUser } from '@/api/db/services/userService'
+import type Datasource from '@/types/datasource'
 
 const prisma = new PrismaClient()
 
@@ -59,11 +61,11 @@ describe('Company Datasource Model Tests', () => {
 
   test('Retrieve a Company Datasource Relation', async () => {
     const dataSources = await getDataSourcesByCompanyId(companyId)
-    expect(dataSources.some((dataSource) => dataSource.id === dataSourceId)).toBe(true)
+    expect(dataSources.some((dataSource: Datasource) => dataSource.id === dataSourceId)).toBe(true)
   })
 
   test('Retrieve a Company Datasource Relation', async () => {
     const companies = await getCompaniesByDataSourceId(dataSourceId)
-    expect(companies.some((company) => company.id === companyId)).toBe(true)
+    expect(companies.some((company: Company) => company.id === companyId)).toBe(true)
   })
 })

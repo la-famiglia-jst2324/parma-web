@@ -1,5 +1,14 @@
+import type { Bucket, Company, CompanyBucketMembership } from '@prisma/client'
 import { prisma } from '../prisma/prismaClient'
 import { AlreadyExistsError } from '@/api/utils/errorUtils'
+
+type CompanyBucketMembershipWithCompany = CompanyBucketMembership & {
+  company: Company
+}
+
+type CompanyBucketMembershipWithBucket = CompanyBucketMembership & {
+  bucket: Bucket
+}
 
 const addCompanyToBucket = async (companyId: number, bucketId: number) => {
   try {
@@ -48,7 +57,7 @@ const getCompaniesByBucketId = async (bucketId: number) => {
     if (!membership) {
       throw new Error(`bucket${bucketId} does not have any company.`)
     }
-    return membership.map((membership) => membership.company)
+    return membership.map((membership: CompanyBucketMembershipWithCompany) => membership.company)
   } catch (error) {
     console.error('Error retrieving companies from bucket:', error)
     throw error
@@ -69,7 +78,7 @@ const getBucketsByCompanyId = async (companyId: number) => {
     if (!membership) {
       throw new Error(`company${companyId} does not belong to any buckets.`)
     }
-    return membership.map((membership) => membership.bucket)
+    return membership.map((membership: CompanyBucketMembershipWithBucket) => membership.bucket)
   } catch (error) {
     console.error('Error getting buckets in this company:', error)
     throw error

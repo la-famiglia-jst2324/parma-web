@@ -1,4 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
+import type { MeasurementCommentValue, MeasurementFloatValue, MeasurementIntValue } from '@prisma/client'
 import { getValueByMeasurementIdCompanyId } from '@/api/db/services/companySourceMeasurementService'
 import { ItemNotFoundError } from '@/api/utils/errorUtils'
 import { withAuthValidation } from '@/api/middleware/auth'
@@ -118,10 +119,11 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         const relation = await getValueByMeasurementIdCompanyId(Number(measurementId), companiesArray)
         const dateCompanyMap: Record<string, Record<string, CompanyData>> = {}
         const valueType = relation[0].sourceMeasurement.type
-        relation.forEach((data) => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        relation.forEach((data: any) => {
           switch (valueType.toLowerCase()) {
             case 'int':
-              data.measurementIntValues.forEach((measurement) => {
+              data.measurementIntValues.forEach((measurement: MeasurementIntValue) => {
                 const date = new Date(measurement.timestamp).toLocaleDateString('en-US')
                 if (!dateCompanyMap[date]) {
                   dateCompanyMap[date] = {}
@@ -132,7 +134,7 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
               break
 
             case 'float':
-              data.measurementFloatValues.forEach((measurement) => {
+              data.measurementFloatValues.forEach((measurement: MeasurementFloatValue) => {
                 const date = new Date(measurement.timestamp).toLocaleDateString('en-US')
                 if (!dateCompanyMap[date]) {
                   dateCompanyMap[date] = {}
@@ -142,7 +144,7 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
               break
 
             case 'comment':
-              data.measurementCommentValues.forEach((measurement) => {
+              data.measurementCommentValues.forEach((measurement: MeasurementCommentValue) => {
                 const date = new Date(measurement.timestamp).toLocaleDateString('en-US')
                 if (!dateCompanyMap[date]) {
                   dateCompanyMap[date] = {}

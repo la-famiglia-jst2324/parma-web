@@ -149,8 +149,10 @@ const getMeasurementValueCompanyId = async (companyIds: number[]) => {
       }
     })
     const resultObject = []
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const groupedCompanies = await companySourceMeasurements.reduce(
-      async (accPromise, item) => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      async (accPromise: any[], item: any) => {
         const acc = await accPromise
         const company = item.company
         const measurementName = item.sourceMeasurement.measurementName

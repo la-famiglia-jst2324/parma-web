@@ -1,5 +1,10 @@
+import type { CompanySourceMeasurement, SourceMeasurement } from '@prisma/client'
 import { prisma } from '../prisma/prismaClient'
 import { ItemNotFoundError } from '@/api/utils/errorUtils'
+
+type SourceMeasurementWithCSMs = SourceMeasurement & {
+  companySourceMeasurements: CompanySourceMeasurement[]
+}
 
 const createSourceMeasurement = async (data: {
   sourceModuleId: number
@@ -50,58 +55,6 @@ const getMeasurementsBySourceId = async (sourceModuleId: number) => {
       throw new Error(`source measurements of data source ID ${sourceModuleId} not found.`)
     }
     return measurements
-  } catch (error) {
-    console.error('Error getting the source measurements of data source :', error)
-    throw error
-  }
-}
-
-/**
- * Returns a dictionary with company ids as keys and their corresponding source measurements with sourceModuleId
- * @param sourceModuleId
- * @param companyIds
- * @returns
- */
-const getMeasurementsOfCompaniesBySourceId = async (sourceModuleId: number, companyIds?: number[]) => {
-  try {
-    const measurements = await prisma.sourceMeasurement.findMany({
-      where: {
-        sourceModuleId
-      },
-      include: {
-        companySourceMeasurements: {
-          where: {
-            companyId: companyIds ? { in: companyIds } : undefined
-          },
-          select: {
-            companyMeasurementId: true,
-            companyId: true
-          }
-        }
-      }
-    })
-
-    // add the companyMeasurementId and companyId to the result.
-    const flattenedMeasurements = measurements.flatMap((measurement) =>
-      measurement.companySourceMeasurements.map((csm) => {
-        // here we want to filter out companySourceMeasurements from the output
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const { companySourceMeasurements, ...rest } = { ...measurement, ...csm }
-        return rest
-      })
-    )
-
-    const measurementsByCompanyId = flattenedMeasurements.reduce(
-      (acc, measurement) => {
-        if (!acc[measurement.companyId]) {
-          acc[measurement.companyId] = []
-        }
-        acc[measurement.companyId].push(measurement)
-        return acc
-      },
-      {} as Record<number, typeof flattenedMeasurements>
-    )
-    return measurementsByCompanyId
   } catch (error) {
     console.error('Error getting the source measurements of data source :', error)
     throw error
@@ -197,10 +150,11 @@ const getMeasurementsByCompanyIdSourceId = async (sourceModuleId: number, compan
     })
     // add the companyId to the result
 
-    const flattenedMeasurements = measurements.flatMap((measurement) =>
-      measurement.companySourceMeasurements.map((csm) => {
+    const flattenedMeasurements = measurements.flatMap((measurement: SourceMeasurementWithCSMs) =>
+      measurement.companySourceMeasurements.map((csm: CompanySourceMeasurement) => {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const { companySourceMeasurements, ...rest } = { ...measurement, ...csm }
+        const { companySourceMeasurements, ...measurementWithoutCompanySourceMeasurements } = measurement
+        const rest = { ...measurementWithoutCompanySourceMeasurements, ...csm }
         return rest
       })
     )
@@ -219,6 +173,5 @@ export {
   getChildMeasurementsByParentId,
   updateParentMeasurementId,
   deleteSourceMeasurement,
-  getMeasurementsOfCompaniesBySourceId,
   getMeasurementsByCompanyIdSourceId
 }

@@ -113,16 +113,7 @@ const updateUser = async (
 
 const deleteUser = async (id: number) => {
   try {
-    const transaction = await prisma.$transaction(async (prisma) => {
-      // delete associated data
-      await prisma.newsSubscription.deleteMany({ where: { userId: id } })
-      await prisma.userImportantMeasurementPreference.deleteMany({ where: { userId: id } })
-      await prisma.notificationSubscription.deleteMany({ where: { userId: id } })
-      // delete user
-      return prisma.user.delete({ where: { id } })
-    })
-
-    return transaction
+    return prisma.user.delete({ where: { id } })
   } catch (error) {
     console.error('Error deleting user:', error)
     throw error

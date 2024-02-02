@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 
-import type { User } from '@prisma/client'
+import type { BucketAccess, User } from '@prisma/client'
 import { deleteBucket, getBucketById, updateBucket } from '@/api/db/services/bucketService'
 import { ItemNotFoundError } from '@/api/utils/errorUtils'
 import { withAuthValidation } from '@/api/middleware/auth'
@@ -105,7 +105,7 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse, user: U
         }
         if (bucket.isPublic) res.status(200).json(bucket)
         // check the user has access to private bucket.
-        const hasAccess = bucket.permissions.some((x) => x.inviteeId === user.id)
+        const hasAccess = bucket.permissions.some((x: BucketAccess) => x.inviteeId === user.id)
         if (bucket.ownerId === user.id || hasAccess) res.status(200).json(bucket)
         else res.status(401).json({ error: 'Not authorized to view this bucket' })
       } catch (error) {
@@ -119,7 +119,7 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse, user: U
         const existingBucket = await getBucketById(Number(bucketId))
         if (existingBucket) {
           const hasAccess = existingBucket.permissions.some(
-            (x) => x.inviteeId === user.id && x.permission === 'MODERATOR'
+            (x: BucketAccess) => x.inviteeId === user.id && x.permission === 'MODERATOR'
           )
           if (existingBucket.ownerId !== user.id && !hasAccess) {
             res.status(401).json({ error: 'Not authorized to update this bucket' })

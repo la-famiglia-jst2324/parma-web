@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import type { User } from '@prisma/client'
+import type { BucketAccess, User } from '@prisma/client'
 import {
   getInviteesByBucketId,
   updateBucketAccess,
@@ -117,7 +117,7 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse, user: U
       try {
         const { inviteeId, permission } = req.body
         const bucketAccess = await getInviteesIdsByBucketId(Number(bucketId))
-        const userHasModeratorAccess = bucketAccess.some((access) => access.permission === 'MODERATOR')
+        const userHasModeratorAccess = bucketAccess.some((access: BucketAccess) => access.permission === 'MODERATOR')
         const bucket = await getBucketById(Number(bucketId))
         if (bucket.ownerId !== user.id && (!bucketAccess || (bucketAccess && userHasModeratorAccess))) {
           res.status(401).json({ error: 'Not authorized to update access permissions.' })

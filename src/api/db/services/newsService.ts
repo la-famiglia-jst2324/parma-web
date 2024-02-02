@@ -1,3 +1,4 @@
+import type { Company } from '@prisma/client'
 import { PrismaClient } from '@prisma/client'
 import { getCompaniesByBucketId } from './companyBucketMembershipService'
 import { getBucketById } from './bucketService'
@@ -199,7 +200,7 @@ const getAllNews = async (
     } else if (bucketId) {
       const bucket = await getBucketById(bucketId)
       const companies = await getCompaniesByBucketId(bucketId as number)
-      const companyIds = companies.map((company) => company.id)
+      const companyIds = companies.map((company: Company) => company.id)
 
       const queryOptionsWithCompanyIds = {
         ...baseQuery,

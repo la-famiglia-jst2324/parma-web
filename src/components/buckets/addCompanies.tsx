@@ -24,7 +24,7 @@ const AddCompaniesToBucket: React.FC<AddCompaniesToBucketProps> = ({ handleSave,
   useEffect(() => {
     BucketFunctions.getAllCompanies()
       .then((res) => {
-        res = res.filter((company: Company) => !bucketCompanies?.some((item) => item.id === company.id))
+        res = res.filter((company: Company) => !bucketCompanies?.some((item: Company) => item.id === company.id))
         setAllCompanies(res)
       })
       .catch((error) => {

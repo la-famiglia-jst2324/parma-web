@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 
-import type { User } from '@prisma/client'
+import type { BucketAccess, User } from '@prisma/client'
 import { createBucketAccess, getInviteesIdsByBucketId } from '@/api/db/services/bucketAccessService'
 import { withAuthValidation } from '@/api/middleware/auth'
 import { getBucketById } from '@/api/db/services/bucketService'
@@ -88,7 +88,7 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse, user: U
           }
 
           const bucketAccess = await getInviteesIdsByBucketId(Number(data.bucketId))
-          const userHasModeratorAccess = bucketAccess.some((access) => access.permission === 'MODERATOR')
+          const userHasModeratorAccess = bucketAccess.some((access: BucketAccess) => access.permission === 'MODERATOR')
           const bucket = await getBucketById(Number(data.bucketId))
           if (bucket.ownerId !== user.id && (!bucketAccess || (bucketAccess && userHasModeratorAccess))) {
             return Promise.resolve() // return an empty promise.

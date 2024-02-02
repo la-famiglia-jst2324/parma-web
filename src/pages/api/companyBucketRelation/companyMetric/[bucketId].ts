@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { z } from 'zod'
-
+import type { Company } from '@prisma/client'
 import { ItemNotFoundError } from '@/api/utils/errorUtils'
 import { withAuthValidation } from '@/api/middleware/auth'
 import { getCompaniesByBucketId } from '@/api/db/services/companyBucketMembershipService'
@@ -22,7 +22,7 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         const { bucketId } = membershipGetSchema.parse(req.query)
         if (bucketId) {
           const companies = await getCompaniesByBucketId(bucketId)
-          const companyIds = companies.map((company) => company.id)
+          const companyIds = companies.map((company: Company) => company.id)
           const companySourceMeasurement = await getMeasurementValueCompanyId(companyIds)
           if (companySourceMeasurement) res.status(200).json(companySourceMeasurement)
           else res.status(404).json({ error: 'No measurement value for a company id found' })

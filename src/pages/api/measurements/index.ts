@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import type { SourceMeasurement } from '@prisma/client'
+import type { CompanySourceMeasurement, SourceMeasurement } from '@prisma/client'
 import {
   createSourceMeasurement,
   getAllSourceMeasurements,
@@ -135,7 +135,10 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
           const result: SourceMeasurement[] = []
           for (const id of commonSourceMeasurementIds) {
             for (const item of relation) {
-              if (item.sourceMeasurementId === id && !result.some((r) => r.id === item.sourceMeasurement.id)) {
+              if (
+                item.sourceMeasurementId === id &&
+                !result.some((r: SourceMeasurement) => r.id === item.sourceMeasurement.id)
+              ) {
                 result.push(item.sourceMeasurement)
               }
             }
@@ -146,7 +149,7 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         } else if (companyIds && companiesArray.length === 1) {
           const relation = await getCompanySourceMeasurementByCompanyId(companiesArray)
           if (relation) {
-            const measurements = relation.map((item) => item.sourceMeasurement)
+            const measurements = relation.map((item: CompanySourceMeasurement) => item.sourceMeasurement)
             res.status(200).json(await getMeasurementsWithChildren(measurements))
           } else res.status(400).json({ error: 'No relation found' })
         } else {

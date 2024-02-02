@@ -1,3 +1,4 @@
+import type { Bucket, Company } from '@prisma/client'
 import { prisma } from '../prisma/prismaClient'
 
 const searchCompaniesAndBuckets = async (searchString: string, page: number, pageSize: number, userId: number) => {
@@ -37,12 +38,14 @@ const searchCompaniesAndBuckets = async (searchString: string, page: number, pag
       where: whereClause
     })
 
-    const authBuckets = buckets.filter((bucket) => bucket.title.toLowerCase().includes(searchString.toLowerCase()))
+    const authBuckets = buckets.filter((bucket: Bucket) =>
+      bucket.title.toLowerCase().includes(searchString.toLowerCase())
+    )
 
     // Combine and sort the results
     const combined = [
-      ...companies.map((c) => ({ ...c, type: 'company' })),
-      ...authBuckets.map((b) => ({ ...b, name: b.title, type: 'bucket' }))
+      ...companies.map((c: Company) => ({ ...c, type: 'company' })),
+      ...authBuckets.map((b: Bucket) => ({ ...b, name: b.title, type: 'bucket' }))
     ].sort((a, b) => a.name.localeCompare(b.name))
 
     if (!page || !pageSize) {

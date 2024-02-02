@@ -109,11 +109,11 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse, user: U
           // check the user has access to private bucket.
           const hasAccess = bucket.permissions.some((x) => x.inviteeId === user.id)
           if (bucket.ownerId === user.id || hasAccess) return res.status(200).json(bucket)
-          else res.status(401).json({ error: 'Not authorized to view this bucket' })
+          else return res.status(401).json({ error: 'Not authorized to view this bucket' })
         }
       } catch (error) {
         if (error instanceof ItemNotFoundError) res.status(404).json({ error: error.message })
-        else res.status(500).json({ error: 'Internal Server Error' })
+        else res.status(500).json({ error: 'Internal Server Error', details: JSON.stringify(error) })
       }
       break
 

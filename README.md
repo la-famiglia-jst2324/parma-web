@@ -9,6 +9,10 @@
 ![Functions](https://img.shields.io/badge/functions-57.11%25-red.svg?style=flat)
 ![Lines](https://img.shields.io/badge/lines-55.64%25-red.svg?style=flat)
 
+Frontend for the ParmaAI data mining and analytics platform.
+
+![Topic listing](.github/screenshots/company/company_dashboard.png).
+
 ## Project Description
 
 ParmaAI is a sophisticated platform combining advanced data mining with comprehensive analytics. At its core, Parma Analytics orchestrates the data lifecycle, scheduling and managing data mining modules, and processing the extracted data using tools like ChatGPT for in-depth analysis and report generation. Complementing this, Parma Web provides a user-friendly interface for data management and visualization, making the system's complex functionalities accessible and intuitive. Together, they form a powerful solution for businesses to monitor, analyze, and respond to corporate anomalies, leveraging data-driven insights for strategic decision-making.
@@ -17,7 +21,70 @@ ParmaAI is a sophisticated platform combining advanced data mining with comprehe
 
 Parma Web is the interactive user interface of the ParmaAI platform, designed for efficient data source management and visualization. It not only serves as a gateway for users to add, edit, and delete data sources but also ensures that these sources are seamlessly integrated into the platform once they are independently deployed. The repository is crucial for enhancing the user experience, providing clear visualization of analytics results, and facilitating interaction with the backend analytics system. Ideal for contributors focusing on front-end development, Parma Web combines usability and functionality, making complex data insights accessible and understandable for all users.
 
-[![Screenshot](./docs/images/landing-page-parma.png)](https://parma.software)
+**Related repositories:**
+
+- Core Backend: [parma-analytics](https://github.com/la-famiglia-jst2324/parma-analytics/)
+- Modular data sourcing modules providing a standardized REST api:
+  - Copier template for new mining modules: [parma-mining-template](https://github.com/la-famiglia-jst2324/parma-mining-template)
+  - [parma-mining-producthunt](https://github.com/la-famiglia-jst2324/parma-mining-producthunt)
+  - [parma-mining-peopledatalabs](https://github.com/la-famiglia-jst2324/parma-mining-peopledatalabs)
+  - [parma-mining-discord](https://github.com/la-famiglia-jst2324/parma-mining-discord)
+  - [parma-mining-github](https://github.com/la-famiglia-jst2324/parma-mining-github)
+  - [parma-mining-linkedin](https://github.com/la-famiglia-jst2324/parma-mining-linkedin)
+  - [parma-mining-crunchbase](https://github.com/la-famiglia-jst2324/parma-mining-crunchbase)
+  - [parma-mining-affinity](https://github.com/la-famiglia-jst2324/parma-mining-affinity)
+  - [parma-mining-reddit](https://github.com/la-famiglia-jst2324/parma-mining-reddit)
+  - [parma-mining-clearbit](https://github.com/la-famiglia-jst2324/parma-mining-clearbit)
+
+## Visual Impressions
+
+#### Auth & Landing Pages
+
+|                         Landing Page                          |                      Login Page                      |                          News Feed                          |
+| :-----------------------------------------------------------: | :--------------------------------------------------: | :---------------------------------------------------------: |
+| ![Landing Page](.github/screenshots/generic/landing_page.png) | ![Login Page](.github/screenshots/generic/login.png) | ![News Feed](.github/screenshots/generic/trending_news.png) |
+
+|                       Profile Page                       |                       Settings Page                        |
+| :------------------------------------------------------: | :--------------------------------------------------------: |
+| ![Profile Page](.github/screenshots/generic/profile.png) | ![Settings Page](.github/screenshots/generic/settings.png) |
+
+#### UI Navigation
+
+|                          Sidebar Navigation                          |                              Pure keyboard Interface                               |
+| :------------------------------------------------------------------: | :--------------------------------------------------------------------------------: |
+| ![Sidebar Navigation](.github/screenshots/navigation/navigation.png) | ![Pure keyboard Interface](.github/screenshots/navigation/navigation_keyboard.png) |
+
+#### Companies
+
+|                            Company Dashboard                            |
+| :---------------------------------------------------------------------: |
+| ![Company Dashboard](.github/screenshots/company/company_dashboard.png) |
+
+|                          Create Company                           |                             Company Attachments                             |
+| :---------------------------------------------------------------: | :-------------------------------------------------------------------------: |
+| ![Create Company](.github/screenshots/company/create_company.png) | ![Company Attachments](.github/screenshots/company/company_attachments.png) |
+
+#### Buckets (Collections of Companies)
+
+|                           Bucket Dashboard                           |
+| :------------------------------------------------------------------: |
+| ![Bucket Dashboard](.github/screenshots/bucket/bucket_dashboard.png) |
+
+|                         Create Bucket                          |                         Delete Bucket                          |                         Share Bucket                         |
+| :------------------------------------------------------------: | :------------------------------------------------------------: | :----------------------------------------------------------: |
+| ![Create Bucket](.github/screenshots/bucket/create_bucket.png) | ![Delete Bucket](.github/screenshots/bucket/delete_bucket.png) | ![Share Bucket](.github/screenshots/bucket/share_bucket.png) |
+
+#### Data Sources
+
+|                          Data Source Dashboard                           |
+| :----------------------------------------------------------------------: |
+| ![Data Source Dashboard](.github/screenshots/datasource/datasources.png) |
+
+|                             Create Data Source                              |                               Configure Data Source                               |
+| :-------------------------------------------------------------------------: | :-------------------------------------------------------------------------------: |
+| ![Create Data Source](.github/screenshots/datasource/create_datasource.png) | ![Configure Data Source](.github/screenshots/datasource/configure_datasource.png) |
+
+#### Bucket
 
 ## Deployment
 

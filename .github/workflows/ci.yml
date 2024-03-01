@@ -22,7 +22,7 @@ jobs:
       - name: add micromamba to GITHUB_PATH
         run: echo "${HOME}/micromamba-bin" >> "$GITHUB_PATH"
       - name: pnpm installation
-        uses: pnpm/action-setup@v2.4.0
+        uses: pnpm/action-setup@v3.0.0
         with:
           version: 8
       - name: Set up node.js
@@ -56,7 +56,7 @@ jobs:
         with:
           ref: ${{ github.head_ref }}
           token: ${{ secrets.RH_PAT_FOR_PUSHING }}
-      - uses: pnpm/action-setup@v2.4.0
+      - uses: pnpm/action-setup@v3.0.0
         with:
           version: 8
       - name: node.js setup

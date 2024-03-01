@@ -4,6 +4,7 @@ import React, { useState } from 'react'
 import { Frequency } from '@prisma/client'
 import type { AxiosError } from 'axios'
 import { Loader2 } from 'lucide-react'
+import axios from 'axios'
 import { Label } from '../ui/label'
 import { ShowToast } from '../ShowToast'
 import {
@@ -99,10 +100,13 @@ const CreateDatasource: React.FC<CreateDatasourceProps> = ({ triggerButton, isOp
         onDatasourceCreated()
       }
     } catch (error) {
-      const axiosError = error as AxiosError
-      const errorResponse = axiosError?.response?.data as ErrorResponse
-      const errorMessage = errorResponse?.error
-      ShowToast('Datasource creation failed', errorMessage || 'An unexpected error occurred', 'destructive')
+      let errorMessage = 'An unexpected error occurred'
+      if (axios.isAxiosError(error)) {
+        const axiosError = error as AxiosError
+        const errorResponse = axiosError?.response?.data as ErrorResponse
+        errorMessage = errorResponse?.error || errorMessage
+      }
+      ShowToast('Datasource creation failed', errorMessage, 'destructive')
     } finally {
       setCreateDataSourceBlocked(false)
     }

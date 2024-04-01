@@ -42,7 +42,7 @@
     "@radix-ui/react-tooltip": "^1.0.7",
     "@tanstack/react-table": "^8.11.3",
     "@tremor/react": "^3.13.4",
-    "axios": "^1.6.2",
+    "axios": "^1.6.8",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.0.0",
     "cmdk": "^0.2.0",

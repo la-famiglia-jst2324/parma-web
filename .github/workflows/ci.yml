@@ -32,7 +32,7 @@ jobs:
       - name: dependency installation
         run: pnpm install --frozen-lockfile
       - name: Run pre-commit checks
-        uses: pre-commit/action@v3.0.0
+        uses: pre-commit/action@v3.0.1
         env:
           PRE_COMMIT_USE_MICROMAMBA: 1
 
